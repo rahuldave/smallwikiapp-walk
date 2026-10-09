@@ -1,0 +1,17 @@
+# The walks of this class. Both are the same tutorial: the tagged steps of smallwikiapp, and the moves
+# between them. They differ only in the mode they start in; the Do/Watch switch changes it at any time.
+# Every path is read from this folder.
+
+[[walk]]
+id = "show"
+title = "smallwikiapp, shown one move at a time"
+kind = "tutorial"
+folder = "walks/tutorial"
+moves = "watch"                   # Show checks out each move's commit: for the projector
+
+[[walk]]
+id = "do"
+title = "smallwikiapp, one move at a time, by hand"
+kind = "tutorial"
+folder = "walks/tutorial"
+moves = "do"                      # the student makes each move from the notes, and presses Done

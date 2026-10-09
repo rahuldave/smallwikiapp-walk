@@ -1,0 +1,15 @@
+# Which slides are shown at which step of smallwikiapp. A move may have slides of its own; its key is
+# quoted, because it holds a dot.
+
+[slides]
+step-00 = ["00-project.md"]
+step-01 = ["01-page.md#1"]
+"step-01.2" = ["01-page.md#2"]
+step-02 = ["02-tests.md"]
+step-03 = ["03-library.md"]
+step-04 = ["04-quality.md#1"]
+"step-04.3" = ["04-quality.md#2"]
+step-05 = ["05-types.md"]
+step-06 = ["06-ci.md"]
+step-07 = ["07-page.md"]
+step-08 = ["08-docs.md"]
