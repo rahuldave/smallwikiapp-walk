@@ -22,7 +22,7 @@ Written once, beside the code it describes.
 | Command | Does |
 |---|---|
 | `just docs module wikipedia` | one module's reference, as Markdown |
-| `just docs check` | every function, class and field without its docs; fails if any |
+| `just docs check` | every module, function, class and field without its docs; fails if any |
 | `just docs` | the site: Quarto, which runs `apidocs.py build` first |
 
 The check runs in `just check`, so the git hook refuses an undocumented function.

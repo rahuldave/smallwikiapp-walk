@@ -12,7 +12,7 @@ pixi; where the notes say "the original wikiapp", they mean that one.
 On GitHub, the notes read as they are. A line that starts with `$ ` is a command: in timewalk a click types it
 into the terminal at the step. A grey block is code to type, or a command that makes the move. Under
 `files:`, `diff PATH` is a file the move changes and `file PATH` a file as the move leaves it; `show:` names the
-line to look at. A long file says to use **Apply** in timewalk; on GitHub, the same file is in the move's
+line to look at. The items are the files worth reading; "What changed" lists every file. A long file says to use **Apply** in timewalk; on GitHub, the same file is in the move's
 commit, listed in the [project's history](https://github.com/rahuldave/smallwikiapp/commits/main).
 
 ## step-00 The project
@@ -44,6 +44,8 @@ $ just
 $ just --show setup
 
 $ just help setup
+
+$ just --show help
 
 ## step-01 A random page
 
@@ -117,9 +119,9 @@ files:
 
 $ uv run wikiapp
 
-It fails: the last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error: Forbidden for url:`
-and the address. Wikipedia now refuses a request
-whose User-Agent header is a library's default, and requests sends `python-requests/` and its version.
+It fails: the last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error: Forbidden for
+url:` and the address. Wikipedia now refuses a request whose User-Agent header is a library's default, and
+requests sends `python-requests/` and its version.
 
 ### step-01.3 A User-Agent
 
@@ -324,8 +326,10 @@ What changed:
 - `pyproject.toml`, `uv.lock`: pytest-mock in the group `test`.
 
 files:
-- diff `tests/test_console.py`: the fixtures and the new test.
+- diff `tests/test_console.py`: the fixtures and the new test; `test_main_succeeds` takes the runner from its fixture.
   show: `mock = mocker.patch("requests.get")`
+- diff `pyproject.toml`: pytest-mock in the group `test`.
+  show: `"pytest-mock>=3.16.0",`
 
 $ just test -k title -v
 
@@ -417,8 +421,8 @@ files:
 $ just test
 
 The table under the tests lists each file of `src/wikiapp`, its statements, and the lines of those no test ran.
-One line of `console.py` is missing: the call to `main` at the end, which runs only when the file itself is run as a
-script.
+One line of `console.py` is missing: the call to `main` at the end, which runs only when the file itself is run
+as a script.
 
 ## step-03 A library and an app
 
@@ -445,8 +449,8 @@ def random_page():
         return response.json()
 ```
 
-`random_page` returns the answer from inside the `with` block, where the original set `data` there and returned it
-after; the result is the same. Then replace `src/wikiapp/console.py`: the constants and the request go, and
+`random_page` returns the answer from inside the `with` block, where the original set `data` there and returned
+it after; the result is the same. Then replace `src/wikiapp/console.py`: the constants and the request go, and
 `main` calls `random_page`.
 
 ```python
@@ -966,6 +970,12 @@ files:
 - diff `pyproject.toml`: one package more in `lint`.
   show: `"validate-pyproject>=0.26",`
 
+$ uv run validate-pyproject pyproject.toml
+
+$ uv lock --check
+
+$ just --fmt --check --unstable
+
 $ just --show lint-config
 
 $ just lint-config
@@ -974,7 +984,7 @@ $ just --show check
 
 $ just check
 
-Each check in turn: the format, the linter, the tests, which must run at least 90% of the lines, and the
+Each check in turn: the format, the linter, the tests, which must run at least 90% of the statements, and the
 configuration. The coverage is 96.77%.
 
 ### step-04.8 A git hook
@@ -1031,6 +1041,8 @@ files:
   show: `entry: just check`
 - diff `justfile`: setup.
   show: `uv sync --locked && uv run pre-commit install`
+- diff `pyproject.toml`: pre-commit in the group `lint`.
+  show: `"pre-commit>=4.6.2",`
 
 $ just setup
 
@@ -1050,14 +1062,15 @@ parameter and return, the types, and the type checker in `just check`.
 
 ### step-05.1 ty, and just types
 
-ty reads the code without running it, and finds calls whose arguments cannot have the type the function asks
+ty reads the code without running it, and finds code whose types cannot fit: a call whose arguments cannot have
+the type the function asks
 for.
 
 ```
 uv add --group lint ty
 ```
 
-In the `justfile`, a recipe after `lint`.
+In the `justfile`, a recipe after `lint`'s recipe and the blank line under it.
 
 ```just
 # Check the types of every function call, with ty. Extra arguments go to ty: just types --help
@@ -1076,6 +1089,8 @@ What changed:
 files:
 - diff `justfile`: the recipe.
   show: `types *args:`
+- diff `pyproject.toml`: ty in the group `lint`.
+  show: `"ty>=0.0.85",`
 
 $ uv run ty check
 
@@ -1231,7 +1246,7 @@ $ just lint
 
 $ just types
 
-Both pass. If `just lint` reports `I001`, the imports are not in the three blocks shown above.
+Both pass. If `just lint` reports `I001`, the imports are not in the blocks shown above.
 
 ### step-05.6 Types join just check
 
@@ -1305,9 +1320,10 @@ The first: `6 passed, 1 deselected`. The second runs the e2e test alone.
 
 ### step-06.2 An end-to-end test of the library
 
-The mocks return a dictionary with a title and an extract. This test, from the original wikiapp, checks that the real
-Wikipedia still does. Add it at the end of `tests/test_wikipedia.py`, and `import pytest` in a block of its own
-between `from unittest.mock import Mock` and `from wikiapp import wikipedia`, with a blank line on each side.
+The mocks return a dictionary with a title and an extract. This test, from the original wikiapp, checks that the
+real Wikipedia still does. Add it at the end of `tests/test_wikipedia.py`, and `import pytest` in a block of its
+own between `from unittest.mock import Mock` and `from wikiapp import wikipedia`, with a blank line on each
+side.
 
 ```python
 
@@ -1407,8 +1423,8 @@ jobs:
       - run: just check
 ```
 
-The original wikiapp did this with pixi, one environment for each Python. With uv, `setup-uv` tells uv which Python to use,
-and `uv run` installs it if it is missing.
+The original wikiapp did this with pixi, one environment for each Python. With uv, `setup-uv` tells uv which
+Python to use, and `uv run` installs it if it is missing.
 
 What changed:
 
@@ -1438,7 +1454,8 @@ pydantic model says so in code.
 uv add pydantic
 ```
 
-In `src/wikiapp/wikipedia.py`, import it under `import requests`, and add the class after `WikipediaError`.
+In `src/wikiapp/wikipedia.py`, import it under `import requests`, and add the class after `WikipediaError`, with
+two blank lines before it and after it.
 
 ```python
 from pydantic import BaseModel
@@ -1460,6 +1477,8 @@ What changed:
 files:
 - diff `src/wikiapp/wikipedia.py`: the model.
   show: `class Page(BaseModel):`
+- diff `pyproject.toml`: pydantic, a dependency of the package.
+  show: `"pydantic>=2.14.0",`
 
 $ uv run python -c "from wikiapp.wikipedia import Page; print(Page.model_validate({'title': 'A', 'extract': 'B', 'lang': 'en'}))"
 
@@ -1514,6 +1533,8 @@ files:
   show: `return Page.model_validate(response.json())`
 - diff `src/wikiapp/console.py`: attributes, not keys.
   show: `click.secho(page.title, fg="green")`
+- diff `tests/test_wikipedia.py`: the e2e test checks for a Page.
+  show: `assert isinstance(page, wikipedia.Page)`
 
 $ just check
 
@@ -1598,8 +1619,8 @@ $ uv run wikiapp --language 'example.com/x?'
 $ just test -q
 
 The command prints `Error: 'example.com/x?' is not a language code, such as en, fr or zh-yue`, and asks no one.
-`7 passed, 2 deselected`. No test reaches the new `raise`, and the coverage table lists its line as missing: 95% in all,
-still over the floor of 90%. A coverage drop is something to know, not something to hide with a test.
+`7 passed, 2 deselected`. No test reaches the new `raise`, and the coverage table lists its line as missing: 95%
+in all, still over the floor of 90%. A coverage drop is something to know, not something to hide with a test.
 
 ## step-08 Docs from the code
 
@@ -1661,6 +1682,8 @@ files:
   show: `def gaps_of(`
 - diff `pyproject.toml`: the group.
   show: `docs = [`
+- diff `justfile`: the recipe.
+  show: `docs *args:`
 
 $ uv run python docs/apidocs.py module wikipedia
 
@@ -1669,10 +1692,9 @@ $ just --show docs
 $ just docs check
 
 `module` prints the reference of wikipedia.py, with empty descriptions. `check` counts, for each module, how
-many of its functions and classes are complete, then lists every gap, and fails: `15 of 29 functions and classes are typed and
-documented`. Fourteen are the
-script's own; the fifteenth is `WikipediaError`, which needs only its docstring. Above the total, every gap by
-name, the six modules without a docstring among them.
+many of its functions and classes are complete, then lists every gap, and fails: `15 of 29 functions and classes
+are typed and documented`. Fourteen are the script's own; the fifteenth is `WikipediaError`, which needs only
+its docstring. Above the total, every gap by name, the six modules without a docstring among them.
 
 ### step-08.2 The library documented
 
@@ -1779,7 +1801,7 @@ def test_main_prints_title(
 What changed:
 
 - `tests/conftest.py`, `tests/test_console.py`, `tests/test_wikipedia.py`: a docstring for each file, fixture and
-  test, and a docment for each parameter.
+  test, and a docment for each parameter and each fixture's return value.
 
 files:
 - diff `tests/conftest.py`: the fixture, documented.
@@ -1787,6 +1809,7 @@ files:
 - diff `tests/test_console.py`: seven functions.
   show: `"""The command prints the title of the page."""`
 - diff `tests/test_wikipedia.py`: three tests.
+  show: `"""The language chooses the Wikipedia that is asked."""`
 
 $ just docs check
 
@@ -1837,9 +1860,10 @@ In the `justfile`, in `check`, run `just docs check` after the tests, and say so
     just docs check
 ```
 
-The README gains Quarto among the tools, `tests/` and `docs/` among the folders, and says that `wikipedia.py`
-is the library and `console.py` the command. Take the README with **Apply this file**, or copy these rows; the
-commit `step-08.6` on GitHub has it whole.
+The README gains Quarto among the tools, `tests/` and `docs/` among the folders, and says that `wikipedia.py` is
+the library and `console.py` the command. Take the README with **Apply this file**, or copy these rows: the
+Quarto row under the just row, and the three rows in place of the `src/wikiapp/` row. The tagged commit
+`step-08` on GitHub has it whole.
 
 ```markdown
 | [Quarto](https://quarto.org/) | The docs site, from `just docs` |
@@ -1864,8 +1888,8 @@ files:
 
 $ just check
 
-`30 of 30`: `build`, which came in the move before, is the thirtieth. Now the git hook refuses a commit that leaves a function, a parameter or a
-field undocumented.
+`30 of 30`: `build`, which came in the move before, is the thirtieth. Now the git hook refuses a commit that
+leaves a function, a parameter or a field undocumented.
 
 ## step-09 The library as a package
 
@@ -1897,7 +1921,7 @@ description = "A random page of Wikipedia, in any language"
 requires-python = ">=3.11"
 ```
 
-Replace `packages/wikirandom/README.md` with one line of what it is, and lock again.
+Replace `packages/wikirandom/README.md` with a heading and one line of what it is, and lock again.
 
 ```markdown
 # wikirandom
@@ -1987,9 +2011,9 @@ from wikiapp import __version__
 
 Delete `src/wikiapp/wikipedia.py`. Rename `tests/test_wikipedia.py` to `tests/test_wikirandom.py`, and make it
 test the library: its docstring says `Tests of the library, wikirandom.`, it imports `import wikirandom` under
-`import pytest`, in place of `from wikiapp import wikipedia` and the blank line before it, and `wikipedia.random_page`, `wikipedia.Page` and `wikipedia.WikipediaError` become
-`wikirandom.random_page`, `wikirandom.Page` and `wikirandom.WikipediaError`. The host `es.wikipedia.org` in the
-first test stays as it is.
+`import pytest`, in place of `from wikiapp import wikipedia` and the blank line before it, and
+`wikipedia.random_page`, `wikipedia.Page` and `wikipedia.WikipediaError` become `wikirandom.random_page`,
+`wikirandom.Page` and `wikirandom.WikipediaError`. The host `es.wikipedia.org` in the first test stays as it is.
 
 ```
 git rm src/wikiapp/wikipedia.py
@@ -2028,15 +2052,15 @@ $ uv tree --depth 2
 
 $ just docs check
 
-`7 passed, 2 deselected`, and the coverage table lists `packages/wikirandom/src/wikirandom/__init__.py`. `uv tree` shows
-wikiapp needing click and wikirandom, and wikirandom needing requests and pydantic. `just docs check` still
-counts the app alone, 27 of 27: the next move adds the library.
+`7 passed, 2 deselected`, and the coverage table lists `packages/wikirandom/src/wikirandom/__init__.py`. `uv
+tree` shows wikiapp needing click and wikirandom, and wikirandom needing requests and pydantic. `just docs
+check` still counts the app alone, 27 of 27: the next move adds the library.
 
 ### step-09.4 The docs name both packages
 
 `docs/apidocs.py` documented one package, and only its modules. It now documents a list of packages, and each
 package's own `__init__.py` too, because wikirandom is a single module. Take it with **Apply this file**, or
-from the commit `step-09.4` on GitHub. The main change is `PACKAGES` and `package_modules`; `check` and `build`
+from the tagged commit `step-09` on GitHub. The main change is `PACKAGES` and `package_modules`; `check` and `build`
 follow from it, and `build` writes a page only for a module that defines something.
 
 ```python
@@ -2044,7 +2068,7 @@ PACKAGES = ("wikiapp", "wikirandom")  # the app, and the library in packages/wik
 ```
 
 The front page of the site, `docs/index.qmd`, and the README's table of folders say that the repository contains
-two packages: take them with **Apply this file** too, or from the commit `step-09.4` on GitHub.
+two packages: take them with **Apply this file** too, or from the tagged commit `step-09` on GitHub.
 
 What changed:
 
@@ -2056,7 +2080,8 @@ files:
   show: `mods += [pkg, *(importlib.import_module(f"{name}.{s}") for s in subs)]`
 - diff `docs/index.qmd`: two packages.
   show: `It is two packages, in one repository:`
-- diff `README.md`: one row more.
+- diff `README.md`: one row more, and the `src/wikiapp/` row says the app.
+  show: `| The library the app uses: a random page of Wikipedia. A package of its own |`
 
 $ just docs check
 
@@ -2177,6 +2202,9 @@ files:
   show: `license = "Apache-2.0"`
 - diff `justfile`: two files.
   show: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+- diff `pyproject.toml`: the app's repository.
+  show: `[project.urls]`
+- file `packages/wikirandom/LICENSE`: the same Apache-2.0 licence as the app's.
 
 $ just lint-config
 
