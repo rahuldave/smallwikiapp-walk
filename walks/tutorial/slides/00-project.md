@@ -17,7 +17,7 @@ The point is not the command. It is the project around it, built one step at a t
 
 A **step** is a tag: `step-00`, `step-01`, ...
 
-A **move** is one small commit between two tags: one action, and the project works after it.
+A **move** is one small commit between two tags: one action, and a command at its end that shows what it did.
 
 | Mode | What you do |
 |---|---|
@@ -34,11 +34,11 @@ Every step starts from the code of the step before: `just setup` first.
 uv init --package --python 3.13 --name wikiapp
 ```
 
-| File | What it says |
-|---|---|
-| `pyproject.toml` | the name, the Python, the dependencies, the command |
-| `.python-version` | which Python uv installs |
-| `uv.lock` | the exact version of every package |
-| `justfile` | the tasks: `just` lists them |
+| File | What it says | Made by |
+|---|---|---|
+| `pyproject.toml` | the name, the Python, the dependencies, the command | `uv init` |
+| `.python-version` | which Python uv installs | `uv init` |
+| `uv.lock` | the exact version of every package | `uv lock` |
+| `justfile` | the tasks: `just` lists them | by hand |
 
 `just setup` makes `.venv` from the lockfile, on any machine.

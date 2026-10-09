@@ -57,6 +57,7 @@ in [walks/tutorial/notes.md](walks/tutorial/notes.md), and read on GitHub as the
   - [step-07.1](walks/tutorial/notes.md#step-071-page) Page
   - [step-07.2](walks/tutorial/notes.md#step-072-random_page-returns-a-page) random_page returns a Page
   - [step-07.3](walks/tutorial/notes.md#step-073-an-answer-that-is-not-a-page) An answer that is not a page
+  - [step-07.4](walks/tutorial/notes.md#step-074-only-a-language-code-goes-into-the-address) Only a language code goes into the address
 - [step-08](walks/tutorial/notes.md#step-08-docs-from-the-code) **Docs from the code**
   - [step-08.1](walks/tutorial/notes.md#step-081-docsapidocspy) docs/apidocs.py
   - [step-08.2](walks/tutorial/notes.md#step-082-the-library-documented) The library documented
@@ -64,6 +65,14 @@ in [walks/tutorial/notes.md](walks/tutorial/notes.md), and read on GitHub as the
   - [step-08.4](walks/tutorial/notes.md#step-084-the-tests-documented) The tests documented
   - [step-08.5](walks/tutorial/notes.md#step-085-a-site) A site
   - [step-08.6](walks/tutorial/notes.md#step-086-the-docs-check-joins-just-check) The docs check joins just check
+- [step-09](walks/tutorial/notes.md#step-09-the-library-as-a-package) **The library as a package**
+  - [step-09.1](walks/tutorial/notes.md#step-091-an-empty-library-wikirandom) An empty library, wikirandom
+  - [step-09.2](walks/tutorial/notes.md#step-092-wikirandom-gets-the-code) wikirandom gets the code
+  - [step-09.3](walks/tutorial/notes.md#step-093-the-app-uses-wikirandom) The app uses wikirandom
+  - [step-09.4](walks/tutorial/notes.md#step-094-the-docs-name-both-packages) The docs name both packages
+- [step-10](walks/tutorial/notes.md#step-10-build) **Build**
+  - [step-10.1](walks/tutorial/notes.md#step-101-just-build) just build
+  - [step-10.2](walks/tutorial/notes.md#step-102-the-user-agent-says-the-installed-version) The User-Agent says the installed version
 
 ## Two ways to take it
 
@@ -87,6 +96,9 @@ of the step before, so every step starts with `just setup`.
 
 ## Start
 
+Fork this repository on GitHub first, so that you can keep your own notes; or clone `rahuldave/smallwikiapp-walk`
+itself in place of your fork.
+
 ```
 git clone https://github.com/<you>/smallwikiapp-walk
 cd smallwikiapp-walk
@@ -94,7 +106,7 @@ just present do         # do mode: you make the moves
 just present            # watch mode: the moves are shown
 ```
 
-Fork this repository first if you want to keep your own notes. `just present` runs `just setup`, which clones
+`just present` runs `just setup`, which clones
 smallwikiapp into `repo/` (your fork of it, if you have one) and fetches the tags of the steps. timewalk then
 keeps its own copy in `worktree/`, which it moves from step to step and move to move. Git ignores both
 folders. `just check` checks the notes against the steps, and `just pdf` makes `build/walk.pdf`, the slides.

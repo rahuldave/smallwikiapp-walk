@@ -38,7 +38,8 @@ setup url="":
     if ! git -C repo remote get-url upstream >/dev/null 2>&1; then
         git -C repo remote add upstream "$upstream_url"
     fi
-    git -C repo fetch --quiet --tags --force upstream
+    git -C repo fetch --quiet --tags --force upstream 2>/dev/null \
+        || echo "setup: could not fetch the tags from {{ upstream }}/{{ project }}; using the ones repo/ has"
     echo "setup: repo/ is $(git -C repo remote get-url origin), with $(git -C repo tag -l 'step-*' | wc -l | tr -d ' ') steps"
     command -v quarto >/dev/null 2>&1 || echo "setup: Quarto is not on this machine; step 08 needs it: https://quarto.org/docs/get-started/"
 
