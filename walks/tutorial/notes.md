@@ -10,10 +10,11 @@ The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/
 pixi; where the notes say "the original wikiapp", they mean that one.
 
 On GitHub, the notes read as they are. A line that starts with `$ ` is a command: in timewalk a click types it
-into the terminal at the step. A grey block is code to type, or a command that makes the move. Under
-`files:`, `diff PATH` is a file the move changes and `file PATH` a file as the move leaves it; `show:` names the
-line to look at. The items are the files worth reading; "What changed" lists every file. A long file says to use **Apply** in timewalk; on GitHub, the same file is in the move's
-commit, listed in the [project's history](https://github.com/rahuldave/smallwikiapp/commits/main).
+into the terminal at the step. A grey block is code to type, or a command that makes the move. Under `files:`,
+`diff PATH` is a file the move changes and `file PATH` a file as the move leaves it; `show:` names the line to
+look at. The items are the files worth reading; "What changed" says what changed in all of them. A long file
+says to use **Apply** in timewalk; on GitHub, the same file is in the move's commit, listed in the [project's
+history](https://github.com/rahuldave/smallwikiapp/commits/main).
 
 ## step-00 The project
 
@@ -43,9 +44,9 @@ $ just
 
 $ just --show setup
 
-$ just help setup
-
 $ just --show help
+
+$ just help setup
 
 ## step-01 A random page
 
@@ -226,8 +227,8 @@ def test_main_succeeds():
     assert result.exit_code == 0
 ```
 
-click's `CliRunner` runs a command inside the test, in the same process, and keeps what it printed and its
-exit code.
+click's `CliRunner` runs a command inside the test, in the same process, and keeps what it printed and its exit
+code.
 
 What changed:
 
@@ -681,8 +682,7 @@ $ uv run wikiapp --language xx; echo "exit code $?"
 
 $ just test
 
-`Error:` and the message, in place of a traceback, and `exit code 1`.
-`7 passed`.
+`Error:` and the message, in place of a traceback, and `exit code 1`. `7 passed`.
 
 ## step-04 Format, lint, a hook
 
@@ -1063,8 +1063,7 @@ parameter and return, the types, and the type checker in `just check`.
 ### step-05.1 ty, and just types
 
 ty reads the code without running it, and finds code whose types cannot fit: a call whose arguments cannot have
-the type the function asks
-for.
+the type the function asks for.
 
 ```
 uv add --group lint ty
@@ -1901,8 +1900,8 @@ wikirandom without wikiapp and click.
 
 ### step-09.1 An empty library, wikirandom
 
-uv can make a second package inside a project. The two then form a *workspace*: one lockfile and one `.venv`
-for both.
+uv can make a second package inside a project. The two then form a *workspace*: one lockfile and one `.venv` for
+both.
 
 ```
 uv init --lib --author-from none packages/wikirandom
@@ -2060,8 +2059,8 @@ check` still counts the app alone, 27 of 27: the next move adds the library.
 
 `docs/apidocs.py` documented one package, and only its modules. It now documents a list of packages, and each
 package's own `__init__.py` too, because wikirandom is a single module. Take it with **Apply this file**, or
-from the tagged commit `step-09` on GitHub. The main change is `PACKAGES` and `package_modules`; `check` and `build`
-follow from it, and `build` writes a page only for a module that defines something.
+from the tagged commit `step-09` on GitHub. The main change is `PACKAGES` and `package_modules`; `check` and
+`build` follow from it, and `build` writes a page only for a module that defines something.
 
 ```python
 PACKAGES = ("wikiapp", "wikirandom")  # the app, and the library in packages/wikirandom
@@ -2205,6 +2204,7 @@ files:
 - diff `pyproject.toml`: the app's repository.
   show: `[project.urls]`
 - file `packages/wikirandom/LICENSE`: the same Apache-2.0 licence as the app's.
+  show: `Apache License`
 
 $ just lint-config
 
