@@ -4,7 +4,7 @@
 |---|---|---|
 | ruff format | `just fmt` | one way to lay out the code; nothing to argue about |
 | ruff check | `just lint` | rules: unused names, import order, security |
-| validate-pyproject, uv lock --check | `just lint-config` | the configuration |
+| validate-pyproject, uv lock --check, just --fmt --check | `just lint-config` | the configuration: pyproject.toml, the lockfile, the justfile |
 | all of them, and the tests | `just check` | everything a commit must pass |
 | pre-commit | git hook | runs `just check` before every commit |
 
