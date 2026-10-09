@@ -19,7 +19,7 @@ A **mock** replaces `requests.get` for the length of one test, and answers with 
 
 ```toml
 [dependency-groups]
-test = ["pytest", "pytest-mock", "pytest-cov"]
+test = ["pytest>=9.1.1", "pytest-cov>=7.1.0", "pytest-mock>=3.16.0"]
 dev = [{ include-group = "test" }]
 ```
 

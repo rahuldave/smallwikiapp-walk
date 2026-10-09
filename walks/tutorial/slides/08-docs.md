@@ -17,12 +17,12 @@ Written once, beside the code it describes.
 
 ---
 
-## One script, three commands
+## One recipe, three uses
 
 | Command | Does |
 |---|---|
 | `just docs module wikipedia` | one module's reference, as Markdown |
 | `just docs check` | every function, class and field without its docs; fails if any |
-| `just docs` | the site: Quarto, with the reference built from the code first |
+| `just docs` | the site: Quarto, which runs `apidocs.py build` first |
 
 The check runs in `just check`, so the git hook refuses an undocumented function.

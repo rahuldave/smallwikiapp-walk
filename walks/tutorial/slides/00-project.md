@@ -36,7 +36,7 @@ uv init --package --python 3.13 --name wikiapp
 
 | File | What it says | Made by |
 |---|---|---|
-| `pyproject.toml` | the name, the Python, the dependencies, the command | `uv init` |
+| `pyproject.toml` | the name, the Python, the dependencies, the command | `uv init`, then by hand |
 | `.python-version` | which Python uv installs | `uv init` |
 | `uv.lock` | the exact version of every package | `uv lock` |
 | `justfile` | the tasks: `just` lists them | by hand |

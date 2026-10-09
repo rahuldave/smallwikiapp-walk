@@ -72,7 +72,9 @@ in [walks/tutorial/notes.md](walks/tutorial/notes.md), and read on GitHub as the
   - [step-09.4](walks/tutorial/notes.md#step-094-the-docs-name-both-packages) The docs name both packages
 - [step-10](walks/tutorial/notes.md#step-10-build) **Build**
   - [step-10.1](walks/tutorial/notes.md#step-101-just-build) just build
-  - [step-10.2](walks/tutorial/notes.md#step-102-the-user-agent-says-the-installed-version) The User-Agent says the installed version
+  - [step-10.2](walks/tutorial/notes.md#step-102-the-app-needs-wikirandom-01) The app needs wikirandom 0.1
+  - [step-10.3](walks/tutorial/notes.md#step-103-a-licence-and-a-home-for-both) A licence and a home for both
+  - [step-10.4](walks/tutorial/notes.md#step-104-the-user-agent-says-the-installed-version) The User-Agent says the installed version
 
 ## Two ways to take it
 
