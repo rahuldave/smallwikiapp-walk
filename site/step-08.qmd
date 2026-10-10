@@ -58,7 +58,8 @@ What changed:
 
 - `docs/apidocs.py`: new; `check` and `module`.
 - `justfile`: the recipe `docs`.
-- `pyproject.toml`, `uv.lock`: the group `docs`, with fastcore.
+- `pyproject.toml`: the group `docs`, with fastcore.
+- `uv.lock`: the exact version of fastcore.
 
 Files to read:
 - [`docs/apidocs.py`](https://github.com/rahuldave/smallwikiapp/blob/c3d97bbb1da2eeec300d2178cf2b76db97f342d0/docs/apidocs.py): the script; every function in it has its docments.
@@ -159,8 +160,8 @@ def main(
 
 What changed:
 
-- `src/wikiapp/__init__.py`, `src/wikiapp/console.py`: module docstrings.
-- `src/wikiapp/console.py`: `main`, documented, and the help of `--language`.
+- `src/wikiapp/__init__.py`: a module docstring.
+- `src/wikiapp/console.py`: a module docstring; `main`, documented; and the help of `--language`.
 
 Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/578516dacf8505aa01e6851354ffe64c72765103/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/578516dacf8505aa01e6851354ffe64c72765103#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the docment, the docstring and the help.
@@ -190,8 +191,10 @@ def test_main_prints_title(
 
 What changed:
 
-- `tests/conftest.py`, `tests/test_console.py`, `tests/test_wikipedia.py`: a docstring for each file, fixture and
-  test, and a docment for each parameter and each fixture's return value.
+- `tests/conftest.py`: a docstring for the file and the fixture, and docments for its parameter and return.
+- `tests/test_console.py`: a docstring for the file, the fixture and each test, and a docment for each parameter
+  and the fixture's return.
+- `tests/test_wikipedia.py`: a docstring for the file and each test, and a docment for each parameter.
 
 Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/85c598938b20b6e77a51daeb7aebc7cca86f6cc9/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/85c598938b20b6e77a51daeb7aebc7cca86f6cc9#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
@@ -215,14 +218,24 @@ Quarto makes a website from Markdown. It is a program of its own, installed apar
 https://quarto.org/docs/get-started/. The site is in `docs/`: a front page, `index.qmd`, and a reference page
 for each module, which `apidocs.py build` writes from the code before every render.
 
-This move adds `docs/_quarto.yml`, `docs/index.qmd`, `docs/linkify.lua`, which turns a name in backticks into a
-link to its entry, and `docs/.gitignore`. `apidocs.py` gains `build`, with an id on each heading and a link to
-the line of the source. `just docs` with no words renders the site, and `just setup`, now a script of several
-lines, says when Quarto is missing. Take the move from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/b7f576fb72fbe71a743cdf0bc065a968ea469dff), and read `docs/_quarto.yml`.
+This move adds four files:
+
+- `docs/_quarto.yml`, the site's settings;
+- `docs/index.qmd`, the front page;
+- `docs/linkify.lua`, which turns a name in backticks into a link to its entry;
+- `docs/.gitignore`.
+
+`apidocs.py` gains `build`, with an id on each heading and a link to the line of the source. `just docs` with no
+words renders the site, and `just setup`, now a script of several lines, says when Quarto is missing. Take the
+move from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/b7f576fb72fbe71a743cdf0bc065a968ea469dff), and read
+`docs/_quarto.yml`.
 
 What changed:
 
-- `docs/_quarto.yml`, `docs/index.qmd`, `docs/linkify.lua`, `docs/.gitignore`: new; the site.
+- `docs/_quarto.yml`: new; the site's settings, and the script to run before each render.
+- `docs/index.qmd`: new; the front page.
+- `docs/linkify.lua`: new; turns a name in backticks into a link.
+- `docs/.gitignore`: new; what Quarto makes and git should not track.
 - `docs/apidocs.py`: the command `build`; `entry` and `markdown` take `page`, which adds an id to each heading and
   a link to the source, and leaves out the module's own heading, since Quarto writes the title.
 - `justfile`: `docs` renders the site; `setup` checks for Quarto.

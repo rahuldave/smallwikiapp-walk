@@ -147,7 +147,8 @@ Lorem Ipsum.
 What changed:
 
 - `tests/test_console.py`: two fixtures, and a test of the title.
-- `pyproject.toml`, `uv.lock`: pytest-mock in the group `test`.
+- `pyproject.toml`: pytest-mock in the group `test`.
+- `uv.lock`: the exact version of pytest-mock.
 
 Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/b1f2c37139bd85f98c1c39df193bcec206989add/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/b1f2c37139bd85f98c1c39df193bcec206989add#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixtures and the new test; `test_main_succeeds` takes the runner from its fixture.

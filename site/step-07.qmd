@@ -40,7 +40,8 @@ class Page(BaseModel):
 What changed:
 
 - `src/wikiapp/wikipedia.py`: the class `Page`.
-- `pyproject.toml`, `uv.lock`: pydantic, a dependency of the package like click and requests.
+- `pyproject.toml`: pydantic, a dependency of the package like click and requests.
+- `uv.lock`: the exact version of pydantic, and of what it needs.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/51f2e9de15e717875c9c3e74a7f91d82d75ed91a/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/51f2e9de15e717875c9c3e74a7f91d82d75ed91a#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the model.

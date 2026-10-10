@@ -361,7 +361,8 @@ Lorem Ipsum.
 What changed:
 
 - `tests/test_console.py`: two fixtures, and a test of the title.
-- `pyproject.toml`, `uv.lock`: pytest-mock in the group `test`.
+- `pyproject.toml`: pytest-mock in the group `test`.
+- `uv.lock`: the exact version of pytest-mock.
 
 Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/b1f2c37139bd85f98c1c39df193bcec206989add/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/b1f2c37139bd85f98c1c39df193bcec206989add#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixtures and the new test; `test_main_succeeds` takes the runner from its fixture.
@@ -1063,7 +1064,8 @@ check *args:
 What changed:
 
 - `justfile`: `UV_LOCKED`, and the recipes `lint-config` and `check`.
-- `pyproject.toml`, `uv.lock`: validate-pyproject.
+- `pyproject.toml`: validate-pyproject in the group `lint`.
+- `uv.lock`: the exact version of validate-pyproject, and of what it needs.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/58aedae8653fd9f604efa438aeb182c77d246767/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/58aedae8653fd9f604efa438aeb182c77d246767#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipes.
@@ -1133,7 +1135,8 @@ What changed:
 
 - `.pre-commit-config.yaml`: new; the hooks.
 - `justfile`: `setup` installs the hook.
-- `pyproject.toml`, `uv.lock`: pre-commit.
+- `pyproject.toml`: pre-commit in the group `lint`.
+- `uv.lock`: the exact version of pre-commit, and of what it needs.
 
 Files to read:
 - [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/c4b193a0d3b705314214f651d3dc987406425be8/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
@@ -1189,7 +1192,8 @@ types *args:
 What changed:
 
 - `justfile`: the recipe `types`.
-- `pyproject.toml`, `uv.lock`: ty.
+- `pyproject.toml`: ty in the group `lint`.
+- `uv.lock`: the exact version of ty.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/56c4925bc35e40f38de0fc65b0744963c0c41993/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/56c4925bc35e40f38de0fc65b0744963c0c41993#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
@@ -1282,7 +1286,8 @@ def main(language: str) -> None:
 
 What changed:
 
-- `src/wikiapp/wikipedia.py`, `src/wikiapp/console.py`: the types of the code.
+- `src/wikiapp/wikipedia.py`: the types of `random_page`.
+- `src/wikiapp/console.py`: the type of `main`'s parameter.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e96b5c5014904c190146e0e793eea7da1af6ef82/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e96b5c5014904c190146e0e793eea7da1af6ef82#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the parameter and the return.
@@ -1348,7 +1353,9 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
 
 What changed:
 
-- `tests/conftest.py`, `tests/test_console.py`, `tests/test_wikipedia.py`: a type on every parameter and return.
+- `tests/conftest.py`: the types of the fixture.
+- `tests/test_console.py`: the types of the fixture and of every test.
+- `tests/test_wikipedia.py`: the types of the test.
 
 Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/78719d508fddbe173afc20641b1cfae752ae2d85/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/78719d508fddbe173afc20641b1cfae752ae2d85#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.
@@ -1616,7 +1623,8 @@ class Page(BaseModel):
 What changed:
 
 - `src/wikiapp/wikipedia.py`: the class `Page`.
-- `pyproject.toml`, `uv.lock`: pydantic, a dependency of the package like click and requests.
+- `pyproject.toml`: pydantic, a dependency of the package like click and requests.
+- `uv.lock`: the exact version of pydantic, and of what it needs.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/51f2e9de15e717875c9c3e74a7f91d82d75ed91a/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/51f2e9de15e717875c9c3e74a7f91d82d75ed91a#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the model.
@@ -1834,7 +1842,8 @@ What changed:
 
 - `docs/apidocs.py`: new; `check` and `module`.
 - `justfile`: the recipe `docs`.
-- `pyproject.toml`, `uv.lock`: the group `docs`, with fastcore.
+- `pyproject.toml`: the group `docs`, with fastcore.
+- `uv.lock`: the exact version of fastcore.
 
 Files to read:
 - [`docs/apidocs.py`](https://github.com/rahuldave/smallwikiapp/blob/c3d97bbb1da2eeec300d2178cf2b76db97f342d0/docs/apidocs.py): the script; every function in it has its docments.
@@ -1935,8 +1944,8 @@ def main(
 
 What changed:
 
-- `src/wikiapp/__init__.py`, `src/wikiapp/console.py`: module docstrings.
-- `src/wikiapp/console.py`: `main`, documented, and the help of `--language`.
+- `src/wikiapp/__init__.py`: a module docstring.
+- `src/wikiapp/console.py`: a module docstring; `main`, documented; and the help of `--language`.
 
 Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/578516dacf8505aa01e6851354ffe64c72765103/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/578516dacf8505aa01e6851354ffe64c72765103#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the docment, the docstring and the help.
@@ -1966,8 +1975,10 @@ def test_main_prints_title(
 
 What changed:
 
-- `tests/conftest.py`, `tests/test_console.py`, `tests/test_wikipedia.py`: a docstring for each file, fixture and
-  test, and a docment for each parameter and each fixture's return value.
+- `tests/conftest.py`: a docstring for the file and the fixture, and docments for its parameter and return.
+- `tests/test_console.py`: a docstring for the file, the fixture and each test, and a docment for each parameter
+  and the fixture's return.
+- `tests/test_wikipedia.py`: a docstring for the file and each test, and a docment for each parameter.
 
 Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/85c598938b20b6e77a51daeb7aebc7cca86f6cc9/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/85c598938b20b6e77a51daeb7aebc7cca86f6cc9#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
@@ -1991,14 +2002,24 @@ Quarto makes a website from Markdown. It is a program of its own, installed apar
 https://quarto.org/docs/get-started/. The site is in `docs/`: a front page, `index.qmd`, and a reference page
 for each module, which `apidocs.py build` writes from the code before every render.
 
-This move adds `docs/_quarto.yml`, `docs/index.qmd`, `docs/linkify.lua`, which turns a name in backticks into a
-link to its entry, and `docs/.gitignore`. `apidocs.py` gains `build`, with an id on each heading and a link to
-the line of the source. `just docs` with no words renders the site, and `just setup`, now a script of several
-lines, says when Quarto is missing. Take the move from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/b7f576fb72fbe71a743cdf0bc065a968ea469dff), and read `docs/_quarto.yml`.
+This move adds four files:
+
+- `docs/_quarto.yml`, the site's settings;
+- `docs/index.qmd`, the front page;
+- `docs/linkify.lua`, which turns a name in backticks into a link to its entry;
+- `docs/.gitignore`.
+
+`apidocs.py` gains `build`, with an id on each heading and a link to the line of the source. `just docs` with no
+words renders the site, and `just setup`, now a script of several lines, says when Quarto is missing. Take the
+move from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/b7f576fb72fbe71a743cdf0bc065a968ea469dff), and read
+`docs/_quarto.yml`.
 
 What changed:
 
-- `docs/_quarto.yml`, `docs/index.qmd`, `docs/linkify.lua`, `docs/.gitignore`: new; the site.
+- `docs/_quarto.yml`: new; the site's settings, and the script to run before each render.
+- `docs/index.qmd`: new; the front page.
+- `docs/linkify.lua`: new; turns a name in backticks into a link.
+- `docs/.gitignore`: new; what Quarto makes and git should not track.
 - `docs/apidocs.py`: the command `build`; `entry` and `markdown` take `page`, which adds an id to each heading and
   a link to the source, and leaves out the module's own heading, since Quarto writes the title.
 - `justfile`: `docs` renders the site; `setup` checks for Quarto.
@@ -2088,10 +2109,16 @@ both.
 uv init --lib --author-from none packages/wikirandom
 ```
 
-uv makes `packages/wikirandom/` with its own `pyproject.toml`, its code under `src/wikirandom/`, and `py.typed`,
-the mark that tells a type checker the package has types. In the project's `pyproject.toml` it adds
-`[tool.uv.workspace]`. uv copied the Python version from `.python-version`; in
-`packages/wikirandom/pyproject.toml`, make the library need 3.11, like the app, and give it a description.
+uv makes `packages/wikirandom/`, with these files in it:
+
+- `pyproject.toml`, the library's own;
+- `README.md`, empty;
+- `src/wikirandom/__init__.py`, with an example function, `hello`;
+- `src/wikirandom/py.typed`, the mark that tells a type checker the package has types.
+
+In the project's `pyproject.toml` it adds `[tool.uv.workspace]`. uv copied the Python version from
+`.python-version`; in `packages/wikirandom/pyproject.toml`, make the library need 3.11, like the app, and give
+it a description.
 
 ```toml
 description = "A random page of Wikipedia, in any language"
@@ -2158,7 +2185,8 @@ USER_AGENT = "wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
 What changed:
 
 - `packages/wikirandom/src/wikirandom/__init__.py`: the code of wikipedia.py.
-- `packages/wikirandom/pyproject.toml`, `uv.lock`: requests and pydantic.
+- `packages/wikirandom/pyproject.toml`: requests and pydantic, the library's dependencies.
+- `uv.lock`: the library's dependencies.
 
 Files to read:
 - [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/9a4a80f0a96303df3aee8c331d799f0c4a1ffaab/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9a4a80f0a96303df3aee8c331d799f0c4a1ffaab#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the library.
@@ -2220,8 +2248,8 @@ addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'
 
 What changed:
 
-- `pyproject.toml`, `uv.lock`: wikirandom in, requests and pydantic out; its source in the workspace; coverage of
-  both.
+- `pyproject.toml`: wikirandom in, requests and pydantic out; its source in the workspace; coverage of both.
+- `uv.lock`: the app's dependencies are click and wikirandom.
 - `src/wikiapp/console.py`: imports from wikirandom.
 - `src/wikiapp/wikipedia.py`: deleted.
 - `tests/test_wikipedia.py`: now `tests/test_wikirandom.py`.
@@ -2262,7 +2290,8 @@ two packages: take them too, from [the move's commit](https://github.com/rahulda
 What changed:
 
 - `docs/apidocs.py`: two packages.
-- `docs/index.qmd`, `README.md`: the library and the app.
+- `docs/index.qmd`: two packages, the library and the app.
+- `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
 
 Files to read:
 - [`docs/apidocs.py`](https://github.com/rahuldave/smallwikiapp/blob/e84679d0c0293465570e00c87bb5b53a98bdc813/docs/apidocs.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e84679d0c0293465570e00c87bb5b53a98bdc813#diff-da01f36fbf3b920a98c35ef6b70581a4f7a056ee5fce1a3cf3ca0c713601f832): the list, and the package's own module.

@@ -302,7 +302,8 @@ check *args:
 What changed:
 
 - `justfile`: `UV_LOCKED`, and the recipes `lint-config` and `check`.
-- `pyproject.toml`, `uv.lock`: validate-pyproject.
+- `pyproject.toml`: validate-pyproject in the group `lint`.
+- `uv.lock`: the exact version of validate-pyproject, and of what it needs.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/58aedae8653fd9f604efa438aeb182c77d246767/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/58aedae8653fd9f604efa438aeb182c77d246767#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipes.
@@ -372,7 +373,8 @@ What changed:
 
 - `.pre-commit-config.yaml`: new; the hooks.
 - `justfile`: `setup` installs the hook.
-- `pyproject.toml`, `uv.lock`: pre-commit.
+- `pyproject.toml`: pre-commit in the group `lint`.
+- `uv.lock`: the exact version of pre-commit, and of what it needs.
 
 Files to read:
 - [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/c4b193a0d3b705314214f651d3dc987406425be8/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.

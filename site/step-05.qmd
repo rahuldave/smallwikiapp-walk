@@ -36,7 +36,8 @@ types *args:
 What changed:
 
 - `justfile`: the recipe `types`.
-- `pyproject.toml`, `uv.lock`: ty.
+- `pyproject.toml`: ty in the group `lint`.
+- `uv.lock`: the exact version of ty.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/56c4925bc35e40f38de0fc65b0744963c0c41993/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/56c4925bc35e40f38de0fc65b0744963c0c41993#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
@@ -129,7 +130,8 @@ def main(language: str) -> None:
 
 What changed:
 
-- `src/wikiapp/wikipedia.py`, `src/wikiapp/console.py`: the types of the code.
+- `src/wikiapp/wikipedia.py`: the types of `random_page`.
+- `src/wikiapp/console.py`: the type of `main`'s parameter.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e96b5c5014904c190146e0e793eea7da1af6ef82/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e96b5c5014904c190146e0e793eea7da1af6ef82#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the parameter and the return.
@@ -195,7 +197,9 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
 
 What changed:
 
-- `tests/conftest.py`, `tests/test_console.py`, `tests/test_wikipedia.py`: a type on every parameter and return.
+- `tests/conftest.py`: the types of the fixture.
+- `tests/test_console.py`: the types of the fixture and of every test.
+- `tests/test_wikipedia.py`: the types of the test.
 
 Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/78719d508fddbe173afc20641b1cfae752ae2d85/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/78719d508fddbe173afc20641b1cfae752ae2d85#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.

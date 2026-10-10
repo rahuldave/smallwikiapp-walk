@@ -23,10 +23,16 @@ both.
 uv init --lib --author-from none packages/wikirandom
 ```
 
-uv makes `packages/wikirandom/` with its own `pyproject.toml`, its code under `src/wikirandom/`, and `py.typed`,
-the mark that tells a type checker the package has types. In the project's `pyproject.toml` it adds
-`[tool.uv.workspace]`. uv copied the Python version from `.python-version`; in
-`packages/wikirandom/pyproject.toml`, make the library need 3.11, like the app, and give it a description.
+uv makes `packages/wikirandom/`, with these files in it:
+
+- `pyproject.toml`, the library's own;
+- `README.md`, empty;
+- `src/wikirandom/__init__.py`, with an example function, `hello`;
+- `src/wikirandom/py.typed`, the mark that tells a type checker the package has types.
+
+In the project's `pyproject.toml` it adds `[tool.uv.workspace]`. uv copied the Python version from
+`.python-version`; in `packages/wikirandom/pyproject.toml`, make the library need 3.11, like the app, and give
+it a description.
 
 ```toml
 description = "A random page of Wikipedia, in any language"
@@ -93,7 +99,8 @@ USER_AGENT = "wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
 What changed:
 
 - `packages/wikirandom/src/wikirandom/__init__.py`: the code of wikipedia.py.
-- `packages/wikirandom/pyproject.toml`, `uv.lock`: requests and pydantic.
+- `packages/wikirandom/pyproject.toml`: requests and pydantic, the library's dependencies.
+- `uv.lock`: the library's dependencies.
 
 Files to read:
 - [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/9a4a80f0a96303df3aee8c331d799f0c4a1ffaab/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9a4a80f0a96303df3aee8c331d799f0c4a1ffaab#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the library.
@@ -155,8 +162,8 @@ addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'
 
 What changed:
 
-- `pyproject.toml`, `uv.lock`: wikirandom in, requests and pydantic out; its source in the workspace; coverage of
-  both.
+- `pyproject.toml`: wikirandom in, requests and pydantic out; its source in the workspace; coverage of both.
+- `uv.lock`: the app's dependencies are click and wikirandom.
 - `src/wikiapp/console.py`: imports from wikirandom.
 - `src/wikiapp/wikipedia.py`: deleted.
 - `tests/test_wikipedia.py`: now `tests/test_wikirandom.py`.
@@ -197,7 +204,8 @@ two packages: take them too, from [the move's commit](https://github.com/rahulda
 What changed:
 
 - `docs/apidocs.py`: two packages.
-- `docs/index.qmd`, `README.md`: the library and the app.
+- `docs/index.qmd`: two packages, the library and the app.
+- `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
 
 Files to read:
 - [`docs/apidocs.py`](https://github.com/rahuldave/smallwikiapp/blob/e84679d0c0293465570e00c87bb5b53a98bdc813/docs/apidocs.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e84679d0c0293465570e00c87bb5b53a98bdc813#diff-da01f36fbf3b920a98c35ef6b70581a4f7a056ee5fce1a3cf3ca0c713601f832): the list, and the package's own module.
