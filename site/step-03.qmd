@@ -56,7 +56,7 @@ if __name__=="__main__":
     main()
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: new; the address, the User-Agent, and `random_page`.
 - `src/wikiapp/console.py`: `main` calls `random_page`.
@@ -95,7 +95,7 @@ def mock_requests_get(mocker):
     return mock
 ```
 
-What changed:
+These are the files changed:
 
 - `tests/conftest.py`: new; the mock.
 - `tests/test_console.py`: without it.
@@ -139,7 +139,7 @@ def test_random_page_uses_given_language(mock_requests_get):
     assert "es.wikipedia.org" in args[0]
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: `random_page` takes a language.
 - `tests/test_wikipedia.py`: new; a test that the language chooses the Wikipedia.
@@ -182,7 +182,7 @@ def main(language) -> None:
 
 click passes the option's value to the parameter of the same name.
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/console.py`: the option `--language`, or `-l`.
 
@@ -221,7 +221,7 @@ def random_page(language="en"):
 
 `from error` keeps the original exception, so a traceback shows both.
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/wikipedia.py`: the class `WikipediaError`; `random_page` raises it.
 
@@ -267,7 +267,7 @@ def test_main_prints_message_on_request_error(runner, mock_requests_get):
 In the original wikiapp, the library raised click's exception itself, with a note to move it to the console
 one day. Here it is moved: wikipedia.py knows Wikipedia and requests, console.py knows click.
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/console.py`: `main` catches WikipediaError.
 - `tests/test_console.py`: a test of the message.

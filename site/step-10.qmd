@@ -28,7 +28,7 @@ build *args:
     {{ if args == "help" { "just help build" } else { 'uv build --all-packages "$@"' } }}
 ```
 
-What changed:
+This is the file changed:
 
 - `justfile`: the recipe `build`.
 
@@ -62,7 +62,7 @@ uv add "wikirandom>=0.1.0,<0.2"
 
 In the workspace nothing else changes: `[tool.uv.sources]` still installs it from `packages/wikirandom`.
 
-What changed:
+This is the file changed:
 
 - `pyproject.toml`: a version range on wikirandom.
 
@@ -110,7 +110,7 @@ In the `justfile`, `lint-config` checks both files.
     uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
 ```
 
-What changed:
+These are the files changed:
 
 - `packages/wikirandom/LICENSE`: new; the same licence.
 - `packages/wikirandom/pyproject.toml`: the licence, the author, the repository.
@@ -155,7 +155,7 @@ VERSION = importlib.metadata.version("wikirandom")
 USER_AGENT = f"wikirandom/{VERSION} (https://github.com/rahuldave/smallwikiapp)"
 ```
 
-What changed:
+This is the file changed:
 
 - `packages/wikirandom/src/wikirandom/__init__.py`: the version, read once, when the package is imported.
 

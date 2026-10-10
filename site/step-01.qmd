@@ -21,7 +21,7 @@ click makes command lines; requests fetches pages over HTTP. Add both.
 uv add click requests
 ```
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the two packages in `dependencies`, each with the newest version as its lower bound.
 - `uv.lock`: the exact version of each, and of every package they need.
@@ -72,7 +72,7 @@ annotation `uv init` gave it at step-00. `requests.get` asks Wikipedia's REST AP
 random page, `raise_for_status` raises an exception if the answer is an error, and `response.json()` reads the
 answer as a dictionary. The title is printed in green, and the summary wrapped to 70 columns.
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/console.py`: `main` asks Wikipedia for a page and prints it.
 
@@ -104,7 +104,7 @@ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
     with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/console.py`: a constant `USER_AGENT`, and the request sends it.
 
@@ -142,7 +142,7 @@ from wikiapp import __version__
 def main() -> None:
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/__init__.py`: `__version__`, from the installed package.
 - `src/wikiapp/console.py`: the option `--version`.

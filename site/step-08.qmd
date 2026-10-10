@@ -54,7 +54,7 @@ docs *args:
     {{ if args == "help" { "just help docs" } else { 'uv run python docs/apidocs.py "$@"' } }}
 ```
 
-What changed:
+These are the files changed:
 
 - `docs/apidocs.py`: new; `check` and `module`.
 - `justfile`: the recipe `docs`.
@@ -109,7 +109,7 @@ def random_page(
     """
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/wikipedia.py`: a module docstring, docments, and a longer docstring.
 
@@ -158,7 +158,7 @@ def main(
     """
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/__init__.py`: a module docstring.
 - `src/wikiapp/console.py`: a module docstring; `main`, documented; and the help of `--language`.
@@ -189,7 +189,7 @@ def test_main_prints_title(
     """The command prints the title of the page."""
 ```
 
-What changed:
+These are the files changed:
 
 - `tests/conftest.py`: a docstring for the file and the fixture, and docments for its parameter and return.
 - `tests/test_console.py`: a docstring for the file, the fixture and each test, and a docment for each parameter
@@ -230,7 +230,7 @@ words renders the site, and `just setup`, now a script of several lines, says wh
 move from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/b7f576fb72fbe71a743cdf0bc065a968ea469dff), and read
 `docs/_quarto.yml`.
 
-What changed:
+These are the files changed:
 
 - `docs/_quarto.yml`: new; the site's settings, and the script to run before each render.
 - `docs/index.qmd`: new; the front page.
@@ -284,7 +284,7 @@ the `src/wikiapp/` row.
 | `docs/` | The docs site. `apidocs.py` makes its reference from the code |
 ```
 
-What changed:
+These are the files changed:
 
 - `justfile`: the docs check in `check`.
 - `README.md`: Quarto, tests and docs.

@@ -33,7 +33,7 @@ types *args:
 
 ```
 
-What changed:
+These are the files changed:
 
 - `justfile`: the recipe `types`.
 - `pyproject.toml`: ty in the group `lint`.
@@ -65,7 +65,7 @@ the last line of `src/wikiapp/__init__.py`.
 __version__ = importlib.metadata.version("wikiapp")
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/__init__.py`: the name, written out.
 
@@ -90,7 +90,7 @@ line to `select`, after `"N"`.
     "ANN", # annotations: every parameter and every return value has a type
 ```
 
-What changed:
+This is the file changed:
 
 - `pyproject.toml`: the rules `ANN`.
 
@@ -128,7 +128,7 @@ In `src/wikiapp/console.py`, `main` takes the language as a string.
 def main(language: str) -> None:
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: the types of `random_page`.
 - `src/wikiapp/console.py`: the type of `main`'s parameter.
@@ -195,7 +195,7 @@ and the test's types.
 def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
 ```
 
-What changed:
+These are the files changed:
 
 - `tests/conftest.py`: the types of the fixture.
 - `tests/test_console.py`: the types of the fixture and of every test.
@@ -231,7 +231,7 @@ In the `justfile`, in `check`, run `just types` after `just lint`, and say so in
     just types
 ```
 
-What changed:
+This is the file changed:
 
 - `justfile`: `check` runs the type checker.
 

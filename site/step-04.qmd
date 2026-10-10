@@ -56,7 +56,7 @@ fmt *args:
     {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
 ```
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the group `lint`, and ruff's settings.
 - `justfile`: the recipe `fmt`.
@@ -88,10 +88,14 @@ Run the formatter.
 just fmt
 ```
 
-What changed:
+These are the files changed:
 
-- six files: two blank lines around each function and class, one after the imports of `__init__.py`, spaces
-  around `==`, and the two lines longer than 100 characters split.
+- `src/wikiapp/__init__.py`: a blank line after the import.
+- `src/wikiapp/console.py`: two blank lines before the command and before `if __name__`, and spaces around `==`.
+- `src/wikiapp/wikipedia.py`: two blank lines around the class, and the request, longer than 100 characters, split.
+- `tests/conftest.py`: two blank lines before the fixture.
+- `tests/test_console.py`: two blank lines around each function, and the line longer than 100 characters split.
+- `tests/test_wikipedia.py`: two blank lines before the test.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8dec927fd06b423e44c4c04ff87bb2d6a94a429d/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8dec927fd06b423e44c4c04ff87bb2d6a94a429d#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the long line of the request, split into three.
@@ -146,7 +150,7 @@ lint *args:
     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
 ```
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the rules.
 - `justfile`: the recipe `lint`.
@@ -177,7 +181,7 @@ ruff can fix one of the five itself.
 just lint --fix
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/console.py`: the imports in three blocks: the standard library, the packages installed, then
   wikiapp's own.
@@ -207,7 +211,7 @@ first line the call alone.
     runner.invoke(console.main)
 ```
 
-What changed:
+This is the file changed:
 
 - `tests/test_console.py`: the import at the top, and two assignments gone.
 
@@ -238,7 +242,7 @@ for ever. In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
 A request that waits more than 10 seconds for the server now raises an exception, which `random_page` turns
 into a WikipediaError like any other.
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/wikipedia.py`: the timeout.
 
@@ -299,7 +303,7 @@ check *args:
     just lint-config
 ```
 
-What changed:
+These are the files changed:
 
 - `justfile`: `UV_LOCKED`, and the recipes `lint-config` and `check`.
 - `pyproject.toml`: validate-pyproject in the group `lint`.
@@ -369,7 +373,7 @@ setup *args:
     @{{ if args == "help" { "just help setup" } else { "uv sync --locked && uv run pre-commit install" } }}
 ```
 
-What changed:
+These are the files changed:
 
 - `.pre-commit-config.yaml`: new; the hooks.
 - `justfile`: `setup` installs the hook.

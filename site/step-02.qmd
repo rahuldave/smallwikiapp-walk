@@ -46,7 +46,7 @@ def test_main_succeeds():
 click's `CliRunner` runs a command inside the test, in the same process, and keeps what it printed and its exit
 code.
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the groups `test` and `dev`.
 - `tests/test_console.py`: the first test.
@@ -83,7 +83,7 @@ test *args:
 prints each line of a recipe before it runs it, unless the line starts with `@`: `just test` prints `uv run
 pytest "$@"`, the command it ran.
 
-What changed:
+This is the file changed:
 
 - `justfile`: the recipe `test`.
 
@@ -144,7 +144,7 @@ fixture: `mocker.patch("requests.get")` replaces the function and puts it back a
 says what the mock returns where the code calls `response.json()` inside the `with` block: a page whose title is
 Lorem Ipsum.
 
-What changed:
+These are the files changed:
 
 - `tests/test_console.py`: two fixtures, and a test of the title.
 - `pyproject.toml`: pytest-mock in the group `test`.
@@ -181,7 +181,7 @@ def test_main_uses_correct_url(runner, mock_requests_get):
 `call_args[0]` is the tuple of the positional arguments of the last call: here, the address alone. The header
 is a keyword argument, in `call_args[1]`.
 
-What changed:
+This is the file changed:
 
 - `tests/test_console.py`: two tests of the request.
 
@@ -209,7 +209,7 @@ def test_main_fails_on_request_error(runner, mock_requests_get):
     assert result.exit_code == 1
 ```
 
-What changed:
+This is the file changed:
 
 - `tests/test_console.py`: a test that a failed request ends the command with exit code 1.
 
@@ -246,7 +246,7 @@ addopts = "--cov=wikiapp --cov-report=term-missing"
 The original wikiapp's tests had one more fixture, `mock_wikipedia_random_page`, and a test left commented
 out; neither was used, and they are not brought over.
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: pytest-cov in the group `test`, and pytest's settings.
 - `uv.lock`: pytest-cov and coverage.

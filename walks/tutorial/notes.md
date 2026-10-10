@@ -14,7 +14,7 @@ made from these notes, with the commands in code blocks and a link to the commit
 that starts with `$ ` is a command: in timewalk a click types it into the terminal at the step. A grey block is
 code to type, or a command that makes the move. Under `files:`, `diff PATH` is a file the move changes and `file
 PATH` a file as the move leaves it; `show:` names the line to look at. The items are the files worth reading;
-"What changed" says what changed in all of them.
+the list before them names every file the move changed, and what happened to it.
 
 ## step-00 The project
 
@@ -63,7 +63,7 @@ click makes command lines; requests fetches pages over HTTP. Add both.
 uv add click requests
 ```
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the two packages in `dependencies`, each with the newest version as its lower bound.
 - `uv.lock`: the exact version of each, and of every package they need.
@@ -110,7 +110,7 @@ annotation `uv init` gave it at step-00. `requests.get` asks Wikipedia's REST AP
 random page, `raise_for_status` raises an exception if the answer is an error, and `response.json()` reads the
 answer as a dictionary. The title is printed in green, and the summary wrapped to 70 columns.
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/console.py`: `main` asks Wikipedia for a page and prints it.
 
@@ -138,7 +138,7 @@ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
     with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/console.py`: a constant `USER_AGENT`, and the request sends it.
 
@@ -172,7 +172,7 @@ from wikiapp import __version__
 def main() -> None:
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/__init__.py`: `__version__`, from the installed package.
 - `src/wikiapp/console.py`: the option `--version`.
@@ -230,7 +230,7 @@ def test_main_succeeds():
 click's `CliRunner` runs a command inside the test, in the same process, and keeps what it printed and its exit
 code.
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the groups `test` and `dev`.
 - `tests/test_console.py`: the first test.
@@ -263,7 +263,7 @@ test *args:
 prints each line of a recipe before it runs it, unless the line starts with `@`: `just test` prints `uv run
 pytest "$@"`, the command it ran.
 
-What changed:
+This is the file changed:
 
 - `justfile`: the recipe `test`.
 
@@ -321,7 +321,7 @@ fixture: `mocker.patch("requests.get")` replaces the function and puts it back a
 says what the mock returns where the code calls `response.json()` inside the `with` block: a page whose title is
 Lorem Ipsum.
 
-What changed:
+These are the files changed:
 
 - `tests/test_console.py`: two fixtures, and a test of the title.
 - `pyproject.toml`: pytest-mock in the group `test`.
@@ -354,7 +354,7 @@ def test_main_uses_correct_url(runner, mock_requests_get):
 `call_args[0]` is the tuple of the positional arguments of the last call: here, the address alone. The header
 is a keyword argument, in `call_args[1]`.
 
-What changed:
+This is the file changed:
 
 - `tests/test_console.py`: two tests of the request.
 
@@ -378,7 +378,7 @@ def test_main_fails_on_request_error(runner, mock_requests_get):
     assert result.exit_code == 1
 ```
 
-What changed:
+This is the file changed:
 
 - `tests/test_console.py`: a test that a failed request ends the command with exit code 1.
 
@@ -411,7 +411,7 @@ addopts = "--cov=wikiapp --cov-report=term-missing"
 The original wikiapp's tests had one more fixture, `mock_wikipedia_random_page`, and a test left commented
 out; neither was used, and they are not brought over.
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: pytest-cov in the group `test`, and pytest's settings.
 - `uv.lock`: pytest-cov and coverage.
@@ -476,7 +476,7 @@ if __name__=="__main__":
     main()
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: new; the address, the User-Agent, and `random_page`.
 - `src/wikiapp/console.py`: `main` calls `random_page`.
@@ -511,7 +511,7 @@ def mock_requests_get(mocker):
     return mock
 ```
 
-What changed:
+These are the files changed:
 
 - `tests/conftest.py`: new; the mock.
 - `tests/test_console.py`: without it.
@@ -551,7 +551,7 @@ def test_random_page_uses_given_language(mock_requests_get):
     assert "es.wikipedia.org" in args[0]
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: `random_page` takes a language.
 - `tests/test_wikipedia.py`: new; a test that the language chooses the Wikipedia.
@@ -590,7 +590,7 @@ def main(language) -> None:
 
 click passes the option's value to the parameter of the same name.
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/console.py`: the option `--language`, or `-l`.
 
@@ -626,7 +626,7 @@ def random_page(language="en"):
 
 `from error` keeps the original exception, so a traceback shows both.
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/wikipedia.py`: the class `WikipediaError`; `random_page` raises it.
 
@@ -668,7 +668,7 @@ def test_main_prints_message_on_request_error(runner, mock_requests_get):
 In the original wikiapp, the library raised click's exception itself, with a note to move it to the console
 one day. Here it is moved: wikipedia.py knows Wikipedia and requests, console.py knows click.
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/console.py`: `main` catches WikipediaError.
 - `tests/test_console.py`: a test of the message.
@@ -735,7 +735,7 @@ fmt *args:
     {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
 ```
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the group `lint`, and ruff's settings.
 - `justfile`: the recipe `fmt`.
@@ -765,10 +765,14 @@ Run the formatter.
 just fmt
 ```
 
-What changed:
+These are the files changed:
 
-- six files: two blank lines around each function and class, one after the imports of `__init__.py`, spaces
-  around `==`, and the two lines longer than 100 characters split.
+- `src/wikiapp/__init__.py`: a blank line after the import.
+- `src/wikiapp/console.py`: two blank lines before the command and before `if __name__`, and spaces around `==`.
+- `src/wikiapp/wikipedia.py`: two blank lines around the class, and the request, longer than 100 characters, split.
+- `tests/conftest.py`: two blank lines before the fixture.
+- `tests/test_console.py`: two blank lines around each function, and the line longer than 100 characters split.
+- `tests/test_wikipedia.py`: two blank lines before the test.
 
 files:
 - diff `src/wikiapp/wikipedia.py`: the long line of the request, split into three.
@@ -820,7 +824,7 @@ lint *args:
     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
 ```
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the rules.
 - `justfile`: the recipe `lint`.
@@ -849,7 +853,7 @@ ruff can fix one of the five itself.
 just lint --fix
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/console.py`: the imports in three blocks: the standard library, the packages installed, then
   wikiapp's own.
@@ -875,7 +879,7 @@ first line the call alone.
     runner.invoke(console.main)
 ```
 
-What changed:
+This is the file changed:
 
 - `tests/test_console.py`: the import at the top, and two assignments gone.
 
@@ -903,7 +907,7 @@ for ever. In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
 A request that waits more than 10 seconds for the server now raises an exception, which `random_page` turns
 into a WikipediaError like any other.
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/wikipedia.py`: the timeout.
 
@@ -960,7 +964,7 @@ check *args:
     just lint-config
 ```
 
-What changed:
+These are the files changed:
 
 - `justfile`: `UV_LOCKED`, and the recipes `lint-config` and `check`.
 - `pyproject.toml`: validate-pyproject in the group `lint`.
@@ -1032,7 +1036,7 @@ setup *args:
     @{{ if args == "help" { "just help setup" } else { "uv sync --locked && uv run pre-commit install" } }}
 ```
 
-What changed:
+These are the files changed:
 
 - `.pre-commit-config.yaml`: new; the hooks.
 - `justfile`: `setup` installs the hook.
@@ -1083,7 +1087,7 @@ types *args:
 
 ```
 
-What changed:
+These are the files changed:
 
 - `justfile`: the recipe `types`.
 - `pyproject.toml`: ty in the group `lint`.
@@ -1113,7 +1117,7 @@ the last line of `src/wikiapp/__init__.py`.
 __version__ = importlib.metadata.version("wikiapp")
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/__init__.py`: the name, written out.
 
@@ -1134,7 +1138,7 @@ line to `select`, after `"N"`.
     "ANN", # annotations: every parameter and every return value has a type
 ```
 
-What changed:
+This is the file changed:
 
 - `pyproject.toml`: the rules `ANN`.
 
@@ -1168,7 +1172,7 @@ In `src/wikiapp/console.py`, `main` takes the language as a string.
 def main(language: str) -> None:
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: the types of `random_page`.
 - `src/wikiapp/console.py`: the type of `main`'s parameter.
@@ -1234,7 +1238,7 @@ and the test's types.
 def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
 ```
 
-What changed:
+These are the files changed:
 
 - `tests/conftest.py`: the types of the fixture.
 - `tests/test_console.py`: the types of the fixture and of every test.
@@ -1267,7 +1271,7 @@ In the `justfile`, in `check`, run `just types` after `just lint`, and say so in
     just types
 ```
 
-What changed:
+This is the file changed:
 
 - `justfile`: `check` runs the type checker.
 
@@ -1307,7 +1311,7 @@ addopts = "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"
 markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]
 ```
 
-What changed:
+These are the files changed:
 
 - `tests/test_console.py`: the marker, and the name.
 - `pyproject.toml`: the marker, declared and left out.
@@ -1341,7 +1345,7 @@ def test_random_page_returns_dictionary_in_production() -> None:
     assert "extract" in page
 ```
 
-What changed:
+This is the file changed:
 
 - `tests/test_wikipedia.py`: an e2e test.
 
@@ -1369,7 +1373,7 @@ uv lock
 
 The project still runs on 3.13, from `.python-version`.
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the oldest Python.
 - `uv.lock`: solved for every Python from 3.11 on.
@@ -1432,7 +1436,7 @@ jobs:
 The original wikiapp did this with pixi, one environment for each Python. With uv, `setup-uv` tells uv which
 Python to use, and `uv run` installs it if it is missing.
 
-What changed:
+This is the file changed:
 
 - `.github/workflows/test.yaml`: new; two jobs, one of them twelve times.
 
@@ -1475,7 +1479,7 @@ class Page(BaseModel):
     extract: str
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: the class `Page`.
 - `pyproject.toml`: pydantic, a dependency of the package like click and requests.
@@ -1529,7 +1533,7 @@ def test_random_page_returns_page_in_production() -> None:
     assert isinstance(page, wikipedia.Page)
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: returns a Page.
 - `src/wikiapp/console.py`: prints its attributes.
@@ -1575,7 +1579,7 @@ def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
         wikipedia.random_page()
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: a ValidationError is a WikipediaError too.
 - `tests/test_wikipedia.py`: its test.
@@ -1613,7 +1617,7 @@ LANGUAGE = re.compile(r"[a-z]+(-[a-z]+)*")  # en, fr, simple, zh-yue: letters an
         raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/wikipedia.py`: the pattern, and the check.
 
@@ -1678,7 +1682,7 @@ docs *args:
     {{ if args == "help" { "just help docs" } else { 'uv run python docs/apidocs.py "$@"' } }}
 ```
 
-What changed:
+These are the files changed:
 
 - `docs/apidocs.py`: new; `check` and `module`.
 - `justfile`: the recipe `docs`.
@@ -1732,7 +1736,7 @@ def random_page(
     """
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/wikipedia.py`: a module docstring, docments, and a longer docstring.
 
@@ -1777,7 +1781,7 @@ def main(
     """
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/__init__.py`: a module docstring.
 - `src/wikiapp/console.py`: a module docstring; `main`, documented; and the help of `--language`.
@@ -1806,7 +1810,7 @@ def test_main_prints_title(
     """The command prints the title of the page."""
 ```
 
-What changed:
+These are the files changed:
 
 - `tests/conftest.py`: a docstring for the file and the fixture, and docments for its parameter and return.
 - `tests/test_console.py`: a docstring for the file, the fixture and each test, and a docment for each parameter
@@ -1843,7 +1847,7 @@ words renders the site, and `just setup`, now a script of several lines, says wh
 move with **Apply the whole move** in timewalk, or from the move's commit on GitHub, and read
 `docs/_quarto.yml`.
 
-What changed:
+These are the files changed:
 
 - `docs/_quarto.yml`: new; the site's settings, and the script to run before each render.
 - `docs/index.qmd`: new; the front page.
@@ -1894,7 +1898,7 @@ the `src/wikiapp/` row.
 | `docs/` | The docs site. `apidocs.py` makes its reference from the code |
 ```
 
-What changed:
+These are the files changed:
 
 - `justfile`: the docs check in `check`.
 - `README.md`: Quarto, tests and docs.
@@ -1958,9 +1962,12 @@ A random page of Wikipedia, in any language: the library that the command `wikia
 uv lock
 ```
 
-What changed:
+These are the files changed:
 
-- `packages/wikirandom/`: new; a package with uv's example function, `hello`.
+- `packages/wikirandom/pyproject.toml`: new; the package's name, version and description, and uv_build.
+- `packages/wikirandom/README.md`: new; what the library is.
+- `packages/wikirandom/src/wikirandom/__init__.py`: new; uv's example function, `hello`.
+- `packages/wikirandom/src/wikirandom/py.typed`: new and empty; it tells ty and other checkers that the package has types.
 - `pyproject.toml`: the workspace, with one member.
 - `uv.lock`: the second package.
 
@@ -1996,7 +2003,7 @@ request.
 USER_AGENT = "wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
 ```
 
-What changed:
+These are the files changed:
 
 - `packages/wikirandom/src/wikirandom/__init__.py`: the code of wikipedia.py.
 - `packages/wikirandom/pyproject.toml`: requests and pydantic, the library's dependencies.
@@ -2056,13 +2063,13 @@ In `pyproject.toml`, coverage measures both packages.
 addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"
 ```
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: wikirandom in, requests and pydantic out; its source in the workspace; coverage of both.
 - `uv.lock`: the app's dependencies are click and wikirandom.
 - `src/wikiapp/console.py`: imports from wikirandom.
 - `src/wikiapp/wikipedia.py`: deleted.
-- `tests/test_wikipedia.py`: now `tests/test_wikirandom.py`.
+- `tests/test_wikirandom.py`: renamed from `tests/test_wikipedia.py`, and it tests wikirandom.
 
 files:
 - diff `pyproject.toml`: the app depends on the library.
@@ -2096,7 +2103,7 @@ PACKAGES = ("wikiapp", "wikirandom")  # the app, and the library in packages/wik
 The front page of the site, `docs/index.qmd`, and the README's table of folders say that the repository contains
 two packages: take them with **Apply this file** too, in timewalk, or from the move's commit on GitHub.
 
-What changed:
+These are the files changed:
 
 - `docs/apidocs.py`: two packages.
 - `docs/index.qmd`: two packages, the library and the app.
@@ -2138,7 +2145,7 @@ build *args:
     {{ if args == "help" { "just help build" } else { 'uv build --all-packages "$@"' } }}
 ```
 
-What changed:
+This is the file changed:
 
 - `justfile`: the recipe `build`.
 
@@ -2172,7 +2179,7 @@ uv add "wikirandom>=0.1.0,<0.2"
 
 In the workspace nothing else changes: `[tool.uv.sources]` still installs it from `packages/wikirandom`.
 
-What changed:
+This is the file changed:
 
 - `pyproject.toml`: a version range on wikirandom.
 
@@ -2217,7 +2224,7 @@ In the `justfile`, `lint-config` checks both files.
     uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
 ```
 
-What changed:
+These are the files changed:
 
 - `packages/wikirandom/LICENSE`: new; the same licence.
 - `packages/wikirandom/pyproject.toml`: the licence, the author, the repository.
@@ -2260,7 +2267,7 @@ VERSION = importlib.metadata.version("wikirandom")
 USER_AGENT = f"wikirandom/{VERSION} (https://github.com/rahuldave/smallwikiapp)"
 ```
 
-What changed:
+This is the file changed:
 
 - `packages/wikirandom/src/wikirandom/__init__.py`: the version, read once, when the package is imported.
 

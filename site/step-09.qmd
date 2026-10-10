@@ -54,9 +54,12 @@ A random page of Wikipedia, in any language: the library that the command `wikia
 uv lock
 ```
 
-What changed:
+These are the files changed:
 
-- `packages/wikirandom/`: new; a package with uv's example function, `hello`.
+- `packages/wikirandom/pyproject.toml`: new; the package's name, version and description, and uv_build.
+- `packages/wikirandom/README.md`: new; what the library is.
+- `packages/wikirandom/src/wikirandom/__init__.py`: new; uv's example function, `hello`.
+- `packages/wikirandom/src/wikirandom/py.typed`: new and empty; it tells ty and other checkers that the package has types.
 - `pyproject.toml`: the workspace, with one member.
 - `uv.lock`: the second package.
 
@@ -96,7 +99,7 @@ request.
 USER_AGENT = "wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
 ```
 
-What changed:
+These are the files changed:
 
 - `packages/wikirandom/src/wikirandom/__init__.py`: the code of wikipedia.py.
 - `packages/wikirandom/pyproject.toml`: requests and pydantic, the library's dependencies.
@@ -160,13 +163,13 @@ In `pyproject.toml`, coverage measures both packages.
 addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"
 ```
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: wikirandom in, requests and pydantic out; its source in the workspace; coverage of both.
 - `uv.lock`: the app's dependencies are click and wikirandom.
 - `src/wikiapp/console.py`: imports from wikirandom.
 - `src/wikiapp/wikipedia.py`: deleted.
-- `tests/test_wikipedia.py`: now `tests/test_wikirandom.py`.
+- `tests/test_wikirandom.py`: renamed from `tests/test_wikipedia.py`, and it tests wikirandom.
 
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b0ad9785fa3775f58babe661243fe46ec2948e53/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b0ad9785fa3775f58babe661243fe46ec2948e53#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app depends on the library.
@@ -201,7 +204,7 @@ PACKAGES = ("wikiapp", "wikirandom")  # the app, and the library in packages/wik
 The front page of the site, `docs/index.qmd`, and the README's table of folders say that the repository contains
 two packages: take them too, from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/e84679d0c0293465570e00c87bb5b53a98bdc813).
 
-What changed:
+These are the files changed:
 
 - `docs/apidocs.py`: two packages.
 - `docs/index.qmd`: two packages, the library and the app.

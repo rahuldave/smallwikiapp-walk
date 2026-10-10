@@ -37,7 +37,7 @@ class Page(BaseModel):
     extract: str
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: the class `Page`.
 - `pyproject.toml`: pydantic, a dependency of the package like click and requests.
@@ -94,7 +94,7 @@ def test_random_page_returns_page_in_production() -> None:
     assert isinstance(page, wikipedia.Page)
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: returns a Page.
 - `src/wikiapp/console.py`: prints its attributes.
@@ -142,7 +142,7 @@ def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
         wikipedia.random_page()
 ```
 
-What changed:
+These are the files changed:
 
 - `src/wikiapp/wikipedia.py`: a ValidationError is a WikipediaError too.
 - `tests/test_wikipedia.py`: its test.
@@ -184,7 +184,7 @@ LANGUAGE = re.compile(r"[a-z]+(-[a-z]+)*")  # en, fr, simple, zh-yue: letters an
         raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
 ```
 
-What changed:
+This is the file changed:
 
 - `src/wikiapp/wikipedia.py`: the pattern, and the check.
 

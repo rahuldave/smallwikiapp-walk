@@ -97,7 +97,12 @@ notes, the slides, and terminals in the project at each step.
 | **Watch** | **Show** checks out each move's commit, and the notes explain what changed. This is how the class is shown |
 
 The switch **Do / Watch** beside the walk's name changes the mode at any time. Every step starts from the code
-of the step before, so every step starts with `just setup`.
+of the step before, so every step starts with `just setup`. The moves of a step go in order: to go back, press
+**Restart step**, and then run `just setup`.
+
+**A move keeps your work.** Before a move, timewalk puts your edits and commits in `worktree/` on a branch
+`timewalk/saved/<place>`, for example `timewalk/saved/step-03.2`, and does not ask. The page names the branch,
+and gives the command that brings a file back.
 
 ## What you need
 
@@ -118,10 +123,12 @@ just present do         # do mode: you make the moves
 just present            # watch mode: the moves are shown
 ```
 
-`just present` runs `just setup`, which clones
-smallwikiapp into `repo/` (your fork of it, if you have one) and fetches the tags of the steps. timewalk then
-keeps its own copy in `worktree/`, which it moves from step to step and move to move. Git ignores both
-folders. `just check` checks the notes against the steps, and `just pdf` makes `build/walk.pdf`, the slides.
+`just present` opens the first walk, `show`, and `just present do` the other. It runs `just setup` first, which
+clones smallwikiapp into `repo/` (your fork of it, if you have one) and fetches the tags of the steps. To clone
+from another address, run `just setup <address>` before the first `just present`. timewalk then puts its replay
+copy in `worktree/`: a clone of `repo/` on the branch `timewalk/replay`, which it moves from step to step and move
+to move. timewalk never writes to `repo/`. Git ignores both folders. `just check` checks the notes against the
+steps, and `just pdf` makes `build/walk.pdf`, the slides.
 
 ## The folders
 
@@ -134,5 +141,5 @@ smallwikiapp-walk/
 ├── site/                       the website, made from TUTORIAL.md; GitHub publishes it on every push
 ├── justfile                    present, setup, check, pdf, site
 ├── repo/                       ignored: your clone of smallwikiapp
-└── worktree/                   ignored: timewalk's copy, at the step on show
+└── worktree/                   ignored: the replay copy, at the step on show
 ```

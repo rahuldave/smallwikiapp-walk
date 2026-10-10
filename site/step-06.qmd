@@ -34,7 +34,7 @@ addopts = "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"
 markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]
 ```
 
-What changed:
+These are the files changed:
 
 - `tests/test_console.py`: the marker, and the name.
 - `pyproject.toml`: the marker, declared and left out.
@@ -70,7 +70,7 @@ def test_random_page_returns_dictionary_in_production() -> None:
     assert "extract" in page
 ```
 
-What changed:
+This is the file changed:
 
 - `tests/test_wikipedia.py`: an e2e test.
 
@@ -102,7 +102,7 @@ uv lock
 
 The project still runs on 3.13, from `.python-version`.
 
-What changed:
+These are the files changed:
 
 - `pyproject.toml`: the oldest Python.
 - `uv.lock`: solved for every Python from 3.11 on.
@@ -168,7 +168,7 @@ jobs:
 The original wikiapp did this with pixi, one environment for each Python. With uv, `setup-uv` tells uv which
 Python to use, and `uv run` installs it if it is missing.
 
-What changed:
+This is the file changed:
 
 - `.github/workflows/test.yaml`: new; two jobs, one of them twelve times.
 

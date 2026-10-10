@@ -1,20 +1,35 @@
 # The tutorial through smallwikiapp, in timewalk. Run `just` to see the list.
 #
-# `just setup` clones the project into repo/, and timewalk keeps its copy in worktree/. Git ignores both.
+# This file names the project and the upstream owner here. `just setup` clones the project into repo/, and
+# timewalk puts its replay copy in worktree/. Both folders are in .gitignore. toc.toml lists the two walks, show
+# (watch mode, the first) and do, over the same notes. Made from the walk skill's template, with `site` added.
 
 project := "smallwikiapp"
 upstream := "rahuldave"
-# Tutorials are on timewalk's branch `walks` until a release has them. TIMEWALK names another source
+# timewalk is not pinned: each run fetches the newest. TIMEWALK names another source, a working copy say
 timewalk := env("TIMEWALK", "git+https://github.com/rahuldave/timewalk@walks")
-tw := "uvx -q --refresh-package timewalk --from " + quote(timewalk)
+
+# Recipes get their arguments as "$1", "$@": a word with a space or a quote stays one word
+set positional-arguments
 
 [private]
 default:
     @just --list --unsorted
 
-# Open the tutorial: just present do (you make the moves), or just present (they are shown)
-present walk="show" *args: setup
-    {{ tw }} timewalk repo --replay worktree --toc toc.toml --walk {{ walk }} --discard-edits {{ args }}
+# Open the walk: the steps, the files, the terminals and the notes. just present ID opens another walk. Prints the address to open
+present *args: setup
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -f toc.toml ]; then
+        source=(--toc toc.toml)
+        # A first word that is not an option is the id of a walk
+        if [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; then source+=(--walk "$1"); shift; fi
+    else
+        if [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; then echo "present: this repository has one walk" >&2; exit 1; fi
+        source=(--notes walk.md)
+        if [ -f slides/slides.toml ]; then source+=(--slides slides/slides.toml); fi
+    fi
+    uvx --refresh-package timewalk --from {{ quote(timewalk) }} timewalk repo --replay worktree "${source[@]}" "$@"
 
 # Clone the project into repo/: your own fork if you have one, or else the upstream. Then fetch the tags of the steps
 setup url="":
@@ -23,7 +38,7 @@ setup url="":
     export GIT_TERMINAL_PROMPT=0
     upstream_url="https://github.com/{{ upstream }}/{{ project }}.git"
     if [ ! -d repo/.git ]; then
-        url="{{ url }}"
+        url="$1"
         if [ -z "$url" ]; then
             url="$upstream_url"
             owner="$(git remote get-url origin 2>/dev/null | sed -nE 's#.*github\.com[:/]([^/]+)/.*#\1#p')"
@@ -40,17 +55,43 @@ setup url="":
     fi
     git -C repo fetch --quiet --tags --force upstream 2>/dev/null \
         || echo "setup: could not fetch the tags from {{ upstream }}/{{ project }}; using the ones repo/ has"
-    echo "setup: repo/ is $(git -C repo remote get-url origin), with $(git -C repo tag -l 'step-*' | wc -l | tr -d ' ') steps"
+    echo "setup: repo/ is $(git -C repo remote get-url origin), with $(git -C repo tag -l 'step-*' | wc -l | tr -d ' ') steps from {{ upstream }}/{{ project }}"
     command -v quarto >/dev/null 2>&1 || echo "setup: Quarto is not on this machine; step 08 needs it: https://quarto.org/docs/get-started/"
 
-# Check the notes and slides against the steps and moves of the project
-check: setup
-    {{ tw }} timewalk-check repo --replay worktree --toc toc.toml
-
-# Make build/walk.pdf: the slides, one page each. The notes are for the page, `just present`
-pdf:
+# Make build/walk.pdf, or build/walk-ID.pdf for just pdf ID: the slides, one page each. BRAND=DIR gives it a brand
+pdf id="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # The notes are for the step browser, `just present`, and are not in the PDF. A brand is a folder with a brand.toml, a
+    # logo and fonts. Without BRAND, the PDF has no brand
+    id="$1" name=walk
+    if [ -f toc.toml ]; then
+        source=(--toc toc.toml)
+        if [ -n "$id" ]; then source+=(--walk "$id"); name="walk-$id"; fi
+        # A walk with no slides manifest has no PDF. Say so here, as timewalk-pdf asks for a manifest instead
+        uv run --no-project --quiet --python '>=3.11' python - "$id" <<'EOF'
+    import pathlib, sys, tomllib
+    walks = tomllib.loads(pathlib.Path("toc.toml").read_text(encoding="utf-8")).get("walk", [])
+    wanted = sys.argv[1] or (walks[0].get("id") if walks else None)
+    walk = next((walk for walk in walks if walk.get("id") == wanted), None)
+    folder = walk and walk.get("folder")
+    slides = walk and (walk.get("slides") or (folder and f"{folder}/slides/slides.toml"))
+    if walk and not (slides and pathlib.Path(slides).is_file()):
+        sys.exit(f"pdf: walk {wanted} has no slides, so it has no PDF. Its notes are for the step browser: just present {sys.argv[1]}".rstrip())
+    EOF
+    else
+        test -z "$id" || { echo "pdf: this repository has one walk" >&2; exit 1; }
+        test -f slides/slides.toml || { echo "pdf: this walk has no slides; the notes are for the step browser: just present" >&2; exit 1; }
+        source=(slides/slides.toml --notes walk.md --title "{{ project }}")
+    fi
     mkdir -p build
-    {{ tw }} timewalk-pdf --toc toc.toml --walk show --title {{ project }} -o build/walk.pdf
+    brand=()
+    if [ -n "${BRAND:-}" ]; then test -e "$BRAND" || { echo "pdf: BRAND=$BRAND does not exist" >&2; exit 1; }; brand=(--brand "$BRAND"); fi
+    uvx --refresh-package timewalk --from {{ quote(timewalk) }} timewalk-pdf "${source[@]}" ${brand[@]+"${brand[@]}"} -o "build/$name.pdf"
+
+# Check the notes and slides of both walks against the steps and moves of the project
+check: setup
+    uvx --refresh-package timewalk --from {{ quote(timewalk) }} timewalk-check repo --replay worktree --toc toc.toml
 
 # Render the tutorial's website into site/_site, as GitHub Pages does: open site/_site/index.html
 site:
