@@ -1,0 +1,37 @@
+# The tutorial as a website, made by `just walk-update` from TUTORIAL.md: do not edit these files by hand.
+# GitHub renders and publishes it on every push (.github/workflows/pages.yml); `just site` renders it here.
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "smallwikiapp, one move at a time"
+  site-url: "https://rahuldave.github.io/smallwikiapp-walk/"
+  repo-url: "https://github.com/rahuldave/smallwikiapp-walk"
+  page-navigation: true
+  search: true
+  sidebar:
+    style: docked
+    contents:
+      - index.qmd
+      - section: "The steps"
+        contents:
+          - step-00.qmd
+          - step-01.qmd
+          - step-02.qmd
+          - step-03.qmd
+          - step-04.qmd
+          - step-05.qmd
+          - step-06.qmd
+          - step-07.qmd
+          - step-08.qmd
+          - step-09.qmd
+          - step-10.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    from: markdown-tex_math_dollars-smart  # a $ is a dollar, not mathematics; -- stays two hyphens

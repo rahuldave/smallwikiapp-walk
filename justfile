@@ -51,3 +51,7 @@ check: setup
 pdf:
     mkdir -p build
     {{ tw }} timewalk-pdf --toc toc.toml --walk show --title {{ project }} -o build/walk.pdf
+
+# Render the tutorial's website into site/_site, as GitHub Pages does: open site/_site/index.html
+site:
+    quarto render site

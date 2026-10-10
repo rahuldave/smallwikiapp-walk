@@ -7,8 +7,10 @@ made from the code.
 
 smallwikiapp grew in **steps**. Each step is a tag, `step-00`, `step-01` and so on. Between two tags are the
 **moves**: small commits, one action each, and each ends with a command that shows what it did. The tutorial
-is in two files, with the same text:
+is in three forms, with the same text:
 
+- **[The website](https://rahuldave.github.io/smallwikiapp-walk/)**, a page for each step, with a list of the
+  steps beside it and a search box.
 - [walks/tutorial/TUTORIAL.md](walks/tutorial/TUTORIAL.md), **to read on GitHub**: the commands in code blocks,
   and a link to the code at every step and to the commit of every move.
 - [walks/tutorial/notes.md](walks/tutorial/notes.md), **the notes that timewalk reads**, below. TUTORIAL.md is
@@ -129,7 +131,8 @@ smallwikiapp-walk/
 ├── walks/tutorial/TUTORIAL.md  the tutorial, to read on GitHub, made from notes.md
 ├── walks/tutorial/notes.md     the notes of every step and move, for timewalk
 ├── walks/tutorial/slides/      the slides, and slides.toml, which step shows which
-├── justfile                    present, setup, check, pdf
+├── site/                       the website, made from TUTORIAL.md; GitHub publishes it on every push
+├── justfile                    present, setup, check, pdf, site
 ├── repo/                       ignored: your clone of smallwikiapp
 └── worktree/                   ignored: timewalk's copy, at the step on show
 ```

@@ -1,0 +1,39 @@
+---
+title: "step-00: The project"
+---
+
+[The code at step-00](https://github.com/rahuldave/smallwikiapp/tree/step-00)
+
+```bash
+just setup
+```
+
+This is where the tutorial starts, so it has no moves. `uv init --package --python 3.13 --name wikiapp` made the
+shape of the project: `pyproject.toml`, `src/wikiapp/__init__.py` with a function `main`, and the Python version
+in `.python-version`. Then, by hand: `main` moved to `src/wikiapp/console.py`, and `pyproject.toml` got a
+description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
+lockfile, `uv.lock`; the justfile, the README, `.gitignore` and `LICENSE` were written by hand. `just setup`
+runs `uv sync --locked`, which makes `.venv` with Python 3.13, from `.python-version`, and exactly the packages
+the lockfile names: here, the package `wikiapp` itself, and nothing else.
+
+```bash
+cat pyproject.toml
+```
+
+The line under `[project.scripts]` makes `wikiapp` a command: a name on the left, a function on the right,
+`main` in `src/wikiapp/console.py`. For now it prints one line.
+
+```bash
+uv run wikiapp
+cat src/wikiapp/console.py
+```
+
+The justfile is the project's interface. `just` lists the tasks, `just --show setup` shows the recipe behind
+one, and `just help setup` says the same. Most steps add recipes to it.
+
+```bash
+just
+just --show setup
+just --show help
+just help setup
+```
