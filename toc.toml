@@ -5,6 +5,7 @@
 [[walk]]
 id = "show"
 title = "smallwikiapp, shown one move at a time"
+description = "Watch a small command and its project grow, one commit at a time: tests, a library, lint, types, CI, docs and a build."
 kind = "tutorial"
 folder = "walks/tutorial"
 moves = "watch"                   # Show checks out each move's commit: for the projector
@@ -12,6 +13,7 @@ moves = "watch"                   # Show checks out each move's commit: for the 
 [[walk]]
 id = "do"
 title = "smallwikiapp, one move at a time, by hand"
+description = "Build the project yourself, one move at a time, from the notes: each move ends with a command that shows what it did."
 kind = "tutorial"
 folder = "walks/tutorial"
 moves = "do"                      # the student makes each move from the notes, and presses Done
