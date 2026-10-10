@@ -6,7 +6,7 @@ project:
 
 website:
   title: "smallwikiapp, one move at a time"
-  site-url: "https://rahuldave.github.io/smallwikiapp-walk/"
+  site-url: "https://rahuldave.com/smallwikiapp-walk/"
   repo-url: "https://github.com/rahuldave/smallwikiapp-walk"
   page-navigation: true
   search: true

@@ -9,7 +9,7 @@ smallwikiapp grew in **steps**. Each step is a tag, `step-00`, `step-01` and so 
 **moves**: small commits, one action each, and each ends with a command that shows what it did. The tutorial
 is in three forms, with the same text:
 
-- **[The website](https://rahuldave.github.io/smallwikiapp-walk/)**, a page for each step, with a list of the
+- **[The website](https://rahuldave.com/smallwikiapp-walk/)**, a page for each step, with a list of the
   steps beside it and a search box.
 - [walks/tutorial/TUTORIAL.md](walks/tutorial/TUTORIAL.md), **to read on GitHub**: the commands in code blocks,
   and a link to the code at every step and to the commit of every move.

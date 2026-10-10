@@ -1,5 +1,5 @@
 # The tutorial's website: on every push to main, Quarto renders site/ and GitHub Pages publishes it at
-# https://rahuldave.github.io/smallwikiapp-walk/. site/ is made from the notes by the teacher's walk-update.
+# https://rahuldave.com/smallwikiapp-walk/. site/ is made from the notes by the teacher's walk-update.
 name: Pages
 
 on:
