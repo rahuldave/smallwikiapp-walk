@@ -9,12 +9,12 @@ from the code of the step before, so every step starts with `just setup`.
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), written in 2024 with
 pixi; where the notes say "the original wikiapp", they mean that one.
 
-On GitHub, the notes read as they are. A line that starts with `$ ` is a command: in timewalk a click types it
-into the terminal at the step. A grey block is code to type, or a command that makes the move. Under `files:`,
-`diff PATH` is a file the move changes and `file PATH` a file as the move leaves it; `show:` names the line to
-look at. The items are the files worth reading; "What changed" says what changed in all of them. A long file
-says to use **Apply** in timewalk; on GitHub, the same file is in the move's commit, listed in the [project's
-history](https://github.com/rahuldave/smallwikiapp/commits/main).
+These notes are written for timewalk. To read the tutorial on GitHub, read TUTORIAL.md, beside this file: it is
+made from these notes, with the commands in code blocks and a link to the commit of every move. Here, a line
+that starts with `$ ` is a command: in timewalk a click types it into the terminal at the step. A grey block is
+code to type, or a command that makes the move. Under `files:`, `diff PATH` is a file the move changes and `file
+PATH` a file as the move leaves it; `show:` names the line to look at. The items are the files worth reading;
+"What changed" says what changed in all of them.
 
 ## step-00 The project
 
@@ -1653,11 +1653,11 @@ docs = []
 uv add --group docs fastcore
 ```
 
-`docs/apidocs.py` is a script of 218 lines. Take it with **Apply this file** on the Next change tab, or copy it
-from the commit `step-08.1` on GitHub. It has two commands: `module NAME` prints one module's reference as
-Markdown, and `check` lists every function and class, in the package, the tests and the script itself, that
-lacks a docstring, a type or a docment, and every module without a docstring. Read its docstring, and any one
-function: the script follows its own rule.
+`docs/apidocs.py` is a script of 218 lines. Take it with **Apply this file** in timewalk, or from the move's
+commit on GitHub. It has two commands: `module NAME` prints one module's reference as Markdown, and `check`
+lists every function and class, in the package, the tests and the script itself, that lacks a docstring, a type
+or a docment, and every module without a docstring. Read its docstring, and any one function: the script follows
+its own rule.
 
 And a recipe, at the end of the `justfile`.
 
@@ -1787,7 +1787,7 @@ The reference of `main` has its description, and `--help` shows the new docstrin
 
 Every test file says what it tests, every fixture what it returns, and every test, in one line, what it checks.
 The docstrings say in words what the asserts say in code. The three files are long to type: take them with
-**Apply the whole move**, or from the commit `step-08.4` on GitHub. One test is the pattern.
+**Apply the whole move** in timewalk, or from the move's commit on GitHub. One test is the pattern.
 
 ```python
 def test_main_prints_title(
@@ -1823,8 +1823,8 @@ for each module, which `apidocs.py build` writes from the code before every rend
 This move adds `docs/_quarto.yml`, `docs/index.qmd`, `docs/linkify.lua`, which turns a name in backticks into a
 link to its entry, and `docs/.gitignore`. `apidocs.py` gains `build`, with an id on each heading and a link to
 the line of the source. `just docs` with no words renders the site, and `just setup`, now a script of several
-lines, says when Quarto is missing. Take the move with **Apply the whole move**, or from the commit `step-08.5`
-on GitHub, and read `docs/_quarto.yml`.
+lines, says when Quarto is missing. Take the move with **Apply the whole move** in timewalk, or from the move's
+commit on GitHub, and read `docs/_quarto.yml`.
 
 What changed:
 
@@ -1860,9 +1860,9 @@ In the `justfile`, in `check`, run `just docs check` after the tests, and say so
 ```
 
 The README gains Quarto among the tools, `tests/` and `docs/` among the folders, and says that `wikipedia.py` is
-the library and `console.py` the command. Take the README with **Apply this file**, or copy these rows: the
-Quarto row under the just row, and the three rows in place of the `src/wikiapp/` row. The tagged commit
-`step-08` on GitHub has it whole.
+the library and `console.py` the command. Take the README with **Apply this file** in timewalk, or from the
+move's commit on GitHub, or copy these rows: the Quarto row under the just row, and the three rows in place of
+the `src/wikiapp/` row.
 
 ```markdown
 | [Quarto](https://quarto.org/) | The docs site, from `just docs` |
@@ -2058,8 +2058,8 @@ check` still counts the app alone, 27 of 27: the next move adds the library.
 ### step-09.4 The docs name both packages
 
 `docs/apidocs.py` documented one package, and only its modules. It now documents a list of packages, and each
-package's own `__init__.py` too, because wikirandom is a single module. Take it with **Apply this file**, or
-from the tagged commit `step-09` on GitHub. The main change is `PACKAGES` and `package_modules`; `check` and
+package's own `__init__.py` too, because wikirandom is a single module. Take it with **Apply this file** in
+timewalk, or from the move's commit on GitHub. The main change is `PACKAGES` and `package_modules`; `check` and
 `build` follow from it, and `build` writes a page only for a module that defines something.
 
 ```python
@@ -2067,7 +2067,7 @@ PACKAGES = ("wikiapp", "wikirandom")  # the app, and the library in packages/wik
 ```
 
 The front page of the site, `docs/index.qmd`, and the README's table of folders say that the repository contains
-two packages: take them with **Apply this file** too, or from the tagged commit `step-09` on GitHub.
+two packages: take them with **Apply this file** too, in timewalk, or from the move's commit on GitHub.
 
 What changed:
 
