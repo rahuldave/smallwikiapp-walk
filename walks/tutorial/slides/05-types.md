@@ -5,7 +5,7 @@
 | ruff, `ANN` | is a type written on every parameter and return? |
 | ty, `just types` | can every call have the types the function asks for? |
 
-ty's one finding:
+ty finds one problem:
 
 ```python
 importlib.metadata.version(__name__ or __package__)

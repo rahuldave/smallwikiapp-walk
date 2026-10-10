@@ -8,21 +8,21 @@ title: "step-05: Types"
 just setup
 ```
 
-Six moves. A type checker, and the one problem it finds; then a lint rule that asks for a type on every
-parameter and return, the types, and the type checker in `just check`.
+The six moves of this step add a type checker, and fix the one problem that it finds. Then a lint rule asks for
+a type on every parameter and return. The last moves add the types, and put the type checker in `just check`.
 
-## step-05.1 ty, and just types
+## step-05.1 ty, and the recipe types
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/29c671af83502e182df3c44ee8946c53efc5491a): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d59d19907fc93849a2cb2a6af6db76b9ff3bdcab) shows exactly what the move changes.
 
-ty reads the code without running it, and finds code whose types cannot fit: a call whose arguments cannot have
-the type the function asks for.
+ty reads the code without running it. It finds code whose types cannot fit, for example a call whose
+arguments cannot have the types that the function asks for.
 
 ```
 uv add --group lint ty
 ```
 
-In the `justfile`, a recipe after `lint`'s recipe and the blank line under it.
+In the `justfile`, add a recipe after the recipe `lint` and the blank line under it.
 
 ```just
 # Check the types of every function call, with ty. Extra arguments go to ty: just types --help
@@ -33,16 +33,16 @@ types *args:
 
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `justfile`: the recipe `types`.
 - `pyproject.toml`: ty in the group `lint`.
 - `uv.lock`: the exact version of ty.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/29c671af83502e182df3c44ee8946c53efc5491a/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/29c671af83502e182df3c44ee8946c53efc5491a#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/d59d19907fc93849a2cb2a6af6db76b9ff3bdcab/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/d59d19907fc93849a2cb2a6af6db76b9ff3bdcab#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `types *args:`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/29c671af83502e182df3c44ee8946c53efc5491a/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/29c671af83502e182df3c44ee8946c53efc5491a#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): ty in the group `lint`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/d59d19907fc93849a2cb2a6af6db76b9ff3bdcab/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/d59d19907fc93849a2cb2a6af6db76b9ff3bdcab#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): ty in the group `lint`.
   - look at: `"ty>=0.0.86",`
 
 ```bash
@@ -51,26 +51,26 @@ just --show types
 just types
 ```
 
-One problem, in `src/wikiapp/__init__.py`: `Expected str, found str | None`. `__name__ or __package__` could
-be None, as far as ty can tell, and `importlib.metadata.version` needs a string.
+ty finds one problem, in `src/wikiapp/__init__.py`. The message is `Expected str, found str | None`. As far as
+ty can tell, `__name__ or __package__` could be None. But `importlib.metadata.version` needs a string.
 
 ## step-05.2 The version of "wikiapp", by name
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4aeb20fc7480a962ca7a90dae15750b02a98ce4b): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/899da963782847990a532c8a22bb88d7c00eb7d0) shows exactly what the move changes.
 
-The installed package is named in `pyproject.toml`: `wikiapp`. That is the name to ask the version of. Change
+`pyproject.toml` gives the name of the installed package, `wikiapp`. Ask for the version of that name. Change
 the last line of `src/wikiapp/__init__.py`.
 
 ```python
 __version__ = importlib.metadata.version("wikiapp")
 ```
 
-This is the file changed:
+The move changed this file:
 
 - `src/wikiapp/__init__.py`: the name, written out.
 
 Files to read:
-- [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/4aeb20fc7480a962ca7a90dae15750b02a98ce4b/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/4aeb20fc7480a962ca7a90dae15750b02a98ce4b#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): a string that is never None.
+- [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/899da963782847990a532c8a22bb88d7c00eb7d0/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/899da963782847990a532c8a22bb88d7c00eb7d0#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): a string that is never None.
   - look at: `__version__ = importlib.metadata.version("wikiapp")`
 
 ```bash
@@ -81,38 +81,39 @@ just types
 
 ## step-05.3 A type on every parameter and return
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bb4cb5b9ed4402447f776a0b9116c821d61d21e0): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4cfcfd118bcc9bf50911e9b78f364d5bf4270f6a) shows exactly what the move changes.
 
-ty checks the types that are written. ruff's `ANN` rules make sure they are written. In `pyproject.toml`, add a
-line to `select`, after `"N"`.
+ty checks the types that the code states. ruff's `ANN` rules make sure that the code states a type for every
+parameter and return. In `pyproject.toml`, add a line to `select`, after `"N"`.
 
 ```toml
     "ANN", # annotations: every parameter and every return value has a type
 ```
 
-This is the file changed:
+The move changed this file:
 
 - `pyproject.toml`: the rules `ANN`.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/bb4cb5b9ed4402447f776a0b9116c821d61d21e0/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/bb4cb5b9ed4402447f776a0b9116c821d61d21e0#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4cfcfd118bcc9bf50911e9b78f364d5bf4270f6a/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4cfcfd118bcc9bf50911e9b78f364d5bf4270f6a#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `"ANN", # annotations: every parameter and every return value has a type`
 
 ```bash
 just lint --statistics
 ```
 
-25 missing: 15 parameters (`ANN001`) and 10 returns (`ANN201`), in the code and in the tests. `just check`
-fails here, and stays failing until the next two moves, so the git hook refuses to commit this move or the next.
-In do mode you make them without committing; in the project's history they are commits made past the hook.
+The linter finds 25 missing types, in the code and in the tests. They are 15 parameters (`ANN001`) and 10
+returns (`ANN201`). `just check` fails at this move and at the next move, and passes again at step-05.5. So the
+git hook refuses to commit this move or the next. In do mode, you make the two moves without a commit. In the
+project's history, they are commits made past the hook.
 
 ## step-05.4 Types in the code
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2da8e84c6ff7295a1b9404fc7b28f758f9b140ef): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e90d3539a291aec5ff8991880c84d826e31e4de3) shows exactly what the move changes.
 
-In `src/wikiapp/wikipedia.py`, `random_page` takes a string and returns the JSON that Wikipedia sends: a
-dictionary from strings to values of any kind. `Any` says that ty cannot check what is inside. Import it at the
-top, above `import requests`, with a blank line between them: the standard library is a block of its own.
+In `src/wikiapp/wikipedia.py`, `random_page` takes a string. It returns the JSON that Wikipedia sends, which is
+a dictionary from strings to values of any kind. `Any` says that ty cannot check the values. Import `Any` at the
+top, above `import requests`, with a blank line between them. The standard library is a block of its own.
 
 ```python
 from typing import Any
@@ -128,30 +129,30 @@ In `src/wikiapp/console.py`, `main` takes the language as a string.
 def main(language: str) -> None:
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `src/wikiapp/wikipedia.py`: the types of `random_page`.
 - `src/wikiapp/console.py`: the type of `main`'s parameter.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/2da8e84c6ff7295a1b9404fc7b28f758f9b140ef/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2da8e84c6ff7295a1b9404fc7b28f758f9b140ef#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the parameter and the return.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e90d3539a291aec5ff8991880c84d826e31e4de3/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e90d3539a291aec5ff8991880c84d826e31e4de3#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the parameter and the return.
   - look at: `def random_page(language: str = "en") -> dict[str, Any]:`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/2da8e84c6ff7295a1b9404fc7b28f758f9b140ef/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2da8e84c6ff7295a1b9404fc7b28f758f9b140ef#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the parameter.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/e90d3539a291aec5ff8991880c84d826e31e4de3/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e90d3539a291aec5ff8991880c84d826e31e4de3#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the parameter.
   - look at: `def main(language: str) -> None:`
 
 ```bash
 just lint --statistics
 ```
 
-What is left is in the tests: 22, 13 parameters and 9 returns.
+The 22 problems that are left are all in the tests. They are 13 parameters and 9 returns.
 
 ## step-05.5 Types in the tests
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/72bfa607d94842f261e75b1bc3789c44dc30465b): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4fb473c006a96a13b7dca1d44e689922b3367a3f) shows exactly what the move changes.
 
-A fixture's return type is what a test receives: the runner is a `CliRunner`, the mock of `requests.get` a
-`Mock`, and `mocker` is pytest-mock's `MockerFixture`, the name that replaced the original wikiapp's
-`MockFixture`. A test returns None. Replace `tests/conftest.py`.
+The return type of a fixture is the type of what a test receives. The runner is a `CliRunner`, and the mock of
+`requests.get` is a `Mock`. `mocker` is pytest-mock's `MockerFixture`, the name that replaced the original
+wikiapp's `MockFixture`. A test returns None. Replace `tests/conftest.py` with this file.
 
 ```python
 from unittest.mock import Mock
@@ -169,8 +170,8 @@ def mock_requests_get(mocker: MockerFixture) -> Mock:
     return mock
 ```
 
-In `tests/test_console.py`, import `Mock` and `CliRunner` by name, use `CliRunner()` in the fixture, and give
-every function its types. Two of them are the pattern for the rest.
+In `tests/test_console.py`, import `Mock` and `CliRunner` by name. Use `CliRunner()` in the fixture, and give
+every function its types. Two of the functions are the pattern for the rest.
 
 ```python
 from unittest.mock import Mock
@@ -188,25 +189,25 @@ def runner() -> CliRunner:
 def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
 ```
 
-In `tests/test_wikipedia.py`, the same: `from unittest.mock import Mock` at the top, with a blank line after it,
-and the test's types.
+In `tests/test_wikipedia.py`, do the same. Put `from unittest.mock import Mock` at the top, with a blank line
+after it, and give the test its types.
 
 ```python
 def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `tests/conftest.py`: the types of the fixture.
 - `tests/test_console.py`: the types of the fixture and of every test.
 - `tests/test_wikipedia.py`: the types of the test.
 
 Files to read:
-- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/72bfa607d94842f261e75b1bc3789c44dc30465b/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/72bfa607d94842f261e75b1bc3789c44dc30465b#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/4fb473c006a96a13b7dca1d44e689922b3367a3f/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/4fb473c006a96a13b7dca1d44e689922b3367a3f#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.
   - look at: `def mock_requests_get(mocker: MockerFixture) -> Mock:`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/72bfa607d94842f261e75b1bc3789c44dc30465b/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/72bfa607d94842f261e75b1bc3789c44dc30465b#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the runner is a CliRunner.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/4fb473c006a96a13b7dca1d44e689922b3367a3f/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/4fb473c006a96a13b7dca1d44e689922b3367a3f#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the runner is a CliRunner.
   - look at: `def runner() -> CliRunner:`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/72bfa607d94842f261e75b1bc3789c44dc30465b/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/72bfa607d94842f261e75b1bc3789c44dc30465b#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): one test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/4fb473c006a96a13b7dca1d44e689922b3367a3f/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/4fb473c006a96a13b7dca1d44e689922b3367a3f#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): one test.
   - look at: `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
 ```bash
@@ -214,13 +215,13 @@ just lint
 just types
 ```
 
-Both pass. If `just lint` reports `I001`, the imports are not in the blocks shown above.
+Both commands pass. If `just lint` reports `I001`, the imports are not in the blocks that the code above shows.
 
-## step-05.6 Types join just check
+## step-05.6 The recipe check runs the type checker
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/7d4bff2139c541caa47ad5884a8c89819d64117d): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/651dfacf9652736ba064cb7d5ed7c448b6717b62) shows exactly what the move changes.
 
-In the `justfile`, in `check`, run `just types` after `just lint`, and say so in its comment.
+In the `justfile`, in `check`, run `just types` after `just lint`. Also add the types to the comment of `check`.
 
 ```just
 # Everything a commit must pass: format, lint, types, the tests over the coverage floor, the configuration
@@ -231,16 +232,16 @@ In the `justfile`, in `check`, run `just types` after `just lint`, and say so in
     just types
 ```
 
-This is the file changed:
+The move changed this file:
 
 - `justfile`: `check` runs the type checker.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/7d4bff2139c541caa47ad5884a8c89819d64117d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/7d4bff2139c541caa47ad5884a8c89819d64117d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in check.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/651dfacf9652736ba064cb7d5ed7c448b6717b62/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/651dfacf9652736ba064cb7d5ed7c448b6717b62#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in check.
   - look at: `just types`
 
 ```bash
 just check
 ```
 
-Every check passes, the types among them, with a coverage of 96.88%.
+Every check passes, the type check among them. The coverage is 96.88%.

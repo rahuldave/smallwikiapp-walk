@@ -2,10 +2,10 @@
 
 A command that prints a random page of Wikipedia, in any language.
 
-The point is not the command. It is the project around it, built one step at a time:
+The tutorial builds the project around the command, one step at a time:
 
-- packaging, with **uv**
-- one interface for every task, with **just**
+- packages, with **uv**
+- one interface for every task, with `just`
 - tests, and mocks
 - a library, and an app that uses it
 - format, lint, types, a git hook, CI
@@ -15,16 +15,16 @@ The point is not the command. It is the project around it, built one step at a t
 
 ## Steps and moves
 
-A **step** is a tag: `step-00`, `step-01`, ...
+A **step** is a tag, for example `step-00` or `step-01`.
 
-A **move** is one small commit between two tags: one action, and a command at its end that shows what it did.
+A **move** is one small commit between two tags. It does one action, and a command at its end shows what it did.
 
 | Mode | What you do |
 |---|---|
-| **Watch** | Show checks out each move; the notes explain the change |
-| **Do** | You make each move from the notes, run the command at its end, and press Done |
+| **Watch** | **Show** checks out each move, and the notes explain the change |
+| **Do** | You make each move from the notes, run the command at its end, and press **Done** |
 
-Every step starts from the code of the step before: `just setup` first.
+Every step starts from the code of the step before, so run `just setup` first.
 
 ---
 

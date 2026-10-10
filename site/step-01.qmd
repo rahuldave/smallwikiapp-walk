@@ -8,42 +8,46 @@ title: "step-01: A random page"
 just setup
 ```
 
-Four moves: the two packages the command needs, the command asking Wikipedia for a page, a header that
-Wikipedia now asks for, and `--version`.
+The moves of step-01 add these things:
+
+- the two packages that the command needs
+- a request to Wikipedia for a page
+- a header that Wikipedia now asks for
+- the option `--version`
 
 ## step-01.1 click and requests
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/babd435639351573a535123d8e45146e39b86ff0): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/0244a354462fd8bbfa669c0b4fc20d94f30b684f) shows exactly what the move changes.
 
-click makes command lines; requests fetches pages over HTTP. Add both.
+click makes command lines. requests gets pages over HTTP. Add both packages.
 
 ```
 uv add click requests
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `pyproject.toml`: the two packages in `dependencies`, each with the newest version as its lower bound.
 - `uv.lock`: the exact version of each, and of every package they need.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/babd435639351573a535123d8e45146e39b86ff0/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/babd435639351573a535123d8e45146e39b86ff0#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the dependencies of the package, which anyone who installs it gets.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/0244a354462fd8bbfa669c0b4fc20d94f30b684f/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/0244a354462fd8bbfa669c0b4fc20d94f30b684f#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the dependencies of the package, which anyone who installs it gets.
   - look at: `"click>=8.5.0",`
-- [`uv.lock`](https://github.com/rahuldave/smallwikiapp/blob/babd435639351573a535123d8e45146e39b86ff0/uv.lock), [its change](https://github.com/rahuldave/smallwikiapp/commit/babd435639351573a535123d8e45146e39b86ff0#diff-84321598744d84dbee2318e634c74c9aae39a1c253f1c4bd17ebf9ef2f807b11): the exact versions, for every platform.
+- [`uv.lock`](https://github.com/rahuldave/smallwikiapp/blob/0244a354462fd8bbfa669c0b4fc20d94f30b684f/uv.lock), [its change](https://github.com/rahuldave/smallwikiapp/commit/0244a354462fd8bbfa669c0b4fc20d94f30b684f#diff-84321598744d84dbee2318e634c74c9aae39a1c253f1c4bd17ebf9ef2f807b11): the exact versions, for every platform.
 
 ```bash
 uv tree --depth 1
 ```
 
-`uv tree` shows the two under `wikiapp`. A newer version may have come out since this was written: if your
-numbers are newer, your `uv.lock` will differ from the one here, and that is fine.
+`uv tree` shows the two packages under `wikiapp`. A newer version of a package can come out after these notes.
+If your numbers are newer, your `uv.lock` differs from the one here, and the move is still correct.
 
 ## step-01.2 Ask Wikipedia for a page
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/7f4aca68a6be75c4adcd6ef8ff76a8c5882ad67a): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bfeb0574e98b051ac34d7c01acabebfbe2edea93) shows exactly what the move changes.
 
-This is the first code of wikiapp, from 2024, with a docstring that says what the command does. Replace
-`src/wikiapp/console.py` with it.
+The code below is the first code of wikiapp, from 2024, with a docstring that says what the command does.
+Replace `src/wikiapp/console.py` with it.
 
 ```python
 import click
@@ -67,33 +71,37 @@ if __name__=="__main__":
     main()
 ```
 
-`@click.command()` turns `main` into a command. The original's `main` had no `-> None`; this one keeps the
-annotation `uv init` gave it at step-00. `requests.get` asks Wikipedia's REST API for the summary of a
-random page, `raise_for_status` raises an exception if the answer is an error, and `response.json()` reads the
-answer as a dictionary. The title is printed in green, and the summary wrapped to 70 columns.
+`@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The `main`
+here keeps the annotation that `uv init` gave it at step-00.
 
-This is the file changed:
+- `requests.get` asks the REST API of Wikipedia for the summary of a random page.
+- `raise_for_status` raises an exception if the answer is an error.
+- `response.json()` reads the answer as a dictionary.
+
+`main` prints the title in green, and the summary wrapped to 70 columns.
+
+The move changed this file:
 
 - `src/wikiapp/console.py`: `main` asks Wikipedia for a page and prints it.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/7f4aca68a6be75c4adcd6ef8ff76a8c5882ad67a/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/7f4aca68a6be75c4adcd6ef8ff76a8c5882ad67a#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): a request, and two lines printed.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/bfeb0574e98b051ac34d7c01acabebfbe2edea93/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/bfeb0574e98b051ac34d7c01acabebfbe2edea93#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): a request, and two lines printed.
   - look at: `with requests.get(API_URL) as response:`
 
 ```bash
 uv run wikiapp
 ```
 
-It fails: the last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error: Forbidden for
-url:` and the address. Wikipedia now refuses a request whose User-Agent header is a library's default, and
-requests sends `python-requests/` and its version.
+The command fails. The last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error:
+Forbidden for url:` and the address. Wikipedia now refuses a request whose User-Agent header is the default of
+a library. requests sends `python-requests/` and its version.
 
 ## step-01.3 A User-Agent
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/92468952973a0251041a6df78eb07e027bf51336): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/daf71c89c6e48812e0dba005ad5889e02473c297) shows exactly what the move changes.
 
-The User-Agent header says who is asking. Wikimedia's policy asks for the name of the program, its version, and
-a way to reach whoever runs it. In `src/wikiapp/console.py`, add a line under `API_URL`, and pass it as a
+The User-Agent header says who sends the request. The policy of Wikimedia asks for the name of the program,
+its version, and a way to reach the person who runs it. In `src/wikiapp/console.py`, add a line under `API_URL`, and pass it as a
 header.
 
 ```python
@@ -104,12 +112,12 @@ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
     with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
 ```
 
-This is the file changed:
+The move changed this file:
 
 - `src/wikiapp/console.py`: a constant `USER_AGENT`, and the request sends it.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/92468952973a0251041a6df78eb07e027bf51336/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/92468952973a0251041a6df78eb07e027bf51336#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the header.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/daf71c89c6e48812e0dba005ad5889e02473c297/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/daf71c89c6e48812e0dba005ad5889e02473c297#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the header.
   - look at: `with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:`
 
 ```bash
@@ -120,10 +128,10 @@ A title in green, and a paragraph. Run it again for another page.
 
 ## step-01.4 --version
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4f2dea44474a5d0f6eaa814125090449cee226b3): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d7c0b15653372c416c640bfa0e57d6c3063f33c8) shows exactly what the move changes.
 
-The package can read its own version from what is installed, which is the version in `pyproject.toml`. Replace
-`src/wikiapp/__init__.py` with this.
+The package can read its own version from the installed package, which has the version in `pyproject.toml`.
+Replace `src/wikiapp/__init__.py` with the code below.
 
 ```python
 import importlib.metadata
@@ -142,15 +150,15 @@ from wikiapp import __version__
 def main() -> None:
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `src/wikiapp/__init__.py`: `__version__`, from the installed package.
 - `src/wikiapp/console.py`: the option `--version`.
 
 Files to read:
-- [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/4f2dea44474a5d0f6eaa814125090449cee226b3/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/4f2dea44474a5d0f6eaa814125090449cee226b3#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): the version, read when the package is imported.
+- [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/d7c0b15653372c416c640bfa0e57d6c3063f33c8/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d7c0b15653372c416c640bfa0e57d6c3063f33c8#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): the version, which Python reads when it imports the package.
   - look at: `__version__ = importlib.metadata.version(__name__ or __package__)`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/4f2dea44474a5d0f6eaa814125090449cee226b3/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/4f2dea44474a5d0f6eaa814125090449cee226b3#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): click's version option.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/d7c0b15653372c416c640bfa0e57d6c3063f33c8/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d7c0b15653372c416c640bfa0e57d6c3063f33c8#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): click's version option.
   - look at: `@click.version_option(version=__version__)`
 
 ```bash
@@ -158,5 +166,5 @@ uv run wikiapp --version
 uv run wikiapp --help
 ```
 
-`--version` prints `wikiapp, version 0.1.0`. `--help` lists both options: click writes the help from the
+`--version` prints `wikiapp, version 0.1.0`. `--help` lists both options. click writes the help from the
 decorators and the docstring.

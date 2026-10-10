@@ -7,8 +7,8 @@ class Page(BaseModel):
 ```
 
 - `Page.model_validate(answer)` keeps the two keys, and checks they are strings
-- `page.title`: an attribute that ty and an editor know, not a key that could be misspelled
-- an answer without them: `ValidationError`, which becomes `WikipediaError`
+- `page.title` is an attribute that ty and an editor know, and a misspelled name is an error
+- an answer without the two keys raises `ValidationError`, which becomes `WikipediaError`
 
 ---
 

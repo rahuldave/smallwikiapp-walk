@@ -1,20 +1,22 @@
 ---
 title: "smallwikiapp, one move at a time"
 ---
-A tutorial: the tagged steps of smallwikiapp, and the small commits between them, the moves. Each move is one
-action. The grey blocks are the code to type, or the command that makes the move; the command at the end of a move
-shows what it did. Every step starts from the code of the step before, so every step starts with `just setup`. To
-take the tutorial in timewalk, where you can watch each move or make it yourself, see the
-[README](https://github.com/rahuldave/smallwikiapp-walk/blob/main/README.md).
+This tutorial goes through the tagged steps of smallwikiapp, and the small commits between them. Each
+small commit is a move, one action. A grey block is code to type, or a command that makes the move. The command
+at the end of a move shows what the move did. Every step starts from the code of the step before, so every step
+starts with `just setup`. To take the tutorial in timewalk, where you can watch each move or make it yourself,
+see the [README](https://github.com/rahuldave/smallwikiapp-walk/blob/main/README.md).
 
-The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), written in 2024 with
-pixi; where the notes say "the original wikiapp", they mean that one.
+The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
+2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
 
-This is the tutorial for reading on GitHub. It is made from [notes.md](https://github.com/rahuldave/smallwikiapp-walk/blob/main/walks/tutorial/notes.md), the notes that timewalk
-reads, each time the walk is brought up to date: do not edit it by hand. Every step links to the code as it was at
-that step, and every move to its commit, which shows exactly what the move changed. A command to run is in a grey
-block marked `bash`, and what it prints is said under it. Under "Files to read", each file links to the file as
-the move leaves it, and to its change in the commit.
+This website is the tutorial for reading in a browser, one page for each step. `just walk-update` makes it from [notes.md](https://github.com/rahuldave/smallwikiapp-walk/blob/main/walks/tutorial/notes.md),
+the notes that timewalk reads, so do not edit it by hand.
+
+- **Each step** links to the code at that step.
+- **Each move** links to its commit, which shows exactly what the move changed.
+- **A command to run** is in a grey block marked `bash`, and the text under it says what the command prints.
+- **Under "Files to read"**, each file links to the file as the move leaves it, and to its change in the commit.
 
 ## The steps
 
@@ -25,8 +27,8 @@ the move leaves it, and to its change in the commit.
   - [step-01.3: A User-Agent](step-01.qmd#step-01.3-a-user-agent)
   - [step-01.4: --version](step-01.qmd#step-01.4---version)
 - [step-02: Tests, with mocks](step-02.qmd)
-  - [step-02.1: pytest, and the first test](step-02.qmd#step-02.1-pytest-and-the-first-test)
-  - [step-02.2: just test](step-02.qmd#step-02.2-just-test)
+  - [step-02.1: pytest and the first test](step-02.qmd#step-02.1-pytest-and-the-first-test)
+  - [step-02.2: The recipe `just test`](step-02.qmd#step-02.2-the-recipe-just-test)
   - [step-02.3: A mock in place of Wikipedia](step-02.qmd#step-02.3-a-mock-in-place-of-wikipedia)
   - [step-02.4: Tests of the request](step-02.qmd#step-02.4-tests-of-the-request)
   - [step-02.5: A test of a failed request](step-02.qmd#step-02.5-a-test-of-a-failed-request)
@@ -39,45 +41,45 @@ the move leaves it, and to its change in the commit.
   - [step-03.5: WikipediaError](step-03.qmd#step-03.5-wikipediaerror)
   - [step-03.6: The command prints the error](step-03.qmd#step-03.6-the-command-prints-the-error)
 - [step-04: Format, lint, a hook](step-04.qmd)
-  - [step-04.1: ruff, and just fmt](step-04.qmd#step-04.1-ruff-and-just-fmt)
+  - [step-04.1: ruff, and the recipe fmt](step-04.qmd#step-04.1-ruff-and-the-recipe-fmt)
   - [step-04.2: The code, formatted](step-04.qmd#step-04.2-the-code-formatted)
-  - [step-04.3: The linter's rules, and just lint](step-04.qmd#step-04.3-the-linters-rules-and-just-lint)
-  - [step-04.4: just lint --fix sorts the imports](step-04.qmd#step-04.4-just-lint---fix-sorts-the-imports)
+  - [step-04.3: The linter's rules, and the recipe lint](step-04.qmd#step-04.3-the-linters-rules-and-the-recipe-lint)
+  - [step-04.4: The linter sorts the imports](step-04.qmd#step-04.4-the-linter-sorts-the-imports)
   - [step-04.5: The tests' imports at the top, and no unused variables](step-04.qmd#step-04.5-the-tests-imports-at-the-top-and-no-unused-variables)
   - [step-04.6: A timeout](step-04.qmd#step-04.6-a-timeout)
-  - [step-04.7: just lint-config, and just check](step-04.qmd#step-04.7-just-lint-config-and-just-check)
+  - [step-04.7: The recipes lint-config and check](step-04.qmd#step-04.7-the-recipes-lint-config-and-check)
   - [step-04.8: A git hook](step-04.qmd#step-04.8-a-git-hook)
 - [step-05: Types](step-05.qmd)
-  - [step-05.1: ty, and just types](step-05.qmd#step-05.1-ty-and-just-types)
+  - [step-05.1: ty, and the recipe types](step-05.qmd#step-05.1-ty-and-the-recipe-types)
   - [step-05.2: The version of "wikiapp", by name](step-05.qmd#step-05.2-the-version-of-wikiapp-by-name)
   - [step-05.3: A type on every parameter and return](step-05.qmd#step-05.3-a-type-on-every-parameter-and-return)
   - [step-05.4: Types in the code](step-05.qmd#step-05.4-types-in-the-code)
   - [step-05.5: Types in the tests](step-05.qmd#step-05.5-types-in-the-tests)
-  - [step-05.6: Types join just check](step-05.qmd#step-05.6-types-join-just-check)
+  - [step-05.6: The recipe check runs the type checker](step-05.qmd#step-05.6-the-recipe-check-runs-the-type-checker)
 - [step-06: End to end, and CI](step-06.qmd)
-  - [step-06.1: The end-to-end test runs only when asked for](step-06.qmd#step-06.1-the-end-to-end-test-runs-only-when-asked-for)
+  - [step-06.1: The end-to-end test runs only on request](step-06.qmd#step-06.1-the-end-to-end-test-runs-only-on-request)
   - [step-06.2: An end-to-end test of the library](step-06.qmd#step-06.2-an-end-to-end-test-of-the-library)
   - [step-06.3: Any Python from 3.11 on](step-06.qmd#step-06.3-any-python-from-3.11-on)
   - [step-06.4: GitHub runs the tests](step-06.qmd#step-06.4-github-runs-the-tests)
 - [step-07: A page with a shape](step-07.qmd)
-  - [step-07.1: Page](step-07.qmd#step-07.1-page)
+  - [step-07.1: The model Page](step-07.qmd#step-07.1-the-model-page)
   - [step-07.2: random_page returns a Page](step-07.qmd#step-07.2-random_page-returns-a-page)
   - [step-07.3: An answer that is not a page](step-07.qmd#step-07.3-an-answer-that-is-not-a-page)
   - [step-07.4: Only a language code goes into the address](step-07.qmd#step-07.4-only-a-language-code-goes-into-the-address)
 - [step-08: Docs from the code](step-08.qmd)
-  - [step-08.1: docs/apidocs.py](step-08.qmd#step-08.1-docsapidocs.py)
+  - [step-08.1: The script docs/apidocs.py](step-08.qmd#step-08.1-the-script-docsapidocs.py)
   - [step-08.2: The library documented](step-08.qmd#step-08.2-the-library-documented)
   - [step-08.3: The command documented](step-08.qmd#step-08.3-the-command-documented)
   - [step-08.4: The tests documented](step-08.qmd#step-08.4-the-tests-documented)
   - [step-08.5: A site](step-08.qmd#step-08.5-a-site)
-  - [step-08.6: The docs check joins just check](step-08.qmd#step-08.6-the-docs-check-joins-just-check)
+  - [step-08.6: The docs check in `just check`](step-08.qmd#step-08.6-the-docs-check-in-just-check)
 - [step-09: The library as a package](step-09.qmd)
   - [step-09.1: An empty library, wikirandom](step-09.qmd#step-09.1-an-empty-library-wikirandom)
-  - [step-09.2: wikirandom gets the code](step-09.qmd#step-09.2-wikirandom-gets-the-code)
+  - [step-09.2: The code goes into wikirandom](step-09.qmd#step-09.2-the-code-goes-into-wikirandom)
   - [step-09.3: The app uses wikirandom](step-09.qmd#step-09.3-the-app-uses-wikirandom)
   - [step-09.4: The docs name both packages](step-09.qmd#step-09.4-the-docs-name-both-packages)
 - [step-10: Build](step-10.qmd)
-  - [step-10.1: just build](step-10.qmd#step-10.1-just-build)
+  - [step-10.1: The recipe `build`](step-10.qmd#step-10.1-the-recipe-build)
   - [step-10.2: The app needs wikirandom 0.1](step-10.qmd#step-10.2-the-app-needs-wikirandom-0.1)
-  - [step-10.3: A licence and a home for both](step-10.qmd#step-10.3-a-licence-and-a-home-for-both)
+  - [step-10.3: A licence and a repository link for both](step-10.qmd#step-10.3-a-licence-and-a-repository-link-for-both)
   - [step-10.4: The User-Agent says the installed version](step-10.qmd#step-10.4-the-user-agent-says-the-installed-version)

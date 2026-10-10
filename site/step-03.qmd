@@ -8,13 +8,13 @@ title: "step-03: A library and an app"
 just setup
 ```
 
-Six moves. The code that asks Wikipedia moves into a module of its own, `wikipedia.py`, which learns languages
-and gets an error of its own. The command, in `console.py`, uses it. wikipedia.py becomes a library that knows
-nothing of the command line, and console.py the app that uses it.
+The code that asks Wikipedia moves into a module of its own, `wikipedia.py`. The module then gets a language
+and an error of its own. The command, in `console.py`, uses the module. So wikipedia.py is a library that knows
+nothing of the command line, and console.py is the app that uses it.
 
 ## step-03.1 random_page moves to wikipedia.py
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a9427561a71d0d6bd0261ef58688e805bdb653a7): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d3f80f14b1769cf9db45c5da2a483303a043804a) shows exactly what the move changes.
 
 Make `src/wikiapp/wikipedia.py`.
 
@@ -31,9 +31,9 @@ def random_page():
         return response.json()
 ```
 
-`random_page` returns the answer from inside the `with` block, where the original set `data` there and returned
-it after; the result is the same. Then replace `src/wikiapp/console.py`: the constants and the request go, and
-`main` calls `random_page`.
+`random_page` returns the answer from inside the `with` block. The original set `data` there, and returned it
+after the block. The result is the same. Then replace `src/wikiapp/console.py` with the code below. The
+constants and the request go, and `main` calls `random_page`.
 
 ```python
 import click
@@ -56,31 +56,31 @@ if __name__=="__main__":
     main()
 ```
 
-These are the files changed:
+The move changed these files:
 
-- `src/wikiapp/wikipedia.py`: new; the address, the User-Agent, and `random_page`.
+- `src/wikiapp/wikipedia.py`: a new file with the address, the User-Agent, and `random_page`.
 - `src/wikiapp/console.py`: `main` calls `random_page`.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/a9427561a71d0d6bd0261ef58688e805bdb653a7/src/wikiapp/wikipedia.py): the code that talks to Wikipedia.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/d3f80f14b1769cf9db45c5da2a483303a043804a/src/wikiapp/wikipedia.py): the code that talks to Wikipedia.
   - look at: `def random_page():`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/a9427561a71d0d6bd0261ef58688e805bdb653a7/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/a9427561a71d0d6bd0261ef58688e805bdb653a7#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): what is left is the command.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/d3f80f14b1769cf9db45c5da2a483303a043804a/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d3f80f14b1769cf9db45c5da2a483303a043804a#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): only the command stays.
   - look at: `data = random_page()`
 
 ```bash
 just test
 ```
 
-`5 passed`, with no change to the tests. The mock replaces the function `get` in the module `requests`, and
-wikipedia.py calls it through the module, as `requests.get`, so it gets the mock.
+The result is `5 passed`, with no change to the tests. The mock replaces the function `get` in the module
+`requests`. wikipedia.py calls the function through the module, as `requests.get`, so it gets the mock.
 
 ## step-03.2 The mock moves to conftest.py
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a23a191c6704f87f8ae2d35dced756448d62d437): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/945d9d0bcdaf01f8efd2545ca8b6e4c5b394590d) shows exactly what the move changes.
 
-pytest reads `tests/conftest.py` before the tests, and every test file can use a fixture defined there. The
-tests of wikipedia.py, in the next move, need the mock too. Make `tests/conftest.py` with it, and delete it from
-`tests/test_console.py`.
+pytest reads `tests/conftest.py` before the tests, and every test file can use a fixture in it. The tests of
+wikipedia.py, in the next move, need the mock too. Make `tests/conftest.py` with the mock in it. Then delete the
+mock from `tests/test_console.py`.
 
 ```python
 import pytest
@@ -95,28 +95,28 @@ def mock_requests_get(mocker):
     return mock
 ```
 
-These are the files changed:
+The move changed these files:
 
-- `tests/conftest.py`: new; the mock.
-- `tests/test_console.py`: without it.
+- `tests/conftest.py`: a new file with the mock.
+- `tests/test_console.py`: the mock is gone.
 
 Files to read:
-- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/a23a191c6704f87f8ae2d35dced756448d62d437/tests/conftest.py): the fixture, for every test file.
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/945d9d0bcdaf01f8efd2545ca8b6e4c5b394590d/tests/conftest.py): the fixture, for every test file.
   - look at: `def mock_requests_get(mocker):`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/a23a191c6704f87f8ae2d35dced756448d62d437/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/a23a191c6704f87f8ae2d35dced756448d62d437#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture is gone; the tests still name it.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/945d9d0bcdaf01f8efd2545ca8b6e4c5b394590d/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/945d9d0bcdaf01f8efd2545ca8b6e4c5b394590d#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture is gone, but the tests still name it.
 
 ```bash
 just test
 ```
 
-`5 passed`: pytest finds the fixture in conftest.py.
+The result is `5 passed`. pytest finds the fixture in conftest.py.
 
 ## step-03.3 A language
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/02cddf614ac415f2015d25eef50f1298c103c77d): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5b7b97126c6d8a8ff1700ce9174b0fed619b44f8) shows exactly what the move changes.
 
-Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, give the address
-a hole for the language, and fill it in `random_page`, with English as the default.
+Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, put a
+placeholder for the language in the address. Fill it in `random_page`, with English as the default.
 
 ```python
 API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
@@ -128,7 +128,7 @@ def random_page(language="en"):
     with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
 ```
 
-And the first test of the library, `tests/test_wikipedia.py`.
+Then make the first test of the library, `tests/test_wikipedia.py`.
 
 ```python
 from wikiapp import wikipedia
@@ -139,26 +139,26 @@ def test_random_page_uses_given_language(mock_requests_get):
     assert "es.wikipedia.org" in args[0]
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `src/wikiapp/wikipedia.py`: `random_page` takes a language.
-- `tests/test_wikipedia.py`: new; a test that the language chooses the Wikipedia.
+- `tests/test_wikipedia.py`: a new file with a test that the language chooses the Wikipedia.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/02cddf614ac415f2015d25eef50f1298c103c77d/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/02cddf614ac415f2015d25eef50f1298c103c77d#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the hole, and its filling.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/5b7b97126c6d8a8ff1700ce9174b0fed619b44f8/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/5b7b97126c6d8a8ff1700ce9174b0fed619b44f8#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the placeholder, and the code that fills it.
   - look at: `def random_page(language="en"):`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/02cddf614ac415f2015d25eef50f1298c103c77d/tests/test_wikipedia.py): the test uses the mock from conftest.py.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/5b7b97126c6d8a8ff1700ce9174b0fed619b44f8/tests/test_wikipedia.py): the test uses the mock from conftest.py.
   - look at: `assert "es.wikipedia.org" in args[0]`
 
 ```bash
 just test
 ```
 
-`6 passed`.
+The result is `6 passed`.
 
 ## step-03.4 wikiapp --language
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/0c008e2d7797ad21caa1c5a9f8828aa4e3f75078): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5c36a9e6397a07627ba4822bb1fe15ed11cd7da2) shows exactly what the move changes.
 
 In `src/wikiapp/console.py`, add an option between `@click.command()` and `@click.version_option`, and pass it
 on.
@@ -180,14 +180,14 @@ def main(language) -> None:
     data = random_page(language=language)
 ```
 
-click passes the option's value to the parameter of the same name.
+click gives the value of the option to the parameter with the same name.
 
-This is the file changed:
+The move changed this file:
 
 - `src/wikiapp/console.py`: the option `--language`, or `-l`.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/0c008e2d7797ad21caa1c5a9f8828aa4e3f75078/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/0c008e2d7797ad21caa1c5a9f8828aa4e3f75078#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the option, and `main` passes it on.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/5c36a9e6397a07627ba4822bb1fe15ed11cd7da2/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/5c36a9e6397a07627ba4822bb1fe15ed11cd7da2#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the option, which `main` gives to `random_page`.
   - look at: `data = random_page(language=language)`
 
 ```bash
@@ -195,15 +195,15 @@ uv run wikiapp --language fr
 uv run wikiapp --help
 ```
 
-A French page. `--help` lists the option, its short form and its default.
+The first command prints a French page. `--help` lists the option, its short form and its default.
 
 ## step-03.5 WikipediaError
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/000725e3c6a5946e046d79d577e542fa64dbda31): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e56dd91911fcc2f6f97322c9ec6a2abdd003576a) shows exactly what the move changes.
 
-Whatever goes wrong with a request, requests raises a `RequestException`. Code that uses the library should
-not need to know requests' exceptions: the library raises one of its own. In `src/wikiapp/wikipedia.py`, add
-the class above `random_page`, and wrap the request.
+If a request fails for any reason, requests raises a `RequestException`. Code that uses the library should
+not need to know the exceptions of requests. So the library raises an exception of its own. In
+`src/wikiapp/wikipedia.py`, add the class above `random_page`, and put the request in a `try` block.
 
 ```python
 class WikipediaError(Exception):
@@ -219,14 +219,14 @@ def random_page(language="en"):
         raise WikipediaError(str(error)) from error
 ```
 
-`from error` keeps the original exception, so a traceback shows both.
+`from error` keeps the original exception, so a traceback shows both exceptions.
 
-This is the file changed:
+The move changed this file:
 
-- `src/wikiapp/wikipedia.py`: the class `WikipediaError`; `random_page` raises it.
+- `src/wikiapp/wikipedia.py`: the class `WikipediaError`, which `random_page` raises.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/000725e3c6a5946e046d79d577e542fa64dbda31/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/000725e3c6a5946e046d79d577e542fa64dbda31#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the exception, and where it is raised.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e56dd91911fcc2f6f97322c9ec6a2abdd003576a/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e56dd91911fcc2f6f97322c9ec6a2abdd003576a#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the exception, and the line that raises it.
   - look at: `raise WikipediaError(str(error)) from error`
 
 ```bash
@@ -234,14 +234,14 @@ uv run wikiapp --language xx
 ```
 
 There is no Wikipedia in the language `xx`, so the name `xx.wikipedia.org` does not resolve. The command ends in
-a traceback whose last line is the `WikipediaError`: nothing catches it yet.
+a traceback, and the last line is the `WikipediaError`. No code catches the error yet.
 
 ## step-03.6 The command prints the error
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/560998138cda5c274494c3d59bbde5fa56fe95b5): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3b1b8264f0ccd49f4b14646fe201d4ca89d27562) shows exactly what the move changes.
 
-In `src/wikiapp/console.py`, import the error with `random_page`, and turn it into click's exception, which
-click prints as a message.
+In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click,
+which click prints as a message.
 
 ```python
 from wikiapp.wikipedia import WikipediaError, random_page
@@ -254,8 +254,7 @@ from wikiapp.wikipedia import WikipediaError, random_page
         raise click.ClickException(str(error)) from error
 ```
 
-And a test, in `tests/test_console.py`, before `test_main_succeeds`, with `import requests` under `import
-pytest`.
+Add a test to `tests/test_console.py`, before `test_main_succeeds`. Put `import requests` under `import pytest`.
 
 ```python
 def test_main_prints_message_on_request_error(runner, mock_requests_get):
@@ -264,18 +263,18 @@ def test_main_prints_message_on_request_error(runner, mock_requests_get):
     assert "Error" in result.output
 ```
 
-In the original wikiapp, the library raised click's exception itself, with a note to move it to the console
-one day. Here it is moved: wikipedia.py knows Wikipedia and requests, console.py knows click.
+In the original wikiapp, the library raised the exception of click itself, with a note to move it to the
+console one day. In this move, the exception of click moves to console.py. wikipedia.py knows Wikipedia and requests, and console.py knows click.
 
-These are the files changed:
+The move changed these files:
 
 - `src/wikiapp/console.py`: `main` catches WikipediaError.
 - `tests/test_console.py`: a test of the message.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/560998138cda5c274494c3d59bbde5fa56fe95b5/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/560998138cda5c274494c3d59bbde5fa56fe95b5#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the error becomes a message.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/3b1b8264f0ccd49f4b14646fe201d4ca89d27562/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b1b8264f0ccd49f4b14646fe201d4ca89d27562#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the error becomes a message.
   - look at: `raise click.ClickException(str(error)) from error`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/560998138cda5c274494c3d59bbde5fa56fe95b5/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/560998138cda5c274494c3d59bbde5fa56fe95b5#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/3b1b8264f0ccd49f4b14646fe201d4ca89d27562/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b1b8264f0ccd49f4b14646fe201d4ca89d27562#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test.
   - look at: `assert "Error" in result.output`
 
 ```bash
@@ -283,4 +282,5 @@ uv run wikiapp --language xx; echo "exit code $?"
 just test
 ```
 
-`Error:` and the message, in place of a traceback, and `exit code 1`. `7 passed`.
+The first command prints `Error:` and the message in place of a traceback, then `exit code 1`. The tests give
+`7 passed`.

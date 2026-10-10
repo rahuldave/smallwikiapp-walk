@@ -8,14 +8,16 @@ title: "step-04: Format, lint, a hook"
 just setup
 ```
 
-Eight moves. A formatter and what it changes; a linter, the five problems it finds, and their fixes; a recipe
-that checks the configuration and one that runs every check; and a git hook that runs that before every commit.
-A tool comes in one move and what it changes in the next, so that you see what the tool does before you accept
-it. The tests still need the network, and pre-commit downloads its hooks from GitHub the first time.
+The eight moves of this step add a formatter, and then the changes that it makes. Next, a linter finds five
+problems, and the next three moves fix them. Then a recipe checks the configuration, and another recipe runs every
+check. Last, a git hook runs every check before each commit.
 
-## step-04.1 ruff, and just fmt
+A tool comes in one move, and its changes come in the next move. So you see what the tool does before you accept
+it. The tests still need the network. Also, pre-commit downloads its hooks from GitHub the first time.
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d55cb0e34c42e10883a9e12a8b0ca25371584404): exactly what it changes.
+## step-04.1 ruff, and the recipe fmt
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5a753853c419bdc6332bf32d1b133d169a420ac4) shows exactly what the move changes.
 
 ruff is a formatter and a linter in one program. It goes in a third dependency group, `lint`, which `dev`
 includes. In `pyproject.toml`, change the line `dev = ...`, and add the group.
@@ -25,7 +27,7 @@ dev = [{ include-group = "test" }, { include-group = "lint" }]
 lint = []
 ```
 
-Add ruff to it, and its settings at the end of `pyproject.toml`.
+Add ruff to the group. Then add its settings at the end of `pyproject.toml`.
 
 ```
 uv add --group lint ruff
@@ -45,7 +47,7 @@ indent-style = "space"            # four spaces, never tabs
 skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
 ```
 
-And a recipe, at the end of the `justfile`.
+Add a recipe at the end of the `justfile`.
 
 ```just
 
@@ -56,16 +58,16 @@ fmt *args:
     {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `pyproject.toml`: the group `lint`, and ruff's settings.
 - `justfile`: the recipe `fmt`.
 - `uv.lock`: ruff.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/d55cb0e34c42e10883a9e12a8b0ca25371584404/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/d55cb0e34c42e10883a9e12a8b0ca25371584404#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group and the settings.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/5a753853c419bdc6332bf32d1b133d169a420ac4/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/5a753853c419bdc6332bf32d1b133d169a420ac4#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group and the settings.
   - look at: `line-length = 100`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/d55cb0e34c42e10883a9e12a8b0ca25371584404/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/d55cb0e34c42e10883a9e12a8b0ca25371584404#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5a753853c419bdc6332bf32d1b133d169a420ac4/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/5a753853c419bdc6332bf32d1b133d169a420ac4#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `fmt *args:`
 
 ```bash
@@ -74,13 +76,13 @@ just --show fmt
 just fmt --check
 ```
 
-`--check` changes nothing: it lists what it would change and fails. `6 files would be reformatted, 1 file
-already formatted`: the seventh file is the README. The recipe runs the same command, and passes on the words
-after `just fmt`.
+`--check` changes nothing. It lists the files that it would change, and fails. It prints `6 files would be
+reformatted, 1 file already formatted`. The seventh file is the README. The recipe runs the same command, and
+passes on the words after `just fmt`.
 
 ## step-04.2 The code, formatted
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8dec927fd06b423e44c4c04ff87bb2d6a94a429d): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/feced32a1860c8cf7cbf8bebd0d4255ad65eb3a0) shows exactly what the move changes.
 
 Run the formatter.
 
@@ -88,7 +90,7 @@ Run the formatter.
 just fmt
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `src/wikiapp/__init__.py`: a blank line after the import.
 - `src/wikiapp/console.py`: two blank lines before the command and before `if __name__`, and spaces around `==`.
@@ -98,9 +100,9 @@ These are the files changed:
 - `tests/test_wikipedia.py`: two blank lines before the test.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8dec927fd06b423e44c4c04ff87bb2d6a94a429d/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8dec927fd06b423e44c4c04ff87bb2d6a94a429d#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the long line of the request, split into three.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/feced32a1860c8cf7cbf8bebd0d4255ad65eb3a0/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/feced32a1860c8cf7cbf8bebd0d4255ad65eb3a0#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the long line of the request, split into three.
   - look at: `API_URL.format(language=language), headers={"User-Agent": USER_AGENT}`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/8dec927fd06b423e44c4c04ff87bb2d6a94a429d/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8dec927fd06b423e44c4c04ff87bb2d6a94a429d#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): blank lines, and the long address split.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/feced32a1860c8cf7cbf8bebd0d4255ad65eb3a0/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/feced32a1860c8cf7cbf8bebd0d4255ad65eb3a0#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): blank lines, and the long address split.
   - look at: `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
 
 ```bash
@@ -108,15 +110,16 @@ just fmt --check
 just test
 ```
 
-`7 files already formatted`, and the tests pass as before: the formatter changes how the code looks, never what
-it does.
+The check prints `7 files already formatted`, and the tests pass as before. The formatter changes how the code
+looks, and never what it does.
 
-## step-04.3 The linter's rules, and just lint
+## step-04.3 The linter's rules, and the recipe lint
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8236536c7d57b0eb9b78c271f42180852955c23d): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/766d872a76673e075aef1a0d34d3c6161f85954e) shows exactly what the move changes.
 
-The linter checks the code against rules. At the end of `pyproject.toml`, choose the families of rules, and let
-the tests use `assert`: the rest of the code may not, because Python skips every `assert` when run with `-O`.
+The linter checks the code against rules. At the end of `pyproject.toml`, choose the families of rules. Also
+let the tests use `assert`. The rest of the code may not use it, because Python skips every `assert` when it runs
+with `-O`.
 
 ```toml
 
@@ -139,7 +142,7 @@ select = [
 "tests/**" = ["S101"]
 ```
 
-And a recipe, at the end of the `justfile`.
+Add a recipe at the end of the `justfile`.
 
 ```just
 
@@ -150,15 +153,15 @@ lint *args:
     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `pyproject.toml`: the rules.
 - `justfile`: the recipe `lint`.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/8236536c7d57b0eb9b78c271f42180852955c23d/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/8236536c7d57b0eb9b78c271f42180852955c23d#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): a family of rules on each line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/766d872a76673e075aef1a0d34d3c6161f85954e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/766d872a76673e075aef1a0d34d3c6161f85954e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): a family of rules on each line.
   - look at: `"tests/**" = ["S101"]`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/8236536c7d57b0eb9b78c271f42180852955c23d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/8236536c7d57b0eb9b78c271f42180852955c23d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/766d872a76673e075aef1a0d34d3c6161f85954e/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/766d872a76673e075aef1a0d34d3c6161f85954e#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `lint *args:`
 
 ```bash
@@ -167,56 +170,63 @@ just --show lint
 just lint --statistics
 ```
 
-Five problems, each with its code: `I001`, the imports of console.py out of order; `E402`, an import in
-test_console.py below code; `F841` twice, a variable assigned and never used; and `S113`, a request with no
-timeout. `just lint` shows each one with its lines. `uv run ruff rule S113` explains a code.
+The linter finds five problems, each with its code:
 
-## step-04.4 just lint --fix sorts the imports
+- `I001`: the imports of console.py are out of order.
+- `E402`: an import in test_console.py comes below code.
+- `F841`, twice: a variable is assigned and never used.
+- `S113`: a request has no timeout.
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/75976381b05d63d57eb1b7fc1ad5aa7665eac1b7): exactly what it changes.
+`just lint` shows each problem with its lines. `uv run ruff rule S113` explains a code.
 
-ruff can fix one of the five itself.
+## step-04.4 The linter sorts the imports
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a6b786b22acae52a142843d5bc4d3465974f6977) shows exactly what the move changes.
+
+ruff can fix one of the five problems itself.
 
 ```
 just lint --fix
 ```
 
-This is the file changed:
+The move changed this file:
 
-- `src/wikiapp/console.py`: the imports in three blocks: the standard library, the packages installed, then
-  wikiapp's own.
+- `src/wikiapp/console.py`: the imports in three blocks, which are the standard library, the packages
+  installed, and then wikiapp's own.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/75976381b05d63d57eb1b7fc1ad5aa7665eac1b7/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/75976381b05d63d57eb1b7fc1ad5aa7665eac1b7#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the imports, sorted.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/a6b786b22acae52a142843d5bc4d3465974f6977/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/a6b786b22acae52a142843d5bc4d3465974f6977#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the imports, sorted.
   - look at: `from wikiapp import __version__`
 
 ```bash
 just lint --statistics
 ```
 
-`just lint --fix` reported `Found 5 errors (1 fixed, 4 remaining)` and failed. Four left. They need a person.
+`just lint --fix` reported `Found 5 errors (1 fixed, 4 remaining)` and failed. Four problems are left, and a
+person must fix them.
 
 ## step-04.5 The tests' imports at the top, and no unused variables
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/26dd80f417c207449dcbf1a7b2a705c11f139e88): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/f58fcbc8bae0a8f9dfcababac5214e7bcb179c0f) shows exactly what the move changes.
 
-In `tests/test_console.py`, move `from wikiapp import console` up under `import requests`, where a reader looks
-for imports, with a blank line between them: wikiapp's own imports are a block of their own, after the installed
-packages, as `--fix` made them in console.py. Where the import was, delete it and the two blank lines after it,
-so that one function follows another with two blank lines between. In `test_main_invokes_requests_get` and
-`test_main_uses_correct_url`, the result is never read: those tests check the mock, not the result. Make their
-first line the call alone.
+In `tests/test_console.py`, move `from wikiapp import console` up, under `import requests`. A reader looks for
+imports there. Put a blank line between the two imports. wikiapp's own imports are a block of their own, after
+the installed packages, as `--fix` made them in console.py. Where the import was, delete it and the two blank
+lines after it. The functions are then two blank lines apart.
+
+In `test_main_invokes_requests_get` and `test_main_uses_correct_url`, no line reads the result. The two tests
+check the mock, not the result. Make the first line of each test the call alone.
 
 ```python
     runner.invoke(console.main)
 ```
 
-This is the file changed:
+The move changed this file:
 
 - `tests/test_console.py`: the import at the top, and two assignments gone.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/26dd80f417c207449dcbf1a7b2a705c11f139e88/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/26dd80f417c207449dcbf1a7b2a705c11f139e88#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the import moves; `result =` goes twice.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/f58fcbc8bae0a8f9dfcababac5214e7bcb179c0f/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/f58fcbc8bae0a8f9dfcababac5214e7bcb179c0f#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the import moves, and two lines lose `result =`.
   - look at: `from wikiapp import console`
 
 ```bash
@@ -224,14 +234,14 @@ just lint --statistics
 just fmt --check
 ```
 
-One left: `S113`. The format is unchanged: `7 files already formatted`.
+One problem is left, `S113`. The format is unchanged, and the check prints `7 files already formatted`.
 
 ## step-04.6 A timeout
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/6ff65200b1bc9f184ff62ae935c681084d8fcd05): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a212a169676e922423ed4b4423041db100c8f298) shows exactly what the move changes.
 
-Without a timeout, requests waits for as long as the server keeps the connection open, and the command can hang
-for ever. In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
+Without a timeout, requests waits as long as the server keeps the connection open. So the command can wait for
+ever. In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
 
 ```python
         with requests.get(
@@ -239,15 +249,15 @@ for ever. In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
         ) as response:
 ```
 
-A request that waits more than 10 seconds for the server now raises an exception, which `random_page` turns
-into a WikipediaError like any other.
+If the server does not answer within 10 seconds, the request now raises an exception. `random_page` turns it
+into a WikipediaError, as it does with every other error of requests.
 
-This is the file changed:
+The move changed this file:
 
 - `src/wikiapp/wikipedia.py`: the timeout.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/6ff65200b1bc9f184ff62ae935c681084d8fcd05/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/6ff65200b1bc9f184ff62ae935c681084d8fcd05#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): one argument more.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/a212a169676e922423ed4b4423041db100c8f298/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/a212a169676e922423ed4b4423041db100c8f298#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): one more argument.
   - look at: `timeout=10`
 
 ```bash
@@ -256,9 +266,9 @@ just lint
 
 `All checks passed!`
 
-## step-04.7 just lint-config, and just check
+## step-04.7 The recipes lint-config and check
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/58aedae8653fd9f604efa438aeb182c77d246767): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/87e187e314adcef8251c2545e20d8d2083cbbba2) shows exactly what the move changes.
 
 validate-pyproject checks `pyproject.toml` against the standard for it.
 
@@ -266,16 +276,16 @@ validate-pyproject checks `pyproject.toml` against the standard for it.
 uv add --group lint validate-pyproject
 ```
 
-In the `justfile`, under `set positional-arguments`, make every `uv run` of a recipe refuse a lockfile that is
-out of date, in place of quietly updating it.
+In the `justfile`, under `set positional-arguments`, add the line below. With it, every `uv run` of a recipe
+refuses a lockfile that is out of date. Without it, `uv run` quietly updates the lockfile.
 
 ```just
 
 export UV_LOCKED := "1"
 ```
 
-And two recipes at the end: `lint-config` checks the configuration, and `check` runs every check, in order,
-stopping at the first that fails.
+Then add two recipes at the end. `lint-config` checks the configuration. `check` runs every check in order, and
+stops at the first check that fails.
 
 ```just
 
@@ -303,16 +313,16 @@ check *args:
     just lint-config
 ```
 
-These are the files changed:
+The move changed these files:
 
 - `justfile`: `UV_LOCKED`, and the recipes `lint-config` and `check`.
 - `pyproject.toml`: validate-pyproject in the group `lint`.
 - `uv.lock`: the exact version of validate-pyproject, and of what it needs.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/58aedae8653fd9f604efa438aeb182c77d246767/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/58aedae8653fd9f604efa438aeb182c77d246767#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipes.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/87e187e314adcef8251c2545e20d8d2083cbbba2/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/87e187e314adcef8251c2545e20d8d2083cbbba2#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipes.
   - look at: `just test -q --cov-fail-under=90`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/58aedae8653fd9f604efa438aeb182c77d246767/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/58aedae8653fd9f604efa438aeb182c77d246767#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one package more in `lint`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/87e187e314adcef8251c2545e20d8d2083cbbba2/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/87e187e314adcef8251c2545e20d8d2083cbbba2#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one package more in `lint`.
   - look at: `"validate-pyproject>=0.26",`
 
 ```bash
@@ -325,15 +335,15 @@ just --show check
 just check
 ```
 
-Each check in turn: the format, the linter, the tests, which must run at least 90% of the statements, and the
-configuration. The coverage is 96.77%.
+`just check` runs the format, the linter, the tests and the configuration, in that order. The
+tests must run at least 90% of the statements. The coverage is 96.77%.
 
 ## step-04.8 A git hook
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/774e4690468f28a77fb4f907119fdb928fd2dc7d): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c8989273671435cc31dac2b9980ab637c62c7c29) shows exactly what the move changes.
 
-pre-commit installs a git hook: a program that git runs before every commit, and that refuses the commit if it
-fails.
+pre-commit installs a git hook. A git hook is a program that git runs before every commit. If the program
+fails, git refuses the commit.
 
 ```
 uv add --group lint pre-commit
@@ -374,19 +384,19 @@ hook *args:
     @{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}
 ```
 
-These are the files changed:
+The move changed these files:
 
-- `.pre-commit-config.yaml`: new; the hooks.
+- `.pre-commit-config.yaml`: a new file, with the hooks.
 - `justfile`: the recipe `hook`, which installs the hook.
 - `pyproject.toml`: pre-commit in the group `lint`.
 - `uv.lock`: the exact version of pre-commit, and of what it needs.
 
 Files to read:
-- [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/774e4690468f28a77fb4f907119fdb928fd2dc7d/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
+- [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/c8989273671435cc31dac2b9980ab637c62c7c29/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
   - look at: `entry: just check`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/774e4690468f28a77fb4f907119fdb928fd2dc7d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/774e4690468f28a77fb4f907119fdb928fd2dc7d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c8989273671435cc31dac2b9980ab637c62c7c29/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/c8989273671435cc31dac2b9980ab637c62c7c29#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
   - look at: `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/774e4690468f28a77fb4f907119fdb928fd2dc7d/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/774e4690468f28a77fb4f907119fdb928fd2dc7d#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c8989273671435cc31dac2b9980ab637c62c7c29/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/c8989273671435cc31dac2b9980ab637c62c7c29#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
   - look at: `"pre-commit>=4.6.2",`
 
 ```bash
@@ -396,9 +406,12 @@ just hook
 uv run pre-commit run --files .pre-commit-config.yaml
 ```
 
-`uv run pre-commit install`, and `just hook` after it, print `pre-commit installed at .git/hooks/pre-commit`.
-The hook is in `.git/hooks`, which no step or move changes, so it stays for the rest of the tutorial. If you
-start at a later step, run `just hook` once there. `pre-commit run` runs every hook now, as git will before a
-commit, on the file named. The first time, it prints `[INFO]` lines while it downloads the hooks; then four
-lines, each `Passed`. `--all-files` would mean every file git tracks, and would skip this new file until it is
-added.
+`uv run pre-commit install` prints `pre-commit installed at .git/hooks/pre-commit`, and `just hook` prints the
+same line. The hook is in `.git/hooks`, and no step or move changes that folder. So the hook stays for the rest
+of the tutorial. If you start at a later step, run `just hook` once there.
+
+`pre-commit run` now runs every hook on the file named, as git will before a commit. The first time, it prints
+`[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
+
+With `--all-files`, pre-commit would check every file that git tracks. It would skip the new file until you add
+it.

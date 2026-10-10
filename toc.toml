@@ -13,7 +13,7 @@ moves = "watch"                   # Show checks out each move's commit: for the 
 [[walk]]
 id = "do"
 title = "smallwikiapp, one move at a time, by hand"
-description = "Build the project yourself, one move at a time, from the notes: each move ends with a command that shows what it did."
+description = "Build the project yourself, one move at a time, from the notes. Each move ends with a command that shows what it did."
 kind = "tutorial"
 folder = "walks/tutorial"
 moves = "do"                      # the student makes each move from the notes, and presses Done

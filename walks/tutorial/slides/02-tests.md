@@ -5,7 +5,7 @@ A test that asks the real Wikipedia:
 - fails on a train
 - sees a different page each time
 
-A **mock** replaces `requests.get` for the length of one test, and answers with the page we choose:
+A **mock** replaces `requests.get` for the length of one test. It answers with a page that the test chooses,
 **Lorem Ipsum**.
 
 | Fixture | What a test receives |
