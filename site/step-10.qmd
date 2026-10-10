@@ -14,7 +14,7 @@ version that is installed.
 
 ## step-10.1 just build
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ac01b3ec38dd668698a794a11f35154aecca8ae4): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/18d422aa30c0ddbffc171fd187653c11828b8205): exactly what it changes.
 
 `uv build --all-packages` builds every package of the workspace into `dist/`, which `.gitignore` lists. A recipe
 for it, at the end of the `justfile`.
@@ -33,7 +33,7 @@ This is the file changed:
 - `justfile`: the recipe `build`.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/ac01b3ec38dd668698a794a11f35154aecca8ae4/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/ac01b3ec38dd668698a794a11f35154aecca8ae4#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/18d422aa30c0ddbffc171fd187653c11828b8205/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/18d422aa30c0ddbffc171fd187653c11828b8205#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `build *args:`
 
 ```bash
@@ -51,7 +51,7 @@ PyPI has under that name; today there is nothing, so wikirandom would have to be
 
 ## step-10.2 The app needs wikirandom 0.1
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/097d05d9a6b99c0c76160e43afef377d28ddb182): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b9d46f1d23ef5649c143822fe846b2039776ebb4): exactly what it changes.
 
 The app's wheel says it needs `wikirandom`, any version. Installed from PyPI, it would take whatever anyone
 publishes under that name. Give it the range it was built and tested with.
@@ -67,7 +67,7 @@ This is the file changed:
 - `pyproject.toml`: a version range on wikirandom.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/097d05d9a6b99c0c76160e43afef377d28ddb182/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/097d05d9a6b99c0c76160e43afef377d28ddb182#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b9d46f1d23ef5649c143822fe846b2039776ebb4/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b9d46f1d23ef5649c143822fe846b2039776ebb4#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `"wikirandom>=0.1.0,<0.2",`
 
 ```bash
@@ -79,7 +79,7 @@ The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 
 ## step-10.3 A licence and a home for both
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/825550faff7dc27cd6c60cb3bf4c56761e9393b1): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a5df8df434c4f34e3be411051228845048d648d3): exactly what it changes.
 
 The library's wheel has no licence, and neither package says where its source is. Copy the project's `LICENSE`
 into `packages/wikirandom/`, and in `packages/wikirandom/pyproject.toml`, under `readme`, give the licence and
@@ -118,13 +118,13 @@ These are the files changed:
 - `justfile`: `lint-config` checks both.
 
 Files to read:
-- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/825550faff7dc27cd6c60cb3bf4c56761e9393b1/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/825550faff7dc27cd6c60cb3bf4c56761e9393b1#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): what PyPI would show.
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/a5df8df434c4f34e3be411051228845048d648d3/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/a5df8df434c4f34e3be411051228845048d648d3#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): what PyPI would show.
   - look at: `license = "Apache-2.0"`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/825550faff7dc27cd6c60cb3bf4c56761e9393b1/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/825550faff7dc27cd6c60cb3bf4c56761e9393b1#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/a5df8df434c4f34e3be411051228845048d648d3/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/a5df8df434c4f34e3be411051228845048d648d3#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
   - look at: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/825550faff7dc27cd6c60cb3bf4c56761e9393b1/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/825550faff7dc27cd6c60cb3bf4c56761e9393b1#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app's repository.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/a5df8df434c4f34e3be411051228845048d648d3/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/a5df8df434c4f34e3be411051228845048d648d3#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app's repository.
   - look at: `[project.urls]`
-- [`packages/wikirandom/LICENSE`](https://github.com/rahuldave/smallwikiapp/blob/825550faff7dc27cd6c60cb3bf4c56761e9393b1/packages/wikirandom/LICENSE): the same Apache-2.0 licence as the app's.
+- [`packages/wikirandom/LICENSE`](https://github.com/rahuldave/smallwikiapp/blob/a5df8df434c4f34e3be411051228845048d648d3/packages/wikirandom/LICENSE): the same Apache-2.0 licence as the app's.
   - look at: `Apache License`
 
 ```bash
@@ -138,7 +138,7 @@ unzip -p dist/wikirandom-0.1.0-py3-none-any.whl wikirandom-0.1.0.dist-info/METAD
 
 ## step-10.4 The User-Agent says the installed version
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/cb1a3e3748ad6b8d5c166e94e193403ff33ce8f8): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/391e99c84d5b9e81ebbeb6146ea7c8053056f191): exactly what it changes.
 
 The User-Agent says `0.1.0`, written by hand, and would go on saying it after the version in
 `packages/wikirandom/pyproject.toml` changed. In `packages/wikirandom/src/wikirandom/__init__.py`, read it from
@@ -160,7 +160,7 @@ This is the file changed:
 - `packages/wikirandom/src/wikirandom/__init__.py`: the version, read once, when the package is imported.
 
 Files to read:
-- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/cb1a3e3748ad6b8d5c166e94e193403ff33ce8f8/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/cb1a3e3748ad6b8d5c166e94e193403ff33ce8f8#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): one place for the version: pyproject.toml.
+- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/391e99c84d5b9e81ebbeb6146ea7c8053056f191/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/391e99c84d5b9e81ebbeb6146ea7c8053056f191#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): one place for the version: pyproject.toml.
   - look at: `VERSION = importlib.metadata.version("wikirandom")`
 
 ```bash

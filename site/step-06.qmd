@@ -13,7 +13,7 @@ from 3.11; and GitHub runs the tests on three systems and four Pythons.
 
 ## step-06.1 The end-to-end test runs only when asked for
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/92e8adfe42d25e5d6f6047e5562791ed720ec646): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e4c619c35b718980a70078ea4d40281d54e6b9d2): exactly what it changes.
 
 `test_main_succeeds` is the one test that goes over the network: it fails without one, and its result depends
 on Wikipedia. Mark it `e2e`, end to end, and rename it to say so, in `tests/test_console.py`.
@@ -40,9 +40,9 @@ These are the files changed:
 - `pyproject.toml`: the marker, declared and left out.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/92e8adfe42d25e5d6f6047e5562791ed720ec646/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/92e8adfe42d25e5d6f6047e5562791ed720ec646#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test, marked.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/e4c619c35b718980a70078ea4d40281d54e6b9d2/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e4c619c35b718980a70078ea4d40281d54e6b9d2#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test, marked.
   - look at: `@pytest.mark.e2e`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/92e8adfe42d25e5d6f6047e5562791ed720ec646/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/92e8adfe42d25e5d6f6047e5562791ed720ec646#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): `-m 'not e2e'`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/e4c619c35b718980a70078ea4d40281d54e6b9d2/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/e4c619c35b718980a70078ea4d40281d54e6b9d2#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): `-m 'not e2e'`.
   - look at: `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
 
 ```bash
@@ -54,7 +54,7 @@ The first: `6 passed, 1 deselected`. The second runs the e2e test alone.
 
 ## step-06.2 An end-to-end test of the library
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9dd759b5c90bd5aa6515f00f2b86ab38ec9f62bd): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/207f1b6832a44e9b91b154a5bb1dc18c6ac48a65): exactly what it changes.
 
 The mocks return a dictionary with a title and an extract. This test, from the original wikiapp, checks that the
 real Wikipedia still does. Add it at the end of `tests/test_wikipedia.py`, and `import pytest` in a block of its
@@ -75,7 +75,7 @@ This is the file changed:
 - `tests/test_wikipedia.py`: an e2e test.
 
 Files to read:
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9dd759b5c90bd5aa6515f00f2b86ab38ec9f62bd/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9dd759b5c90bd5aa6515f00f2b86ab38ec9f62bd#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/207f1b6832a44e9b91b154a5bb1dc18c6ac48a65/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/207f1b6832a44e9b91b154a5bb1dc18c6ac48a65#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `assert "extract" in page`
 
 ```bash
@@ -86,7 +86,7 @@ just test -q -m e2e
 
 ## step-06.3 Any Python from 3.11 on
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e0106bea1a8eccd2d9ced7bc35f458900bea048d): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/56de85d652a8e7b49b9e9ec81e96c8923f30c463): exactly what it changes.
 
 `uv init` wrote `requires-python = ">=3.13"`, the Python it was asked for. Nothing here needs more than 3.11,
 the oldest Python still given security fixes since 3.10's end on 1 October 2026. In `pyproject.toml`, change the
@@ -108,7 +108,7 @@ These are the files changed:
 - `uv.lock`: solved for every Python from 3.11 on.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/e0106bea1a8eccd2d9ced7bc35f458900bea048d/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/e0106bea1a8eccd2d9ced7bc35f458900bea048d#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/56de85d652a8e7b49b9e9ec81e96c8923f30c463/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/56de85d652a8e7b49b9e9ec81e96c8923f30c463#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `requires-python = ">=3.11"`
 
 ```bash
@@ -120,7 +120,7 @@ uv run --isolated --python 3.11 pytest -q
 
 ## step-06.4 GitHub runs the tests
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1abc50390a8d51db60fc9cc7f9ad283ca5d41317): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c191541470c0b4ee5f732395790557f2f002af7a): exactly what it changes.
 
 A GitHub Actions workflow is a file in `.github/workflows/`. On every push to main and every pull request,
 GitHub runs its jobs. Make `.github/workflows/test.yaml`.
@@ -173,7 +173,7 @@ This is the file changed:
 - `.github/workflows/test.yaml`: new; two jobs, one of them twelve times.
 
 Files to read:
-- [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/1abc50390a8d51db60fc9cc7f9ad283ca5d41317/.github/workflows/test.yaml): the matrix of systems and Pythons.
+- [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/c191541470c0b4ee5f732395790557f2f002af7a/.github/workflows/test.yaml): the matrix of systems and Pythons.
   - look at: `python: ["3.11", "3.12", "3.13", "3.14"]`
 
 ```bash

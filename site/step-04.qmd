@@ -330,7 +330,7 @@ configuration. The coverage is 96.77%.
 
 ## step-04.8 A git hook
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c4b193a0d3b705314214f651d3dc987406425be8): exactly what it changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/774e4690468f28a77fb4f907119fdb928fd2dc7d): exactly what it changes.
 
 pre-commit installs a git hook: a program that git runs before every commit, and that refuses the commit if it
 fails.
@@ -342,7 +342,7 @@ uv add --group lint pre-commit
 Make `.pre-commit-config.yaml`.
 
 ```yaml
-# What every commit must pass. `just setup` installs it as a git hook.
+# What every commit must pass. `just hook` installs it as a git hook.
 #
 # The project's own checks are one hook that runs `just check`, so the hook and the terminal run the
 # same thing. The hooks before it guard against files that should never be committed.
@@ -364,36 +364,41 @@ repos:
         always_run: true
 ```
 
-In the `justfile`, `setup` installs the hook too, so every working copy has it.
+In the `justfile`, after `setup`, add a recipe `hook` that installs the hook. It is a recipe of its own, run
+once in each clone, because `just setup` runs at every step and never touches git.
 
 ```just
-# Install Python and every dependency into .venv, exactly as the lockfile says, and the git hook
+# Install the git hook: just check before every commit. Once per clone; just setup never touches git
 [group('setup')]
-setup *args:
-    @{{ if args == "help" { "just help setup" } else { "uv sync --locked && uv run pre-commit install" } }}
+hook *args:
+    @{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}
 ```
 
 These are the files changed:
 
 - `.pre-commit-config.yaml`: new; the hooks.
-- `justfile`: `setup` installs the hook.
+- `justfile`: the recipe `hook`, which installs the hook.
 - `pyproject.toml`: pre-commit in the group `lint`.
 - `uv.lock`: the exact version of pre-commit, and of what it needs.
 
 Files to read:
-- [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/c4b193a0d3b705314214f651d3dc987406425be8/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
+- [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/774e4690468f28a77fb4f907119fdb928fd2dc7d/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
   - look at: `entry: just check`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c4b193a0d3b705314214f651d3dc987406425be8/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/c4b193a0d3b705314214f651d3dc987406425be8#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): setup.
-  - look at: `uv sync --locked && uv run pre-commit install`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c4b193a0d3b705314214f651d3dc987406425be8/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/c4b193a0d3b705314214f651d3dc987406425be8#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/774e4690468f28a77fb4f907119fdb928fd2dc7d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/774e4690468f28a77fb4f907119fdb928fd2dc7d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
+  - look at: `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/774e4690468f28a77fb4f907119fdb928fd2dc7d/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/774e4690468f28a77fb4f907119fdb928fd2dc7d#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
   - look at: `"pre-commit>=4.6.2",`
 
 ```bash
-just setup
+uv run pre-commit install
+just --show hook
+just hook
 uv run pre-commit run --files .pre-commit-config.yaml
 ```
 
-`just setup` prints `pre-commit installed at .git/hooks/pre-commit`. `pre-commit run` runs every hook now, as
-git will before a commit, on the file named. The first time, it prints `[INFO]` lines while it downloads the
-hooks; then four lines, each `Passed`. `--all-files` would mean every file git tracks, and would skip this new
-file until it is added.
+`uv run pre-commit install`, and `just hook` after it, print `pre-commit installed at .git/hooks/pre-commit`.
+The hook is in `.git/hooks`, which no step or move changes, so it stays for the rest of the tutorial. If you
+start at a later step, run `just hook` once there. `pre-commit run` runs every hook now, as git will before a
+commit, on the file named. The first time, it prints `[INFO]` lines while it downloads the hooks; then four
+lines, each `Passed`. `--all-files` would mean every file git tracks, and would skip this new file until it is
+added.

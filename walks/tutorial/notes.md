@@ -1005,7 +1005,7 @@ uv add --group lint pre-commit
 Make `.pre-commit-config.yaml`.
 
 ```yaml
-# What every commit must pass. `just setup` installs it as a git hook.
+# What every commit must pass. `just hook` installs it as a git hook.
 #
 # The project's own checks are one hook that runs `just check`, so the hook and the terminal run the
 # same thing. The hooks before it guard against files that should never be committed.
@@ -1027,38 +1027,45 @@ repos:
         always_run: true
 ```
 
-In the `justfile`, `setup` installs the hook too, so every working copy has it.
+In the `justfile`, after `setup`, add a recipe `hook` that installs the hook. It is a recipe of its own, run
+once in each clone, because `just setup` runs at every step and never touches git.
 
 ```just
-# Install Python and every dependency into .venv, exactly as the lockfile says, and the git hook
+# Install the git hook: just check before every commit. Once per clone; just setup never touches git
 [group('setup')]
-setup *args:
-    @{{ if args == "help" { "just help setup" } else { "uv sync --locked && uv run pre-commit install" } }}
+hook *args:
+    @{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}
 ```
 
 These are the files changed:
 
 - `.pre-commit-config.yaml`: new; the hooks.
-- `justfile`: `setup` installs the hook.
+- `justfile`: the recipe `hook`, which installs the hook.
 - `pyproject.toml`: pre-commit in the group `lint`.
 - `uv.lock`: the exact version of pre-commit, and of what it needs.
 
 files:
 - file `.pre-commit-config.yaml`: three hooks from pre-commit's collection, then `just check`.
   show: `entry: just check`
-- diff `justfile`: setup.
-  show: `uv sync --locked && uv run pre-commit install`
+- diff `justfile`: the recipe `hook`.
+  show: `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
 - diff `pyproject.toml`: pre-commit in the group `lint`.
   show: `"pre-commit>=4.6.2",`
 
-$ just setup
+$ uv run pre-commit install
+
+$ just --show hook
+
+$ just hook
 
 $ uv run pre-commit run --files .pre-commit-config.yaml
 
-`just setup` prints `pre-commit installed at .git/hooks/pre-commit`. `pre-commit run` runs every hook now, as
-git will before a commit, on the file named. The first time, it prints `[INFO]` lines while it downloads the
-hooks; then four lines, each `Passed`. `--all-files` would mean every file git tracks, and would skip this new
-file until it is added.
+`uv run pre-commit install`, and `just hook` after it, print `pre-commit installed at .git/hooks/pre-commit`.
+The hook is in `.git/hooks`, which no step or move changes, so it stays for the rest of the tutorial. If you
+start at a later step, run `just hook` once there. `pre-commit run` runs every hook now, as git will before a
+commit, on the file named. The first time, it prints `[INFO]` lines while it downloads the hooks; then four
+lines, each `Passed`. `--all-files` would mean every file git tracks, and would skip this new file until it is
+added.
 
 ## step-05 Types
 
@@ -1097,7 +1104,7 @@ files:
 - diff `justfile`: the recipe.
   show: `types *args:`
 - diff `pyproject.toml`: ty in the group `lint`.
-  show: `"ty>=0.0.85",`
+  show: `"ty>=0.0.86",`
 
 $ uv run ty check
 
