@@ -76,11 +76,15 @@ The moves of step-01 add these things:
 
 ### step-01.1 click and requests
 
-click makes command lines. requests gets pages over HTTP. Add both packages.
+click makes command lines. requests gets pages over HTTP. Both packages go in the dependencies of wikiapp.
+
+::: do
+Add both packages.
 
 ```
 uv add click requests
 ```
+:::
 
 The move changed these files:
 
@@ -95,12 +99,25 @@ files:
 $ uv tree --depth 1
 
 `uv tree` shows the two packages under `wikiapp`. A newer version of a package can come out after these notes.
+
+::: do
 If your numbers are newer, your `uv.lock` differs from the one here, and the move is still correct.
+:::
 
 ### step-01.2 Ask Wikipedia for a page
 
-The code below is the first code of wikiapp, from 2024, with a docstring that says what the command does.
-Replace `src/wikiapp/console.py` with it.
+The new `src/wikiapp/console.py` is the first code of wikiapp, from 2024, with a docstring that says what the
+command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
+`main` here keeps the annotation that `uv init` gave it at step-00.
+
+- `requests.get` asks the REST API of Wikipedia for the summary of a random page.
+- `raise_for_status` raises an exception if the answer is an error.
+- `response.json()` reads the answer as a dictionary.
+
+`main` prints the title in green, and the summary wrapped to 70 columns.
+
+::: do
+Replace `src/wikiapp/console.py` with the code below.
 
 ```python
 import click
@@ -123,15 +140,7 @@ def main() -> None:
 if __name__=="__main__":
     main()
 ```
-
-`@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The `main`
-here keeps the annotation that `uv init` gave it at step-00.
-
-- `requests.get` asks the REST API of Wikipedia for the summary of a random page.
-- `raise_for_status` raises an exception if the answer is an error.
-- `response.json()` reads the answer as a dictionary.
-
-`main` prints the title in green, and the summary wrapped to 70 columns.
+:::
 
 The move changed this file:
 
@@ -150,8 +159,11 @@ a library. requests sends `python-requests/` and its version.
 ### step-01.3 A User-Agent
 
 The User-Agent header says who sends the request. The policy of Wikimedia asks for the name of the program,
-its version, and a way to reach the person who runs it. In `src/wikiapp/console.py`, add a line under `API_URL`, and pass it as a
-header.
+its version, and a way to reach the person who runs it. In `src/wikiapp/console.py`, a constant `USER_AGENT`
+under `API_URL` gives these three things. The request sends it as a header.
+
+::: do
+In `src/wikiapp/console.py`, add a line under `API_URL`, and pass it as a header.
 
 ```python
 USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
@@ -160,6 +172,7 @@ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
 ```python
     with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
 ```
+:::
 
 The move changed this file:
 
@@ -171,11 +184,16 @@ files:
 
 $ uv run wikiapp
 
-A title in green, and a paragraph. Run it again for another page.
+A title in green, and a paragraph. Each run prints another page.
 
 ### step-01.4 --version
 
 The package can read its own version from the installed package, which has the version in `pyproject.toml`.
+`src/wikiapp/__init__.py` now sets `__version__` from the metadata of the installed package.
+`src/wikiapp/console.py` imports `__version__`. The decorator `@click.version_option`, above `def main`, gives
+the command the option `--version`.
+
+::: do
 Replace `src/wikiapp/__init__.py` with the code below.
 
 ```python
@@ -194,6 +212,7 @@ from wikiapp import __version__
 @click.version_option(version=__version__)
 def main() -> None:
 ```
+:::
 
 The move changed these files:
 
@@ -225,7 +244,10 @@ the network until step 06.
 
 The tests need pytest, but the package does not. A person who installs wikiapp should not get pytest. So
 pytest goes in a dependency group of its own, `test`. uv installs the group `dev` by default, so `dev` includes
-`test`. In `pyproject.toml`, add the groups above `[build-system]`.
+`test`.
+
+::: do
+In `pyproject.toml`, add the groups above `[build-system]`.
 
 ```toml
 [dependency-groups]
@@ -234,11 +256,18 @@ dev = [{ include-group = "test" }]
 
 ```
 
-Then add pytest to the group `test`, and make the first test, `tests/test_console.py`.
+Then add pytest to the group `test`.
 
 ```
 uv add --group test pytest
 ```
+:::
+
+The first test, in `tests/test_console.py`, runs the command and checks that it ends with exit code 0. click's
+`CliRunner` runs a command in the same process as the test. It keeps the output and the exit code of the command.
+
+::: do
+Make `tests/test_console.py`.
 
 ```python
 import click.testing
@@ -250,9 +279,7 @@ def test_main_succeeds():
     result = runner.invoke(console.main)
     assert result.exit_code == 0
 ```
-
-click's `CliRunner` runs a command in the same process as the test. It keeps the output and the exit code of
-the command.
+:::
 
 The move changed these files:
 
@@ -272,7 +299,11 @@ The result is `1 passed`. The test asks the real Wikipedia, so it needs the netw
 
 ### step-02.2 The recipe `just test`
 
-Add a recipe for the tests at the end of the `justfile`.
+A recipe `test` runs the tests. Its words go to pytest. `"$@"` is every word after `just test`, and the recipe
+gives each word to pytest whole. `just test help` shows the recipe.
+
+::: do
+Add the recipe at the end of the `justfile`.
 
 ```just
 
@@ -282,10 +313,10 @@ Add a recipe for the tests at the end of the `justfile`.
 test *args:
     {{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}
 ```
+:::
 
-`"$@"` is every word after `just test`, and the recipe gives each word to pytest whole. `just test help` shows
-the recipe. `just` prints each line of a recipe before it runs the line, if the line does not start with `@`.
-So `just test` prints `uv run pytest "$@"`, the command that it ran.
+`just` prints each line of a recipe before it runs the line, if the line does not start with `@`. So `just test`
+prints `uv run pytest "$@"`, the command that it ran.
 
 The move changed this file:
 
@@ -304,8 +335,11 @@ The result is the same, `1 passed`.
 ### step-02.3 The runner as a fixture
 
 Each test of the command needs a `CliRunner`. A fixture makes one for every test that asks for it. A fixture is a
-function that pytest calls for each test that names it as a parameter. Replace `tests/test_console.py` with the
-code below.
+function that pytest calls for each test that names it as a parameter. The fixture `runner` returns a
+`CliRunner`, and `test_main_succeeds` takes the runner as its parameter.
+
+::: do
+Replace `tests/test_console.py` with the code below.
 
 ```python
 import click.testing
@@ -321,6 +355,7 @@ def test_main_succeeds(runner):
     result = runner.invoke(console.main)
     assert result.exit_code == 0
 ```
+:::
 
 The move changed this file:
 
@@ -337,13 +372,21 @@ The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 ### step-02.4 A mock in place of Wikipedia
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page.
-pytest-mock can replace `requests.get` with a mock for the length of one test.
+pytest-mock can replace `requests.get` with a mock for the length of one test. It goes in the group `test`.
+
+`mocker` is the fixture of pytest-mock. A new fixture, `mock_requests_get`, calls `mocker.patch("requests.get")`.
+The call replaces the function, and puts it back after the test. The line `mock.return_value.__enter__.return_value.json.return_value = {` sets what the mock returns when
+the code calls `response.json()` inside the `with` block. The mock returns a page with the title Lorem Ipsum. A
+new test, `test_main_prints_title`, checks that the command prints that title.
+
+::: do
+Add pytest-mock to the group `test`.
 
 ```
 uv add --group test pytest-mock
 ```
 
-Replace `tests/test_console.py` with the code below.
+Then replace `tests/test_console.py` with the code below.
 
 ```python
 import click.testing
@@ -372,10 +415,7 @@ def test_main_succeeds(runner):
     result = runner.invoke(console.main)
     assert result.exit_code == 0
 ```
-
-`mocker` is the fixture of pytest-mock. `mocker.patch("requests.get")` replaces the function, and puts it back after the test. The long
-line sets what the mock returns when the code calls `response.json()` inside the `with` block. The mock returns
-a page with the title Lorem Ipsum.
+:::
 
 The move changed these files:
 
@@ -395,7 +435,13 @@ The output shows `test_main_prints_title PASSED`, without the network.
 
 ### step-02.5 Tests of the request
 
-A mock keeps a record of each call to it. Add two tests to `tests/test_console.py`, after `test_main_prints_title`.
+A mock keeps a record of each call to it. Two tests check the request. `test_main_invokes_requests_get` checks
+that the command calls `requests.get`, and `test_main_uses_correct_url` checks the address. `call_args[0]` is the
+tuple of the positional arguments of the last call. Here it contains only the address. The header is a keyword
+argument, in `call_args[1]`.
+
+::: do
+Add the two tests to `tests/test_console.py`, after `test_main_prints_title`.
 
 ```python
 def test_main_invokes_requests_get(runner, mock_requests_get):
@@ -406,9 +452,7 @@ def test_main_uses_correct_url(runner, mock_requests_get):
     result = runner.invoke(console.main)
     assert mock_requests_get.call_args[0] == ("https://en.wikipedia.org/api/rest_v1/page/random/summary",)
 ```
-
-`call_args[0]` is the tuple of the positional arguments of the last call. Here it holds only the address. The
-header is a keyword argument, in `call_args[1]`.
+:::
 
 The move changed this file:
 
@@ -425,7 +469,11 @@ The result is `4 passed`.
 ### step-02.6 A test of a failed request
 
 The mock can raise an exception as well as return a value. If `side_effect` is an exception, a call to the
-mock raises it. Add the test below before `test_main_succeeds`.
+mock raises it. The test `test_main_fails_on_request_error` makes the mock raise, and checks that the command
+ends with exit code 1.
+
+::: do
+Add the test below before `test_main_succeeds`.
 
 ```python
 def test_main_fails_on_request_error(runner, mock_requests_get):
@@ -433,6 +481,7 @@ def test_main_fails_on_request_error(runner, mock_requests_get):
     result = runner.invoke(console.main)
     assert result.exit_code == 1
 ```
+:::
 
 The move changed this file:
 
@@ -448,13 +497,17 @@ The result is `5 passed`.
 
 ### step-02.7 Coverage
 
-pytest-cov measures which lines of the code the tests run.
+pytest-cov measures which lines of the code the tests run. It goes in the group `test`, and pytest's settings,
+at the end of `pyproject.toml`, turn coverage on for every run.
+
+::: do
+Add pytest-cov to the group `test`.
 
 ```
 uv add --group test pytest-cov
 ```
 
-Turn it on for every run, at the end of `pyproject.toml`.
+Then add the settings at the end of `pyproject.toml`.
 
 ```toml
 
@@ -463,6 +516,7 @@ testpaths = ["tests"]
 # Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
 addopts = "--cov=wikiapp --cov-report=term-missing"
 ```
+:::
 
 The tests of the original wikiapp had one more fixture, `mock_wikipedia_random_page`, and a test that was commented out.
 No test used them, so the project does not keep them.
@@ -492,6 +546,11 @@ nothing of the command line, and console.py is the app that uses it.
 
 ### step-03.1 random_page moves to wikipedia.py
 
+A new module, `src/wikiapp/wikipedia.py`, contains the address, the User-Agent and the function `random_page`.
+`random_page` returns the answer from inside the `with` block. The original set `data` there, and returned it
+after the block. The result is the same.
+
+::: do
 Make `src/wikiapp/wikipedia.py`.
 
 ```python
@@ -506,10 +565,12 @@ def random_page():
         response.raise_for_status()
         return response.json()
 ```
+:::
 
-`random_page` returns the answer from inside the `with` block. The original set `data` there, and returned it
-after the block. The result is the same. Then replace `src/wikiapp/console.py` with the code below. The
-constants and the request go, and `main` calls `random_page`.
+The constants and the request leave `src/wikiapp/console.py`, and `main` calls `random_page`.
+
+::: do
+Replace `src/wikiapp/console.py` with the code below.
 
 ```python
 import click
@@ -531,6 +592,7 @@ def main() -> None:
 if __name__=="__main__":
     main()
 ```
+:::
 
 The move changed these files:
 
@@ -551,8 +613,11 @@ The result is `5 passed`, with no change to the tests. The mock replaces the fun
 ### step-03.2 The mock moves to conftest.py
 
 pytest reads `tests/conftest.py` before the tests, and every test file can use a fixture in it. The tests of
-wikipedia.py, in the next move, need the mock too. Make `tests/conftest.py` with the mock in it. Then delete the
-mock from `tests/test_console.py`.
+wikipedia.py, in the next move, need the mock too. So the fixture `mock_requests_get` moves from
+`tests/test_console.py` to a new file, `tests/conftest.py`.
+
+::: do
+Make `tests/conftest.py` with the mock in it.
 
 ```python
 import pytest
@@ -566,6 +631,9 @@ def mock_requests_get(mocker):
     }
     return mock
 ```
+
+Then delete the fixture `mock_requests_get` from `tests/test_console.py`, with the blank line after it.
+:::
 
 The move changed these files:
 
@@ -583,8 +651,12 @@ The result is `5 passed`. pytest finds the fixture in conftest.py.
 
 ### step-03.3 A language
 
-Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, put a
-placeholder for the language in the address. Fill it in `random_page`, with English as the default.
+Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, the address
+has a placeholder for the language. `random_page` fills it, with English as the default.
+
+::: do
+In `src/wikiapp/wikipedia.py`, put a placeholder for the language in the address. Fill it in `random_page`, with
+English as the default.
 
 ```python
 API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
@@ -595,8 +667,13 @@ def random_page(language="en"):
     """Get a random page from Wikipedia."""
     with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
 ```
+:::
 
-Then make the first test of the library, `tests/test_wikipedia.py`.
+The first test of the library, in `tests/test_wikipedia.py`, asks for a page in Spanish. It checks that the
+address of the request contains `es.wikipedia.org`.
+
+::: do
+Then make `tests/test_wikipedia.py`.
 
 ```python
 from wikiapp import wikipedia
@@ -606,6 +683,7 @@ def test_random_page_uses_given_language(mock_requests_get):
     args, _ = mock_requests_get.call_args
     assert "es.wikipedia.org" in args[0]
 ```
+:::
 
 The move changed these files:
 
@@ -624,6 +702,10 @@ The result is `6 passed`.
 
 ### step-03.4 wikiapp --language
 
+In `src/wikiapp/console.py`, a new option `--language`, or `-l`, comes between `@click.command()` and
+`@click.version_option`. `main` takes a parameter `language`, and passes it on to `random_page`.
+
+::: do
 In `src/wikiapp/console.py`, add an option between `@click.command()` and `@click.version_option`, and pass it
 on.
 
@@ -643,6 +725,7 @@ def main(language) -> None:
     """Print the title and summary of a random Wikipedia page."""
     data = random_page(language=language)
 ```
+:::
 
 click gives the value of the option to the parameter with the same name.
 
@@ -664,7 +747,11 @@ The first command prints a French page. `--help` lists the option, its short for
 
 If a request fails for any reason, requests raises a `RequestException`. Code that uses the library should
 not need to know the exceptions of requests. So the library raises an exception of its own. In
-`src/wikiapp/wikipedia.py`, add the class above `random_page`, and put the request in a `try` block.
+`src/wikiapp/wikipedia.py`, the class `WikipediaError` comes above `random_page`. The request is now in a `try`
+block, and a `RequestException` becomes a `WikipediaError`.
+
+::: do
+In `src/wikiapp/wikipedia.py`, add the class above `random_page`, and put the request in a `try` block.
 
 ```python
 class WikipediaError(Exception):
@@ -679,6 +766,7 @@ def random_page(language="en"):
     except requests.RequestException as error:
         raise WikipediaError(str(error)) from error
 ```
+:::
 
 `from error` keeps the original exception, so a traceback shows both exceptions.
 
@@ -697,8 +785,11 @@ a traceback, and the last line is the `WikipediaError`. No code catches the erro
 
 ### step-03.6 The command prints the error
 
-In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click,
-which click prints as a message.
+`src/wikiapp/console.py` imports the error with `random_page`. `main` catches it, and raises the exception of
+click in its place. click prints that exception as a message.
+
+::: do
+In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click.
 
 ```python
 from wikiapp.wikipedia import WikipediaError, random_page
@@ -710,8 +801,13 @@ from wikiapp.wikipedia import WikipediaError, random_page
     except WikipediaError as error:
         raise click.ClickException(str(error)) from error
 ```
+:::
 
-Add a test to `tests/test_console.py`, before `test_main_succeeds`. Put `import requests` under `import pytest`.
+A new test, `test_main_prints_message_on_request_error`, makes the mock raise a `RequestException`. It checks
+that the output contains `Error`. `tests/test_console.py` now imports `requests`.
+
+::: do
+Add the test to `tests/test_console.py`, before `test_main_succeeds`. Put `import requests` under `import pytest`.
 
 ```python
 def test_main_prints_message_on_request_error(runner, mock_requests_get):
@@ -719,9 +815,11 @@ def test_main_prints_message_on_request_error(runner, mock_requests_get):
     result = runner.invoke(console.main)
     assert "Error" in result.output
 ```
+:::
 
 In the original wikiapp, the library raised the exception of click itself, with a note to move it to the
-console one day. In this move, the exception of click moves to console.py. wikipedia.py knows Wikipedia and requests, and console.py knows click.
+console one day. In this move, the exception of click moves to console.py. wikipedia.py knows Wikipedia and
+requests, and console.py knows click.
 
 The move changed these files:
 
@@ -755,18 +853,28 @@ it. The tests still need the network. Also, pre-commit downloads its hooks from 
 ### step-04.1 ruff, and the recipe fmt
 
 ruff is a formatter and a linter in one program. It goes in a third dependency group, `lint`, which `dev`
-includes. In `pyproject.toml`, change the line `dev = ...`, and add the group.
+includes.
+
+::: do
+In `pyproject.toml`, change the line `dev = ...`, and add the group.
 
 ```toml
 dev = [{ include-group = "test" }, { include-group = "lint" }]
 lint = []
 ```
 
-Add ruff to the group. Then add its settings at the end of `pyproject.toml`.
+Then add ruff to the group.
 
 ```
 uv add --group lint ruff
 ```
+:::
+
+ruff's settings, at the end of `pyproject.toml`, set lines of up to 100 characters. They also write out the
+defaults of the formatter.
+
+::: do
+Add the settings at the end of `pyproject.toml`.
 
 ```toml
 
@@ -781,7 +889,11 @@ quote-style = "double"            # "text", not 'text'
 indent-style = "space"            # four spaces, never tabs
 skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
 ```
+:::
 
+A recipe `fmt` runs the formatter. Its words go to `ruff format`.
+
+::: do
 Add a recipe at the end of the `justfile`.
 
 ```just
@@ -792,6 +904,7 @@ Add a recipe at the end of the `justfile`.
 fmt *args:
     {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
 ```
+:::
 
 The move changed these files:
 
@@ -817,11 +930,16 @@ passes on the words after `just fmt`.
 
 ### step-04.2 The code, formatted
 
+The formatter rewrites six files. It adds blank lines, puts spaces around `==`, and splits the lines longer than
+100 characters.
+
+::: do
 Run the formatter.
 
 ```
 just fmt
 ```
+:::
 
 The move changed these files:
 
@@ -847,9 +965,12 @@ looks, and never what it does. One test asks the real Wikipedia, so the tests ne
 
 ### step-04.3 The linter's rules, and the recipe lint
 
-The linter checks the code against rules. At the end of `pyproject.toml`, choose the families of rules. Also
-let the tests use `assert`. The rest of the code may not use it, because Python skips every `assert` when it runs
-with `-O`.
+The linter checks the code against rules. A table at the end of `pyproject.toml` chooses the families of rules,
+one family on each line. The tests may use `assert`. The rest of the code may not use it, because Python skips
+every `assert` when it runs with `-O`.
+
+::: do
+At the end of `pyproject.toml`, choose the families of rules, and let the tests use `assert`.
 
 ```toml
 
@@ -871,7 +992,11 @@ select = [
 # A test is written with assert
 "tests/**" = ["S101"]
 ```
+:::
 
+A recipe `lint` runs the linter. Its words go to `ruff check`.
+
+::: do
 Add a recipe at the end of the `justfile`.
 
 ```just
@@ -882,6 +1007,7 @@ Add a recipe at the end of the `justfile`.
 lint *args:
     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
 ```
+:::
 
 The move changed these files:
 
@@ -911,11 +1037,15 @@ The linter finds five problems, each with its code:
 
 ### step-04.4 The linter sorts the imports
 
-ruff can fix one of the five problems itself.
+ruff can fix one of the five problems itself. `just lint --fix` sorts the imports of `console.py`.
+
+::: do
+Let the linter fix what it can. The command still fails, with exit code 1, because four problems are left.
 
 ```
 just lint --fix
 ```
+:::
 
 The move changed this file:
 
@@ -933,17 +1063,26 @@ person must fix them.
 
 ### step-04.5 The tests' imports at the top, and no unused variables
 
-In `tests/test_console.py`, move `from wikiapp import console` up, under `import requests`. A reader looks for
-imports there. Put a blank line between the two imports. wikiapp's own imports are a block of their own, after
-the installed packages, as `--fix` made them in console.py. Where the import was, delete it and the two blank
-lines after it. The functions are then two blank lines apart.
+In `tests/test_console.py`, `from wikiapp import console` moves up, under `import requests`. A reader looks for
+imports there. wikiapp's own imports are a block of their own, after the installed packages, as `--fix` made them
+in console.py.
+
+::: do
+In `tests/test_console.py`, move `from wikiapp import console` up, under `import requests`. Put a blank line
+between the two imports. Where the import was, delete it and the two blank lines after it. The functions are then
+two blank lines apart.
+:::
 
 In `test_main_invokes_requests_get` and `test_main_uses_correct_url`, no line reads the result. The two tests
-check the mock, not the result. Make the first line of each test the call alone.
+check the mock, not the result. So the first line of each test is the call alone, without `result =`.
+
+::: do
+Make the first line of each of the two tests the call alone.
 
 ```python
     runner.invoke(console.main)
 ```
+:::
 
 The move changed this file:
 
@@ -962,13 +1101,17 @@ One problem is left, `S113`. The format is unchanged, and the check prints `7 fi
 ### step-04.6 A timeout
 
 Without a timeout, requests waits as long as the server keeps the connection open. So the command can wait for
-ever. In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
+ever. The request in `src/wikiapp/wikipedia.py` now has `timeout=10`.
+
+::: do
+In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
 
 ```python
         with requests.get(
             API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10
         ) as response:
 ```
+:::
 
 If the server does not answer within 10 seconds, the request now raises an exception. `random_page` turns it
 into a WikipediaError, as it does with every other error of requests.
@@ -987,13 +1130,18 @@ $ just lint
 
 ### step-04.7 The recipe lint-config
 
-validate-pyproject checks `pyproject.toml` against the standard for it.
+validate-pyproject checks `pyproject.toml` against the standard for it. It goes in the group `lint`. A recipe
+`lint-config` checks the configuration with three commands. validate-pyproject checks `pyproject.toml`,
+`uv lock --check` checks the lockfile, and `just --fmt --check --unstable` checks the `justfile`.
+
+::: do
+Add validate-pyproject to the group `lint`.
 
 ```
 uv add --group lint validate-pyproject
 ```
 
-Add a recipe at the end of the `justfile`. `lint-config` checks the configuration.
+Add a recipe at the end of the `justfile`.
 
 ```just
 
@@ -1008,6 +1156,7 @@ lint-config *args:
     uv lock --check
     just --fmt --check --unstable
 ```
+:::
 
 The move changed these files:
 
@@ -1036,13 +1185,17 @@ The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `
 
 ### step-04.8 A locked lockfile
 
-In the `justfile`, under `set positional-arguments`, add the line below. With it, every `uv run` of a recipe
-refuses a lockfile that is out of date. Without it, `uv run` quietly updates the lockfile.
+The `justfile` exports the variable `UV_LOCKED`, under `set positional-arguments`. With it, every `uv run` of a
+recipe refuses a lockfile that is out of date. Without it, `uv run` quietly updates the lockfile.
+
+::: do
+In the `justfile`, under `set positional-arguments`, add the line below.
 
 ```just
 
 export UV_LOCKED := "1"
 ```
+:::
 
 The move changed this file:
 
@@ -1059,8 +1212,11 @@ sees it.
 
 ### step-04.9 The recipe check
 
-Add a recipe at the end of the `justfile`. `check` runs every check in order, and stops at the first check
-that fails.
+A recipe `check` runs every check in order, and stops at the first check that fails. The order is the format,
+the linter, the tests with a floor on the coverage, and the configuration.
+
+::: do
+Add a recipe at the end of the `justfile`.
 
 ```just
 
@@ -1076,6 +1232,7 @@ check *args:
     just test -q --cov-fail-under=90
     just lint-config
 ```
+:::
 
 The move changed this file:
 
@@ -1095,12 +1252,21 @@ tests must run at least 90% of the statements. The coverage is 96.77%.
 ### step-04.10 A git hook
 
 pre-commit installs a git hook. A git hook is a program that git runs before every commit. If the program
-fails, git refuses the commit.
+fails, git refuses the commit. pre-commit goes in the group `lint`.
+
+::: do
+Add pre-commit to the group `lint`.
 
 ```
 uv add --group lint pre-commit
 ```
+:::
 
+The new file `.pre-commit-config.yaml` names the hooks. Three come from pre-commit's collection. They check for
+valid YAML, large files and leftover merge-conflict markers. The last hook runs `just check`, so the hook and
+the terminal run the same thing.
+
+::: do
 Make `.pre-commit-config.yaml`.
 
 ```yaml
@@ -1125,9 +1291,13 @@ repos:
         pass_filenames: false
         always_run: true
 ```
+:::
 
-In the `justfile`, after `setup`, add a recipe `hook` that installs the hook. It is a recipe of its own, run
-once in each clone, because `just setup` runs at every step and never touches git.
+A recipe `hook`, after `setup` in the `justfile`, installs the hook. It is a recipe of its own, run once in each
+clone, because `just setup` runs at every step and never touches git.
+
+::: do
+In the `justfile`, after `setup` and the blank line under it, add the recipe `hook`, with a blank line after it.
 
 ```just
 # Install the git hook: just check before every commit. Once per clone; just setup never touches git
@@ -1135,6 +1305,7 @@ once in each clone, because `just setup` runs at every step and never touches gi
 hook *args:
     @{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}
 ```
+:::
 
 The move changed these files:
 
@@ -1161,12 +1332,12 @@ $ uv run pre-commit run --files .pre-commit-config.yaml
 
 `uv run pre-commit install` prints `pre-commit installed at .git/hooks/pre-commit`, and `just hook` prints the
 same line. The hook is in `.git/hooks`, and no step or move changes that folder. So the hook stays for the rest
-of the tutorial. If you start at a later step, run `just hook` once there.
+of the tutorial. At a later step, `just hook` installs it once.
 
 `pre-commit run` now runs every hook on the file named, as git will before a commit. The first time, it prints
 `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
 
-With `--all-files`, pre-commit would check every file that git tracks. It would skip the new file until you add
+With `--all-files`, pre-commit would check every file that git tracks. It would skip a new file until git tracks
 it.
 
 ## step-05 Types
@@ -1179,12 +1350,19 @@ a type on every parameter and return. The last moves add the types, and put the 
 ### step-05.1 ty, and the recipe types
 
 ty reads the code without running it. It finds code whose types cannot fit, for example a call whose
-arguments cannot have the types that the function asks for.
+arguments cannot have the types that the function asks for. ty goes in the group `lint`.
+
+::: do
+Add ty to the group `lint`.
 
 ```
 uv add --group lint ty
 ```
+:::
 
+A recipe `types` runs ty. It comes after the recipe `lint` in the `justfile`.
+
+::: do
 In the `justfile`, add a recipe after the recipe `lint` and the blank line under it.
 
 ```just
@@ -1195,6 +1373,7 @@ types *args:
     {{ if args == "help" { "just help types" } else { 'uv run ty check "$@"' } }}
 
 ```
+:::
 
 The move changed these files:
 
@@ -1219,12 +1398,16 @@ ty can tell, `__name__ or __package__` could be None. But `importlib.metadata.ve
 
 ### step-05.2 The version of "wikiapp", by name
 
-`pyproject.toml` gives the name of the installed package, `wikiapp`. Ask for the version of that name. Change
-the last line of `src/wikiapp/__init__.py`.
+`pyproject.toml` gives the name of the installed package, `wikiapp`. The last line of `src/wikiapp/__init__.py`
+now asks for the version of that name, a string that is never None.
+
+::: do
+Change the last line of `src/wikiapp/__init__.py`.
 
 ```python
 __version__ = importlib.metadata.version("wikiapp")
 ```
+:::
 
 The move changed this file:
 
@@ -1240,12 +1423,17 @@ $ just types
 
 ### step-05.3 A type on every parameter and return
 
-ty, the type checker that `just types` runs, checks the types that the code states. ruff's `ANN` rules make sure that the code states a type for every
-parameter and return. In `pyproject.toml`, add a line to `select`, after `"N"`.
+ty, the type checker that `just types` runs, checks the types that the code states. ruff's `ANN` rules make sure
+that the code states a type for every parameter and return. One line in `select` of `pyproject.toml` turns them
+on, after `"N"`.
+
+::: do
+In `pyproject.toml`, add a line to `select`, after `"N"`.
 
 ```toml
     "ANN", # annotations: every parameter and every return value has a type
 ```
+:::
 
 The move changed this file:
 
@@ -1259,14 +1447,19 @@ $ just lint --statistics
 
 The linter finds 25 missing types, in the code and in the tests. They are 15 parameters (`ANN001`) and 10
 returns (`ANN201`). `just check` fails at this move and at the next move, and passes again at step-05.5. So the
-git hook refuses to commit this move or the next. In do mode, you make the two moves without a commit. In the
-project's history, they are commits made past the hook.
+git hook refuses to commit this move or the next. In the project's history, they are commits made past the hook.
 
 ### step-05.4 Types in the code
 
 In `src/wikiapp/wikipedia.py`, `random_page` takes a string. It returns the JSON that Wikipedia sends, which is
-a dictionary from strings to values of any kind. `Any` says that ty cannot check the values. Import `Any` at the
-top, above `import requests`, with a blank line between them. The standard library is a block of its own.
+a dictionary from strings to values of any kind. `Any` says that ty cannot check the values. The file imports
+`Any` at the top, above `import requests`. The standard library is a block of its own.
+
+In `src/wikiapp/console.py`, `main` takes the language as a string. Its return type, None, was already there.
+
+::: do
+Import `Any` at the top of `src/wikiapp/wikipedia.py`, above `import requests`, with a blank line between them.
+Then give `random_page` its types.
 
 ```python
 from typing import Any
@@ -1276,11 +1469,12 @@ from typing import Any
 def random_page(language: str = "en") -> dict[str, Any]:
 ```
 
-In `src/wikiapp/console.py`, `main` takes the language as a string.
+In `src/wikiapp/console.py`, give the parameter of `main` its type.
 
 ```python
 def main(language: str) -> None:
 ```
+:::
 
 The move changed these files:
 
@@ -1304,7 +1498,11 @@ Since step-05.3, ruff's `ANN` rules ask for a type on every parameter and return
 
 The return type of a fixture is the type of what a test receives. The runner is a `CliRunner`, and the mock of
 `requests.get` is a `Mock`. `mocker` is pytest-mock's `MockerFixture`, the name that replaced the original
-wikiapp's `MockFixture`. A test returns None. Replace `tests/conftest.py` with this file.
+wikiapp's `MockFixture`. `tests/conftest.py` now imports `Mock` and `MockerFixture`, and its fixture states both
+types.
+
+::: do
+Replace `tests/conftest.py` with this file.
 
 ```python
 from unittest.mock import Mock
@@ -1322,9 +1520,16 @@ def mock_requests_get(mocker: MockerFixture) -> Mock:
     }
     return mock
 ```
+:::
 
-In `tests/test_console.py`, import `Mock` and `CliRunner` by name. Use `CliRunner()` in the fixture, and give
-every function its types. Two of the functions are the pattern for the rest.
+A test returns None. `tests/test_console.py` imports `Mock` and `CliRunner` by name. The fixture `runner` returns
+`CliRunner()`, and every function has its types. `tests/test_wikipedia.py` imports `Mock` at the top, and its
+test has its types.
+
+::: do
+In `tests/test_console.py`, replace the imports at the top with the ones below: `import click.testing` goes, and
+`Mock` and `CliRunner` come in by name. Use `CliRunner()` in the fixture, and give every function its types. Two
+of the functions are the pattern for the rest.
 
 ```python
 from unittest.mock import Mock
@@ -1344,12 +1549,13 @@ def runner() -> CliRunner:
 def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
 ```
 
-In `tests/test_wikipedia.py`, do the same. Put `from unittest.mock import Mock` at the top, with a blank line
+In `tests/test_wikipedia.py`, put `from unittest.mock import Mock` at the top, with a blank line
 after it, and give the test its types.
 
 ```python
 def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
 ```
+:::
 
 The move changed these files:
 
@@ -1369,10 +1575,18 @@ $ just lint
 
 $ just types
 
-Both commands pass. If `just lint` reports `I001`, the imports are not in the blocks that the code above shows.
+Both commands pass.
+
+::: do
+If `just lint` reports `I001`, the imports are not in their blocks. Lines 1 to 7 of `tests/test_console.py` show
+the blocks, the standard library first, then the other packages, then wikiapp.
+:::
 
 ### step-05.6 The recipe check runs the type checker
 
+The recipe `check` in the `justfile` now runs `just types` after `just lint`. Its comment names the types too.
+
+::: do
 In the `justfile`, in `check`, run `just types` after `just lint`. Also add the types to the comment of `check`.
 
 ```just
@@ -1383,6 +1597,7 @@ In the `justfile`, in `check`, run `just types` after `just lint`. Also add the 
     just lint
     just types
 ```
+:::
 
 The move changed this file:
 
@@ -1406,16 +1621,19 @@ The project accepts every Python from 3.11 on. GitHub runs the tests on three sy
 ### step-06.1 The end-to-end test runs only on request
 
 `test_main_succeeds` is the one test that goes over the network. It fails without a network, and its result
-depends on Wikipedia. In `tests/test_console.py`, mark it `e2e`, which means end to end, and give it a name that
-says so.
+depends on Wikipedia. In `tests/test_console.py`, it now has the marker `e2e`, which means end to end. Its new
+name says so, `test_main_succeeds_in_production`. `pyproject.toml` declares the marker in `markers`. The option
+`-m 'not e2e'` in `addopts` leaves the e2e tests out of every run that does not ask for them.
+
+::: do
+In `tests/test_console.py`, mark the test `e2e`, and give it the new name.
 
 ```python
 @pytest.mark.e2e
 def test_main_succeeds_in_production(runner: CliRunner) -> None:
 ```
 
-In `pyproject.toml`, declare the marker, and leave the e2e tests out of every run that does not ask for them.
-Replace the comment and the line `addopts`.
+In `pyproject.toml`, replace the comment and the line `addopts`.
 
 ```toml
 # Every run measures how much of src/wikiapp the tests run, and lists the lines they do not. A test
@@ -1424,6 +1642,7 @@ Replace the comment and the line `addopts`.
 addopts = "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"
 markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]
 ```
+:::
 
 The move changed these files:
 
@@ -1444,10 +1663,14 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
 
 ### step-06.2 An end-to-end test of the library
 
-The mocks return a dictionary with a title and an extract. The test below comes from the original wikiapp. It
-checks that the real Wikipedia still returns the same keys. Add it at the end of `tests/test_wikipedia.py`. Put
-`import pytest` in a block of its own between `from unittest.mock import Mock` and `from wikiapp import
-wikipedia`, with a blank line on each side.
+The mocks return a dictionary with a title and an extract. A second e2e test, from the original wikiapp,
+checks that the real Wikipedia still returns the same keys. It is
+`test_random_page_returns_dictionary_in_production`, at the end of `tests/test_wikipedia.py`. The file now
+imports pytest, in a block of its own.
+
+::: do
+Add the test at the end of `tests/test_wikipedia.py`. Put `import pytest` in a block of its own between
+`from unittest.mock import Mock` and `from wikiapp import wikipedia`, with a blank line on each side.
 
 ```python
 
@@ -1458,6 +1681,7 @@ def test_random_page_returns_dictionary_in_production() -> None:
     assert "title" in page
     assert "extract" in page
 ```
+:::
 
 The move changed this file:
 
@@ -1475,7 +1699,10 @@ The output is `2 passed, 6 deselected`.
 
 `uv init` wrote `requires-python = ">=3.13"`, because the command asked for Python 3.13. Nothing here needs
 more than 3.11. Python 3.10 reached its end of life on 1 October 2026, so 3.11 is now the oldest Python that
-still gets security fixes. In `pyproject.toml`, change the line, and solve the lockfile again.
+still gets security fixes. The line in `pyproject.toml` now says 3.11, and uv solves the lockfile again.
+
+::: do
+In `pyproject.toml`, change the line, and solve the lockfile again.
 
 ```toml
 requires-python = ">=3.11"
@@ -1484,6 +1711,7 @@ requires-python = ">=3.11"
 ```
 uv lock
 ```
+:::
 
 The project still runs on 3.13, from `.python-version`.
 
@@ -1506,7 +1734,11 @@ $ uv run --isolated --python 3.11 pytest -q
 ### step-06.4 GitHub runs the tests
 
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push
-to main and on every pull request. Make `.github/workflows/test.yaml`.
+to main and on every pull request. The workflow `.github/workflows/test.yaml` has two jobs. The job `tests` runs
+the tests on three systems and four Pythons. The job `check` runs `just check` once.
+
+::: do
+Make `.github/workflows/test.yaml`.
 
 ```yaml
 # What GitHub runs on every push to main and every pull request.
@@ -1547,6 +1779,7 @@ jobs:
       - run: just setup
       - run: just check
 ```
+:::
 
 The original wikiapp used pixi for the same work, with one environment for each Python. Here, `setup-uv` tells
 uv which Python to use. If that Python is missing, `uv run` installs it.
@@ -1576,11 +1809,18 @@ language code.
 
 The command uses two of the many keys that Wikipedia sends. Until now, the code expects these keys to be there,
 with strings as values, but nothing checks it. A pydantic model states the two keys and their types in code.
+pydantic is a dependency of the package, as click and requests are.
 
+::: do
 ```
 uv add pydantic
 ```
+:::
 
+In `src/wikiapp/wikipedia.py`, the class `Page` comes after `WikipediaError`. It has a title and an extract, both
+strings. The file imports `BaseModel` under `import requests`.
+
+::: do
 In `src/wikiapp/wikipedia.py`, import it under `import requests`, and add the class after `WikipediaError`, with
 two blank lines before it and after it.
 
@@ -1595,6 +1835,7 @@ class Page(BaseModel):
     title: str
     extract: str
 ```
+:::
 
 The move changed these files:
 
@@ -1618,7 +1859,11 @@ with a ValidationError, because `extract` is missing.
 ### step-07.2 random_page returns a Page
 
 In `src/wikiapp/wikipedia.py`, `random_page` makes a Page of the answer and returns the Page. The code no
-longer uses `Any`, so delete its import, and the blank line under it.
+longer uses `Any`, so its import and the blank line under it are gone.
+
+::: do
+In `src/wikiapp/wikipedia.py`, delete the import of `Any`, and the blank line under it. Then change the return
+type of `random_page`, and its `return` line.
 
 ```python
 def random_page(language: str = "en") -> Page:
@@ -1627,9 +1872,13 @@ def random_page(language: str = "en") -> Page:
 ```python
             return Page.model_validate(response.json())
 ```
+:::
 
 In `src/wikiapp/console.py`, `main` prints the attributes of the page. ty and an editor know the names of the
 attributes. A misspelled key of a dictionary shows up only when the program runs.
+
+::: do
+In `src/wikiapp/console.py`, replace the code under the docstring of `main` with the code below.
 
 ```python
     try:
@@ -1639,9 +1888,14 @@ attributes. A misspelled key of a dictionary shows up only when the program runs
     click.secho(page.title, fg="green")
     click.echo(textwrap.fill(page.extract))
 ```
+:::
 
+In `tests/test_wikipedia.py`, the e2e test is now `test_random_page_returns_page_in_production`, with the same
+marker. Its new name says that it checks for a Page.
+
+::: do
 In `tests/test_wikipedia.py`, replace the e2e test `test_random_page_returns_dictionary_in_production`, and
-keep its marker. The new name says that the test checks for a Page.
+keep its marker.
 
 ```python
 @pytest.mark.e2e
@@ -1649,6 +1903,7 @@ def test_random_page_returns_page_in_production() -> None:
     page = wikipedia.random_page()
     assert isinstance(page, wikipedia.Page)
 ```
+:::
 
 The move changed these files:
 
@@ -1673,8 +1928,11 @@ $ uv run wikiapp
 ### step-07.3 An answer that is not a page
 
 When the answer has no title, `model_validate` raises the ValidationError of pydantic. `random_page` turns it
-into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, import ValidationError,
-and catch it together with the exception of requests.
+into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, the `except` catches
+ValidationError together with the exception of requests.
+
+::: do
+In `src/wikiapp/wikipedia.py`, import ValidationError, and catch it together with the exception of requests.
 
 ```python
 from pydantic import BaseModel, ValidationError
@@ -1683,9 +1941,13 @@ from pydantic import BaseModel, ValidationError
 ```python
     except (requests.RequestException, ValidationError) as error:
 ```
+:::
 
-Add the test from the original wikiapp at the end of `tests/test_wikipedia.py`. In the test, the mock answers
-with an empty dictionary.
+A test from the original wikiapp, `test_random_page_handles_validation_error`, is at the end of
+`tests/test_wikipedia.py`. In the test, the mock answers with an empty dictionary.
+
+::: do
+Add the test at the end of `tests/test_wikipedia.py`.
 
 ```python
 
@@ -1695,6 +1957,7 @@ def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
     with pytest.raises(wikipedia.WikipediaError):
         wikipedia.random_page()
 ```
+:::
 
 The move changed these files:
 
@@ -1715,8 +1978,13 @@ The output is `1 passed, 8 deselected`.
 
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as
 `example.com/x?` sends the request to example.com, with the User-Agent. The code of every Wikipedia has only
-letters and hyphens, for example `en`, `fr`, `simple` and `zh-yue`. In `src/wikiapp/wikipedia.py`, import `re`
-at the top, in a block of its own above `import requests`. Add a pattern under `API_URL`.
+letters and hyphens, for example `en`, `fr`, `simple` and `zh-yue`. In `src/wikiapp/wikipedia.py`, a pattern
+`LANGUAGE` under `API_URL` matches such a code. `random_page` checks the language first, before the `try`. Any
+other language raises a WikipediaError.
+
+::: do
+In `src/wikiapp/wikipedia.py`, import `re` at the top, in a block of its own above `import requests`. Add a
+pattern under `API_URL`.
 
 ```python
 import re
@@ -1727,12 +1995,13 @@ import re
 LANGUAGE = re.compile(r"[a-z]+(-[a-z]+)*")  # en, fr, simple, zh-yue: letters and hyphens
 ```
 
-`random_page` checks the language first, before the `try`.
+Add the check at the top of the body of `random_page`, under its docstring and before the `try`.
 
 ```python
     if not LANGUAGE.fullmatch(language):
         raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
 ```
+:::
 
 The move changed this file:
 
@@ -1749,7 +2018,7 @@ $ just test -q
 The command prints `Error: 'example.com/x?' is not a language code, such as en, fr or zh-yue`, and sends no
 request. The tests print `7 passed, 2 deselected`. No test reaches the new `raise`, so the coverage table lists
 its line as missing. The coverage is 95% in all, which is still over the floor of 90%. A drop in coverage is
-something to know about. Do not hide it with a new test.
+something to know about. The tutorial adds no test to hide it.
 
 ## step-08 Docs from the code
 
@@ -1769,7 +2038,8 @@ The reference of a function gives its signature, what it does, and what each par
 the types are in the code. The docstring says what the function does. A docment says what each parameter is. A
 docment is the comment beside a parameter, with one parameter to a line.
 
-The block below shows `random_page` with its docments. You write it in the next move, not in this move.
+The block below shows `random_page` with its docments, as the next move writes them. This move does not change
+`random_page`.
 
 ```python
 def random_page(
@@ -1778,20 +2048,28 @@ def random_page(
 ```
 
 smalldocs reads all three, and writes the reference as Markdown. It is a Python package, so uv installs it like
-any other. smalldocs goes in a fourth dependency group, `docs`, and `dev` includes that group. In
-`pyproject.toml`, change the line `dev = ...`, and add the group on the line after it.
+any other. smalldocs goes in a fourth dependency group, `docs`, and `dev` includes that group.
+
+::: do
+In `pyproject.toml`, change the line `dev = ...`, and add the group on the line after it.
 
 ```toml
 dev = [{ include-group = "test" }, { include-group = "lint" }, { include-group = "docs" }]
 docs = []
 ```
 
+Then add smalldocs to the group `docs`.
+
 ```
 uv add --group docs smalldocs
 ```
+:::
 
 smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has one section, `api`, the
-reference. Make the file with these lines.
+reference. It names the package to document, the address of its source, and the files of the tests to check.
+
+::: do
+Make `docs/_smalldocs.yml` with the lines below.
 
 ```yaml
 # The settings of smalldocs. `api` is the reference, made from the code of the packages
@@ -1800,6 +2078,7 @@ api:
   source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
   check: ["tests/**/*.py"]  # the tests are held to the same rule as the package
 ```
+:::
 
 `smalldocs api` has two commands that this step uses:
 
@@ -1807,7 +2086,10 @@ api:
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
   docstring. It looks in the package and in the files of `check`, here the tests.
 
-Add a recipe at the end of the `justfile`.
+A recipe `docs`, at the end of the `justfile`, gives its words to `smalldocs api`.
+
+::: do
+Add the recipe at the end of the `justfile`.
 
 ```just
 
@@ -1817,6 +2099,7 @@ Add a recipe at the end of the `justfile`.
 docs *args:
     {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
 ```
+:::
 
 The move changed these files:
 
@@ -1848,17 +2131,23 @@ docstring. Above the total, `check` names every gap, and the five modules withou
 
 ### step-08.2 The library documented
 
-In `src/wikiapp/wikipedia.py`, add these:
+`src/wikiapp/wikipedia.py` gets these:
 
 - a docstring at the top of the module
 - a docment beside each field of Page
 - a docment on the parameter and on the return of `random_page`
 - a longer docstring of `random_page`, which says when it raises an error
 
+::: do
+In `src/wikiapp/wikipedia.py`, add the docstring of the module at the top.
+
 ```python
 """Wikipedia's REST API: a random page."""
 
 ```
+
+Then replace the class `Page` and the head of `random_page`, from its `def` to the end of its docstring, with the
+code below.
 
 ```python
 class Page(BaseModel):
@@ -1877,6 +2166,7 @@ def random_page(
     when the answer is not a page.
     """
 ```
+:::
 
 A pydantic field can also take its description as `Field(description="...")`. pydantic keeps that description
 in the schema of the model, which other programs read. smalldocs uses the description when a field has one, and
@@ -1897,6 +2187,9 @@ The tables now have their descriptions.
 
 ### step-08.3 The command documented
 
+`src/wikiapp/__init__.py` and `src/wikiapp/console.py` each get a docstring at the top.
+
+::: do
 Add a docstring at the top of `src/wikiapp/__init__.py` and of `src/wikiapp/console.py`.
 
 ```python
@@ -1908,18 +2201,24 @@ Add a docstring at the top of `src/wikiapp/__init__.py` and of `src/wikiapp/cons
 """The wikiapp command."""
 
 ```
+:::
 
-`check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class. Python
-still shows it, in `help(wikiapp)`.
+`check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class.
+Python still shows it, in `help(wikiapp)`.
 
-In `console.py`, give `main` one parameter to a line, with its docment, and a docstring that says what `main`
-prints. A function that returns None needs no docment for its return. `wikiapp --help` prints the docstring and
-the help of each option, so those are documentation too. The help of `--language` now says what a language is.
-It replaces the help of the original wikiapp, "Gets random page from Wikipedia in given language".
+`wikiapp --help` prints the docstring of `main` and the help of each option, so those are documentation too. The
+help of `--language` now says what a language is. It replaces the help of the original wikiapp, "Gets random
+page from Wikipedia in given language". `main` has one parameter to a line, with its docment, and a docstring
+that says what `main` prints. A function that returns None needs no docment for its return.
+
+::: do
+In `console.py`, replace the line `help=...` of the option `--language` with the line below.
 
 ```python
     help="The language of the Wikipedia to ask, as its code: en, fr, es",
 ```
+
+Then replace the line `def main(...)` and the docstring under it with the code below.
 
 ```python
 def main(
@@ -1930,6 +2229,7 @@ def main(
     The title is in green, and the summary is wrapped to 70 columns.
     """
 ```
+:::
 
 The move changed these files:
 
@@ -1954,7 +2254,8 @@ A docment is the comment beside a parameter, or after the colon of the `def` lin
 docstrings.
 
 Each test file says what it tests, and each fixture says what it returns. Each test says in one line what it
-checks. The docstrings say in words what the asserts say in code.
+checks. The docstrings say in words what the asserts say in code. Each parameter of a test has a docment, one
+parameter to a line, and `tests/test_console.py` shows the pattern best.
 
 ::: do
 The three files are long to type, so take them with **Apply the whole move** in timewalk, or from the move's
@@ -1967,11 +2268,6 @@ def test_main_prints_title(
 ) -> None:
     """The command prints the title of the page."""
 ```
-:::
-
-::: watch
-`tests/test_console.py` shows the pattern best. Each parameter of a test has a docment, and the docstring of
-the test is one line.
 :::
 
 The move changed these files:
@@ -2000,10 +2296,10 @@ smalldocs also makes a website from Markdown. The site is in `docs/`. It has a f
 reference page for each module. Each build writes the reference pages from the code, before it builds the site.
 A name in backticks, such as `random_page`, becomes a link to its entry.
 
-The move adds the front page, `docs/index.qmd`. A `.qmd` file is Markdown, with a header between two `---` lines
-that gives the title of the page. It also adds the settings of the site to `docs/_smalldocs.yml`.
-The settings are the type of the project, its output folder, the title, the sidebar, the theme and a table of
-contents on each page. `just docs` with no words builds the site.
+The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, which stays as it is. They are
+the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
+page. The comment at the top now says that `just docs` builds the site. The front page, `docs/index.qmd`, is
+new. A `.qmd` file is Markdown, with a header between two `---` lines that gives the title of the page.
 
 ::: do
 In `docs/_smalldocs.yml`, replace the first line, a comment, with the lines below. The section `api` stays as it
@@ -2029,6 +2325,14 @@ toc: true
 # `api` is the reference, made from the code of the packages. A name in backticks links to its entry
 ```
 
+The front page is long to type, so take `docs/index.qmd` with **Apply this file** in timewalk, or from the
+move's commit on GitHub.
+:::
+
+`just docs` with no words builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api` as
+before. The recipe is now a script of several lines.
+
+::: do
 In the `justfile`, replace the recipe `docs`, from its comment to its last line, with the code below.
 
 ```just
@@ -2041,13 +2345,6 @@ docs *args:
     if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi
     exec uv run smalldocs api "$@" --dir docs
 ```
-
-The front page is long to type, so take `docs/index.qmd` with **Apply this file** in timewalk, or from the
-move's commit on GitHub.
-:::
-
-::: watch
-Read `docs/_smalldocs.yml` first. Its new lines are the settings of the site, above the section `api`.
 :::
 
 The move changed these files:
@@ -2072,9 +2369,9 @@ $ just --show docs
 
 $ just docs
 
-smalldocs prints `wrote 3 page(s) to docs/_site`. Open `docs/_site/index.html` in a browser. On the front page,
-`random_page` is a link to its entry. Each build makes the site and the reference pages, and git ignores
-them.
+smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is `docs/_site/index.html`, for a
+browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
+pages, and git ignores them.
 
 ### step-08.6 The README names the tests and the docs
 
@@ -2106,17 +2403,22 @@ $ grep -n -E 'tests/|docs/' README.md
 
 ### step-08.7 The docs check in `just check`
 
-In the `justfile`, in `check`, run `just docs check` after the tests. Replace the comment above `check` with
-the first line below.
+`check` now runs `just docs check` after the tests, and the comment above it names the docs among the checks.
+
+::: do
+In the `justfile`, replace the comment above `check` with the line below.
 
 ```just
 # Everything a commit must pass: format, lint, types, tests over the coverage floor, docs, configuration
 ```
 
+Then, in `check`, add `just docs check` after the line of the tests.
+
 ```just
     just test -q --cov-fail-under=90
     just docs check
 ```
+:::
 
 The move changed this file:
 
@@ -2143,11 +2445,15 @@ could then install wikirandom without wikiapp and click.
 ### step-09.1 An empty library, wikirandom
 
 uv can make a second package inside a project. The two packages then form a *workspace*, which has one lockfile
-and one `.venv` for both.
+and one `.venv` for both. `uv init --lib --author-from none packages/wikirandom` makes the library.
+`--author-from none` keeps uv from writing the author's name and email from git into the library's
+`pyproject.toml`.
 
+::: do
 ```
 uv init --lib --author-from none packages/wikirandom
 ```
+:::
 
 uv makes `packages/wikirandom/`, with these files in it:
 
@@ -2156,9 +2462,12 @@ uv makes `packages/wikirandom/`, with these files in it:
 - `src/wikirandom/__init__.py`, with an example function, `hello`
 - `src/wikirandom/py.typed`, the mark that tells a type checker that the package has types
 
-In the project's `pyproject.toml`, uv adds `[tool.uv.workspace]`. uv copied the Python version from
-`.python-version`. In `packages/wikirandom/pyproject.toml`, make the library need 3.11, as the app does. Also give
-the library a description.
+In the project's `pyproject.toml`, uv adds `[tool.uv.workspace]`. uv copies the Python version from
+`.python-version`. The library's `pyproject.toml` then gets Python 3.11, as the app has, and a description. Its
+README gets a heading and one line of what it is.
+
+::: do
+In `packages/wikirandom/pyproject.toml`, make the library need 3.11, and give it a description.
 
 ```toml
 description = "A random page of Wikipedia, in any language"
@@ -2168,17 +2477,22 @@ description = "A random page of Wikipedia, in any language"
 requires-python = ">=3.11"
 ```
 
-Replace `packages/wikirandom/README.md` with a heading and one line of what it is, and lock again.
+Replace `packages/wikirandom/README.md` with a heading and one line of what it is.
 
 ```markdown
 # wikirandom
 
-A random page of Wikipedia, in any language. The command `wikiapp` uses this library.
+A random page of Wikipedia, in any language. The command `wikiapp` will use this library.
 ```
+:::
 
+`uv lock` makes the lockfile again, for the workspace of two packages.
+
+::: do
 ```
 uv lock
 ```
+:::
 
 The move changed these files:
 
@@ -2199,11 +2513,15 @@ $ uv run --package wikirandom python -c "import wikirandom; print(wikirandom.hel
 
 The command prints `Hello from wikirandom!`. `--package wikirandom` installs the library into the shared `.venv`,
 and runs the command there. The app does not depend on the library yet, so a plain `uv run` would not install it.
-`--author-from none` kept uv from writing your name and email from git into the library's `pyproject.toml`.
 
 ### step-09.2 The code goes into wikirandom
 
-The library needs requests and pydantic.
+The library needs requests and pydantic. `packages/wikirandom/src/wikirandom/__init__.py` now contains the code of
+`src/wikiapp/wikipedia.py`. Its docstring says what the package is. Its User-Agent names the program that makes
+the request.
+
+::: do
+Add requests and pydantic to the library.
 
 ```
 uv add --package wikirandom requests pydantic
@@ -2219,6 +2537,7 @@ docstring to say what the package is. Change its User-Agent to name the program 
 ```python
 USER_AGENT = "wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
 ```
+:::
 
 The move changed these files:
 
@@ -2239,20 +2558,21 @@ library yet.
 
 ### step-09.3 The app uses wikirandom
 
-Make the library a dependency of the app. Take requests and pydantic out of the app's dependencies, because the
-app no longer imports them.
+The library becomes a dependency of the app. requests and pydantic leave the app's dependencies, because the app
+no longer imports them. Because wikirandom is a member of the workspace, `uv add` writes
+`wikirandom = { workspace = true }` under `[tool.uv.sources]`. So uv installs the library from
+`packages/wikirandom` as an editable package, and not from PyPI. `src/wikiapp/console.py` imports from the
+library. ruff sorts the import with the installed packages, under `import click`.
+
+::: do
+Make the library a dependency of the app, and take requests and pydantic out of the app's dependencies.
 
 ```
 uv add wikirandom
 uv remove requests pydantic
 ```
 
-Because wikirandom is a member of the workspace, `uv add` writes `wikirandom = { workspace = true }` under
-`[tool.uv.sources]`. So uv installs the library from `packages/wikirandom` as an editable package, and not from
-PyPI.
-
-In `src/wikiapp/console.py`, import from the library. ruff sorts the import with the installed packages, under
-`import click`.
+In `src/wikiapp/console.py`, import from the library.
 
 ```python
 import click
@@ -2260,9 +2580,25 @@ from wikirandom import WikipediaError, random_page
 
 from wikiapp import __version__
 ```
+:::
 
-Delete `src/wikiapp/wikipedia.py`. Rename `tests/test_wikipedia.py` to `tests/test_wikirandom.py`. Then make the
-test file test the library:
+`src/wikiapp/wikipedia.py` goes, and `tests/test_wikipedia.py` becomes `tests/test_wikirandom.py`.
+
+::: do
+Delete `src/wikiapp/wikipedia.py`, and rename `tests/test_wikipedia.py` to `tests/test_wikirandom.py`.
+
+```
+git rm src/wikiapp/wikipedia.py
+git mv tests/test_wikipedia.py tests/test_wikirandom.py
+```
+:::
+
+The renamed file tests the library. Its docstring is `Tests of the library, wikirandom.`, and it imports
+`wikirandom` under `import pytest`. Its tests call `wikirandom.random_page`, `wikirandom.Page` and
+`wikirandom.WikipediaError`. The host `es.wikipedia.org` in the first test stays as it was.
+
+::: do
+Make `tests/test_wikirandom.py` test the library.
 
 - Change its docstring to `Tests of the library, wikirandom.`
 - Put `import wikirandom` under `import pytest`, in place of `from wikiapp import wikipedia` and the blank line
@@ -2271,13 +2607,13 @@ test file test the library:
   `wikirandom.Page` and `wikirandom.WikipediaError`.
 
 Keep the host `es.wikipedia.org` in the first test as it is.
+:::
 
-```
-git rm src/wikiapp/wikipedia.py
-git mv tests/test_wikipedia.py tests/test_wikirandom.py
-```
+Coverage, in `pyproject.toml`, measures both packages.
 
-In `pyproject.toml`, make coverage measure both packages.
+::: do
+In `pyproject.toml`, make coverage measure both packages. Replace the first line of the comment above
+`addopts`, and the line `addopts`, with the lines below.
 
 ```toml
 # Every run measures how much of the two packages the tests run, and lists the lines they do not. A test
@@ -2286,8 +2622,11 @@ In `pyproject.toml`, make coverage measure both packages.
 ```toml
 addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"
 ```
+:::
 
-The README and the front page of the site, `docs/index.qmd`, now say that the repository contains two packages.
+The README gets a row for the library, and the front page of the site, `docs/index.qmd`, now says that the
+repository contains two packages.
+The library's README now says that the app uses the library, and no longer that it will.
 
 ::: do
 In the README, replace the `src/wikiapp/` row of the table of folders with the two rows below.
@@ -2299,6 +2638,12 @@ In the README, replace the `src/wikiapp/` row of the table of folders with the t
 
 The front page is long to type, so take `docs/index.qmd` with **Apply this file** in timewalk, or from the
 move's commit on GitHub.
+
+In `packages/wikirandom/README.md`, replace the line under the heading with the line below.
+
+```markdown
+A random page of Wikipedia, in any language. The command `wikiapp` uses this library.
+```
 :::
 
 The move changed these files:
@@ -2310,6 +2655,7 @@ The move changed these files:
 - `tests/test_wikirandom.py`: renamed from `tests/test_wikipedia.py`, and it tests wikirandom.
 - `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
 - `docs/index.qmd`: two packages, the library and the app.
+- `packages/wikirandom/README.md`: says that wikiapp uses the library now.
 
 files:
 - diff `pyproject.toml`: the app depends on the library.
@@ -2341,12 +2687,15 @@ library to the settings.
 ### step-09.4 The docs check counts the library
 
 Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
-`docs/_smalldocs.yml` names only `wikiapp`. Change the line `packages:` in the section `api`, so that it names
-both.
+`docs/_smalldocs.yml` names only `wikiapp`. The line `packages:` in the section `api` now names both.
+
+::: do
+In `docs/_smalldocs.yml`, change the line `packages:` in the section `api`, so that it names both.
 
 ```yaml
   packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
 ```
+:::
 
 The move changed this file:
 
@@ -2376,8 +2725,11 @@ library's User-Agent says the version that is installed.
 
 ### step-10.1 The recipe `build`
 
-`uv build --all-packages` builds every package of the workspace into `dist/`, which `.gitignore` lists. Add a
-recipe for it at the end of the `justfile`.
+`uv build --all-packages` builds every package of the workspace into `dist/`, which `.gitignore` lists. The
+recipe `build`, at the end of the `justfile`, runs it.
+
+::: do
+Add a recipe for it at the end of the `justfile`.
 
 ```just
 
@@ -2387,6 +2739,7 @@ recipe for it at the end of the `justfile`.
 build *args:
     {{ if args == "help" { "just help build" } else { 'uv build --all-packages "$@"' } }}
 ```
+:::
 
 The move changed this file:
 
@@ -2415,11 +2768,15 @@ first.
 ### step-10.2 The app needs wikirandom 0.1
 
 The app's wheel says that the app needs `wikirandom`, of any version. An install from PyPI would take any package
-that anyone publishes under that name. Give the app the range of versions that it was built and tested with.
+that anyone publishes under that name. The app now gives the range of versions that it was built and tested with.
+
+::: do
+Give the app the range of versions of wikirandom.
 
 ```
 uv add "wikirandom>=0.1.0,<0.2"
 ```
+:::
 
 Nothing else changes in the workspace. `[tool.uv.sources]` still installs the library from
 `packages/wikirandom`.
@@ -2440,12 +2797,17 @@ The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 
 ### step-10.3 lint-config checks both pyproject.toml files
 
-Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. In
-the `justfile`, in `lint-config`, replace the line `uv run validate-pyproject pyproject.toml` with the line below.
+Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
+recipe `lint-config` now gives validate-pyproject both files.
+
+::: do
+In the `justfile`, in `lint-config`, replace the line `uv run validate-pyproject pyproject.toml` with the line
+below.
 
 ```just
     uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
 ```
+:::
 
 The move changed this file:
 
@@ -2461,9 +2823,14 @@ $ just lint-config
 
 ### step-10.4 A licence and a repository link for both
 
-The library's wheel has no licence, and neither package says where its source is. Copy the project's `LICENSE`
-into `packages/wikirandom/`. In `packages/wikirandom/pyproject.toml`, under `readme`, give the licence and the
-author, as the app's `pyproject.toml` does.
+The library's wheel has no licence, and neither package says where its source is. The library gets a copy of the
+project's `LICENSE`. Its `pyproject.toml` gives the licence and the author under `readme`, as the app's
+`pyproject.toml` does. Both `pyproject.toml` files now name the repository, in `[project.urls]`. PyPI shows it on
+the package's page.
+
+::: do
+Copy the project's `LICENSE` into `packages/wikirandom/`. In `packages/wikirandom/pyproject.toml`, under `readme`,
+give the licence and the author.
 
 ```
 cp LICENSE packages/wikirandom/LICENSE
@@ -2475,8 +2842,8 @@ license-files = ["LICENSE"]
 authors = [{ name = "Rahul Dave" }]
 ```
 
-Add the repository to both `pyproject.toml` files. PyPI shows it on the package's page. In the library's file,
-put it after the list `dependencies`, so that one blank line comes before it and one after it. In the app's file, put it after the line
+Add the repository to both `pyproject.toml` files. In the library's file, put it after the list `dependencies`,
+so that one blank line comes before it and one after it. In the app's file, put it after the line
 `wikiapp = "wikiapp.console:main"` of `[project.scripts]`.
 
 ```toml
@@ -2484,6 +2851,7 @@ put it after the list `dependencies`, so that one blank line comes before it and
 [project.urls]
 Repository = "https://github.com/rahuldave/smallwikiapp"
 ```
+:::
 
 The move changed these files:
 
@@ -2509,8 +2877,12 @@ The library's metadata has `License-Expression: Apache-2.0`,
 ### step-10.5 The User-Agent says the installed version
 
 The User-Agent says `0.1.0`, written by hand. It would still say `0.1.0` after a change of the version in
-`packages/wikirandom/pyproject.toml`. In `packages/wikirandom/src/wikirandom/__init__.py`, read the version from
-the installed package, as `wikiapp --version` does. Add `import importlib.metadata` above `import re`, in the
+`packages/wikirandom/pyproject.toml`. `packages/wikirandom/src/wikirandom/__init__.py` now reads the version
+from the installed package, as `wikiapp --version` does. `import importlib.metadata` comes above `import re`, in
+the same block. `VERSION` is the installed version, and `USER_AGENT` contains it.
+
+::: do
+In `packages/wikirandom/src/wikirandom/__init__.py`, add `import importlib.metadata` above `import re`, in the
 same block. Then replace the line `USER_AGENT`.
 
 ```python
@@ -2522,6 +2894,7 @@ import re
 VERSION = importlib.metadata.version("wikirandom")
 USER_AGENT = f"wikirandom/{VERSION} (https://github.com/rahuldave/smallwikiapp)"
 ```
+:::
 
 The move changed this file:
 
@@ -2536,3 +2909,4 @@ $ uv run python -c "import wikirandom; print(wikirandom.USER_AGENT)"
 $ just check
 
 The first command prints `wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)`, and `just check` passes.
+

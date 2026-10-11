@@ -16,23 +16,8 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d) shows what the move changes.
 
-Add a recipe at the end of the `justfile`. `check` runs every check in order, and stops at the first check
-that fails.
-
-```just
-
-# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
-[group('quality')]
-[no-exit-message]
-check *args:
-    #!/usr/bin/env sh
-    set -e
-    if [ "$*" = help ]; then just help check; exit 0; fi
-    just fmt --check
-    just lint
-    just test -q --cov-fail-under=90
-    just lint-config
-```
+A recipe `check` runs every check in order, and stops at the first check that fails. The order is the format,
+the linter, the tests with a floor on the coverage, and the configuration.
 
 The move changed this file:
 
@@ -52,49 +37,17 @@ tests must run at least 90% of the statements. The coverage is 96.77%.
 
 ## step-04.10 A git hook {#step-04.10}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db) shows what the move changes.
 
 pre-commit installs a git hook. A git hook is a program that git runs before every commit. If the program
-fails, git refuses the commit.
+fails, git refuses the commit. pre-commit goes in the group `lint`.
 
-```
-uv add --group lint pre-commit
-```
+The new file `.pre-commit-config.yaml` names the hooks. Three come from pre-commit's collection. They check for
+valid YAML, large files and leftover merge-conflict markers. The last hook runs `just check`, so the hook and
+the terminal run the same thing.
 
-Make `.pre-commit-config.yaml`.
-
-```yaml
-# What every commit must pass. `just hook` installs it as a git hook.
-#
-# The project's own checks are one hook that runs `just check`, so the hook and the terminal run the
-# same thing. The hooks before it guard against files that should never be committed.
-repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
-    hooks:
-      - id: check-yaml
-      - id: check-added-large-files
-        args: [--maxkb=1000]
-      - id: check-merge-conflict
-  - repo: local
-    hooks:
-      - id: check
-        name: just check
-        entry: just check
-        language: system
-        pass_filenames: false
-        always_run: true
-```
-
-In the `justfile`, after `setup`, add a recipe `hook` that installs the hook. It is a recipe of its own, run
-once in each clone, because `just setup` runs at every step and never touches git.
-
-```just
-# Install the git hook: just check before every commit. Once per clone; just setup never touches git
-[group('setup')]
-hook *args:
-    @{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}
-```
+A recipe `hook`, after `setup` in the `justfile`, installs the hook. It is a recipe of its own, run once in each
+clone, because `just setup` runs at every step and never touches git.
 
 The move changed these files:
 
@@ -104,11 +57,11 @@ The move changed these files:
 - `uv.lock`: the exact version of pre-commit, and of what it needs.
 
 Files to read:
-- [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
+- [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
   - look at: `entry: just check`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
   - look at: `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
   - look at: `"pre-commit>=4.6.2",`
 
 ```bash
@@ -120,10 +73,10 @@ uv run pre-commit run --files .pre-commit-config.yaml
 
 `uv run pre-commit install` prints `pre-commit installed at .git/hooks/pre-commit`, and `just hook` prints the
 same line. The hook is in `.git/hooks`, and no step or move changes that folder. So the hook stays for the rest
-of the tutorial. If you start at a later step, run `just hook` once there.
+of the tutorial. At a later step, `just hook` installs it once.
 
 `pre-commit run` now runs every hook on the file named, as git will before a commit. The first time, it prints
 `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
 
-With `--all-files`, pre-commit would check every file that git tracks. It would skip the new file until you add
+With `--all-files`, pre-commit would check every file that git tracks. It would skip a new file until git tracks
 it.

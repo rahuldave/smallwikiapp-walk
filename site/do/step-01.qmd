@@ -23,7 +23,9 @@ The moves of step-01 add these things:
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1efd5611b90ac42a697374b0ca0449d5a880773e) shows what the move changes.
 
-click makes command lines. requests gets pages over HTTP. Add both packages.
+click makes command lines. requests gets pages over HTTP. Both packages go in the dependencies of wikiapp.
+
+Add both packages.
 
 ```
 uv add click requests
@@ -44,14 +46,24 @@ uv tree --depth 1
 ```
 
 `uv tree` shows the two packages under `wikiapp`. A newer version of a package can come out after these notes.
+
 If your numbers are newer, your `uv.lock` differs from the one here, and the move is still correct.
 
 ## step-01.2 Ask Wikipedia for a page {#step-01.2}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a46ba5420b43d7ea47508ae393977935e7bd8bd0) shows what the move changes.
 
-The code below is the first code of wikiapp, from 2024, with a docstring that says what the command does.
-Replace `src/wikiapp/console.py` with it.
+The new `src/wikiapp/console.py` is the first code of wikiapp, from 2024, with a docstring that says what the
+command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
+`main` here keeps the annotation that `uv init` gave it at step-00.
+
+- `requests.get` asks the REST API of Wikipedia for the summary of a random page.
+- `raise_for_status` raises an exception if the answer is an error.
+- `response.json()` reads the answer as a dictionary.
+
+`main` prints the title in green, and the summary wrapped to 70 columns.
+
+Replace `src/wikiapp/console.py` with the code below.
 
 ```python
 import click
@@ -75,15 +87,6 @@ if __name__=="__main__":
     main()
 ```
 
-`@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The `main`
-here keeps the annotation that `uv init` gave it at step-00.
-
-- `requests.get` asks the REST API of Wikipedia for the summary of a random page.
-- `raise_for_status` raises an exception if the answer is an error.
-- `response.json()` reads the answer as a dictionary.
-
-`main` prints the title in green, and the summary wrapped to 70 columns.
-
 The move changed this file:
 
 - `src/wikiapp/console.py`: `main` asks Wikipedia for a page and prints it.
@@ -105,8 +108,10 @@ a library. requests sends `python-requests/` and its version.
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2dd3e2132565971092bffe6a438a36506f4161cb) shows what the move changes.
 
 The User-Agent header says who sends the request. The policy of Wikimedia asks for the name of the program,
-its version, and a way to reach the person who runs it. In `src/wikiapp/console.py`, add a line under `API_URL`, and pass it as a
-header.
+its version, and a way to reach the person who runs it. In `src/wikiapp/console.py`, a constant `USER_AGENT`
+under `API_URL` gives these three things. The request sends it as a header.
+
+In `src/wikiapp/console.py`, add a line under `API_URL`, and pass it as a header.
 
 ```python
 USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
@@ -128,13 +133,17 @@ Files to read:
 uv run wikiapp
 ```
 
-A title in green, and a paragraph. Run it again for another page.
+A title in green, and a paragraph. Each run prints another page.
 
 ## step-01.4 --version {#step-01.4}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/48a829ee985a69171af7c66846bdb8e7345a199c) shows what the move changes.
 
 The package can read its own version from the installed package, which has the version in `pyproject.toml`.
+`src/wikiapp/__init__.py` now sets `__version__` from the metadata of the installed package.
+`src/wikiapp/console.py` imports `__version__`. The decorator `@click.version_option`, above `def main`, gives
+the command the option `--version`.
+
 Replace `src/wikiapp/__init__.py` with the code below.
 
 ```python

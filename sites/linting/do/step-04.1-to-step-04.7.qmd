@@ -17,18 +17,25 @@ just setup
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9) shows what the move changes.
 
 ruff is a formatter and a linter in one program. It goes in a third dependency group, `lint`, which `dev`
-includes. In `pyproject.toml`, change the line `dev = ...`, and add the group.
+includes.
+
+In `pyproject.toml`, change the line `dev = ...`, and add the group.
 
 ```toml
 dev = [{ include-group = "test" }, { include-group = "lint" }]
 lint = []
 ```
 
-Add ruff to the group. Then add its settings at the end of `pyproject.toml`.
+Then add ruff to the group.
 
 ```
 uv add --group lint ruff
 ```
+
+ruff's settings, at the end of `pyproject.toml`, set lines of up to 100 characters. They also write out the
+defaults of the formatter.
+
+Add the settings at the end of `pyproject.toml`.
 
 ```toml
 
@@ -43,6 +50,8 @@ quote-style = "double"            # "text", not 'text'
 indent-style = "space"            # four spaces, never tabs
 skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
 ```
+
+A recipe `fmt` runs the formatter. Its words go to `ruff format`.
 
 Add a recipe at the end of the `justfile`.
 
@@ -81,6 +90,9 @@ passes on the words after `just fmt`.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986) shows what the move changes.
 
+The formatter rewrites six files. It adds blank lines, puts spaces around `==`, and splits the lines longer than
+100 characters.
+
 Run the formatter.
 
 ```
@@ -114,9 +126,11 @@ looks, and never what it does. One test asks the real Wikipedia, so the tests ne
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e) shows what the move changes.
 
-The linter checks the code against rules. At the end of `pyproject.toml`, choose the families of rules. Also
-let the tests use `assert`. The rest of the code may not use it, because Python skips every `assert` when it runs
-with `-O`.
+The linter checks the code against rules. A table at the end of `pyproject.toml` chooses the families of rules,
+one family on each line. The tests may use `assert`. The rest of the code may not use it, because Python skips
+every `assert` when it runs with `-O`.
+
+At the end of `pyproject.toml`, choose the families of rules, and let the tests use `assert`.
 
 ```toml
 
@@ -138,6 +152,8 @@ select = [
 # A test is written with assert
 "tests/**" = ["S101"]
 ```
+
+A recipe `lint` runs the linter. Its words go to `ruff check`.
 
 Add a recipe at the end of the `justfile`.
 
@@ -180,7 +196,9 @@ The linter finds five problems, each with its code:
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf) shows what the move changes.
 
-ruff can fix one of the five problems itself.
+ruff can fix one of the five problems itself. `just lint --fix` sorts the imports of `console.py`.
+
+Let the linter fix what it can. The command still fails, with exit code 1, because four problems are left.
 
 ```
 just lint --fix
@@ -206,13 +224,18 @@ person must fix them.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3ba5d239ff4f171c58d4249a33caafc510883b46) shows what the move changes.
 
-In `tests/test_console.py`, move `from wikiapp import console` up, under `import requests`. A reader looks for
-imports there. Put a blank line between the two imports. wikiapp's own imports are a block of their own, after
-the installed packages, as `--fix` made them in console.py. Where the import was, delete it and the two blank
-lines after it. The functions are then two blank lines apart.
+In `tests/test_console.py`, `from wikiapp import console` moves up, under `import requests`. A reader looks for
+imports there. wikiapp's own imports are a block of their own, after the installed packages, as `--fix` made them
+in console.py.
+
+In `tests/test_console.py`, move `from wikiapp import console` up, under `import requests`. Put a blank line
+between the two imports. Where the import was, delete it and the two blank lines after it. The functions are then
+two blank lines apart.
 
 In `test_main_invokes_requests_get` and `test_main_uses_correct_url`, no line reads the result. The two tests
-check the mock, not the result. Make the first line of each test the call alone.
+check the mock, not the result. So the first line of each test is the call alone, without `result =`.
+
+Make the first line of each of the two tests the call alone.
 
 ```python
     runner.invoke(console.main)
@@ -238,7 +261,9 @@ One problem is left, `S113`. The format is unchanged, and the check prints `7 fi
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/80c33d4cfaf4b157cd44482712e520c77378cf9c) shows what the move changes.
 
 Without a timeout, requests waits as long as the server keeps the connection open. So the command can wait for
-ever. In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
+ever. The request in `src/wikiapp/wikipedia.py` now has `timeout=10`.
+
+In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
 
 ```python
         with requests.get(
@@ -267,13 +292,17 @@ just lint
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a) shows what the move changes.
 
-validate-pyproject checks `pyproject.toml` against the standard for it.
+validate-pyproject checks `pyproject.toml` against the standard for it. It goes in the group `lint`. A recipe
+`lint-config` checks the configuration with three commands. validate-pyproject checks `pyproject.toml`,
+`uv lock --check` checks the lockfile, and `just --fmt --check --unstable` checks the `justfile`.
+
+Add validate-pyproject to the group `lint`.
 
 ```
 uv add --group lint validate-pyproject
 ```
 
-Add a recipe at the end of the `justfile`. `lint-config` checks the configuration.
+Add a recipe at the end of the `justfile`.
 
 ```just
 

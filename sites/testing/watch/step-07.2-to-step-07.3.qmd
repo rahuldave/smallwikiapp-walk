@@ -6,7 +6,7 @@ title: "step-07.2 to step-07.3"
 
 Watch mode. [The same step in do mode](../do/step-07.2-to-step-07.3.qmd).
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/570c70fe5d6de269121f442425d0e941f09cdbd5), the commit before step-07.2.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a86d7848100f28d4cd5bdca2bc3a8b5ab98bb4c8), the commit before step-07.2.
 
 ```bash
 just setup
@@ -14,40 +14,16 @@ just setup
 
 ## step-07.2 random_page returns a Page {#step-07.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a) shows what the move changes.
 
 In `src/wikiapp/wikipedia.py`, `random_page` makes a Page of the answer and returns the Page. The code no
-longer uses `Any`, so delete its import, and the blank line under it.
-
-```python
-def random_page(language: str = "en") -> Page:
-```
-
-```python
-            return Page.model_validate(response.json())
-```
+longer uses `Any`, so its import and the blank line under it are gone.
 
 In `src/wikiapp/console.py`, `main` prints the attributes of the page. ty and an editor know the names of the
 attributes. A misspelled key of a dictionary shows up only when the program runs.
 
-```python
-    try:
-        page = random_page(language=language)
-    except WikipediaError as error:
-        raise click.ClickException(str(error)) from error
-    click.secho(page.title, fg="green")
-    click.echo(textwrap.fill(page.extract))
-```
-
-In `tests/test_wikipedia.py`, replace the e2e test `test_random_page_returns_dictionary_in_production`, and
-keep its marker. The new name says that the test checks for a Page.
-
-```python
-@pytest.mark.e2e
-def test_random_page_returns_page_in_production() -> None:
-    page = wikipedia.random_page()
-    assert isinstance(page, wikipedia.Page)
-```
+In `tests/test_wikipedia.py`, the e2e test is now `test_random_page_returns_page_in_production`, with the same
+marker. Its new name says that it checks for a Page.
 
 The move changed these files:
 
@@ -56,11 +32,11 @@ The move changed these files:
 - `tests/test_wikipedia.py`: the e2e test.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
   - look at: `return Page.model_validate(response.json())`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): attributes, not keys.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): attributes, not keys.
   - look at: `click.secho(page.title, fg="green")`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
   - look at: `assert isinstance(page, wikipedia.Page)`
 
 ```bash
@@ -72,31 +48,14 @@ uv run wikiapp
 
 ## step-07.3 An answer that is not a page {#step-07.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703) shows what the move changes.
 
 When the answer has no title, `model_validate` raises the ValidationError of pydantic. `random_page` turns it
-into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, import ValidationError,
-and catch it together with the exception of requests.
+into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, the `except` catches
+ValidationError together with the exception of requests.
 
-```python
-from pydantic import BaseModel, ValidationError
-```
-
-```python
-    except (requests.RequestException, ValidationError) as error:
-```
-
-Add the test from the original wikiapp at the end of `tests/test_wikipedia.py`. In the test, the mock answers
-with an empty dictionary.
-
-```python
-
-
-def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
-    mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
-    with pytest.raises(wikipedia.WikipediaError):
-        wikipedia.random_page()
-```
+A test from the original wikiapp, `test_random_page_handles_validation_error`, is at the end of
+`tests/test_wikipedia.py`. In the test, the mock answers with an empty dictionary.
 
 The move changed these files:
 
@@ -104,9 +63,9 @@ The move changed these files:
 - `tests/test_wikipedia.py`: a test of the ValidationError.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8ef59a76a8988b6ef39a36c630e5785be2573703/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
   - look at: `except (requests.RequestException, ValidationError) as error:`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8ef59a76a8988b6ef39a36c630e5785be2573703/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `with pytest.raises(wikipedia.WikipediaError):`
 
 ```bash

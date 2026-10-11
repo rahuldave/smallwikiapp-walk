@@ -64,7 +64,9 @@ the network until step 06.
 
 The tests need pytest, but the package does not. A person who installs wikiapp should not get pytest. So
 pytest goes in a dependency group of its own, `test`. uv installs the group `dev` by default, so `dev` includes
-`test`. In `pyproject.toml`, add the groups above `[build-system]`.
+`test`.
+
+In `pyproject.toml`, add the groups above `[build-system]`.
 
 ```toml
 [dependency-groups]
@@ -73,11 +75,16 @@ dev = [{ include-group = "test" }]
 
 ```
 
-Then add pytest to the group `test`, and make the first test, `tests/test_console.py`.
+Then add pytest to the group `test`.
 
 ```
 uv add --group test pytest
 ```
+
+The first test, in `tests/test_console.py`, runs the command and checks that it ends with exit code 0. click's
+`CliRunner` runs a command in the same process as the test. It keeps the output and the exit code of the command.
+
+Make `tests/test_console.py`.
 
 ```python
 import click.testing
@@ -89,9 +96,6 @@ def test_main_succeeds():
     result = runner.invoke(console.main)
     assert result.exit_code == 0
 ```
-
-click's `CliRunner` runs a command in the same process as the test. It keeps the output and the exit code of
-the command.
 
 The move changed these files:
 
@@ -115,7 +119,10 @@ The result is `1 passed`. The test asks the real Wikipedia, so it needs the netw
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/94970c50651566f11d5c9d017cb01004e240821a) shows what the move changes.
 
-Add a recipe for the tests at the end of the `justfile`.
+A recipe `test` runs the tests. Its words go to pytest. `"$@"` is every word after `just test`, and the recipe
+gives each word to pytest whole. `just test help` shows the recipe.
+
+Add the recipe at the end of the `justfile`.
 
 ```just
 
@@ -126,9 +133,8 @@ test *args:
     {{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}
 ```
 
-`"$@"` is every word after `just test`, and the recipe gives each word to pytest whole. `just test help` shows
-the recipe. `just` prints each line of a recipe before it runs the line, if the line does not start with `@`.
-So `just test` prints `uv run pytest "$@"`, the command that it ran.
+`just` prints each line of a recipe before it runs the line, if the line does not start with `@`. So `just test`
+prints `uv run pytest "$@"`, the command that it ran.
 
 The move changed this file:
 
@@ -150,8 +156,10 @@ The result is the same, `1 passed`.
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534) shows what the move changes.
 
 Each test of the command needs a `CliRunner`. A fixture makes one for every test that asks for it. A fixture is a
-function that pytest calls for each test that names it as a parameter. Replace `tests/test_console.py` with the
-code below.
+function that pytest calls for each test that names it as a parameter. The fixture `runner` returns a
+`CliRunner`, and `test_main_succeeds` takes the runner as its parameter.
+
+Replace `tests/test_console.py` with the code below.
 
 ```python
 import click.testing
@@ -187,13 +195,20 @@ The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5) shows what the move changes.
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page.
-pytest-mock can replace `requests.get` with a mock for the length of one test.
+pytest-mock can replace `requests.get` with a mock for the length of one test. It goes in the group `test`.
+
+`mocker` is the fixture of pytest-mock. A new fixture, `mock_requests_get`, calls `mocker.patch("requests.get")`.
+The call replaces the function, and puts it back after the test. The line `mock.return_value.__enter__.return_value.json.return_value = {` sets what the mock returns when
+the code calls `response.json()` inside the `with` block. The mock returns a page with the title Lorem Ipsum. A
+new test, `test_main_prints_title`, checks that the command prints that title.
+
+Add pytest-mock to the group `test`.
 
 ```
 uv add --group test pytest-mock
 ```
 
-Replace `tests/test_console.py` with the code below.
+Then replace `tests/test_console.py` with the code below.
 
 ```python
 import click.testing
@@ -223,10 +238,6 @@ def test_main_succeeds(runner):
     assert result.exit_code == 0
 ```
 
-`mocker` is the fixture of pytest-mock. `mocker.patch("requests.get")` replaces the function, and puts it back after the test. The long
-line sets what the mock returns when the code calls `response.json()` inside the `with` block. The mock returns
-a page with the title Lorem Ipsum.
-
 The move changed these files:
 
 - `tests/test_console.py`: the fixture of the mock, and a test of the title.
@@ -249,7 +260,12 @@ The output shows `test_main_prints_title PASSED`, without the network.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f) shows what the move changes.
 
-A mock keeps a record of each call to it. Add two tests to `tests/test_console.py`, after `test_main_prints_title`.
+A mock keeps a record of each call to it. Two tests check the request. `test_main_invokes_requests_get` checks
+that the command calls `requests.get`, and `test_main_uses_correct_url` checks the address. `call_args[0]` is the
+tuple of the positional arguments of the last call. Here it contains only the address. The header is a keyword
+argument, in `call_args[1]`.
+
+Add the two tests to `tests/test_console.py`, after `test_main_prints_title`.
 
 ```python
 def test_main_invokes_requests_get(runner, mock_requests_get):
@@ -260,9 +276,6 @@ def test_main_uses_correct_url(runner, mock_requests_get):
     result = runner.invoke(console.main)
     assert mock_requests_get.call_args[0] == ("https://en.wikipedia.org/api/rest_v1/page/random/summary",)
 ```
-
-`call_args[0]` is the tuple of the positional arguments of the last call. Here it holds only the address. The
-header is a keyword argument, in `call_args[1]`.
 
 The move changed this file:
 
@@ -283,7 +296,10 @@ The result is `4 passed`.
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/16b52dc4f9ec6e997b6954efde180ba6d7f521c7) shows what the move changes.
 
 The mock can raise an exception as well as return a value. If `side_effect` is an exception, a call to the
-mock raises it. Add the test below before `test_main_succeeds`.
+mock raises it. The test `test_main_fails_on_request_error` makes the mock raise, and checks that the command
+ends with exit code 1.
+
+Add the test below before `test_main_succeeds`.
 
 ```python
 def test_main_fails_on_request_error(runner, mock_requests_get):
@@ -310,13 +326,16 @@ The result is `5 passed`.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef) shows what the move changes.
 
-pytest-cov measures which lines of the code the tests run.
+pytest-cov measures which lines of the code the tests run. It goes in the group `test`, and pytest's settings,
+at the end of `pyproject.toml`, turn coverage on for every run.
+
+Add pytest-cov to the group `test`.
 
 ```
 uv add --group test pytest-cov
 ```
 
-Turn it on for every run, at the end of `pyproject.toml`.
+Then add the settings at the end of `pyproject.toml`.
 
 ```toml
 
@@ -362,6 +381,10 @@ nothing of the command line, and console.py is the app that uses it.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fec316ee50d27867f0dab60a755372ce1d1839d1) shows what the move changes.
 
+A new module, `src/wikiapp/wikipedia.py`, contains the address, the User-Agent and the function `random_page`.
+`random_page` returns the answer from inside the `with` block. The original set `data` there, and returned it
+after the block. The result is the same.
+
 Make `src/wikiapp/wikipedia.py`.
 
 ```python
@@ -377,9 +400,9 @@ def random_page():
         return response.json()
 ```
 
-`random_page` returns the answer from inside the `with` block. The original set `data` there, and returned it
-after the block. The result is the same. Then replace `src/wikiapp/console.py` with the code below. The
-constants and the request go, and `main` calls `random_page`.
+The constants and the request leave `src/wikiapp/console.py`, and `main` calls `random_page`.
+
+Replace `src/wikiapp/console.py` with the code below.
 
 ```python
 import click
@@ -425,8 +448,10 @@ The result is `5 passed`, with no change to the tests. The mock replaces the fun
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/dcb1e4c7102be3c1feec309ed88e1097ce28f32e) shows what the move changes.
 
 pytest reads `tests/conftest.py` before the tests, and every test file can use a fixture in it. The tests of
-wikipedia.py, in the next move, need the mock too. Make `tests/conftest.py` with the mock in it. Then delete the
-mock from `tests/test_console.py`.
+wikipedia.py, in the next move, need the mock too. So the fixture `mock_requests_get` moves from
+`tests/test_console.py` to a new file, `tests/conftest.py`.
+
+Make `tests/conftest.py` with the mock in it.
 
 ```python
 import pytest
@@ -440,6 +465,8 @@ def mock_requests_get(mocker):
     }
     return mock
 ```
+
+Then delete the fixture `mock_requests_get` from `tests/test_console.py`, with the blank line after it.
 
 The move changed these files:
 
@@ -461,8 +488,11 @@ The result is `5 passed`. pytest finds the fixture in conftest.py.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3d9dfef45760f1ce2cfa78841f554e08f62d32f4) shows what the move changes.
 
-Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, put a
-placeholder for the language in the address. Fill it in `random_page`, with English as the default.
+Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, the address
+has a placeholder for the language. `random_page` fills it, with English as the default.
+
+In `src/wikiapp/wikipedia.py`, put a placeholder for the language in the address. Fill it in `random_page`, with
+English as the default.
 
 ```python
 API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
@@ -474,7 +504,10 @@ def random_page(language="en"):
     with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
 ```
 
-Then make the first test of the library, `tests/test_wikipedia.py`.
+The first test of the library, in `tests/test_wikipedia.py`, asks for a page in Spanish. It checks that the
+address of the request contains `es.wikipedia.org`.
+
+Then make `tests/test_wikipedia.py`.
 
 ```python
 from wikiapp import wikipedia
@@ -505,6 +538,9 @@ The result is `6 passed`.
 ### step-03.4 wikiapp --language
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3bd5616ab15d6b2b526784e8b3b014bceef2548f) shows what the move changes.
+
+In `src/wikiapp/console.py`, a new option `--language`, or `-l`, comes between `@click.command()` and
+`@click.version_option`. `main` takes a parameter `language`, and passes it on to `random_page`.
 
 In `src/wikiapp/console.py`, add an option between `@click.command()` and `@click.version_option`, and pass it
 on.
@@ -549,7 +585,10 @@ The first command prints a French page. `--help` lists the option, its short for
 
 If a request fails for any reason, requests raises a `RequestException`. Code that uses the library should
 not need to know the exceptions of requests. So the library raises an exception of its own. In
-`src/wikiapp/wikipedia.py`, add the class above `random_page`, and put the request in a `try` block.
+`src/wikiapp/wikipedia.py`, the class `WikipediaError` comes above `random_page`. The request is now in a `try`
+block, and a `RequestException` becomes a `WikipediaError`.
+
+In `src/wikiapp/wikipedia.py`, add the class above `random_page`, and put the request in a `try` block.
 
 ```python
 class WikipediaError(Exception):
@@ -586,8 +625,10 @@ a traceback, and the last line is the `WikipediaError`. No code catches the erro
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7) shows what the move changes.
 
-In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click,
-which click prints as a message.
+`src/wikiapp/console.py` imports the error with `random_page`. `main` catches it, and raises the exception of
+click in its place. click prints that exception as a message.
+
+In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click.
 
 ```python
 from wikiapp.wikipedia import WikipediaError, random_page
@@ -600,7 +641,10 @@ from wikiapp.wikipedia import WikipediaError, random_page
         raise click.ClickException(str(error)) from error
 ```
 
-Add a test to `tests/test_console.py`, before `test_main_succeeds`. Put `import requests` under `import pytest`.
+A new test, `test_main_prints_message_on_request_error`, makes the mock raise a `RequestException`. It checks
+that the output contains `Error`. `tests/test_console.py` now imports `requests`.
+
+Add the test to `tests/test_console.py`, before `test_main_succeeds`. Put `import requests` under `import pytest`.
 
 ```python
 def test_main_prints_message_on_request_error(runner, mock_requests_get):
@@ -610,7 +654,8 @@ def test_main_prints_message_on_request_error(runner, mock_requests_get):
 ```
 
 In the original wikiapp, the library raised the exception of click itself, with a note to move it to the
-console one day. In this move, the exception of click moves to console.py. wikipedia.py knows Wikipedia and requests, and console.py knows click.
+console one day. In this move, the exception of click moves to console.py. wikipedia.py knows Wikipedia and
+requests, and console.py knows click.
 
 The move changed these files:
 
@@ -633,7 +678,7 @@ The first command prints `Error:` and the message in place of a traceback, then 
 
 ## step-05.5 Types in the tests
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/37ff4096c6af3750178af2e961cf2c61a6fa8d6a), the commit before step-05.5.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/48523b8748a8bd60f80b73e1b2b2322eb616325b), the commit before step-05.5.
 
 ```bash
 just setup
@@ -641,14 +686,17 @@ just setup
 
 ### step-05.5 Types in the tests
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8f6e8938925501f9c1bc198818fbd8fab7b647ff) shows what the move changes.
 
 Since step-05.3, ruff's `ANN` rules ask for a type on every parameter and return. The code has its types, and
 `just lint` finds 22 missing in the tests.
 
 The return type of a fixture is the type of what a test receives. The runner is a `CliRunner`, and the mock of
 `requests.get` is a `Mock`. `mocker` is pytest-mock's `MockerFixture`, the name that replaced the original
-wikiapp's `MockFixture`. A test returns None. Replace `tests/conftest.py` with this file.
+wikiapp's `MockFixture`. `tests/conftest.py` now imports `Mock` and `MockerFixture`, and its fixture states both
+types.
+
+Replace `tests/conftest.py` with this file.
 
 ```python
 from unittest.mock import Mock
@@ -667,8 +715,13 @@ def mock_requests_get(mocker: MockerFixture) -> Mock:
     return mock
 ```
 
-In `tests/test_console.py`, import `Mock` and `CliRunner` by name. Use `CliRunner()` in the fixture, and give
-every function its types. Two of the functions are the pattern for the rest.
+A test returns None. `tests/test_console.py` imports `Mock` and `CliRunner` by name. The fixture `runner` returns
+`CliRunner()`, and every function has its types. `tests/test_wikipedia.py` imports `Mock` at the top, and its
+test has its types.
+
+In `tests/test_console.py`, replace the imports at the top with the ones below: `import click.testing` goes, and
+`Mock` and `CliRunner` come in by name. Use `CliRunner()` in the fixture, and give every function its types. Two
+of the functions are the pattern for the rest.
 
 ```python
 from unittest.mock import Mock
@@ -688,7 +741,7 @@ def runner() -> CliRunner:
 def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
 ```
 
-In `tests/test_wikipedia.py`, do the same. Put `from unittest.mock import Mock` at the top, with a blank line
+In `tests/test_wikipedia.py`, put `from unittest.mock import Mock` at the top, with a blank line
 after it, and give the test its types.
 
 ```python
@@ -702,11 +755,11 @@ The move changed these files:
 - `tests/test_wikipedia.py`: the types of the test.
 
 Files to read:
-- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/37ff4096c6af3750178af2e961cf2c61a6fa8d6a...77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/8f6e8938925501f9c1bc198818fbd8fab7b647ff/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/48523b8748a8bd60f80b73e1b2b2322eb616325b...8f6e8938925501f9c1bc198818fbd8fab7b647ff#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.
   - look at: `def mock_requests_get(mocker: MockerFixture) -> Mock:`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/37ff4096c6af3750178af2e961cf2c61a6fa8d6a...77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the runner is a CliRunner.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/8f6e8938925501f9c1bc198818fbd8fab7b647ff/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/48523b8748a8bd60f80b73e1b2b2322eb616325b...8f6e8938925501f9c1bc198818fbd8fab7b647ff#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the runner is a CliRunner.
   - look at: `def runner() -> CliRunner:`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/37ff4096c6af3750178af2e961cf2c61a6fa8d6a...77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): one test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8f6e8938925501f9c1bc198818fbd8fab7b647ff/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/48523b8748a8bd60f80b73e1b2b2322eb616325b...8f6e8938925501f9c1bc198818fbd8fab7b647ff#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): one test.
   - look at: `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
 ```bash
@@ -714,7 +767,10 @@ just lint
 just types
 ```
 
-Both commands pass. If `just lint` reports `I001`, the imports are not in the blocks that the code above shows.
+Both commands pass.
+
+If `just lint` reports `I001`, the imports are not in their blocks. Lines 1 to 7 of `tests/test_console.py` show
+the blocks, the standard library first, then the other packages, then wikiapp.
 
 ## step-06 End to end, and CI
 
@@ -729,19 +785,21 @@ The project accepts every Python from 3.11 on. GitHub runs the tests on three sy
 
 ### step-06.1 The end-to-end test runs only on request
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4ccfe3566846e64d7383837ef3e936e151c6c9d5) shows what the move changes.
 
 `test_main_succeeds` is the one test that goes over the network. It fails without a network, and its result
-depends on Wikipedia. In `tests/test_console.py`, mark it `e2e`, which means end to end, and give it a name that
-says so.
+depends on Wikipedia. In `tests/test_console.py`, it now has the marker `e2e`, which means end to end. Its new
+name says so, `test_main_succeeds_in_production`. `pyproject.toml` declares the marker in `markers`. The option
+`-m 'not e2e'` in `addopts` leaves the e2e tests out of every run that does not ask for them.
+
+In `tests/test_console.py`, mark the test `e2e`, and give it the new name.
 
 ```python
 @pytest.mark.e2e
 def test_main_succeeds_in_production(runner: CliRunner) -> None:
 ```
 
-In `pyproject.toml`, declare the marker, and leave the e2e tests out of every run that does not ask for them.
-Replace the comment and the line `addopts`.
+In `pyproject.toml`, replace the comment and the line `addopts`.
 
 ```toml
 # Every run measures how much of src/wikiapp the tests run, and lists the lines they do not. A test
@@ -757,9 +815,9 @@ The move changed these files:
 - `pyproject.toml`: the marker, declared, and the e2e tests left out of a plain run.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/49b28350bd9b8bb19f0b98431f81e523953eea26/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test, marked.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/4ccfe3566846e64d7383837ef3e936e151c6c9d5/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/4ccfe3566846e64d7383837ef3e936e151c6c9d5#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test, marked.
   - look at: `@pytest.mark.e2e`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/49b28350bd9b8bb19f0b98431f81e523953eea26/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the option `-m 'not e2e'`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4ccfe3566846e64d7383837ef3e936e151c6c9d5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4ccfe3566846e64d7383837ef3e936e151c6c9d5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the option `-m 'not e2e'`.
   - look at: `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
 
 ```bash
@@ -771,12 +829,15 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
 
 ### step-06.2 An end-to-end test of the library
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d0d10f6aeb1359ed5e93081dccde0435d9f7395d) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/41e5681a18bc9975f383d1520b8781c4e836e90d) shows what the move changes.
 
-The mocks return a dictionary with a title and an extract. The test below comes from the original wikiapp. It
-checks that the real Wikipedia still returns the same keys. Add it at the end of `tests/test_wikipedia.py`. Put
-`import pytest` in a block of its own between `from unittest.mock import Mock` and `from wikiapp import
-wikipedia`, with a blank line on each side.
+The mocks return a dictionary with a title and an extract. A second e2e test, from the original wikiapp,
+checks that the real Wikipedia still returns the same keys. It is
+`test_random_page_returns_dictionary_in_production`, at the end of `tests/test_wikipedia.py`. The file now
+imports pytest, in a block of its own.
+
+Add the test at the end of `tests/test_wikipedia.py`. Put `import pytest` in a block of its own between
+`from unittest.mock import Mock` and `from wikiapp import wikipedia`, with a blank line on each side.
 
 ```python
 
@@ -793,7 +854,7 @@ The move changed this file:
 - `tests/test_wikipedia.py`: an e2e test.
 
 Files to read:
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/d0d10f6aeb1359ed5e93081dccde0435d9f7395d/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d0d10f6aeb1359ed5e93081dccde0435d9f7395d#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/41e5681a18bc9975f383d1520b8781c4e836e90d/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/41e5681a18bc9975f383d1520b8781c4e836e90d#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `assert "extract" in page`
 
 ```bash
@@ -804,11 +865,13 @@ The output is `2 passed, 6 deselected`.
 
 ### step-06.3 Any Python from 3.11 on
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e8933c57a023759eeee6db0b3683ca8aa51a6b8e) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761) shows what the move changes.
 
 `uv init` wrote `requires-python = ">=3.13"`, because the command asked for Python 3.13. Nothing here needs
 more than 3.11. Python 3.10 reached its end of life on 1 October 2026, so 3.11 is now the oldest Python that
-still gets security fixes. In `pyproject.toml`, change the line, and solve the lockfile again.
+still gets security fixes. The line in `pyproject.toml` now says 3.11, and uv solves the lockfile again.
+
+In `pyproject.toml`, change the line, and solve the lockfile again.
 
 ```toml
 requires-python = ">=3.11"
@@ -826,7 +889,7 @@ The move changed these files:
 - `uv.lock`: solved for every Python from 3.11 on.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/e8933c57a023759eeee6db0b3683ca8aa51a6b8e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/e8933c57a023759eeee6db0b3683ca8aa51a6b8e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/15ba9fa843e3f055dac9c8f1a844b7382858b761/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `requires-python = ">=3.11"`
 
 ```bash
@@ -839,10 +902,13 @@ uv run --isolated --python 3.11 pytest -q
 
 ### step-06.4 GitHub runs the tests
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/0ca4b5a3e8f67d2394b5b96e001a706bf2df20e6) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d3f84ea883f0e41f64fb397f436c89e372c83bff) shows what the move changes.
 
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push
-to main and on every pull request. Make `.github/workflows/test.yaml`.
+to main and on every pull request. The workflow `.github/workflows/test.yaml` has two jobs. The job `tests` runs
+the tests on three systems and four Pythons. The job `check` runs `just check` once.
+
+Make `.github/workflows/test.yaml`.
 
 ```yaml
 # What GitHub runs on every push to main and every pull request.
@@ -892,7 +958,7 @@ The move changed this file:
 - `.github/workflows/test.yaml`: a new file with two jobs. GitHub runs one of the jobs twelve times.
 
 Files to read:
-- [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/0ca4b5a3e8f67d2394b5b96e001a706bf2df20e6/.github/workflows/test.yaml): the matrix of systems and Pythons.
+- [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/d3f84ea883f0e41f64fb397f436c89e372c83bff/.github/workflows/test.yaml): the matrix of systems and Pythons.
   - look at: `python: ["3.11", "3.12", "3.13", "3.14"]`
 
 ```bash
@@ -904,7 +970,7 @@ thirteen jobs.
 
 ## step-07.2 to step-07.3
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/570c70fe5d6de269121f442425d0e941f09cdbd5), the commit before step-07.2.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a86d7848100f28d4cd5bdca2bc3a8b5ab98bb4c8), the commit before step-07.2.
 
 ```bash
 just setup
@@ -912,10 +978,13 @@ just setup
 
 ### step-07.2 random_page returns a Page
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a) shows what the move changes.
 
 In `src/wikiapp/wikipedia.py`, `random_page` makes a Page of the answer and returns the Page. The code no
-longer uses `Any`, so delete its import, and the blank line under it.
+longer uses `Any`, so its import and the blank line under it are gone.
+
+In `src/wikiapp/wikipedia.py`, delete the import of `Any`, and the blank line under it. Then change the return
+type of `random_page`, and its `return` line.
 
 ```python
 def random_page(language: str = "en") -> Page:
@@ -928,6 +997,8 @@ def random_page(language: str = "en") -> Page:
 In `src/wikiapp/console.py`, `main` prints the attributes of the page. ty and an editor know the names of the
 attributes. A misspelled key of a dictionary shows up only when the program runs.
 
+In `src/wikiapp/console.py`, replace the code under the docstring of `main` with the code below.
+
 ```python
     try:
         page = random_page(language=language)
@@ -937,8 +1008,11 @@ attributes. A misspelled key of a dictionary shows up only when the program runs
     click.echo(textwrap.fill(page.extract))
 ```
 
+In `tests/test_wikipedia.py`, the e2e test is now `test_random_page_returns_page_in_production`, with the same
+marker. Its new name says that it checks for a Page.
+
 In `tests/test_wikipedia.py`, replace the e2e test `test_random_page_returns_dictionary_in_production`, and
-keep its marker. The new name says that the test checks for a Page.
+keep its marker.
 
 ```python
 @pytest.mark.e2e
@@ -954,11 +1028,11 @@ The move changed these files:
 - `tests/test_wikipedia.py`: the e2e test.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
   - look at: `return Page.model_validate(response.json())`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): attributes, not keys.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): attributes, not keys.
   - look at: `click.secho(page.title, fg="green")`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
   - look at: `assert isinstance(page, wikipedia.Page)`
 
 ```bash
@@ -970,11 +1044,13 @@ uv run wikiapp
 
 ### step-07.3 An answer that is not a page
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703) shows what the move changes.
 
 When the answer has no title, `model_validate` raises the ValidationError of pydantic. `random_page` turns it
-into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, import ValidationError,
-and catch it together with the exception of requests.
+into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, the `except` catches
+ValidationError together with the exception of requests.
+
+In `src/wikiapp/wikipedia.py`, import ValidationError, and catch it together with the exception of requests.
 
 ```python
 from pydantic import BaseModel, ValidationError
@@ -984,8 +1060,10 @@ from pydantic import BaseModel, ValidationError
     except (requests.RequestException, ValidationError) as error:
 ```
 
-Add the test from the original wikiapp at the end of `tests/test_wikipedia.py`. In the test, the mock answers
-with an empty dictionary.
+A test from the original wikiapp, `test_random_page_handles_validation_error`, is at the end of
+`tests/test_wikipedia.py`. In the test, the mock answers with an empty dictionary.
+
+Add the test at the end of `tests/test_wikipedia.py`.
 
 ```python
 
@@ -1002,9 +1080,9 @@ The move changed these files:
 - `tests/test_wikipedia.py`: a test of the ValidationError.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8ef59a76a8988b6ef39a36c630e5785be2573703/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
   - look at: `except (requests.RequestException, ValidationError) as error:`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8ef59a76a8988b6ef39a36c630e5785be2573703/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `with pytest.raises(wikipedia.WikipediaError):`
 
 ```bash
@@ -1015,7 +1093,7 @@ The output is `1 passed, 8 deselected`.
 
 ## step-08.4 The tests documented
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367), the commit before step-08.4.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0), the commit before step-08.4.
 
 ```bash
 just setup
@@ -1023,16 +1101,17 @@ just setup
 
 ### step-08.4 The tests documented
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/632adbffca8dee5475b394b877bb642da3ed1aff) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b) shows what the move changes.
 
 A docment is the comment beside a parameter, or after the colon of the `def` line for the return.
 `just docs check`, from step-08.1, counts the functions and classes that have their types, docments and
 docstrings.
 
 Each test file says what it tests, and each fixture says what it returns. Each test says in one line what it
-checks. The docstrings say in words what the asserts say in code.
+checks. The docstrings say in words what the asserts say in code. Each parameter of a test has a docment, one
+parameter to a line, and `tests/test_console.py` shows the pattern best.
 
-The three files are long to type, so take them from [the move's commit](https://github.com/rahuldave/smallwikiapp/compare/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367...632adbffca8dee5475b394b877bb642da3ed1aff). The test below shows the pattern.
+The three files are long to type, so take them from [the move's commit](https://github.com/rahuldave/smallwikiapp/compare/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0...d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b). The test below shows the pattern.
 
 ```python
 def test_main_prints_title(
@@ -1050,11 +1129,11 @@ The move changed these files:
 - `tests/test_wikipedia.py`: a docstring for the file and each test, and a docment for each parameter.
 
 Files to read:
-- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/632adbffca8dee5475b394b877bb642da3ed1aff/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367...632adbffca8dee5475b394b877bb642da3ed1aff#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0...d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
   - look at: `mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/632adbffca8dee5475b394b877bb642da3ed1aff/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367...632adbffca8dee5475b394b877bb642da3ed1aff#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): seven functions.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0...d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): seven functions.
   - look at: `"""The command prints the title of the page."""`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/632adbffca8dee5475b394b877bb642da3ed1aff/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367...632adbffca8dee5475b394b877bb642da3ed1aff#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0...d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
   - look at: `"""The language chooses the Wikipedia that is asked."""`
 
 ```bash

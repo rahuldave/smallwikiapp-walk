@@ -20,6 +20,10 @@ nothing of the command line, and console.py is the app that uses it.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fec316ee50d27867f0dab60a755372ce1d1839d1) shows what the move changes.
 
+A new module, `src/wikiapp/wikipedia.py`, contains the address, the User-Agent and the function `random_page`.
+`random_page` returns the answer from inside the `with` block. The original set `data` there, and returned it
+after the block. The result is the same.
+
 Make `src/wikiapp/wikipedia.py`.
 
 ```python
@@ -35,9 +39,9 @@ def random_page():
         return response.json()
 ```
 
-`random_page` returns the answer from inside the `with` block. The original set `data` there, and returned it
-after the block. The result is the same. Then replace `src/wikiapp/console.py` with the code below. The
-constants and the request go, and `main` calls `random_page`.
+The constants and the request leave `src/wikiapp/console.py`, and `main` calls `random_page`.
+
+Replace `src/wikiapp/console.py` with the code below.
 
 ```python
 import click
@@ -83,8 +87,10 @@ The result is `5 passed`, with no change to the tests. The mock replaces the fun
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/dcb1e4c7102be3c1feec309ed88e1097ce28f32e) shows what the move changes.
 
 pytest reads `tests/conftest.py` before the tests, and every test file can use a fixture in it. The tests of
-wikipedia.py, in the next move, need the mock too. Make `tests/conftest.py` with the mock in it. Then delete the
-mock from `tests/test_console.py`.
+wikipedia.py, in the next move, need the mock too. So the fixture `mock_requests_get` moves from
+`tests/test_console.py` to a new file, `tests/conftest.py`.
+
+Make `tests/conftest.py` with the mock in it.
 
 ```python
 import pytest
@@ -98,6 +104,8 @@ def mock_requests_get(mocker):
     }
     return mock
 ```
+
+Then delete the fixture `mock_requests_get` from `tests/test_console.py`, with the blank line after it.
 
 The move changed these files:
 
@@ -119,8 +127,11 @@ The result is `5 passed`. pytest finds the fixture in conftest.py.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3d9dfef45760f1ce2cfa78841f554e08f62d32f4) shows what the move changes.
 
-Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, put a
-placeholder for the language in the address. Fill it in `random_page`, with English as the default.
+Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, the address
+has a placeholder for the language. `random_page` fills it, with English as the default.
+
+In `src/wikiapp/wikipedia.py`, put a placeholder for the language in the address. Fill it in `random_page`, with
+English as the default.
 
 ```python
 API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
@@ -132,7 +143,10 @@ def random_page(language="en"):
     with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
 ```
 
-Then make the first test of the library, `tests/test_wikipedia.py`.
+The first test of the library, in `tests/test_wikipedia.py`, asks for a page in Spanish. It checks that the
+address of the request contains `es.wikipedia.org`.
+
+Then make `tests/test_wikipedia.py`.
 
 ```python
 from wikiapp import wikipedia
@@ -163,6 +177,9 @@ The result is `6 passed`.
 ## step-03.4 wikiapp --language {#step-03.4}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3bd5616ab15d6b2b526784e8b3b014bceef2548f) shows what the move changes.
+
+In `src/wikiapp/console.py`, a new option `--language`, or `-l`, comes between `@click.command()` and
+`@click.version_option`. `main` takes a parameter `language`, and passes it on to `random_page`.
 
 In `src/wikiapp/console.py`, add an option between `@click.command()` and `@click.version_option`, and pass it
 on.
@@ -207,7 +224,10 @@ The first command prints a French page. `--help` lists the option, its short for
 
 If a request fails for any reason, requests raises a `RequestException`. Code that uses the library should
 not need to know the exceptions of requests. So the library raises an exception of its own. In
-`src/wikiapp/wikipedia.py`, add the class above `random_page`, and put the request in a `try` block.
+`src/wikiapp/wikipedia.py`, the class `WikipediaError` comes above `random_page`. The request is now in a `try`
+block, and a `RequestException` becomes a `WikipediaError`.
+
+In `src/wikiapp/wikipedia.py`, add the class above `random_page`, and put the request in a `try` block.
 
 ```python
 class WikipediaError(Exception):
@@ -244,8 +264,10 @@ a traceback, and the last line is the `WikipediaError`. No code catches the erro
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7) shows what the move changes.
 
-In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click,
-which click prints as a message.
+`src/wikiapp/console.py` imports the error with `random_page`. `main` catches it, and raises the exception of
+click in its place. click prints that exception as a message.
+
+In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click.
 
 ```python
 from wikiapp.wikipedia import WikipediaError, random_page
@@ -258,7 +280,10 @@ from wikiapp.wikipedia import WikipediaError, random_page
         raise click.ClickException(str(error)) from error
 ```
 
-Add a test to `tests/test_console.py`, before `test_main_succeeds`. Put `import requests` under `import pytest`.
+A new test, `test_main_prints_message_on_request_error`, makes the mock raise a `RequestException`. It checks
+that the output contains `Error`. `tests/test_console.py` now imports `requests`.
+
+Add the test to `tests/test_console.py`, before `test_main_succeeds`. Put `import requests` under `import pytest`.
 
 ```python
 def test_main_prints_message_on_request_error(runner, mock_requests_get):
@@ -268,7 +293,8 @@ def test_main_prints_message_on_request_error(runner, mock_requests_get):
 ```
 
 In the original wikiapp, the library raised the exception of click itself, with a note to move it to the
-console one day. In this move, the exception of click moves to console.py. wikipedia.py knows Wikipedia and requests, and console.py knows click.
+console one day. In this move, the exception of click moves to console.py. wikipedia.py knows Wikipedia and
+requests, and console.py knows click.
 
 The move changed these files:
 
