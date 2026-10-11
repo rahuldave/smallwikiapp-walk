@@ -1,0 +1,131 @@
+# Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again.
+project:
+  type: website
+  output-dir: _site
+  render: ["index.qmd", "do/*.qmd", "watch/*.qmd"]   # only these pages: never the notes
+
+website:
+  title: "Testing smallwikiapp, one move at a time"
+  page-navigation: true
+  search: true
+  sidebar:
+    style: docked
+    contents:
+      - index.qmd
+      - section: "Watch"
+        contents:
+          - section: "step-02: Tests, with mocks"
+            href: watch/step-02.qmd
+            contents:
+              - text: "step-02.1 pytest and the first test"
+                href: watch/step-02.qmd#step-02.1
+              - text: "step-02.2 The recipe `just test`"
+                href: watch/step-02.qmd#step-02.2
+              - text: "step-02.3 The runner as a fixture"
+                href: watch/step-02.qmd#step-02.3
+              - text: "step-02.4 A mock in place of Wikipedia"
+                href: watch/step-02.qmd#step-02.4
+              - text: "step-02.5 Tests of the request"
+                href: watch/step-02.qmd#step-02.5
+              - text: "step-02.6 A test of a failed request"
+                href: watch/step-02.qmd#step-02.6
+              - text: "step-02.7 Coverage"
+                href: watch/step-02.qmd#step-02.7
+          - section: "step-03: A library and an app"
+            href: watch/step-03.qmd
+            contents:
+              - text: "step-03.1 random_page moves to wikipedia.py"
+                href: watch/step-03.qmd#step-03.1
+              - text: "step-03.2 The mock moves to conftest.py"
+                href: watch/step-03.qmd#step-03.2
+              - text: "step-03.3 A language"
+                href: watch/step-03.qmd#step-03.3
+              - text: "step-03.4 wikiapp --language"
+                href: watch/step-03.qmd#step-03.4
+              - text: "step-03.5 WikipediaError"
+                href: watch/step-03.qmd#step-03.5
+              - text: "step-03.6 The command prints the error"
+                href: watch/step-03.qmd#step-03.6
+          - section: "step-05.5: Types in the tests"
+            href: watch/step-05.5.qmd
+            contents:
+              - text: "step-05.5 Types in the tests"
+                href: watch/step-05.5.qmd#step-05.5
+          - section: "step-06: End to end, and CI"
+            href: watch/step-06.qmd
+            contents:
+              - text: "step-06.1 The end-to-end test runs only on request"
+                href: watch/step-06.qmd#step-06.1
+              - text: "step-06.2 An end-to-end test of the library"
+                href: watch/step-06.qmd#step-06.2
+              - text: "step-06.3 Any Python from 3.11 on"
+                href: watch/step-06.qmd#step-06.3
+              - text: "step-06.4 GitHub runs the tests"
+                href: watch/step-06.qmd#step-06.4
+          - section: "step-08.4: The tests documented"
+            href: watch/step-08.4.qmd
+            contents:
+              - text: "step-08.4 The tests documented"
+                href: watch/step-08.4.qmd#step-08.4
+      - section: "Do"
+        contents:
+          - section: "step-02: Tests, with mocks"
+            href: do/step-02.qmd
+            contents:
+              - text: "step-02.1 pytest and the first test"
+                href: do/step-02.qmd#step-02.1
+              - text: "step-02.2 The recipe `just test`"
+                href: do/step-02.qmd#step-02.2
+              - text: "step-02.3 The runner as a fixture"
+                href: do/step-02.qmd#step-02.3
+              - text: "step-02.4 A mock in place of Wikipedia"
+                href: do/step-02.qmd#step-02.4
+              - text: "step-02.5 Tests of the request"
+                href: do/step-02.qmd#step-02.5
+              - text: "step-02.6 A test of a failed request"
+                href: do/step-02.qmd#step-02.6
+              - text: "step-02.7 Coverage"
+                href: do/step-02.qmd#step-02.7
+          - section: "step-03: A library and an app"
+            href: do/step-03.qmd
+            contents:
+              - text: "step-03.1 random_page moves to wikipedia.py"
+                href: do/step-03.qmd#step-03.1
+              - text: "step-03.2 The mock moves to conftest.py"
+                href: do/step-03.qmd#step-03.2
+              - text: "step-03.3 A language"
+                href: do/step-03.qmd#step-03.3
+              - text: "step-03.4 wikiapp --language"
+                href: do/step-03.qmd#step-03.4
+              - text: "step-03.5 WikipediaError"
+                href: do/step-03.qmd#step-03.5
+              - text: "step-03.6 The command prints the error"
+                href: do/step-03.qmd#step-03.6
+          - section: "step-05.5: Types in the tests"
+            href: do/step-05.5.qmd
+            contents:
+              - text: "step-05.5 Types in the tests"
+                href: do/step-05.5.qmd#step-05.5
+          - section: "step-06: End to end, and CI"
+            href: do/step-06.qmd
+            contents:
+              - text: "step-06.1 The end-to-end test runs only on request"
+                href: do/step-06.qmd#step-06.1
+              - text: "step-06.2 An end-to-end test of the library"
+                href: do/step-06.qmd#step-06.2
+              - text: "step-06.3 Any Python from 3.11 on"
+                href: do/step-06.qmd#step-06.3
+              - text: "step-06.4 GitHub runs the tests"
+                href: do/step-06.qmd#step-06.4
+          - section: "step-08.4: The tests documented"
+            href: do/step-08.4.qmd
+            contents:
+              - text: "step-08.4 The tests documented"
+                href: do/step-08.4.qmd#step-08.4
+
+theme: cosmo
+css: styles.css
+toc: true
+toc-depth: 3
+code-copy: true
+from: markdown-tex_math_dollars-smart  # a $ is a dollar, not mathematics; -- stays two hyphens

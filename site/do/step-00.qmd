@@ -2,6 +2,10 @@
 title: "step-00: The project"
 ---
 
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Do mode. [The same step in watch mode](../watch/step-00.qmd).
+
 [The code at step-00](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 ```bash

@@ -1,0 +1,194 @@
+---
+title: "step-10: Build"
+---
+
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Watch mode. [The same step in do mode](../do/step-10.qmd).
+
+[The code at step-10](https://github.com/rahuldave/smallwikiapp/tree/step-10)
+
+```bash
+just setup
+```
+
+The moves of this step build each package into a wheel, the file that pip and uv install. Then the app says
+which versions of the library it accepts, and `just lint-config` checks the library's `pyproject.toml` too.
+Both packages say their licence and where their source is. Last, the
+library's User-Agent says the version that is installed.
+
+## step-10.1 The recipe `build` {#step-10.1}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4903a582a9fae628e6544b2182f77f8caf386dbe) shows what the move changes.
+
+`uv build --all-packages` builds every package of the workspace into `dist/`, which `.gitignore` lists. Add a
+recipe for it at the end of the `justfile`.
+
+```just
+
+# Build the wheel and the source archive of both packages into dist/, as they would go to PyPI
+[group('setup')]
+[no-exit-message]
+build *args:
+    {{ if args == "help" { "just help build" } else { 'uv build --all-packages "$@"' } }}
+```
+
+The move changed this file:
+
+- `justfile`: the recipe `build`.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4903a582a9fae628e6544b2182f77f8caf386dbe/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4903a582a9fae628e6544b2182f77f8caf386dbe#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+  - look at: `build *args:`
+
+```bash
+uv build --all-packages
+just --show build
+just build
+unzip -l dist/wikiapp-0.1.0-py3-none-any.whl
+unzip -p dist/wikiapp-0.1.0-py3-none-any.whl wikiapp-0.1.0.dist-info/METADATA
+```
+
+`dist/` now has a source archive, `.tar.gz`, and a wheel, `.whl`, for each package. The app's wheel contains
+`wikiapp/` and its metadata, which says that the app needs click and wikirandom. The metadata does not say which
+version of wikirandom, because `uv add wikirandom` in a workspace writes no version. An install from PyPI would
+get any package that PyPI has under that name. Today PyPI has none, so wikirandom would have to be published
+first.
+
+## step-10.2 The app needs wikirandom 0.1 {#step-10.2}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/663682b805962a82b4c0e8d18ede21e3cd5188d9) shows what the move changes.
+
+The app's wheel says that the app needs `wikirandom`, of any version. An install from PyPI would take any package
+that anyone publishes under that name. Give the app the range of versions that it was built and tested with.
+
+```
+uv add "wikirandom>=0.1.0,<0.2"
+```
+
+Nothing else changes in the workspace. `[tool.uv.sources]` still installs the library from
+`packages/wikirandom`.
+
+The move changed this file:
+
+- `pyproject.toml`: a version range on wikirandom.
+
+Files to read:
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/663682b805962a82b4c0e8d18ede21e3cd5188d9/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/663682b805962a82b4c0e8d18ede21e3cd5188d9#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+  - look at: `"wikirandom>=0.1.0,<0.2",`
+
+```bash
+just build
+unzip -p dist/wikiapp-0.1.0-py3-none-any.whl wikiapp-0.1.0.dist-info/METADATA
+```
+
+The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
+
+## step-10.3 lint-config checks both pyproject.toml files {#step-10.3}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5e6110fbb134015850291ff3558eed9d1951d4c6) shows what the move changes.
+
+Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. In
+the `justfile`, in `lint-config`, replace the line `uv run validate-pyproject pyproject.toml` with the line below.
+
+```just
+    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
+```
+
+The move changed this file:
+
+- `justfile`: `lint-config` checks both files.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5e6110fbb134015850291ff3558eed9d1951d4c6/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/5e6110fbb134015850291ff3558eed9d1951d4c6#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
+  - look at: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+```bash
+just lint-config
+```
+
+`just lint-config` prints `Valid file` twice, once for each file.
+
+## step-10.4 A licence and a repository link for both {#step-10.4}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b4ecef0371b625e151bdbbbaa89187074347c2a8) shows what the move changes.
+
+The library's wheel has no licence, and neither package says where its source is. Copy the project's `LICENSE`
+into `packages/wikirandom/`. In `packages/wikirandom/pyproject.toml`, under `readme`, give the licence and the
+author, as the app's `pyproject.toml` does.
+
+```
+cp LICENSE packages/wikirandom/LICENSE
+```
+
+```toml
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Rahul Dave" }]
+```
+
+Add the repository to both `pyproject.toml` files. PyPI shows it on the package's page. In the library's file,
+put it after the list `dependencies`, so that one blank line comes before it and one after it. In the app's file, put it after the line
+`wikiapp = "wikiapp.console:main"` of `[project.scripts]`.
+
+```toml
+
+[project.urls]
+Repository = "https://github.com/rahuldave/smallwikiapp"
+```
+
+The move changed these files:
+
+- `packages/wikirandom/LICENSE`: new. It has the same licence as the app.
+- `packages/wikirandom/pyproject.toml`: the licence, the author, the repository.
+- `pyproject.toml`: the repository.
+
+Files to read:
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b4ecef0371b625e151bdbbbaa89187074347c2a8/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b4ecef0371b625e151bdbbbaa89187074347c2a8#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): what PyPI would show.
+  - look at: `license = "Apache-2.0"`
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b4ecef0371b625e151bdbbbaa89187074347c2a8/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b4ecef0371b625e151bdbbbaa89187074347c2a8#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app's repository.
+  - look at: `[project.urls]`
+- [`packages/wikirandom/LICENSE`](https://github.com/rahuldave/smallwikiapp/blob/b4ecef0371b625e151bdbbbaa89187074347c2a8/packages/wikirandom/LICENSE): the same Apache-2.0 licence as the app's.
+  - look at: `Apache License`
+
+```bash
+just build
+unzip -p dist/wikirandom-0.1.0-py3-none-any.whl wikirandom-0.1.0.dist-info/METADATA
+```
+
+The library's metadata has `License-Expression: Apache-2.0`,
+`License-File: LICENSE` and `Project-URL: Repository, https://github.com/rahuldave/smallwikiapp`.
+
+## step-10.5 The User-Agent says the installed version {#step-10.5}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bf2c5d6a7fc39320ac0a9cda0ef3343d35364ac8) shows what the move changes.
+
+The User-Agent says `0.1.0`, written by hand. It would still say `0.1.0` after a change of the version in
+`packages/wikirandom/pyproject.toml`. In `packages/wikirandom/src/wikirandom/__init__.py`, read the version from
+the installed package, as `wikiapp --version` does. Add `import importlib.metadata` above `import re`, in the
+same block. Then replace the line `USER_AGENT`.
+
+```python
+import importlib.metadata
+import re
+```
+
+```python
+VERSION = importlib.metadata.version("wikirandom")
+USER_AGENT = f"wikirandom/{VERSION} (https://github.com/rahuldave/smallwikiapp)"
+```
+
+The move changed this file:
+
+- `packages/wikirandom/src/wikirandom/__init__.py`: the package reads its version once, when Python imports it.
+
+Files to read:
+- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/bf2c5d6a7fc39320ac0a9cda0ef3343d35364ac8/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/bf2c5d6a7fc39320ac0a9cda0ef3343d35364ac8#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the version now comes from one place, pyproject.toml.
+  - look at: `VERSION = importlib.metadata.version("wikirandom")`
+
+```bash
+uv run python -c "import wikirandom; print(wikirandom.USER_AGENT)"
+just check
+```
+
+The first command prints `wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)`, and `just check` passes.

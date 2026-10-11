@@ -2,6 +2,10 @@
 title: "step-05: Types"
 ---
 
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Do mode. [The same step in watch mode](../watch/step-05.qmd).
+
 [The code at step-05](https://github.com/rahuldave/smallwikiapp/tree/step-05)
 
 ```bash
@@ -11,9 +15,9 @@ just setup
 The six moves of this step add a type checker, and fix the one problem that it finds. Then a lint rule asks for
 a type on every parameter and return. The last moves add the types, and put the type checker in `just check`.
 
-## step-05.1 ty, and the recipe types
+## step-05.1 ty, and the recipe types {#step-05.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/efda1ef33393ff8f9969a981ff8e3760efe05d67) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/efda1ef33393ff8f9969a981ff8e3760efe05d67) shows what the move changes.
 
 ty reads the code without running it. It finds code whose types cannot fit, for example a call whose
 arguments cannot have the types that the function asks for.
@@ -54,9 +58,9 @@ just types
 ty finds one problem, in `src/wikiapp/__init__.py`. The message is `Expected str, found str | None`. As far as
 ty can tell, `__name__ or __package__` could be None. But `importlib.metadata.version` needs a string.
 
-## step-05.2 The version of "wikiapp", by name
+## step-05.2 The version of "wikiapp", by name {#step-05.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9d95e1a48037b527b275be02d576cf464baf7df0) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9d95e1a48037b527b275be02d576cf464baf7df0) shows what the move changes.
 
 `pyproject.toml` gives the name of the installed package, `wikiapp`. Ask for the version of that name. Change
 the last line of `src/wikiapp/__init__.py`.
@@ -79,9 +83,9 @@ just types
 
 `All checks passed!`
 
-## step-05.3 A type on every parameter and return
+## step-05.3 A type on every parameter and return {#step-05.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c2da7ec65f0a74620c5e411d96dc516b8d63ad15) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c2da7ec65f0a74620c5e411d96dc516b8d63ad15) shows what the move changes.
 
 ty, the type checker that `just types` runs, checks the types that the code states. ruff's `ANN` rules make sure that the code states a type for every
 parameter and return. In `pyproject.toml`, add a line to `select`, after `"N"`.
@@ -107,9 +111,9 @@ returns (`ANN201`). `just check` fails at this move and at the next move, and pa
 git hook refuses to commit this move or the next. In do mode, you make the two moves without a commit. In the
 project's history, they are commits made past the hook.
 
-## step-05.4 Types in the code
+## step-05.4 Types in the code {#step-05.4}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/37ff4096c6af3750178af2e961cf2c61a6fa8d6a) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/37ff4096c6af3750178af2e961cf2c61a6fa8d6a) shows what the move changes.
 
 In `src/wikiapp/wikipedia.py`, `random_page` takes a string. It returns the JSON that Wikipedia sends, which is
 a dictionary from strings to values of any kind. `Any` says that ty cannot check the values. Import `Any` at the
@@ -146,9 +150,9 @@ just lint --statistics
 
 The 22 problems that are left are all in the tests. They are 13 parameters and 9 returns.
 
-## step-05.5 Types in the tests
+## step-05.5 Types in the tests {#step-05.5}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1) shows what the move changes.
 
 Since step-05.3, ruff's `ANN` rules ask for a type on every parameter and return. The code has its types, and
 `just lint` finds 22 missing in the tests.
@@ -162,6 +166,7 @@ from unittest.mock import Mock
 
 import pytest
 from pytest_mock import MockerFixture
+
 
 @pytest.fixture
 def mock_requests_get(mocker: MockerFixture) -> Mock:
@@ -185,9 +190,11 @@ from click.testing import CliRunner
 
 from wikiapp import console
 
+
 @pytest.fixture
 def runner() -> CliRunner:
     return CliRunner()
+
 
 def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
 ```
@@ -220,9 +227,9 @@ just types
 
 Both commands pass. If `just lint` reports `I001`, the imports are not in the blocks that the code above shows.
 
-## step-05.6 The recipe check runs the type checker
+## step-05.6 The recipe check runs the type checker {#step-05.6}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fd2af757335e7569c44a38ef4d4f76a3e71f2989) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fd2af757335e7569c44a38ef4d4f76a3e71f2989) shows what the move changes.
 
 In the `justfile`, in `check`, run `just types` after `just lint`. Also add the types to the comment of `check`.
 

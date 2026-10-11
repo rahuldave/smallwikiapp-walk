@@ -1,0 +1,73 @@
+---
+title: "step-09.4 to step-09.5"
+---
+
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Do mode. [The same step in watch mode](../watch/step-09.4-to-step-09.5.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/517abf247f7a42038536d843fe7585f745d57897), the commit before step-09.4.
+
+```bash
+just setup
+```
+
+## step-09.4 The docs check counts the library {#step-09.4}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c) shows what the move changes.
+
+Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
+`docs/_smalldocs.yml` names only `wikiapp`. Change the line `packages:` in the section `api`, so that it names
+both.
+
+```yaml
+  packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
+```
+
+The move changed this file:
+
+- `docs/_smalldocs.yml`: two packages.
+
+Files to read:
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/426d87e7d66b979bbc8b1d6067583395ab08e01c/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+  - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+```bash
+just docs check
+```
+
+The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
+
+## step-09.5 The front page and the README name both packages {#step-09.5}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309) shows what the move changes.
+
+The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
+contains two packages.
+
+In the README, replace the `src/wikiapp/` row of the table of folders with the two rows below.
+
+```markdown
+| `src/wikiapp/` | The app. `console.py` is the `wikiapp` command |
+| `packages/wikirandom/` | The library the app uses: a random page of Wikipedia. A package of its own |
+```
+
+The front page is long to type, so take `docs/index.qmd` from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309).
+
+The move changed these files:
+
+- `docs/index.qmd`: two packages, the library and the app.
+- `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
+
+Files to read:
+- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
+  - look at: `The code has two packages, in one repository:`
+- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): one row more, and the `src/wikiapp/` row says the app.
+  - look at: `| The library the app uses: a random page of Wikipedia. A package of its own |`
+
+```bash
+just docs
+just check
+```
+
+`just docs` writes 3 pages, and the front page names both packages. `just check` passes.

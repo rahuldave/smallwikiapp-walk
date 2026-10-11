@@ -1,0 +1,90 @@
+---
+title: "step-05.5: Types in the tests"
+---
+
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Watch mode. [The same step in do mode](../do/step-05.5.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/37ff4096c6af3750178af2e961cf2c61a6fa8d6a), the commit before step-05.5.
+
+```bash
+just setup
+```
+
+## step-05.5 Types in the tests {#step-05.5}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1) shows what the move changes.
+
+Since step-05.3, ruff's `ANN` rules ask for a type on every parameter and return. The code has its types, and
+`just lint` finds 22 missing in the tests.
+
+The return type of a fixture is the type of what a test receives. The runner is a `CliRunner`, and the mock of
+`requests.get` is a `Mock`. `mocker` is pytest-mock's `MockerFixture`, the name that replaced the original
+wikiapp's `MockFixture`. A test returns None. Replace `tests/conftest.py` with this file.
+
+```python
+from unittest.mock import Mock
+
+import pytest
+from pytest_mock import MockerFixture
+
+
+@pytest.fixture
+def mock_requests_get(mocker: MockerFixture) -> Mock:
+    mock = mocker.patch("requests.get")
+    mock.return_value.__enter__.return_value.json.return_value = {
+        "title": "Lorem Ipsum",
+        "extract": "Lorem ipsum dolor sit amet",
+    }
+    return mock
+```
+
+In `tests/test_console.py`, import `Mock` and `CliRunner` by name. Use `CliRunner()` in the fixture, and give
+every function its types. Two of the functions are the pattern for the rest.
+
+```python
+from unittest.mock import Mock
+
+import pytest
+import requests
+from click.testing import CliRunner
+
+from wikiapp import console
+
+
+@pytest.fixture
+def runner() -> CliRunner:
+    return CliRunner()
+
+
+def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
+```
+
+In `tests/test_wikipedia.py`, do the same. Put `from unittest.mock import Mock` at the top, with a blank line
+after it, and give the test its types.
+
+```python
+def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+```
+
+The move changed these files:
+
+- `tests/conftest.py`: the types of the fixture.
+- `tests/test_console.py`: the types of the fixture and of every test.
+- `tests/test_wikipedia.py`: the types of the test.
+
+Files to read:
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/37ff4096c6af3750178af2e961cf2c61a6fa8d6a...77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.
+  - look at: `def mock_requests_get(mocker: MockerFixture) -> Mock:`
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/37ff4096c6af3750178af2e961cf2c61a6fa8d6a...77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the runner is a CliRunner.
+  - look at: `def runner() -> CliRunner:`
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/37ff4096c6af3750178af2e961cf2c61a6fa8d6a...77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): one test.
+  - look at: `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
+
+```bash
+just lint
+just types
+```
+
+Both commands pass. If `just lint` reports `I001`, the imports are not in the blocks that the code above shows.

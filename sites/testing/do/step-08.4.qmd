@@ -1,0 +1,56 @@
+---
+title: "step-08.4: The tests documented"
+---
+
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Do mode. [The same step in watch mode](../watch/step-08.4.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367), the commit before step-08.4.
+
+```bash
+just setup
+```
+
+## step-08.4 The tests documented {#step-08.4}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/632adbffca8dee5475b394b877bb642da3ed1aff) shows what the move changes.
+
+A docment is the comment beside a parameter, or after the colon of the `def` line for the return.
+`just docs check`, from step-08.1, counts the functions and classes that have their types, docments and
+docstrings.
+
+Each test file says what it tests, and each fixture says what it returns. Each test says in one line what it
+checks. The docstrings say in words what the asserts say in code.
+
+The three files are long to type, so take them from [the move's commit](https://github.com/rahuldave/smallwikiapp/compare/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367...632adbffca8dee5475b394b877bb642da3ed1aff). The test below shows the pattern.
+
+```python
+def test_main_prints_title(
+    runner: CliRunner,  # The runner from the fixture
+    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
+) -> None:
+    """The command prints the title of the page."""
+```
+
+The move changed these files:
+
+- `tests/conftest.py`: a docstring for the file and the fixture, and docments for its parameter and return.
+- `tests/test_console.py`: a docstring for the file, the fixture and each test, and a docment for each parameter
+  and the fixture's return.
+- `tests/test_wikipedia.py`: a docstring for the file and each test, and a docment for each parameter.
+
+Files to read:
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/632adbffca8dee5475b394b877bb642da3ed1aff/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367...632adbffca8dee5475b394b877bb642da3ed1aff#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
+  - look at: `mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test`
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/632adbffca8dee5475b394b877bb642da3ed1aff/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367...632adbffca8dee5475b394b877bb642da3ed1aff#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): seven functions.
+  - look at: `"""The command prints the title of the page."""`
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/632adbffca8dee5475b394b877bb642da3ed1aff/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367...632adbffca8dee5475b394b877bb642da3ed1aff#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
+  - look at: `"""The language chooses the Wikipedia that is asked."""`
+
+```bash
+just docs check
+```
+
+`check` prints a line for each module and each test file, all complete, and then `15 of 15 functions, methods
+and classes are typed and documented`.

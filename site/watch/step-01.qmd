@@ -2,6 +2,10 @@
 title: "step-01: A random page"
 ---
 
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Watch mode. [The same step in do mode](../do/step-01.qmd).
+
 [The code at step-01](https://github.com/rahuldave/smallwikiapp/tree/step-01)
 
 ```bash
@@ -15,9 +19,9 @@ The moves of step-01 add these things:
 - a header that Wikipedia now asks for
 - the option `--version`
 
-## step-01.1 click and requests
+## step-01.1 click and requests {#step-01.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1efd5611b90ac42a697374b0ca0449d5a880773e) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1efd5611b90ac42a697374b0ca0449d5a880773e) shows what the move changes.
 
 click makes command lines. requests gets pages over HTTP. Add both packages.
 
@@ -42,9 +46,9 @@ uv tree --depth 1
 `uv tree` shows the two packages under `wikiapp`. A newer version of a package can come out after these notes.
 If your numbers are newer, your `uv.lock` differs from the one here, and the move is still correct.
 
-## step-01.2 Ask Wikipedia for a page
+## step-01.2 Ask Wikipedia for a page {#step-01.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a46ba5420b43d7ea47508ae393977935e7bd8bd0) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a46ba5420b43d7ea47508ae393977935e7bd8bd0) shows what the move changes.
 
 The code below is the first code of wikiapp, from 2024, with a docstring that says what the command does.
 Replace `src/wikiapp/console.py` with it.
@@ -96,9 +100,9 @@ The command fails. The last line of the traceback is `requests.exceptions.HTTPEr
 Forbidden for url:` and the address. Wikipedia now refuses a request whose User-Agent header is the default of
 a library. requests sends `python-requests/` and its version.
 
-## step-01.3 A User-Agent
+## step-01.3 A User-Agent {#step-01.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2dd3e2132565971092bffe6a438a36506f4161cb) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2dd3e2132565971092bffe6a438a36506f4161cb) shows what the move changes.
 
 The User-Agent header says who sends the request. The policy of Wikimedia asks for the name of the program,
 its version, and a way to reach the person who runs it. In `src/wikiapp/console.py`, add a line under `API_URL`, and pass it as a
@@ -126,9 +130,9 @@ uv run wikiapp
 
 A title in green, and a paragraph. Run it again for another page.
 
-## step-01.4 --version
+## step-01.4 --version {#step-01.4}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/48a829ee985a69171af7c66846bdb8e7345a199c) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/48a829ee985a69171af7c66846bdb8e7345a199c) shows what the move changes.
 
 The package can read its own version from the installed package, which has the version in `pyproject.toml`.
 Replace `src/wikiapp/__init__.py` with the code below.

@@ -1,5 +1,6 @@
 # The tutorial's website: on every push to main, smalldocs builds site/ and GitHub Pages publishes it at
-# https://rahuldave.com/smallwikiapp-walk/. site/ is made from the notes by the teacher's walk-update.
+# https://rahuldave.com/smallwikiapp-walk/, with each small walk's site from sites/ID at /smallwikiapp-walk/ID/.
+# timewalk-tutorial makes site/ and sites/ from the notes, in the teacher's walk-update.
 name: Pages
 
 on:
@@ -23,6 +24,14 @@ jobs:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.2.0
       - run: uvx --from 'smalldocs>=0.1.3' smalldocs render site
+      - run: |
+          for small in sites/*/; do
+            [ -d "$small" ] || continue  # no small walk: the glob stays as written
+            id=$(basename "$small")
+            uvx --from 'smalldocs>=0.1.3' smalldocs render "sites/$id"
+            mkdir -p "site/_site/$id"
+            cp -R "sites/$id/_site/." "site/_site/$id/"
+          done
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:

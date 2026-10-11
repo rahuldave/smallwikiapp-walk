@@ -2,6 +2,10 @@
 title: "step-03: A library and an app"
 ---
 
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Do mode. [The same step in watch mode](../watch/step-03.qmd).
+
 [The code at step-03](https://github.com/rahuldave/smallwikiapp/tree/step-03)
 
 ```bash
@@ -12,9 +16,9 @@ The code that asks Wikipedia moves into a module of its own, `wikipedia.py`. The
 and an error of its own. The command, in `console.py`, uses the module. So wikipedia.py is a library that knows
 nothing of the command line, and console.py is the app that uses it.
 
-## step-03.1 random_page moves to wikipedia.py
+## step-03.1 random_page moves to wikipedia.py {#step-03.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fec316ee50d27867f0dab60a755372ce1d1839d1) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fec316ee50d27867f0dab60a755372ce1d1839d1) shows what the move changes.
 
 Make `src/wikiapp/wikipedia.py`.
 
@@ -74,9 +78,9 @@ just test
 The result is `5 passed`, with no change to the tests. The mock replaces the function `get` in the module
 `requests`. wikipedia.py calls the function through the module, as `requests.get`, so it gets the mock.
 
-## step-03.2 The mock moves to conftest.py
+## step-03.2 The mock moves to conftest.py {#step-03.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/dcb1e4c7102be3c1feec309ed88e1097ce28f32e) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/dcb1e4c7102be3c1feec309ed88e1097ce28f32e) shows what the move changes.
 
 pytest reads `tests/conftest.py` before the tests, and every test file can use a fixture in it. The tests of
 wikipedia.py, in the next move, need the mock too. Make `tests/conftest.py` with the mock in it. Then delete the
@@ -111,9 +115,9 @@ just test
 
 The result is `5 passed`. pytest finds the fixture in conftest.py.
 
-## step-03.3 A language
+## step-03.3 A language {#step-03.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3d9dfef45760f1ce2cfa78841f554e08f62d32f4) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3d9dfef45760f1ce2cfa78841f554e08f62d32f4) shows what the move changes.
 
 Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, put a
 placeholder for the language in the address. Fill it in `random_page`, with English as the default.
@@ -156,9 +160,9 @@ just test
 
 The result is `6 passed`.
 
-## step-03.4 wikiapp --language
+## step-03.4 wikiapp --language {#step-03.4}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3bd5616ab15d6b2b526784e8b3b014bceef2548f) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3bd5616ab15d6b2b526784e8b3b014bceef2548f) shows what the move changes.
 
 In `src/wikiapp/console.py`, add an option between `@click.command()` and `@click.version_option`, and pass it
 on.
@@ -197,9 +201,9 @@ uv run wikiapp --help
 
 The first command prints a French page. `--help` lists the option, its short form and its default.
 
-## step-03.5 WikipediaError
+## step-03.5 WikipediaError {#step-03.5}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/56214d31141adcc3dab1ecdd7545b94b03c7f0ea) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/56214d31141adcc3dab1ecdd7545b94b03c7f0ea) shows what the move changes.
 
 If a request fails for any reason, requests raises a `RequestException`. Code that uses the library should
 not need to know the exceptions of requests. So the library raises an exception of its own. In
@@ -236,9 +240,9 @@ uv run wikiapp --language xx
 There is no Wikipedia in the language `xx`, so the name `xx.wikipedia.org` does not resolve. The command ends in
 a traceback, and the last line is the `WikipediaError`. No code catches the error yet.
 
-## step-03.6 The command prints the error
+## step-03.6 The command prints the error {#step-03.6}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7) shows what the move changes.
 
 In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click,
 which click prints as a message.

@@ -1,32 +1,317 @@
-# The tutorial as a website, made by `just walk-update` from TUTORIAL.md: do not edit these files by hand.
-# smalldocs builds it. GitHub builds and publishes it on every push (.github/workflows/pages.yml); `just site` builds it here.
+# Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again.
 project:
   type: website
   output-dir: _site
+  render: ["index.qmd", "do/*.qmd", "watch/*.qmd"]   # only these pages: never the notes
 
 website:
   title: "smallwikiapp, one move at a time"
-  site-url: "https://rahuldave.com/smallwikiapp-walk/"
-  repo-url: "https://github.com/rahuldave/smallwikiapp-walk"
   page-navigation: true
   search: true
   sidebar:
     style: docked
     contents:
       - index.qmd
-      - section: "The steps"
+      - section: "Watch"
         contents:
-          - step-00.qmd
-          - step-01.qmd
-          - step-02.qmd
-          - step-03.qmd
-          - step-04.qmd
-          - step-05.qmd
-          - step-06.qmd
-          - step-07.qmd
-          - step-08.qmd
-          - step-09.qmd
-          - step-10.qmd
+          - text: "step-00: The project"
+            href: watch/step-00.qmd
+          - section: "step-01: A random page"
+            href: watch/step-01.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: watch/step-01.qmd#step-01.1
+              - text: "step-01.2 Ask Wikipedia for a page"
+                href: watch/step-01.qmd#step-01.2
+              - text: "step-01.3 A User-Agent"
+                href: watch/step-01.qmd#step-01.3
+              - text: "step-01.4 --version"
+                href: watch/step-01.qmd#step-01.4
+          - section: "step-02: Tests, with mocks"
+            href: watch/step-02.qmd
+            contents:
+              - text: "step-02.1 pytest and the first test"
+                href: watch/step-02.qmd#step-02.1
+              - text: "step-02.2 The recipe `just test`"
+                href: watch/step-02.qmd#step-02.2
+              - text: "step-02.3 The runner as a fixture"
+                href: watch/step-02.qmd#step-02.3
+              - text: "step-02.4 A mock in place of Wikipedia"
+                href: watch/step-02.qmd#step-02.4
+              - text: "step-02.5 Tests of the request"
+                href: watch/step-02.qmd#step-02.5
+              - text: "step-02.6 A test of a failed request"
+                href: watch/step-02.qmd#step-02.6
+              - text: "step-02.7 Coverage"
+                href: watch/step-02.qmd#step-02.7
+          - section: "step-03: A library and an app"
+            href: watch/step-03.qmd
+            contents:
+              - text: "step-03.1 random_page moves to wikipedia.py"
+                href: watch/step-03.qmd#step-03.1
+              - text: "step-03.2 The mock moves to conftest.py"
+                href: watch/step-03.qmd#step-03.2
+              - text: "step-03.3 A language"
+                href: watch/step-03.qmd#step-03.3
+              - text: "step-03.4 wikiapp --language"
+                href: watch/step-03.qmd#step-03.4
+              - text: "step-03.5 WikipediaError"
+                href: watch/step-03.qmd#step-03.5
+              - text: "step-03.6 The command prints the error"
+                href: watch/step-03.qmd#step-03.6
+          - section: "step-04: Format, lint, a hook"
+            href: watch/step-04.qmd
+            contents:
+              - text: "step-04.1 ruff, and the recipe fmt"
+                href: watch/step-04.qmd#step-04.1
+              - text: "step-04.2 The code, formatted"
+                href: watch/step-04.qmd#step-04.2
+              - text: "step-04.3 The linter's rules, and the recipe lint"
+                href: watch/step-04.qmd#step-04.3
+              - text: "step-04.4 The linter sorts the imports"
+                href: watch/step-04.qmd#step-04.4
+              - text: "step-04.5 The tests' imports at the top, and no unused variables"
+                href: watch/step-04.qmd#step-04.5
+              - text: "step-04.6 A timeout"
+                href: watch/step-04.qmd#step-04.6
+              - text: "step-04.7 The recipe lint-config"
+                href: watch/step-04.qmd#step-04.7
+              - text: "step-04.8 A locked lockfile"
+                href: watch/step-04.qmd#step-04.8
+              - text: "step-04.9 The recipe check"
+                href: watch/step-04.qmd#step-04.9
+              - text: "step-04.10 A git hook"
+                href: watch/step-04.qmd#step-04.10
+          - section: "step-05: Types"
+            href: watch/step-05.qmd
+            contents:
+              - text: "step-05.1 ty, and the recipe types"
+                href: watch/step-05.qmd#step-05.1
+              - text: "step-05.2 The version of \"wikiapp\", by name"
+                href: watch/step-05.qmd#step-05.2
+              - text: "step-05.3 A type on every parameter and return"
+                href: watch/step-05.qmd#step-05.3
+              - text: "step-05.4 Types in the code"
+                href: watch/step-05.qmd#step-05.4
+              - text: "step-05.5 Types in the tests"
+                href: watch/step-05.qmd#step-05.5
+              - text: "step-05.6 The recipe check runs the type checker"
+                href: watch/step-05.qmd#step-05.6
+          - section: "step-06: End to end, and CI"
+            href: watch/step-06.qmd
+            contents:
+              - text: "step-06.1 The end-to-end test runs only on request"
+                href: watch/step-06.qmd#step-06.1
+              - text: "step-06.2 An end-to-end test of the library"
+                href: watch/step-06.qmd#step-06.2
+              - text: "step-06.3 Any Python from 3.11 on"
+                href: watch/step-06.qmd#step-06.3
+              - text: "step-06.4 GitHub runs the tests"
+                href: watch/step-06.qmd#step-06.4
+          - section: "step-07: A page with a shape"
+            href: watch/step-07.qmd
+            contents:
+              - text: "step-07.1 The model Page"
+                href: watch/step-07.qmd#step-07.1
+              - text: "step-07.2 random_page returns a Page"
+                href: watch/step-07.qmd#step-07.2
+              - text: "step-07.3 An answer that is not a page"
+                href: watch/step-07.qmd#step-07.3
+              - text: "step-07.4 Only a language code goes into the address"
+                href: watch/step-07.qmd#step-07.4
+          - section: "step-08: Docs from the code"
+            href: watch/step-08.qmd
+            contents:
+              - text: "step-08.1 smalldocs"
+                href: watch/step-08.qmd#step-08.1
+              - text: "step-08.2 The library documented"
+                href: watch/step-08.qmd#step-08.2
+              - text: "step-08.3 The command documented"
+                href: watch/step-08.qmd#step-08.3
+              - text: "step-08.4 The tests documented"
+                href: watch/step-08.qmd#step-08.4
+              - text: "step-08.5 A site"
+                href: watch/step-08.qmd#step-08.5
+              - text: "step-08.6 The README names the tests and the docs"
+                href: watch/step-08.qmd#step-08.6
+              - text: "step-08.7 The docs check in `just check`"
+                href: watch/step-08.qmd#step-08.7
+          - section: "step-09: The library as a package"
+            href: watch/step-09.qmd
+            contents:
+              - text: "step-09.1 An empty library, wikirandom"
+                href: watch/step-09.qmd#step-09.1
+              - text: "step-09.2 The code goes into wikirandom"
+                href: watch/step-09.qmd#step-09.2
+              - text: "step-09.3 The app uses wikirandom"
+                href: watch/step-09.qmd#step-09.3
+              - text: "step-09.4 The docs check counts the library"
+                href: watch/step-09.qmd#step-09.4
+              - text: "step-09.5 The front page and the README name both packages"
+                href: watch/step-09.qmd#step-09.5
+          - section: "step-10: Build"
+            href: watch/step-10.qmd
+            contents:
+              - text: "step-10.1 The recipe `build`"
+                href: watch/step-10.qmd#step-10.1
+              - text: "step-10.2 The app needs wikirandom 0.1"
+                href: watch/step-10.qmd#step-10.2
+              - text: "step-10.3 lint-config checks both pyproject.toml files"
+                href: watch/step-10.qmd#step-10.3
+              - text: "step-10.4 A licence and a repository link for both"
+                href: watch/step-10.qmd#step-10.4
+              - text: "step-10.5 The User-Agent says the installed version"
+                href: watch/step-10.qmd#step-10.5
+      - section: "Do"
+        contents:
+          - text: "step-00: The project"
+            href: do/step-00.qmd
+          - section: "step-01: A random page"
+            href: do/step-01.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: do/step-01.qmd#step-01.1
+              - text: "step-01.2 Ask Wikipedia for a page"
+                href: do/step-01.qmd#step-01.2
+              - text: "step-01.3 A User-Agent"
+                href: do/step-01.qmd#step-01.3
+              - text: "step-01.4 --version"
+                href: do/step-01.qmd#step-01.4
+          - section: "step-02: Tests, with mocks"
+            href: do/step-02.qmd
+            contents:
+              - text: "step-02.1 pytest and the first test"
+                href: do/step-02.qmd#step-02.1
+              - text: "step-02.2 The recipe `just test`"
+                href: do/step-02.qmd#step-02.2
+              - text: "step-02.3 The runner as a fixture"
+                href: do/step-02.qmd#step-02.3
+              - text: "step-02.4 A mock in place of Wikipedia"
+                href: do/step-02.qmd#step-02.4
+              - text: "step-02.5 Tests of the request"
+                href: do/step-02.qmd#step-02.5
+              - text: "step-02.6 A test of a failed request"
+                href: do/step-02.qmd#step-02.6
+              - text: "step-02.7 Coverage"
+                href: do/step-02.qmd#step-02.7
+          - section: "step-03: A library and an app"
+            href: do/step-03.qmd
+            contents:
+              - text: "step-03.1 random_page moves to wikipedia.py"
+                href: do/step-03.qmd#step-03.1
+              - text: "step-03.2 The mock moves to conftest.py"
+                href: do/step-03.qmd#step-03.2
+              - text: "step-03.3 A language"
+                href: do/step-03.qmd#step-03.3
+              - text: "step-03.4 wikiapp --language"
+                href: do/step-03.qmd#step-03.4
+              - text: "step-03.5 WikipediaError"
+                href: do/step-03.qmd#step-03.5
+              - text: "step-03.6 The command prints the error"
+                href: do/step-03.qmd#step-03.6
+          - section: "step-04: Format, lint, a hook"
+            href: do/step-04.qmd
+            contents:
+              - text: "step-04.1 ruff, and the recipe fmt"
+                href: do/step-04.qmd#step-04.1
+              - text: "step-04.2 The code, formatted"
+                href: do/step-04.qmd#step-04.2
+              - text: "step-04.3 The linter's rules, and the recipe lint"
+                href: do/step-04.qmd#step-04.3
+              - text: "step-04.4 The linter sorts the imports"
+                href: do/step-04.qmd#step-04.4
+              - text: "step-04.5 The tests' imports at the top, and no unused variables"
+                href: do/step-04.qmd#step-04.5
+              - text: "step-04.6 A timeout"
+                href: do/step-04.qmd#step-04.6
+              - text: "step-04.7 The recipe lint-config"
+                href: do/step-04.qmd#step-04.7
+              - text: "step-04.8 A locked lockfile"
+                href: do/step-04.qmd#step-04.8
+              - text: "step-04.9 The recipe check"
+                href: do/step-04.qmd#step-04.9
+              - text: "step-04.10 A git hook"
+                href: do/step-04.qmd#step-04.10
+          - section: "step-05: Types"
+            href: do/step-05.qmd
+            contents:
+              - text: "step-05.1 ty, and the recipe types"
+                href: do/step-05.qmd#step-05.1
+              - text: "step-05.2 The version of \"wikiapp\", by name"
+                href: do/step-05.qmd#step-05.2
+              - text: "step-05.3 A type on every parameter and return"
+                href: do/step-05.qmd#step-05.3
+              - text: "step-05.4 Types in the code"
+                href: do/step-05.qmd#step-05.4
+              - text: "step-05.5 Types in the tests"
+                href: do/step-05.qmd#step-05.5
+              - text: "step-05.6 The recipe check runs the type checker"
+                href: do/step-05.qmd#step-05.6
+          - section: "step-06: End to end, and CI"
+            href: do/step-06.qmd
+            contents:
+              - text: "step-06.1 The end-to-end test runs only on request"
+                href: do/step-06.qmd#step-06.1
+              - text: "step-06.2 An end-to-end test of the library"
+                href: do/step-06.qmd#step-06.2
+              - text: "step-06.3 Any Python from 3.11 on"
+                href: do/step-06.qmd#step-06.3
+              - text: "step-06.4 GitHub runs the tests"
+                href: do/step-06.qmd#step-06.4
+          - section: "step-07: A page with a shape"
+            href: do/step-07.qmd
+            contents:
+              - text: "step-07.1 The model Page"
+                href: do/step-07.qmd#step-07.1
+              - text: "step-07.2 random_page returns a Page"
+                href: do/step-07.qmd#step-07.2
+              - text: "step-07.3 An answer that is not a page"
+                href: do/step-07.qmd#step-07.3
+              - text: "step-07.4 Only a language code goes into the address"
+                href: do/step-07.qmd#step-07.4
+          - section: "step-08: Docs from the code"
+            href: do/step-08.qmd
+            contents:
+              - text: "step-08.1 smalldocs"
+                href: do/step-08.qmd#step-08.1
+              - text: "step-08.2 The library documented"
+                href: do/step-08.qmd#step-08.2
+              - text: "step-08.3 The command documented"
+                href: do/step-08.qmd#step-08.3
+              - text: "step-08.4 The tests documented"
+                href: do/step-08.qmd#step-08.4
+              - text: "step-08.5 A site"
+                href: do/step-08.qmd#step-08.5
+              - text: "step-08.6 The README names the tests and the docs"
+                href: do/step-08.qmd#step-08.6
+              - text: "step-08.7 The docs check in `just check`"
+                href: do/step-08.qmd#step-08.7
+          - section: "step-09: The library as a package"
+            href: do/step-09.qmd
+            contents:
+              - text: "step-09.1 An empty library, wikirandom"
+                href: do/step-09.qmd#step-09.1
+              - text: "step-09.2 The code goes into wikirandom"
+                href: do/step-09.qmd#step-09.2
+              - text: "step-09.3 The app uses wikirandom"
+                href: do/step-09.qmd#step-09.3
+              - text: "step-09.4 The docs check counts the library"
+                href: do/step-09.qmd#step-09.4
+              - text: "step-09.5 The front page and the README name both packages"
+                href: do/step-09.qmd#step-09.5
+          - section: "step-10: Build"
+            href: do/step-10.qmd
+            contents:
+              - text: "step-10.1 The recipe `build`"
+                href: do/step-10.qmd#step-10.1
+              - text: "step-10.2 The app needs wikirandom 0.1"
+                href: do/step-10.qmd#step-10.2
+              - text: "step-10.3 lint-config checks both pyproject.toml files"
+                href: do/step-10.qmd#step-10.3
+              - text: "step-10.4 A licence and a repository link for both"
+                href: do/step-10.qmd#step-10.4
+              - text: "step-10.5 The User-Agent says the installed version"
+                href: do/step-10.qmd#step-10.5
 
 theme: cosmo
 css: styles.css

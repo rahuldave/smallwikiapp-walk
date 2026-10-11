@@ -1,8 +1,9 @@
 # The tutorial through smallwikiapp, in timewalk. Run `just` to see the list.
 #
 # This file names the project and the upstream owner here. `just setup` clones the project into repo/, and
-# timewalk puts its replay copy in worktree/. Both folders are in .gitignore. toc.toml lists the two walks, show
-# (watch mode, the first) and do, over the same notes. Made from the walk skill's template, with `site` added.
+# timewalk puts its replay copy in worktree/. Both folders are in .gitignore. toc.toml lists five walks over the
+# same notes: show (watch mode, the first) and do, the whole tutorial, and three small walks, testing, linting
+# and docs. Made from the walk skill's template, with `site` added.
 
 project := "smallwikiapp"
 upstream := "rahuldave"
@@ -88,10 +89,20 @@ pdf id="":
     if [ -n "${BRAND:-}" ]; then test -e "$BRAND" || { echo "pdf: BRAND=$BRAND does not exist" >&2; exit 1; }; brand=(--brand "$BRAND"); fi
     uvx --refresh-package timewalk --from {{ quote(timewalk) }} timewalk-pdf "${source[@]}" ${brand[@]+"${brand[@]}"} -o "build/$name.pdf"
 
-# Check the notes and slides of both walks against the steps and moves of the project
+# Check the notes and slides of every walk against the steps and moves of the project
 check: setup
     uvx --refresh-package timewalk --from {{ quote(timewalk) }} timewalk-check repo --replay worktree --toc toc.toml
 
-# Build the tutorial's website into site/_site with smalldocs, as GitHub Pages does: open site/_site/index.html
+# Build the websites into site/_site with smalldocs, as GitHub Pages does: open site/_site/index.html
 site:
+    #!/usr/bin/env bash
+    set -euo pipefail
     uvx --from 'smalldocs>=0.1.3' smalldocs render site
+    # Each small walk's site, from sites/ID, goes into site/_site/ID
+    for small in sites/*/; do
+        [ -d "$small" ] || continue  # no small walk: the glob stays as written
+        id=$(basename "$small")
+        uvx --from 'smalldocs>=0.1.3' smalldocs render "sites/$id"
+        mkdir -p "site/_site/$id"
+        cp -R "sites/$id/_site/." "site/_site/$id/"
+    done

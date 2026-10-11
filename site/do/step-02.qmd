@@ -2,6 +2,10 @@
 title: "step-02: Tests, with mocks"
 ---
 
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Do mode. [The same step in watch mode](../watch/step-02.qmd).
+
 [The code at step-02](https://github.com/rahuldave/smallwikiapp/tree/step-02)
 
 ```bash
@@ -12,9 +16,9 @@ The moves of this step add pytest and a first test, a recipe for the tests, and 
 place of Wikipedia, with a test of the title. Then they add three more tests, and coverage on every run. One test asks the real Wikipedia, so the tests need
 the network until step 06.
 
-## step-02.1 pytest and the first test
+## step-02.1 pytest and the first test {#step-02.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/645fc59b58e6f49dc92635e2562f949524a4629c) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/645fc59b58e6f49dc92635e2562f949524a4629c) shows what the move changes.
 
 The tests need pytest, but the package does not. A person who installs wikiapp should not get pytest. So
 pytest goes in a dependency group of its own, `test`. uv installs the group `dev` by default, so `dev` includes
@@ -65,9 +69,9 @@ uv run pytest
 
 The result is `1 passed`. The test asks the real Wikipedia, so it needs the network.
 
-## step-02.2 The recipe `just test`
+## step-02.2 The recipe `just test` {#step-02.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/94970c50651566f11d5c9d017cb01004e240821a) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/94970c50651566f11d5c9d017cb01004e240821a) shows what the move changes.
 
 Add a recipe for the tests at the end of the `justfile`.
 
@@ -99,9 +103,9 @@ just test
 
 The result is the same, `1 passed`.
 
-## step-02.3 The runner as a fixture
+## step-02.3 The runner as a fixture {#step-02.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534) shows what the move changes.
 
 Each test of the command needs a `CliRunner`. A fixture makes one for every test that asks for it. A fixture is a
 function that pytest calls for each test that names it as a parameter. Replace `tests/test_console.py` with the
@@ -136,9 +140,9 @@ just test
 
 The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 
-## step-02.4 A mock in place of Wikipedia
+## step-02.4 A mock in place of Wikipedia {#step-02.4}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5) shows what the move changes.
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page.
 pytest-mock can replace `requests.get` with a mock for the length of one test.
@@ -199,9 +203,9 @@ just test -k title -v
 
 The output shows `test_main_prints_title PASSED`, without the network.
 
-## step-02.5 Tests of the request
+## step-02.5 Tests of the request {#step-02.5}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f) shows what the move changes.
 
 A mock keeps a record of each call to it. Add two tests to `tests/test_console.py`, after `test_main_prints_title`.
 
@@ -232,9 +236,9 @@ just test
 
 The result is `4 passed`.
 
-## step-02.6 A test of a failed request
+## step-02.6 A test of a failed request {#step-02.6}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/16b52dc4f9ec6e997b6954efde180ba6d7f521c7) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/16b52dc4f9ec6e997b6954efde180ba6d7f521c7) shows what the move changes.
 
 The mock can raise an exception as well as return a value. If `side_effect` is an exception, a call to the
 mock raises it. Add the test below before `test_main_succeeds`.
@@ -260,9 +264,9 @@ just test
 
 The result is `5 passed`.
 
-## step-02.7 Coverage
+## step-02.7 Coverage {#step-02.7}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef) shows what the move changes.
 
 pytest-cov measures which lines of the code the tests run.
 

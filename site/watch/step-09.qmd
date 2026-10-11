@@ -1,0 +1,254 @@
+---
+title: "step-09: The library as a package"
+---
+
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Watch mode. [The same step in do mode](../do/step-09.qmd).
+
+[The code at step-09](https://github.com/rahuldave/smallwikiapp/tree/step-09)
+
+```bash
+just setup
+```
+
+The code that asks Wikipedia becomes a package of its own, `wikirandom`, in the same repository. The first move
+makes an empty package. The next moves add the code, and make the app use the library. The last two moves update the docs and the
+README. Any other
+program could then install wikirandom without wikiapp and click.
+
+## step-09.1 An empty library, wikirandom {#step-09.1}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/677e1d1f52c3f1c57b4ec0914618f43ddf62123c) shows what the move changes.
+
+uv can make a second package inside a project. The two packages then form a *workspace*, which has one lockfile
+and one `.venv` for both.
+
+```
+uv init --lib --author-from none packages/wikirandom
+```
+
+uv makes `packages/wikirandom/`, with these files in it:
+
+- `pyproject.toml`, the library's own
+- `README.md`, empty
+- `src/wikirandom/__init__.py`, with an example function, `hello`
+- `src/wikirandom/py.typed`, the mark that tells a type checker that the package has types
+
+In the project's `pyproject.toml`, uv adds `[tool.uv.workspace]`. uv copied the Python version from
+`.python-version`. In `packages/wikirandom/pyproject.toml`, make the library need 3.11, as the app does. Also give
+the library a description.
+
+```toml
+description = "A random page of Wikipedia, in any language"
+```
+
+```toml
+requires-python = ">=3.11"
+```
+
+Replace `packages/wikirandom/README.md` with a heading and one line of what it is, and lock again.
+
+```markdown
+# wikirandom
+
+A random page of Wikipedia, in any language. The command `wikiapp` uses this library.
+```
+
+```
+uv lock
+```
+
+The move changed these files:
+
+- `packages/wikirandom/pyproject.toml`: new. It has the package's name, version and description, and uv_build.
+- `packages/wikirandom/README.md`: new. It says what the library is.
+- `packages/wikirandom/src/wikirandom/__init__.py`: new. It has uv's example function, `hello`.
+- `packages/wikirandom/src/wikirandom/py.typed`: new and empty. It tells ty and other checkers that the package has types.
+- `pyproject.toml`: the workspace, with one member.
+- `uv.lock`: the second package.
+
+Files to read:
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/677e1d1f52c3f1c57b4ec0914618f43ddf62123c/packages/wikirandom/pyproject.toml): a package of its own.
+  - look at: `name = "wikirandom"`
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/677e1d1f52c3f1c57b4ec0914618f43ddf62123c/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/677e1d1f52c3f1c57b4ec0914618f43ddf62123c#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the workspace.
+  - look at: `"packages/wikirandom",`
+
+```bash
+uv run --package wikirandom python -c "import wikirandom; print(wikirandom.hello())"
+```
+
+The command prints `Hello from wikirandom!`. `--package wikirandom` installs the library into the shared `.venv`,
+and runs the command there. The app does not depend on the library yet, so a plain `uv run` would not install it.
+`--author-from none` kept uv from writing your name and email from git into the library's `pyproject.toml`.
+
+## step-09.2 The code goes into wikirandom {#step-09.2}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7) shows what the move changes.
+
+The library needs requests and pydantic.
+
+```
+uv add --package wikirandom requests pydantic
+```
+
+Replace `packages/wikirandom/src/wikirandom/__init__.py` with the code of `src/wikiapp/wikipedia.py`. Change its
+docstring to say what the package is. Change its User-Agent to name the program that makes the request.
+
+```python
+"""wikirandom: a random page of Wikipedia, in any language, from its REST API."""
+```
+
+```python
+USER_AGENT = "wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+```
+
+The move changed these files:
+
+- `packages/wikirandom/src/wikirandom/__init__.py`: the code of wikipedia.py.
+- `packages/wikirandom/pyproject.toml`: requests and pydantic, which are the library's dependencies.
+- `uv.lock`: the library's dependencies.
+
+Files to read:
+- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the library.
+  - look at: `def random_page(`
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): its dependencies.
+  - look at: `"pydantic>=2.14.0",`
+
+```bash
+uv run --package wikirandom python -c "import wikirandom; print(wikirandom.random_page('fr').title)"
+```
+
+The command prints the title of a French page. The app still has its own `wikipedia.py`, and does not use the
+library yet.
+
+## step-09.3 The app uses wikirandom {#step-09.3}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897) shows what the move changes.
+
+Make the library a dependency of the app. Take requests and pydantic out of the app's dependencies, because the
+app no longer imports them.
+
+```
+uv add wikirandom
+uv remove requests pydantic
+```
+
+Because wikirandom is a member of the workspace, `uv add` writes `wikirandom = { workspace = true }` under
+`[tool.uv.sources]`. So uv installs the library from `packages/wikirandom` as an editable package, and not from
+PyPI.
+
+In `src/wikiapp/console.py`, import from the library. ruff sorts the import with the installed packages, under
+`import click`.
+
+```python
+import click
+from wikirandom import WikipediaError, random_page
+
+from wikiapp import __version__
+```
+
+Delete `src/wikiapp/wikipedia.py`. Rename `tests/test_wikipedia.py` to `tests/test_wikirandom.py`. Then make the
+test file test the library:
+
+- Change its docstring to `Tests of the library, wikirandom.`
+- Put `import wikirandom` under `import pytest`, in place of `from wikiapp import wikipedia` and the blank line
+  before it.
+- Change `wikipedia.random_page`, `wikipedia.Page` and `wikipedia.WikipediaError` to `wikirandom.random_page`,
+  `wikirandom.Page` and `wikirandom.WikipediaError`.
+
+Keep the host `es.wikipedia.org` in the first test as it is.
+
+```
+git rm src/wikiapp/wikipedia.py
+git mv tests/test_wikipedia.py tests/test_wikirandom.py
+```
+
+In `pyproject.toml`, make coverage measure both packages.
+
+```toml
+# Every run measures how much of the two packages the tests run, and lists the lines they do not. A test
+```
+
+```toml
+addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"
+```
+
+The move changed these files:
+
+- `pyproject.toml`: wikirandom in, requests and pydantic out. The source of wikirandom is the workspace, and coverage measures both packages.
+- `uv.lock`: the app's dependencies are now click and wikirandom.
+- `src/wikiapp/console.py`: imports from wikirandom.
+- `src/wikiapp/wikipedia.py`: deleted.
+- `tests/test_wikirandom.py`: renamed from `tests/test_wikipedia.py`, and it tests wikirandom.
+
+Files to read:
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/517abf247f7a42038536d843fe7585f745d57897/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app depends on the library.
+  - look at: `wikirandom = { workspace = true }`
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/517abf247f7a42038536d843fe7585f745d57897/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): one import.
+  - look at: `from wikirandom import WikipediaError, random_page`
+- [`tests/test_wikirandom.py`](https://github.com/rahuldave/smallwikiapp/blob/517abf247f7a42038536d843fe7585f745d57897/tests/test_wikirandom.py): the same three tests.
+  - look at: `wikirandom.random_page(language="es")`
+
+```bash
+just test -q
+uv tree --depth 2
+just docs check
+```
+
+The tests print `7 passed, 2 deselected`, and the coverage table lists
+`packages/wikirandom/src/wikirandom/__init__.py`. `uv tree` shows that wikiapp needs click and wikirandom, and
+that wikirandom needs requests and pydantic. `just docs check` still counts the app and the tests alone, 12 of 12. The next
+move adds the library. The README still names `wikipedia.py`, and the front page of the site
+`wikiapp.wikipedia`, until step-09.5.
+
+## step-09.4 The docs check counts the library {#step-09.4}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c) shows what the move changes.
+
+Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
+`docs/_smalldocs.yml` names only `wikiapp`. Change the line `packages:` in the section `api`, so that it names
+both.
+
+```yaml
+  packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
+```
+
+The move changed this file:
+
+- `docs/_smalldocs.yml`: two packages.
+
+Files to read:
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/426d87e7d66b979bbc8b1d6067583395ab08e01c/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+  - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+```bash
+just docs check
+```
+
+The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
+
+## step-09.5 The front page and the README name both packages {#step-09.5}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309) shows what the move changes.
+
+The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
+contains two packages.
+
+The move changed these files:
+
+- `docs/index.qmd`: two packages, the library and the app.
+- `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
+
+Files to read:
+- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
+  - look at: `The code has two packages, in one repository:`
+- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): one row more, and the `src/wikiapp/` row says the app.
+  - look at: `| The library the app uses: a random page of Wikipedia. A package of its own |`
+
+```bash
+just docs
+just check
+```
+
+`just docs` writes 3 pages, and the front page names both packages. `just check` passes.

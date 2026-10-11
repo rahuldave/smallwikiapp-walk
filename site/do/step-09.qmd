@@ -2,6 +2,10 @@
 title: "step-09: The library as a package"
 ---
 
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Do mode. [The same step in watch mode](../watch/step-09.qmd).
+
 [The code at step-09](https://github.com/rahuldave/smallwikiapp/tree/step-09)
 
 ```bash
@@ -13,9 +17,9 @@ makes an empty package. The next moves add the code, and make the app use the li
 README. Any other
 program could then install wikirandom without wikiapp and click.
 
-## step-09.1 An empty library, wikirandom
+## step-09.1 An empty library, wikirandom {#step-09.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/677e1d1f52c3f1c57b4ec0914618f43ddf62123c) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/677e1d1f52c3f1c57b4ec0914618f43ddf62123c) shows what the move changes.
 
 uv can make a second package inside a project. The two packages then form a *workspace*, which has one lockfile
 and one `.venv` for both.
@@ -78,9 +82,9 @@ The command prints `Hello from wikirandom!`. `--package wikirandom` installs the
 and runs the command there. The app does not depend on the library yet, so a plain `uv run` would not install it.
 `--author-from none` kept uv from writing your name and email from git into the library's `pyproject.toml`.
 
-## step-09.2 The code goes into wikirandom
+## step-09.2 The code goes into wikirandom {#step-09.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7) shows what the move changes.
 
 The library needs requests and pydantic.
 
@@ -118,9 +122,9 @@ uv run --package wikirandom python -c "import wikirandom; print(wikirandom.rando
 The command prints the title of a French page. The app still has its own `wikipedia.py`, and does not use the
 library yet.
 
-## step-09.3 The app uses wikirandom
+## step-09.3 The app uses wikirandom {#step-09.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897) shows what the move changes.
 
 Make the library a dependency of the app. Take requests and pydantic out of the app's dependencies, because the
 app no longer imports them.
@@ -198,9 +202,9 @@ that wikirandom needs requests and pydantic. `just docs check` still counts the 
 move adds the library. The README still names `wikipedia.py`, and the front page of the site
 `wikiapp.wikipedia`, until step-09.5.
 
-## step-09.4 The docs check counts the library
+## step-09.4 The docs check counts the library {#step-09.4}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c) shows what the move changes.
 
 Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
 `docs/_smalldocs.yml` names only `wikiapp`. Change the line `packages:` in the section `api`, so that it names
@@ -224,12 +228,21 @@ just docs check
 
 The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
 
-## step-09.5 The front page and the README name both packages
+## step-09.5 The front page and the README name both packages {#step-09.5}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309) shows what the move changes.
 
 The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
-contains two packages. Take both files from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309).
+contains two packages.
+
+In the README, replace the `src/wikiapp/` row of the table of folders with the two rows below.
+
+```markdown
+| `src/wikiapp/` | The app. `console.py` is the `wikiapp` command |
+| `packages/wikirandom/` | The library the app uses: a random page of Wikipedia. A package of its own |
+```
+
+The front page is long to type, so take `docs/index.qmd` from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309).
 
 The move changed these files:
 

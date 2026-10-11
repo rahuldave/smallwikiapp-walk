@@ -1,0 +1,313 @@
+---
+title: "step-04.1 to step-04.7"
+---
+
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Watch mode. [The same step in do mode](../do/step-04.1-to-step-04.7.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/b090ad74622ee6109dd72ae66feec36377eef7d7), the commit before step-04.1.
+
+```bash
+just setup
+```
+
+## step-04.1 ruff, and the recipe fmt {#step-04.1}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9) shows what the move changes.
+
+ruff is a formatter and a linter in one program. It goes in a third dependency group, `lint`, which `dev`
+includes. In `pyproject.toml`, change the line `dev = ...`, and add the group.
+
+```toml
+dev = [{ include-group = "test" }, { include-group = "lint" }]
+lint = []
+```
+
+Add ruff to the group. Then add its settings at the end of `pyproject.toml`.
+
+```
+uv add --group lint ruff
+```
+
+```toml
+
+[tool.ruff]
+# The one setting the formatter and the linter share. Ruff's own default is 88; this project reads
+# better at 100.
+line-length = 100
+
+[tool.ruff.format]
+# The formatter has no style to argue about. These are ruff's defaults, written out so they are visible.
+quote-style = "double"            # "text", not 'text'
+indent-style = "space"            # four spaces, never tabs
+skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
+```
+
+Add a recipe at the end of the `justfile`.
+
+```just
+
+# Format the code, one way. Extra arguments go to ruff: just fmt --check, just fmt --diff
+[group('quality')]
+[no-exit-message]
+fmt *args:
+    {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
+```
+
+The move changed these files:
+
+- `pyproject.toml`: the group `lint`, and ruff's settings.
+- `justfile`: the recipe `fmt`.
+- `uv.lock`: ruff.
+
+Files to read:
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/693240e344546dda08ad8fee3951675a0302dbc9/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group and the settings.
+  - look at: `line-length = 100`
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/693240e344546dda08ad8fee3951675a0302dbc9/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+  - look at: `fmt *args:`
+
+```bash
+uv run ruff format --check
+just --show fmt
+just fmt --check
+```
+
+`--check` changes nothing. It lists the files that it would change, and fails. It prints `6 files would be
+reformatted, 1 file already formatted`. The seventh file is the README. The recipe runs the same command, and
+passes on the words after `just fmt`.
+
+## step-04.2 The code, formatted {#step-04.2}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986) shows what the move changes.
+
+Run the formatter.
+
+```
+just fmt
+```
+
+The move changed these files:
+
+- `src/wikiapp/__init__.py`: a blank line after the import.
+- `src/wikiapp/console.py`: two blank lines before the command and before `if __name__`, and spaces around `==`.
+- `src/wikiapp/wikipedia.py`: two blank lines around the class, and the request, longer than 100 characters, split.
+- `tests/conftest.py`: two blank lines before the fixture.
+- `tests/test_console.py`: two blank lines around each function, and the line longer than 100 characters split.
+- `tests/test_wikipedia.py`: two blank lines before the test.
+
+Files to read:
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/ca8685e532e9d372857667484e1c94c91ac9e986/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the long line of the request, split into three.
+  - look at: `API_URL.format(language=language), headers={"User-Agent": USER_AGENT}`
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/ca8685e532e9d372857667484e1c94c91ac9e986/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): blank lines, and the long address split.
+  - look at: `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
+
+```bash
+just fmt --check
+just test
+```
+
+The check prints `7 files already formatted`, and the tests pass as before. The formatter changes how the code
+looks, and never what it does. One test asks the real Wikipedia, so the tests need the network until step 06.
+
+## step-04.3 The linter's rules, and the recipe lint {#step-04.3}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e) shows what the move changes.
+
+The linter checks the code against rules. At the end of `pyproject.toml`, choose the families of rules. Also
+let the tests use `assert`. The rest of the code may not use it, because Python skips every `assert` when it runs
+with `-O`.
+
+```toml
+
+[tool.ruff.lint]
+# What the linter checks: a family of rules on each line, and why it is on
+select = [
+    "E",   # pycodestyle errors: the basics, from indentation to line length
+    "W",   # pycodestyle warnings: stray whitespace and the like
+    "F",   # pyflakes: names that are unused, undefined or redefined
+    "I",   # isort: imports in one order, standard library first
+    "B",   # bugbear: constructs that are likely bugs, such as a mutable default argument
+    "UP",  # pyupgrade: older syntax that this Python has a newer form for
+    "SIM", # simplify: code that can be said in fewer words
+    "S",   # bandit: security, from `assert` in production code to a request with no timeout
+    "N",   # pep8-naming: classes CamelCase, functions and variables lower_case
+]
+
+[tool.ruff.lint.per-file-ignores]
+# A test is written with assert
+"tests/**" = ["S101"]
+```
+
+Add a recipe at the end of the `justfile`.
+
+```just
+
+# Check the code against the rules in pyproject.toml. Extra arguments go to ruff: just lint --fix
+[group('quality')]
+[no-exit-message]
+lint *args:
+    {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
+```
+
+The move changed these files:
+
+- `pyproject.toml`: the rules.
+- `justfile`: the recipe `lint`.
+
+Files to read:
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): a family of rules on each line.
+  - look at: `"tests/**" = ["S101"]`
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+  - look at: `lint *args:`
+
+```bash
+uv run ruff check --statistics
+just --show lint
+just lint --statistics
+```
+
+The linter finds five problems, each with its code:
+
+- `I001`: the imports of console.py are out of order.
+- `E402`: an import in test_console.py comes below code.
+- `F841`, twice: a variable is assigned and never used.
+- `S113`: a request has no timeout.
+
+`just lint` shows each problem with its lines. `uv run ruff rule S113` explains a code.
+
+## step-04.4 The linter sorts the imports {#step-04.4}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf) shows what the move changes.
+
+ruff can fix one of the five problems itself.
+
+```
+just lint --fix
+```
+
+The move changed this file:
+
+- `src/wikiapp/console.py`: the imports in three blocks, which are the standard library, the packages
+  installed, and then wikiapp's own.
+
+Files to read:
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the imports, sorted.
+  - look at: `from wikiapp import __version__`
+
+```bash
+just lint --statistics
+```
+
+`just lint --fix` reported `Found 5 errors (1 fixed, 4 remaining)` and failed. Four problems are left, and a
+person must fix them.
+
+## step-04.5 The tests' imports at the top, and no unused variables {#step-04.5}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3ba5d239ff4f171c58d4249a33caafc510883b46) shows what the move changes.
+
+In `tests/test_console.py`, move `from wikiapp import console` up, under `import requests`. A reader looks for
+imports there. Put a blank line between the two imports. wikiapp's own imports are a block of their own, after
+the installed packages, as `--fix` made them in console.py. Where the import was, delete it and the two blank
+lines after it. The functions are then two blank lines apart.
+
+In `test_main_invokes_requests_get` and `test_main_uses_correct_url`, no line reads the result. The two tests
+check the mock, not the result. Make the first line of each test the call alone.
+
+```python
+    runner.invoke(console.main)
+```
+
+The move changed this file:
+
+- `tests/test_console.py`: the import at the top, and two assignments gone.
+
+Files to read:
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/3ba5d239ff4f171c58d4249a33caafc510883b46/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3ba5d239ff4f171c58d4249a33caafc510883b46#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the import moves, and two lines lose `result =`.
+  - look at: `from wikiapp import console`
+
+```bash
+just lint --statistics
+just fmt --check
+```
+
+One problem is left, `S113`. The format is unchanged, and the check prints `7 files already formatted`.
+
+## step-04.6 A timeout {#step-04.6}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/80c33d4cfaf4b157cd44482712e520c77378cf9c) shows what the move changes.
+
+Without a timeout, requests waits as long as the server keeps the connection open. So the command can wait for
+ever. In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
+
+```python
+        with requests.get(
+            API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10
+        ) as response:
+```
+
+If the server does not answer within 10 seconds, the request now raises an exception. `random_page` turns it
+into a WikipediaError, as it does with every other error of requests.
+
+The move changed this file:
+
+- `src/wikiapp/wikipedia.py`: the timeout.
+
+Files to read:
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/80c33d4cfaf4b157cd44482712e520c77378cf9c/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/80c33d4cfaf4b157cd44482712e520c77378cf9c#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): one more argument.
+  - look at: `timeout=10`
+
+```bash
+just lint
+```
+
+`All checks passed!`
+
+## step-04.7 The recipe lint-config {#step-04.7}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a) shows what the move changes.
+
+validate-pyproject checks `pyproject.toml` against the standard for it.
+
+```
+uv add --group lint validate-pyproject
+```
+
+Add a recipe at the end of the `justfile`. `lint-config` checks the configuration.
+
+```just
+
+# Check the configuration: pyproject.toml, the lockfile, and this justfile
+[group('quality')]
+[no-exit-message]
+lint-config *args:
+    #!/usr/bin/env sh
+    set -e
+    if [ "$*" = help ]; then just help lint-config; exit 0; fi
+    uv run validate-pyproject pyproject.toml
+    uv lock --check
+    just --fmt --check --unstable
+```
+
+The move changed these files:
+
+- `justfile`: the recipe `lint-config`.
+- `pyproject.toml`: validate-pyproject in the group `lint`.
+- `uv.lock`: the exact version of validate-pyproject, and of what it needs.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its three checks.
+  - look at: `uv run validate-pyproject pyproject.toml`
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one package more in `lint`.
+  - look at: `"validate-pyproject>=0.26",`
+
+```bash
+uv run validate-pyproject pyproject.toml
+uv lock --check
+just --fmt --check --unstable
+just --show lint-config
+just lint-config
+```
+
+The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `uv lock --check` prints
+`Resolved 19 packages` and exits with 0, because the lockfile matches `pyproject.toml`.

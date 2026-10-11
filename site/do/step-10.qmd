@@ -2,6 +2,10 @@
 title: "step-10: Build"
 ---
 
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Do mode. [The same step in watch mode](../watch/step-10.qmd).
+
 [The code at step-10](https://github.com/rahuldave/smallwikiapp/tree/step-10)
 
 ```bash
@@ -13,9 +17,9 @@ which versions of the library it accepts, and `just lint-config` checks the libr
 Both packages say their licence and where their source is. Last, the
 library's User-Agent says the version that is installed.
 
-## step-10.1 The recipe `build`
+## step-10.1 The recipe `build` {#step-10.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4903a582a9fae628e6544b2182f77f8caf386dbe) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4903a582a9fae628e6544b2182f77f8caf386dbe) shows what the move changes.
 
 `uv build --all-packages` builds every package of the workspace into `dist/`, which `.gitignore` lists. Add a
 recipe for it at the end of the `justfile`.
@@ -51,9 +55,9 @@ version of wikirandom, because `uv add wikirandom` in a workspace writes no vers
 get any package that PyPI has under that name. Today PyPI has none, so wikirandom would have to be published
 first.
 
-## step-10.2 The app needs wikirandom 0.1
+## step-10.2 The app needs wikirandom 0.1 {#step-10.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/663682b805962a82b4c0e8d18ede21e3cd5188d9) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/663682b805962a82b4c0e8d18ede21e3cd5188d9) shows what the move changes.
 
 The app's wheel says that the app needs `wikirandom`, of any version. An install from PyPI would take any package
 that anyone publishes under that name. Give the app the range of versions that it was built and tested with.
@@ -80,9 +84,9 @@ unzip -p dist/wikiapp-0.1.0-py3-none-any.whl wikiapp-0.1.0.dist-info/METADATA
 
 The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 
-## step-10.3 lint-config checks both pyproject.toml files
+## step-10.3 lint-config checks both pyproject.toml files {#step-10.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5e6110fbb134015850291ff3558eed9d1951d4c6) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5e6110fbb134015850291ff3558eed9d1951d4c6) shows what the move changes.
 
 Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. In
 the `justfile`, in `lint-config`, replace the line `uv run validate-pyproject pyproject.toml` with the line below.
@@ -105,9 +109,9 @@ just lint-config
 
 `just lint-config` prints `Valid file` twice, once for each file.
 
-## step-10.4 A licence and a repository link for both
+## step-10.4 A licence and a repository link for both {#step-10.4}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b4ecef0371b625e151bdbbbaa89187074347c2a8) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b4ecef0371b625e151bdbbbaa89187074347c2a8) shows what the move changes.
 
 The library's wheel has no licence, and neither package says where its source is. Copy the project's `LICENSE`
 into `packages/wikirandom/`. In `packages/wikirandom/pyproject.toml`, under `readme`, give the licence and the
@@ -155,9 +159,9 @@ unzip -p dist/wikirandom-0.1.0-py3-none-any.whl wikirandom-0.1.0.dist-info/METAD
 The library's metadata has `License-Expression: Apache-2.0`,
 `License-File: LICENSE` and `Project-URL: Repository, https://github.com/rahuldave/smallwikiapp`.
 
-## step-10.5 The User-Agent says the installed version
+## step-10.5 The User-Agent says the installed version {#step-10.5}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bf2c5d6a7fc39320ac0a9cda0ef3343d35364ac8) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bf2c5d6a7fc39320ac0a9cda0ef3343d35364ac8) shows what the move changes.
 
 The User-Agent says `0.1.0`, written by hand. It would still say `0.1.0` after a change of the version in
 `packages/wikirandom/pyproject.toml`. In `packages/wikirandom/src/wikirandom/__init__.py`, read the version from

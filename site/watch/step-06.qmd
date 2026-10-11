@@ -1,0 +1,191 @@
+---
+title: "step-06: End to end, and CI"
+---
+
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Watch mode. [The same step in do mode](../do/step-06.qmd).
+
+[The code at step-06](https://github.com/rahuldave/smallwikiapp/tree/step-06)
+
+```bash
+just setup
+```
+
+The moves of this step do three things. The tests that ask the real Wikipedia run only when you ask for them.
+The project accepts every Python from 3.11 on. GitHub runs the tests on three systems and four Pythons.
+
+## step-06.1 The end-to-end test runs only on request {#step-06.1}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26) shows what the move changes.
+
+`test_main_succeeds` is the one test that goes over the network. It fails without a network, and its result
+depends on Wikipedia. In `tests/test_console.py`, mark it `e2e`, which means end to end, and give it a name that
+says so.
+
+```python
+@pytest.mark.e2e
+def test_main_succeeds_in_production(runner: CliRunner) -> None:
+```
+
+In `pyproject.toml`, declare the marker, and leave the e2e tests out of every run that does not ask for them.
+Replace the comment and the line `addopts`.
+
+```toml
+# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not. A test
+# marked e2e asks the real Wikipedia, so it needs the network, and runs only when asked for:
+# just test -m e2e
+addopts = "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"
+markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]
+```
+
+The move changed these files:
+
+- `tests/test_console.py`: the marker, and the name.
+- `pyproject.toml`: the marker, declared, and the e2e tests left out of a plain run.
+
+Files to read:
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/49b28350bd9b8bb19f0b98431f81e523953eea26/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test, marked.
+  - look at: `@pytest.mark.e2e`
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/49b28350bd9b8bb19f0b98431f81e523953eea26/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the option `-m 'not e2e'`.
+  - look at: `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
+
+```bash
+just test -q
+just test -q -m e2e
+```
+
+The first command prints `6 passed, 1 deselected`. The second command runs the e2e test alone.
+
+## step-06.2 An end-to-end test of the library {#step-06.2}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d0d10f6aeb1359ed5e93081dccde0435d9f7395d) shows what the move changes.
+
+The mocks return a dictionary with a title and an extract. The test below comes from the original wikiapp. It
+checks that the real Wikipedia still returns the same keys. Add it at the end of `tests/test_wikipedia.py`. Put
+`import pytest` in a block of its own between `from unittest.mock import Mock` and `from wikiapp import
+wikipedia`, with a blank line on each side.
+
+```python
+
+
+@pytest.mark.e2e
+def test_random_page_returns_dictionary_in_production() -> None:
+    page = wikipedia.random_page()
+    assert "title" in page
+    assert "extract" in page
+```
+
+The move changed this file:
+
+- `tests/test_wikipedia.py`: an e2e test.
+
+Files to read:
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/d0d10f6aeb1359ed5e93081dccde0435d9f7395d/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d0d10f6aeb1359ed5e93081dccde0435d9f7395d#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
+  - look at: `assert "extract" in page`
+
+```bash
+just test -q -m e2e
+```
+
+The output is `2 passed, 6 deselected`.
+
+## step-06.3 Any Python from 3.11 on {#step-06.3}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e8933c57a023759eeee6db0b3683ca8aa51a6b8e) shows what the move changes.
+
+`uv init` wrote `requires-python = ">=3.13"`, because the command asked for Python 3.13. Nothing here needs
+more than 3.11. Python 3.10 reached its end of life on 1 October 2026, so 3.11 is now the oldest Python that
+still gets security fixes. In `pyproject.toml`, change the line, and solve the lockfile again.
+
+```toml
+requires-python = ">=3.11"
+```
+
+```
+uv lock
+```
+
+The project still runs on 3.13, from `.python-version`.
+
+The move changed these files:
+
+- `pyproject.toml`: the oldest Python that the project accepts.
+- `uv.lock`: solved for every Python from 3.11 on.
+
+Files to read:
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/e8933c57a023759eeee6db0b3683ca8aa51a6b8e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/e8933c57a023759eeee6db0b3683ca8aa51a6b8e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+  - look at: `requires-python = ">=3.11"`
+
+```bash
+uv run --isolated --python 3.11 python --version
+uv run --isolated --python 3.11 pytest -q
+```
+
+`--isolated` makes a temporary environment with Python 3.11, and does not change `.venv`. The tests pass on
+3.11.
+
+## step-06.4 GitHub runs the tests {#step-06.4}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/0ca4b5a3e8f67d2394b5b96e001a706bf2df20e6) shows what the move changes.
+
+A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push
+to main and on every pull request. Make `.github/workflows/test.yaml`.
+
+```yaml
+# What GitHub runs on every push to main and every pull request.
+#
+# tests: the tests, on three systems and four Pythons, twelve jobs at once.
+# check: everything `just check` runs, once, as the git hook does.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read  # the jobs read the code, and change nothing on GitHub
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false  # one failing job does not stop the others
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.11", "3.12", "3.13", "3.14"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv run --locked pytest
+
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.2.0
+      - uses: extractions/setup-just@v4
+      - run: just setup
+      - run: just check
+```
+
+The original wikiapp used pixi for the same work, with one environment for each Python. Here, `setup-uv` tells
+uv which Python to use. If that Python is missing, `uv run` installs it.
+
+The move changed this file:
+
+- `.github/workflows/test.yaml`: a new file with two jobs. GitHub runs one of the jobs twelve times.
+
+Files to read:
+- [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/0ca4b5a3e8f67d2394b5b96e001a706bf2df20e6/.github/workflows/test.yaml): the matrix of systems and Pythons.
+  - look at: `python: ["3.11", "3.12", "3.13", "3.14"]`
+
+```bash
+uv run pre-commit run check-yaml --files .github/workflows/test.yaml
+```
+
+The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
+thirteen jobs.

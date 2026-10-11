@@ -1,0 +1,38 @@
+---
+title: "step-10.3: lint-config checks both pyproject.toml files"
+---
+
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Watch mode. [The same step in do mode](../do/step-10.3.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/663682b805962a82b4c0e8d18ede21e3cd5188d9), the commit before step-10.3.
+
+```bash
+just setup
+```
+
+## step-10.3 lint-config checks both pyproject.toml files {#step-10.3}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5e6110fbb134015850291ff3558eed9d1951d4c6) shows what the move changes.
+
+Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. In
+the `justfile`, in `lint-config`, replace the line `uv run validate-pyproject pyproject.toml` with the line below.
+
+```just
+    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
+```
+
+The move changed this file:
+
+- `justfile`: `lint-config` checks both files.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5e6110fbb134015850291ff3558eed9d1951d4c6/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/663682b805962a82b4c0e8d18ede21e3cd5188d9...5e6110fbb134015850291ff3558eed9d1951d4c6#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
+  - look at: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+```bash
+just lint-config
+```
+
+`just lint-config` prints `Valid file` twice, once for each file.

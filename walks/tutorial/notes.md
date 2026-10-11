@@ -14,8 +14,8 @@ starts from the code of the step before, so every step starts with `just setup`.
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
 
-The notes are for timewalk. To read the tutorial on GitHub, open TUTORIAL.md, beside this file. TUTORIAL.md
-comes from these notes, with the commands in code blocks and a link to the commit of every move.
+The notes are for timewalk. To read the tutorial on GitHub, open TUTORIAL-watch.md or TUTORIAL-do.md, beside
+this file. Each comes from these notes, with the commands in code blocks and a link to the commit of every move.
 
 - **A command** is a line that starts with `$ `. In timewalk, a click types it into the terminal at the step.
 - **A grey block** is code to type, or a command that makes the move.
@@ -1954,9 +1954,11 @@ A docment is the comment beside a parameter, or after the colon of the `def` lin
 docstrings.
 
 Each test file says what it tests, and each fixture says what it returns. Each test says in one line what it
-checks. The docstrings say in words what the asserts say in code. The three files are long to type, so take
-them with **Apply the whole move** in timewalk, or from the move's commit on GitHub. The test below shows the
-pattern.
+checks. The docstrings say in words what the asserts say in code.
+
+::: do
+The three files are long to type, so take them with **Apply the whole move** in timewalk, or from the move's
+commit on GitHub. The test below shows the pattern.
 
 ```python
 def test_main_prints_title(
@@ -1965,6 +1967,12 @@ def test_main_prints_title(
 ) -> None:
     """The command prints the title of the page."""
 ```
+:::
+
+::: watch
+`tests/test_console.py` shows the pattern best. Each parameter of a test has a docment, and the docstring of
+the test is one line.
+:::
 
 The move changed these files:
 
@@ -1983,8 +1991,8 @@ files:
 
 $ just docs check
 
-`check` prints `15 of 15 functions, methods and classes are typed and documented`, and every module has its
-docstring.
+`check` prints a line for each module and each test file, all complete, and then `15 of 15 functions, methods
+and classes are typed and documented`.
 
 ### step-08.5 A site
 
@@ -1995,8 +2003,52 @@ A name in backticks, such as `random_page`, becomes a link to its entry.
 The move adds the front page, `docs/index.qmd`. A `.qmd` file is Markdown, with a header between two `---` lines
 that gives the title of the page. It also adds the settings of the site to `docs/_smalldocs.yml`.
 The settings are the type of the project, its output folder, the title, the sidebar, the theme and a table of
-contents on each page. `just docs` with no words builds the site. Take the move
-with **Apply the whole move** in timewalk, or from the move's commit on GitHub, and read `docs/_smalldocs.yml`.
+contents on each page. `just docs` with no words builds the site.
+
+::: do
+In `docs/_smalldocs.yml`, replace the first line, a comment, with the lines below. The section `api` stays as it
+is, under them.
+
+```yaml
+# The settings of smalldocs. `just docs` builds the site into docs/_site
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "wikiapp"
+  sidebar:
+    contents:
+      - index.qmd
+      - section: Reference
+        contents: api/*  # the reference pages, which each build makes from the code
+
+theme: cosmo
+toc: true
+
+# `api` is the reference, made from the code of the packages. A name in backticks links to its entry
+```
+
+In the `justfile`, replace the recipe `docs`, from its comment to its last line, with the code below.
+
+```just
+# The docs. Alone, the site in docs/_site; with words, smalldocs api: just docs check
+[group('docs')]
+[no-exit-message]
+docs *args:
+    #!/usr/bin/env sh
+    if [ "$*" = help ]; then just help docs; exit 0; fi
+    if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi
+    exec uv run smalldocs api "$@" --dir docs
+```
+
+The front page is long to type, so take `docs/index.qmd` with **Apply this file** in timewalk, or from the
+move's commit on GitHub.
+:::
+
+::: watch
+Read `docs/_smalldocs.yml` first. Its new lines are the settings of the site, above the section `api`.
+:::
 
 The move changed these files:
 
@@ -2021,20 +2073,24 @@ $ just --show docs
 $ just docs
 
 smalldocs prints `wrote 3 page(s) to docs/_site`. Open `docs/_site/index.html` in a browser. On the front page,
-`random_page` is a link to its entry. The site and the reference pages are made by each build, and git ignores
+`random_page` is a link to its entry. Each build makes the site and the reference pages, and git ignores
 them.
 
 ### step-08.6 The README names the tests and the docs
 
 The README gets `tests/` and `docs/` among the folders. It also says that `wikipedia.py` is the library and
-`console.py` the command. Take the README with **Apply this file** in timewalk, or from the move's commit on
-GitHub. Or copy the rows below, in place of the `src/wikiapp/` row.
+`console.py` the command.
+
+::: do
+Take the README with **Apply this file** in timewalk, or from the move's commit on GitHub. Or copy the rows
+below, in place of the `src/wikiapp/` row.
 
 ```markdown
 | `src/wikiapp/` | The code. `wikipedia.py` is the library, `console.py` the `wikiapp` command |
 | `tests/` | The tests. `just test` runs them |
 | `docs/` | The docs site. smalldocs makes its reference from the code |
 ```
+:::
 
 The move changed this file:
 
@@ -2284,7 +2340,19 @@ The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
 ### step-09.5 The front page and the README name both packages
 
 The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
-contains two packages. Take both files with **Apply this file** in timewalk, or from the move's commit on GitHub.
+contains two packages.
+
+::: do
+In the README, replace the `src/wikiapp/` row of the table of folders with the two rows below.
+
+```markdown
+| `src/wikiapp/` | The app. `console.py` is the `wikiapp` command |
+| `packages/wikirandom/` | The library the app uses: a random page of Wikipedia. A package of its own |
+```
+
+The front page is long to type, so take `docs/index.qmd` with **Apply this file** in timewalk, or from the
+move's commit on GitHub.
+:::
 
 The move changed these files:
 

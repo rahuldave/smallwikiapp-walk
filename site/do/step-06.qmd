@@ -2,6 +2,10 @@
 title: "step-06: End to end, and CI"
 ---
 
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Do mode. [The same step in watch mode](../watch/step-06.qmd).
+
 [The code at step-06](https://github.com/rahuldave/smallwikiapp/tree/step-06)
 
 ```bash
@@ -11,9 +15,9 @@ just setup
 The moves of this step do three things. The tests that ask the real Wikipedia run only when you ask for them.
 The project accepts every Python from 3.11 on. GitHub runs the tests on three systems and four Pythons.
 
-## step-06.1 The end-to-end test runs only on request
+## step-06.1 The end-to-end test runs only on request {#step-06.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26) shows what the move changes.
 
 `test_main_succeeds` is the one test that goes over the network. It fails without a network, and its result
 depends on Wikipedia. In `tests/test_console.py`, mark it `e2e`, which means end to end, and give it a name that
@@ -53,9 +57,9 @@ just test -q -m e2e
 
 The first command prints `6 passed, 1 deselected`. The second command runs the e2e test alone.
 
-## step-06.2 An end-to-end test of the library
+## step-06.2 An end-to-end test of the library {#step-06.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d0d10f6aeb1359ed5e93081dccde0435d9f7395d) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d0d10f6aeb1359ed5e93081dccde0435d9f7395d) shows what the move changes.
 
 The mocks return a dictionary with a title and an extract. The test below comes from the original wikiapp. It
 checks that the real Wikipedia still returns the same keys. Add it at the end of `tests/test_wikipedia.py`. Put
@@ -63,6 +67,7 @@ checks that the real Wikipedia still returns the same keys. Add it at the end of
 wikipedia`, with a blank line on each side.
 
 ```python
+
 
 @pytest.mark.e2e
 def test_random_page_returns_dictionary_in_production() -> None:
@@ -85,9 +90,9 @@ just test -q -m e2e
 
 The output is `2 passed, 6 deselected`.
 
-## step-06.3 Any Python from 3.11 on
+## step-06.3 Any Python from 3.11 on {#step-06.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e8933c57a023759eeee6db0b3683ca8aa51a6b8e) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e8933c57a023759eeee6db0b3683ca8aa51a6b8e) shows what the move changes.
 
 `uv init` wrote `requires-python = ">=3.13"`, because the command asked for Python 3.13. Nothing here needs
 more than 3.11. Python 3.10 reached its end of life on 1 October 2026, so 3.11 is now the oldest Python that
@@ -120,9 +125,9 @@ uv run --isolated --python 3.11 pytest -q
 `--isolated` makes a temporary environment with Python 3.11, and does not change `.venv`. The tests pass on
 3.11.
 
-## step-06.4 GitHub runs the tests
+## step-06.4 GitHub runs the tests {#step-06.4}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/0ca4b5a3e8f67d2394b5b96e001a706bf2df20e6) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/0ca4b5a3e8f67d2394b5b96e001a706bf2df20e6) shows what the move changes.
 
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push
 to main and on every pull request. Make `.github/workflows/test.yaml`.

@@ -2,6 +2,10 @@
 title: "step-07: A page with a shape"
 ---
 
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Watch mode. [The same step in do mode](../do/step-07.qmd).
+
 [The code at step-07](https://github.com/rahuldave/smallwikiapp/tree/step-07)
 
 ```bash
@@ -12,9 +16,9 @@ The moves of this step give a page a shape. A pydantic model says what a page is
 one. An answer that is not a page becomes an error like any other. The last move checks that the language is a
 language code.
 
-## step-07.1 The model Page
+## step-07.1 The model Page {#step-07.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/570c70fe5d6de269121f442425d0e941f09cdbd5) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/570c70fe5d6de269121f442425d0e941f09cdbd5) shows what the move changes.
 
 The command uses two of the many keys that Wikipedia sends. Until now, the code expects these keys to be there,
 with strings as values, but nothing checks it. A pydantic model states the two keys and their types in code.
@@ -58,9 +62,9 @@ uv run python -c "from wikiapp.wikipedia import Page; Page.model_validate({'titl
 The first command prints `title='A' extract='B'`. The model drops the other key. The second command fails
 with a ValidationError, because `extract` is missing.
 
-## step-07.2 random_page returns a Page
+## step-07.2 random_page returns a Page {#step-07.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4) shows what the move changes.
 
 In `src/wikiapp/wikipedia.py`, `random_page` makes a Page of the answer and returns the Page. The code no
 longer uses `Any`, so delete its import, and the blank line under it.
@@ -116,9 +120,9 @@ uv run wikiapp
 
 `just check` passes, and the command prints a page as before.
 
-## step-07.3 An answer that is not a page
+## step-07.3 An answer that is not a page {#step-07.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9) shows what the move changes.
 
 When the answer has no title, `model_validate` raises the ValidationError of pydantic. `random_page` turns it
 into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, import ValidationError,
@@ -136,6 +140,7 @@ Add the test from the original wikiapp at the end of `tests/test_wikipedia.py`. 
 with an empty dictionary.
 
 ```python
+
 
 def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
     mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
@@ -160,9 +165,9 @@ just test -k validation
 
 The output is `1 passed, 8 deselected`.
 
-## step-07.4 Only a language code goes into the address
+## step-07.4 Only a language code goes into the address {#step-07.4}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/55822322c0a870d808bd25cc2f934169cf7a5386) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/55822322c0a870d808bd25cc2f934169cf7a5386) shows what the move changes.
 
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as
 `example.com/x?` sends the request to example.com, with the User-Agent. The code of every Wikipedia has only
