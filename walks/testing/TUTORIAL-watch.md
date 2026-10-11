@@ -21,7 +21,8 @@ gives the tests their types.
 
 The test that asks the real Wikipedia then runs only when you ask for it, and the library gets a test of the
 same kind. The project accepts any Python from 3.11 on. GitHub runs the tests, except the two that ask Wikipedia.
-The last move documents the tests.
+When the library starts to return a pydantic model, one move renames a test, and the next adds one. The last move
+documents the tests.
 
 Each step of the walk starts from the code before its first move, so each one starts with `just setup`.
 
@@ -30,14 +31,18 @@ Each step of the walk starts from the code before its first move, so each one st
 Between its steps, the whole tutorial makes moves that this walk does not show:
 
 - **Before step-05.5,** [step-04](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html) and the first four moves of [step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html).
-  ruff formats the code and lints it, and the request gets a timeout of 10 seconds. `just check` runs every check, and pre-commit runs it as a git hook
+  ruff formats the code and lints it, and the request gets a timeout of 10 seconds. ruff also formats the
+  tests, moves their imports to the top and removes unused variables. `just check` fails when the tests run less
+  than 90% of the code. `just check` runs every check, and pre-commit runs it as a git hook
   before each commit. ty checks the types, and `just types` runs it. ruff's `ANN` rules ask for a type on
   every parameter and return, and the code gets its types.
-- **Before step-08.4,** [step-07](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html) and the first three moves of [step-08](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html).
-  `random_page` returns a `Page`, a pydantic model with a title and an extract. In
-  `tests/test_wikipedia.py`, the test of the real Wikipedia gets a new name, and a new test checks an answer
-  that is not a page. `random_page` also checks the language before it puts it in the address. smalldocs comes in, and `just docs check` counts the functions and classes that have
-  their types, docments and docstrings. The library and the command get theirs.
+- **Before step-06,** the last move of [step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html). `just check` runs `just types` too.
+- **Before step-07.2,** the move [step-07.1](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html#step-07.1). pydantic comes in, and
+  `wikipedia.py` gets `Page`, a pydantic model with a title and an extract.
+- **Before step-08.4,** the last move of [step-07](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html) and the first three moves of
+  [step-08](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html). `random_page` checks the language before it puts it in the address. smalldocs
+  comes in, and `just docs check` counts the functions and classes that have their types, docments and
+  docstrings. The library and the command get theirs.
 
 The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.
 
@@ -896,6 +901,117 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
 thirteen jobs.
+
+## step-07.2 to step-07.3
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/570c70fe5d6de269121f442425d0e941f09cdbd5), the commit before step-07.2.
+
+```bash
+just setup
+```
+
+### step-07.2 random_page returns a Page
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4) shows what the move changes.
+
+In `src/wikiapp/wikipedia.py`, `random_page` makes a Page of the answer and returns the Page. The code no
+longer uses `Any`, so delete its import, and the blank line under it.
+
+```python
+def random_page(language: str = "en") -> Page:
+```
+
+```python
+            return Page.model_validate(response.json())
+```
+
+In `src/wikiapp/console.py`, `main` prints the attributes of the page. ty and an editor know the names of the
+attributes. A misspelled key of a dictionary shows up only when the program runs.
+
+```python
+    try:
+        page = random_page(language=language)
+    except WikipediaError as error:
+        raise click.ClickException(str(error)) from error
+    click.secho(page.title, fg="green")
+    click.echo(textwrap.fill(page.extract))
+```
+
+In `tests/test_wikipedia.py`, replace the e2e test `test_random_page_returns_dictionary_in_production`, and
+keep its marker. The new name says that the test checks for a Page.
+
+```python
+@pytest.mark.e2e
+def test_random_page_returns_page_in_production() -> None:
+    page = wikipedia.random_page()
+    assert isinstance(page, wikipedia.Page)
+```
+
+The move changed these files:
+
+- `src/wikiapp/wikipedia.py`: returns a Page.
+- `src/wikiapp/console.py`: prints the attributes of the Page.
+- `tests/test_wikipedia.py`: the e2e test.
+
+Files to read:
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
+  - look at: `return Page.model_validate(response.json())`
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): attributes, not keys.
+  - look at: `click.secho(page.title, fg="green")`
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
+  - look at: `assert isinstance(page, wikipedia.Page)`
+
+```bash
+just check
+uv run wikiapp
+```
+
+`just check` passes, and the command prints a page as before.
+
+### step-07.3 An answer that is not a page
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9) shows what the move changes.
+
+When the answer has no title, `model_validate` raises the ValidationError of pydantic. `random_page` turns it
+into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, import ValidationError,
+and catch it together with the exception of requests.
+
+```python
+from pydantic import BaseModel, ValidationError
+```
+
+```python
+    except (requests.RequestException, ValidationError) as error:
+```
+
+Add the test from the original wikiapp at the end of `tests/test_wikipedia.py`. In the test, the mock answers
+with an empty dictionary.
+
+```python
+
+
+def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
+    mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
+    with pytest.raises(wikipedia.WikipediaError):
+        wikipedia.random_page()
+```
+
+The move changed these files:
+
+- `src/wikiapp/wikipedia.py`: a ValidationError is a WikipediaError too.
+- `tests/test_wikipedia.py`: a test of the ValidationError.
+
+Files to read:
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
+  - look at: `except (requests.RequestException, ValidationError) as error:`
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
+  - look at: `with pytest.raises(wikipedia.WikipediaError):`
+
+```bash
+just test -k validation
+```
+
+The output is `1 passed, 8 deselected`.
 
 ## step-08.4 The tests documented
 

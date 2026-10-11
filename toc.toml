@@ -32,7 +32,7 @@ notes = "walks/tutorial/notes.md"
 slides = "walks/tutorial/slides/slides.toml"
 intro = "walks/testing/intro.md"  # what the copies say before the first step
 moves = "watch"
-select = ["step-02", "step-03", "step-05.5", "step-06", "step-08.4"]
+select = ["step-02", "step-03", "step-05.5", "step-06", "step-07.2..step-07.3", "step-08.4"]
 
 [[walk]]
 id = "linting"
@@ -54,4 +54,4 @@ notes = "walks/tutorial/notes.md"
 slides = "walks/tutorial/slides/slides.toml"
 intro = "walks/docs/intro.md"
 moves = "watch"
-select = ["step-08", "step-09.4..step-09.5"]
+select = ["step-08", "step-09.4"]

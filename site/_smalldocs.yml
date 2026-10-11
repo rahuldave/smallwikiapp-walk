@@ -147,8 +147,6 @@ website:
                 href: watch/step-09.qmd#step-09.3
               - text: "step-09.4 The docs check counts the library"
                 href: watch/step-09.qmd#step-09.4
-              - text: "step-09.5 The front page and the README name both packages"
-                href: watch/step-09.qmd#step-09.5
           - section: "step-10: Build"
             href: watch/step-10.qmd
             contents:
@@ -297,8 +295,6 @@ website:
                 href: do/step-09.qmd#step-09.3
               - text: "step-09.4 The docs check counts the library"
                 href: do/step-09.qmd#step-09.4
-              - text: "step-09.5 The front page and the README name both packages"
-                href: do/step-09.qmd#step-09.5
           - section: "step-10: Build"
             href: do/step-10.qmd
             contents:

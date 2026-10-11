@@ -29,9 +29,9 @@ small step starts from the code before its first move, and starts with `just set
 
 | Walk | What it takes | Website | On GitHub |
 |---|---|---|---|
-| `testing` | pytest, a fixture, a mock, coverage, and the tests of the library: the steps 02, 03 and 06, and the moves 05.5 and 08.4 | [testing](https://rahuldave.com/smallwikiapp-walk/testing/) | [watch](walks/testing/TUTORIAL-watch.md), [do](walks/testing/TUTORIAL-do.md) |
+| `testing` | pytest, a fixture, a mock, coverage, and the tests of the library: the steps 02, 03 and 06, and the moves 05.5, 07.2, 07.3 and 08.4 | [testing](https://rahuldave.com/smallwikiapp-walk/testing/) | [watch](walks/testing/TUTORIAL-watch.md), [do](walks/testing/TUTORIAL-do.md) |
 | `linting` | ruff, its fixes, the check of the configuration, the hook, and the types the linter asks for: the moves 04.1 to 04.7, 04.9 and 04.10, 05.3 to 05.6, and 10.3 | [linting](https://rahuldave.com/smallwikiapp-walk/linting/) | [watch](walks/linting/TUTORIAL-watch.md), [do](walks/linting/TUTORIAL-do.md) |
-| `docs` | smalldocs, docstrings and docments, a site, and the check of the docs: the step 08, and the moves 09.4 and 09.5 | [docs](https://rahuldave.com/smallwikiapp-walk/docs/) | [watch](walks/docs/TUTORIAL-watch.md), [do](walks/docs/TUTORIAL-do.md) |
+| `docs` | smalldocs, docstrings and docments, a site, and the check of the docs: the step 08, and the move 09.4 | [docs](https://rahuldave.com/smallwikiapp-walk/docs/) | [watch](walks/docs/TUTORIAL-watch.md), [do](walks/docs/TUTORIAL-do.md) |
 
 `just present testing` opens a small walk in timewalk.
 
@@ -101,7 +101,6 @@ Each link opens its section of TUTORIAL-watch.md.
   - [step-09.2](walks/tutorial/TUTORIAL-watch.md#step-092-the-code-goes-into-wikirandom) The code goes into wikirandom
   - [step-09.3](walks/tutorial/TUTORIAL-watch.md#step-093-the-app-uses-wikirandom) The app uses wikirandom
   - [step-09.4](walks/tutorial/TUTORIAL-watch.md#step-094-the-docs-check-counts-the-library) The docs check counts the library
-  - [step-09.5](walks/tutorial/TUTORIAL-watch.md#step-095-the-front-page-and-the-readme-name-both-packages) The front page and the README name both packages
 - [step-10](walks/tutorial/TUTORIAL-watch.md#step-10-build) **Build**
   - [step-10.1](walks/tutorial/TUTORIAL-watch.md#step-101-the-recipe-build) The recipe `build`
   - [step-10.2](walks/tutorial/TUTORIAL-watch.md#step-102-the-app-needs-wikirandom-01) The app needs wikirandom 0.1

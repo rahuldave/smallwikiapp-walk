@@ -5,17 +5,16 @@
 In do mode, you make each move yourself. The notes give every line to type, every command and every file. [The same tutorial in watch mode](TUTORIAL-watch.md).
 
 This walk takes the moves about documentation out of the whole tutorial of smallwikiapp. `wikiapp` is a small
-command that prints the title and the summary of a random Wikipedia page. The walk starts when the code is
-tested, linted and typed, and has almost no documentation.
+command that prints the title and the summary of a random Wikipedia page. The walk starts when the code has
+tests, lint and types, and almost no documentation.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
 
 The moves add smalldocs, which makes the reference from the code and says what has no documentation. Next, the
 library, the command and the tests get their docstrings and docments. Then smalldocs builds a site, and the
-README names the tests and the docs. The check of the documentation joins `just check`. The last two moves
-come after the library becomes a package of its own. The check counts the library, and the front page and the
-README name both packages.
+README names the tests and the docs. The check of the documentation joins `just check`. The last move comes
+after the library becomes a package of its own, and the check counts the library.
 
 Each step of the walk starts from the code before its first move, so each one starts with `just setup`.
 
@@ -25,10 +24,11 @@ The steps before this walk give the code what the docs describe. [step-04](https
 `just check`, and a git hook that runs `just check` before each commit. [step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html) adds the
 types. In [step-06](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html), the tests that ask the real Wikipedia run only on request, and GitHub runs
 the tests. In [step-07](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html), `random_page` returns a `Page`, a pydantic model with a title and an
-extract.
+extract. An answer that is not a page, or a language that is not a language code, raises `WikipediaError`.
 
 Before step-09.4, the first three moves of [step-09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html) make the library a package of its own,
-`wikirandom`, in `packages/wikirandom`. The app uses it, and `src/wikiapp/wikipedia.py` is gone. The tests of the library are now
+`wikirandom`, in `packages/wikirandom`. The app uses it, and `src/wikiapp/wikipedia.py` is gone. The README
+and the front page of the docs name both packages. The tests of the library are now
 `tests/test_wikirandom.py`.
 
 The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.
@@ -422,9 +422,9 @@ just check
 The docs check prints `15 of 15`. Now the git hook refuses a commit that leaves a function, a parameter or a
 field without documentation.
 
-## step-09.4 to step-09.5
+## step-09.4 The docs check counts the library
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/517abf247f7a42038536d843fe7585f745d57897), the commit before step-09.4.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/5a63494a37069650ea0cdfb8080f69ef3054e1aa), the commit before step-09.4.
 
 ```bash
 just setup
@@ -432,7 +432,7 @@ just setup
 
 ### step-09.4 The docs check counts the library
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/20e9b19091769f175c7bd57b10861d9ab67c4560) shows what the move changes.
 
 Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
 `docs/_smalldocs.yml` names only `wikiapp`. Change the line `packages:` in the section `api`, so that it names
@@ -447,45 +447,14 @@ The move changed this file:
 - `docs/_smalldocs.yml`: two packages.
 
 Files to read:
-- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/426d87e7d66b979bbc8b1d6067583395ab08e01c/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/20e9b19091769f175c7bd57b10861d9ab67c4560/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/5a63494a37069650ea0cdfb8080f69ef3054e1aa...20e9b19091769f175c7bd57b10861d9ab67c4560#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
   - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
 
 ```bash
 just docs check
-```
-
-The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
-
-### step-09.5 The front page and the README name both packages
-
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309) shows what the move changes.
-
-The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
-contains two packages.
-
-In the README, replace the `src/wikiapp/` row of the table of folders with the two rows below.
-
-```markdown
-| `src/wikiapp/` | The app. `console.py` is the `wikiapp` command |
-| `packages/wikirandom/` | The library the app uses: a random page of Wikipedia. A package of its own |
-```
-
-The front page is long to type, so take `docs/index.qmd` from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309).
-
-The move changed these files:
-
-- `docs/index.qmd`: two packages, the library and the app.
-- `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
-
-Files to read:
-- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
-  - look at: `The code has two packages, in one repository:`
-- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): one row more, and the `src/wikiapp/` row says the app.
-  - look at: `| The library the app uses: a random page of Wikipedia. A package of its own |`
-
-```bash
 just docs
 just check
 ```
 
-`just docs` writes 3 pages, and the front page names both packages. `just check` passes.
+The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
+pages, and on the front page, `random_page` is now a link to its entry. `just check` passes.

@@ -1,0 +1,42 @@
+---
+title: "step-09.4: The docs check counts the library"
+---
+
+<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+
+Watch mode. [The same step in do mode](../do/step-09.4.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/5a63494a37069650ea0cdfb8080f69ef3054e1aa), the commit before step-09.4.
+
+```bash
+just setup
+```
+
+## step-09.4 The docs check counts the library {#step-09.4}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/20e9b19091769f175c7bd57b10861d9ab67c4560) shows what the move changes.
+
+Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
+`docs/_smalldocs.yml` names only `wikiapp`. Change the line `packages:` in the section `api`, so that it names
+both.
+
+```yaml
+  packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
+```
+
+The move changed this file:
+
+- `docs/_smalldocs.yml`: two packages.
+
+Files to read:
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/20e9b19091769f175c7bd57b10861d9ab67c4560/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/5a63494a37069650ea0cdfb8080f69ef3054e1aa...20e9b19091769f175c7bd57b10861d9ab67c4560#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+  - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+```bash
+just docs check
+just docs
+just check
+```
+
+The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
+pages, and on the front page, `random_page` is now a link to its entry. `just check` passes.

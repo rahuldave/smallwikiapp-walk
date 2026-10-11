@@ -31,13 +31,11 @@ website:
                 href: watch/step-08.qmd#step-08.6
               - text: "step-08.7 The docs check in `just check`"
                 href: watch/step-08.qmd#step-08.7
-          - section: "step-09.4 to step-09.5"
-            href: watch/step-09.4-to-step-09.5.qmd
+          - section: "step-09.4: The docs check counts the library"
+            href: watch/step-09.4.qmd
             contents:
               - text: "step-09.4 The docs check counts the library"
-                href: watch/step-09.4-to-step-09.5.qmd#step-09.4
-              - text: "step-09.5 The front page and the README name both packages"
-                href: watch/step-09.4-to-step-09.5.qmd#step-09.5
+                href: watch/step-09.4.qmd#step-09.4
       - section: "Do"
         contents:
           - section: "step-08: Docs from the code"
@@ -57,13 +55,11 @@ website:
                 href: do/step-08.qmd#step-08.6
               - text: "step-08.7 The docs check in `just check`"
                 href: do/step-08.qmd#step-08.7
-          - section: "step-09.4 to step-09.5"
-            href: do/step-09.4-to-step-09.5.qmd
+          - section: "step-09.4: The docs check counts the library"
+            href: do/step-09.4.qmd
             contents:
               - text: "step-09.4 The docs check counts the library"
-                href: do/step-09.4-to-step-09.5.qmd#step-09.4
-              - text: "step-09.5 The front page and the README name both packages"
-                href: do/step-09.4-to-step-09.5.qmd#step-09.5
+                href: do/step-09.4.qmd#step-09.4
 
 theme: cosmo
 css: styles.css

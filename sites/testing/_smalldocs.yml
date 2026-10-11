@@ -62,6 +62,13 @@ website:
                 href: watch/step-06.qmd#step-06.3
               - text: "step-06.4 GitHub runs the tests"
                 href: watch/step-06.qmd#step-06.4
+          - section: "step-07.2 to step-07.3"
+            href: watch/step-07.2-to-step-07.3.qmd
+            contents:
+              - text: "step-07.2 random_page returns a Page"
+                href: watch/step-07.2-to-step-07.3.qmd#step-07.2
+              - text: "step-07.3 An answer that is not a page"
+                href: watch/step-07.2-to-step-07.3.qmd#step-07.3
           - section: "step-08.4: The tests documented"
             href: watch/step-08.4.qmd
             contents:
@@ -117,6 +124,13 @@ website:
                 href: do/step-06.qmd#step-06.3
               - text: "step-06.4 GitHub runs the tests"
                 href: do/step-06.qmd#step-06.4
+          - section: "step-07.2 to step-07.3"
+            href: do/step-07.2-to-step-07.3.qmd
+            contents:
+              - text: "step-07.2 random_page returns a Page"
+                href: do/step-07.2-to-step-07.3.qmd#step-07.2
+              - text: "step-07.3 An answer that is not a page"
+                href: do/step-07.2-to-step-07.3.qmd#step-07.3
           - section: "step-08.4: The tests documented"
             href: do/step-08.4.qmd
             contents:

@@ -2136,9 +2136,9 @@ field without documentation.
 $ just setup
 
 The code that asks Wikipedia becomes a package of its own, `wikirandom`, in the same repository. The first move
-makes an empty package. The next moves add the code, and make the app use the library. The last two moves update the docs and the
-README. Any other
-program could then install wikirandom without wikiapp and click.
+makes an empty package. The next moves add the code, and make the app use the library. The README and the front
+page of the docs change with the app. The last move makes the docs check count the library. Any other program
+could then install wikirandom without wikiapp and click.
 
 ### step-09.1 An empty library, wikirandom
 
@@ -2287,6 +2287,20 @@ In `pyproject.toml`, make coverage measure both packages.
 addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"
 ```
 
+The README and the front page of the site, `docs/index.qmd`, now say that the repository contains two packages.
+
+::: do
+In the README, replace the `src/wikiapp/` row of the table of folders with the two rows below.
+
+```markdown
+| `src/wikiapp/` | The app. `console.py` is the `wikiapp` command |
+| `packages/wikirandom/` | The library the app uses: a random page of Wikipedia. A package of its own |
+```
+
+The front page is long to type, so take `docs/index.qmd` with **Apply this file** in timewalk, or from the
+move's commit on GitHub.
+:::
+
 The move changed these files:
 
 - `pyproject.toml`: wikirandom in, requests and pydantic out. The source of wikirandom is the workspace, and coverage measures both packages.
@@ -2294,6 +2308,8 @@ The move changed these files:
 - `src/wikiapp/console.py`: imports from wikirandom.
 - `src/wikiapp/wikipedia.py`: deleted.
 - `tests/test_wikirandom.py`: renamed from `tests/test_wikipedia.py`, and it tests wikirandom.
+- `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
+- `docs/index.qmd`: two packages, the library and the app.
 
 files:
 - diff `pyproject.toml`: the app depends on the library.
@@ -2302,6 +2318,10 @@ files:
   show: `from wikirandom import WikipediaError, random_page`
 - file `tests/test_wikirandom.py`: the same three tests.
   show: `wikirandom.random_page(language="es")`
+- diff `README.md`: one row more, and the `src/wikiapp/` row says the app.
+  show: `| The library the app uses: a random page of Wikipedia. A package of its own |`
+- diff `docs/index.qmd`: two packages.
+  show: `The code has two packages, in one repository:`
 
 $ just test -q
 
@@ -2309,11 +2329,14 @@ $ uv tree --depth 2
 
 $ just docs check
 
+$ just docs
+
 The tests print `7 passed, 2 deselected`, and the coverage table lists
 `packages/wikirandom/src/wikirandom/__init__.py`. `uv tree` shows that wikiapp needs click and wikirandom, and
-that wikirandom needs requests and pydantic. `just docs check` still counts the app and the tests alone, 12 of 12. The next
-move adds the library. The README still names `wikipedia.py`, and the front page of the site
-`wikiapp.wikipedia`, until step-09.5.
+that wikirandom needs requests and pydantic. `just docs check` still counts the app and the tests alone, 12 of 12. `just docs`
+writes 2 pages, the front page and the reference page of the app. The front page names both packages, but
+`random_page` is not yet a link, because the settings of the site name only the app. The next move adds the
+library to the settings.
 
 ### step-09.4 The docs check counts the library
 
@@ -2335,41 +2358,12 @@ files:
 
 $ just docs check
 
-The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
-
-### step-09.5 The front page and the README name both packages
-
-The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
-contains two packages.
-
-::: do
-In the README, replace the `src/wikiapp/` row of the table of folders with the two rows below.
-
-```markdown
-| `src/wikiapp/` | The app. `console.py` is the `wikiapp` command |
-| `packages/wikirandom/` | The library the app uses: a random page of Wikipedia. A package of its own |
-```
-
-The front page is long to type, so take `docs/index.qmd` with **Apply this file** in timewalk, or from the
-move's commit on GitHub.
-:::
-
-The move changed these files:
-
-- `docs/index.qmd`: two packages, the library and the app.
-- `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
-
-files:
-- diff `docs/index.qmd`: two packages.
-  show: `The code has two packages, in one repository:`
-- diff `README.md`: one row more, and the `src/wikiapp/` row says the app.
-  show: `| The library the app uses: a random page of Wikipedia. A package of its own |`
-
 $ just docs
 
 $ just check
 
-`just docs` writes 3 pages, and the front page names both packages. `just check` passes.
+The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
+pages, and on the front page, `random_page` is now a link to its entry. `just check` passes.
 
 ## step-10 Build
 
