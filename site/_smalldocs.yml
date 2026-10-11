@@ -1,5 +1,5 @@
 # The tutorial as a website, made by `just walk-update` from TUTORIAL.md: do not edit these files by hand.
-# GitHub renders and publishes it on every push (.github/workflows/pages.yml); `just site` renders it here.
+# smalldocs builds it. GitHub builds and publishes it on every push (.github/workflows/pages.yml); `just site` builds it here.
 project:
   type: website
   output-dir: _site
@@ -28,11 +28,9 @@ website:
           - step-09.qmd
           - step-10.qmd
 
-format:
-  html:
-    theme: cosmo
-    css: styles.css
-    toc: true
-    toc-depth: 3
-    code-copy: true
-    from: markdown-tex_math_dollars-smart  # a $ is a dollar, not mathematics; -- stays two hyphens
+theme: cosmo
+css: styles.css
+toc: true
+toc-depth: 3
+code-copy: true
+from: markdown-tex_math_dollars-smart  # a $ is a dollar, not mathematics; -- stays two hyphens

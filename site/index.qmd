@@ -67,7 +67,7 @@ the notes that timewalk reads, so do not edit it by hand.
   - [step-07.3: An answer that is not a page](step-07.qmd#step-07.3-an-answer-that-is-not-a-page)
   - [step-07.4: Only a language code goes into the address](step-07.qmd#step-07.4-only-a-language-code-goes-into-the-address)
 - [step-08: Docs from the code](step-08.qmd)
-  - [step-08.1: The script docs/apidocs.py](step-08.qmd#step-08.1-the-script-docsapidocs.py)
+  - [step-08.1: smalldocs](step-08.qmd#step-08.1-smalldocs)
   - [step-08.2: The library documented](step-08.qmd#step-08.2-the-library-documented)
   - [step-08.3: The command documented](step-08.qmd#step-08.3-the-command-documented)
   - [step-08.4: The tests documented](step-08.qmd#step-08.4-the-tests-documented)

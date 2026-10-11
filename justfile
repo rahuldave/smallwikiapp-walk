@@ -56,7 +56,6 @@ setup url="":
     git -C repo fetch --quiet --tags --force upstream 2>/dev/null \
         || echo "setup: could not fetch the tags from {{ upstream }}/{{ project }}; using the ones repo/ has"
     echo "setup: repo/ is $(git -C repo remote get-url origin), with $(git -C repo tag -l 'step-*' | wc -l | tr -d ' ') steps from {{ upstream }}/{{ project }}"
-    command -v quarto >/dev/null 2>&1 || echo "setup: Quarto is not on this machine; step 08 needs it: https://quarto.org/docs/get-started/"
 
 # Make build/walk.pdf, or build/walk-ID.pdf for just pdf ID: the slides, one page each. BRAND=DIR gives it a brand
 pdf id="":
@@ -93,6 +92,6 @@ pdf id="":
 check: setup
     uvx --refresh-package timewalk --from {{ quote(timewalk) }} timewalk-check repo --replay worktree --toc toc.toml
 
-# Render the tutorial's website into site/_site, as GitHub Pages does: open site/_site/index.html
+# Build the tutorial's website into site/_site with smalldocs, as GitHub Pages does: open site/_site/index.html
 site:
-    quarto render site
+    uvx --from 'smalldocs>=0.1.3' smalldocs render site

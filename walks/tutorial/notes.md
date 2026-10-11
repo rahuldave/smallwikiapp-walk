@@ -1689,16 +1689,16 @@ $ just setup
 
 The moves of this step add documentation:
 
-- a script that makes the reference from the code, and says what has no documentation
+- smalldocs, which makes the reference from the code, and says what has no documentation
 - the documentation of the library, of the command and of the tests
 - a site
 - the check of the documentation in `just check`
 
-### step-08.1 The script docs/apidocs.py
+### step-08.1 smalldocs
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and
 the types are in the code. The docstring says what the function does. A docment says what each parameter is. A
-docment is the comment beside a parameter, with one parameter to a line, and fastcore reads it.
+docment is the comment beside a parameter, with one parameter to a line.
 
 The block below shows `random_page` with its docments. You write it in the next move, not in this move.
 
@@ -1708,8 +1708,9 @@ def random_page(
 ) -> Page:  # A page chosen at random
 ```
 
-fastcore goes in a fourth dependency group, `docs`, and `dev` includes that group. In `pyproject.toml`, change
-the line `dev = ...`, and add the group.
+smalldocs reads all three, and writes the reference as Markdown. It is a Python package, so uv installs it like
+any other. smalldocs goes in a fourth dependency group, `docs`, and `dev` includes that group. In
+`pyproject.toml`, change the line `dev = ...`, and add the group on the line after it.
 
 ```toml
 dev = [{ include-group = "test" }, { include-group = "lint" }, { include-group = "docs" }]
@@ -1717,55 +1718,64 @@ docs = []
 ```
 
 ```
-uv add --group docs fastcore
+uv add --group docs smalldocs
 ```
 
-`docs/apidocs.py` is a script of 218 lines. Take it with **Apply this file** in timewalk, or from the move's
-commit on GitHub. The script has two commands:
+smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has one section, `api`, the
+reference. Make the file with these lines.
+
+```yaml
+# The settings of smalldocs. `api` is the reference, made from the code of the packages
+api:
+  packages: [wikiapp]
+  source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+  check: ["tests/**/*.py"]  # the tests are held to the same rule as the package
+```
+
+`smalldocs api` has two commands that this step uses:
 
 - `module NAME` prints the reference of one module as Markdown.
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
-  docstring. It looks in the package, the tests and the script itself.
-
-Read the docstring of the script, and any one function. The script follows its own rule.
+  docstring. It looks in the package and in the files of `check`, here the tests.
 
 Add a recipe at the end of the `justfile`.
 
 ```just
 
-# The reference, from the code: just docs check, just docs module wikipedia. Words go to docs/apidocs.py
+# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
 [group('docs')]
 [no-exit-message]
 docs *args:
-    {{ if args == "help" { "just help docs" } else { 'uv run python docs/apidocs.py "$@"' } }}
+    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
 ```
 
 The move changed these files:
 
-- `docs/apidocs.py`: a new file, with the commands `check` and `module`.
+- `docs/_smalldocs.yml`: a new file, with the settings of the reference.
 - `justfile`: the recipe `docs`.
-- `pyproject.toml`: the group `docs`, with fastcore.
-- `uv.lock`: the exact version of fastcore.
+- `pyproject.toml`: the group `docs`, with smalldocs.
+- `uv.lock`: the exact version of smalldocs and of the packages it needs.
 
 files:
-- file `docs/apidocs.py`: the script. Every function in it has its docments.
-  show: `def gaps_of(`
+- file `docs/_smalldocs.yml`: the package to document, and the tests to check.
+  show: `packages: [wikiapp]`
 - diff `pyproject.toml`: the group.
   show: `docs = [`
 - diff `justfile`: the recipe.
   show: `docs *args:`
 
-$ uv run python docs/apidocs.py module wikipedia
+$ uv run smalldocs api module wikipedia --dir docs
+
+$ uv run smalldocs api check --dir docs
 
 $ just --show docs
 
 $ just docs check
 
-`module` prints the reference of wikipedia.py, with empty descriptions. For each module, `check` counts the
-functions and classes that are complete. Then it lists every gap, and fails with `15 of 29 functions and
-classes are typed and documented`. Fourteen of the 15 are in the script. The fifteenth is `WikipediaError`,
-which needs only its docstring. Above the total, `check` names every gap, and the six modules without a
-docstring are among them.
+`module` prints the reference of `wikipedia.py`, with empty descriptions. For each module and each test file,
+`check` counts the functions and classes that are complete. Then it lists every gap, and fails with `1 of 15
+functions, methods and classes are typed and documented`. The one is `WikipediaError`, which needs only its
+docstring. Above the total, `check` names every gap, and the five modules without a docstring are among them.
 
 ### step-08.2 The library documented
 
@@ -1799,6 +1809,11 @@ def random_page(
     """
 ```
 
+A pydantic field can also take its description as `Field(description="...")`. pydantic keeps that description
+in the schema of the model, which other programs read. smalldocs uses the description when a field has one, and
+the comment beside the field when it has none. `Page` only parses the answer of Wikipedia, so the comment is
+enough.
+
 The move changed this file:
 
 - `src/wikiapp/wikipedia.py`: a docstring for the module, docments, and a longer docstring.
@@ -1824,6 +1839,9 @@ Add a docstring at the top of `src/wikiapp/__init__.py` and of `src/wikiapp/cons
 """The wikiapp command."""
 
 ```
+
+`check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class. Python
+still shows it, in `help(wikiapp)`.
 
 In `console.py`, give `main` one parameter to a line, with its docment, and a docstring that says what `main`
 prints. A function that returns None needs no docment for its return. `wikiapp --help` prints the docstring and
@@ -1857,7 +1875,8 @@ $ just docs module console
 
 $ uv run wikiapp --help
 
-The reference of `main` now has its description. `--help` shows the new docstring and the help of the option.
+`main` is a click command, and smalldocs documents it like a function, with one more table. The table of
+options shows the new help of `--language`, the same help that `--help` prints.
 
 ### step-08.4 The tests documented
 
@@ -1891,48 +1910,46 @@ files:
 
 $ just docs check
 
-`check` prints `29 of 29 functions and classes are typed and documented`, and every module has its docstring.
+`check` prints `15 of 15 functions, methods and classes are typed and documented`, and every module has its
+docstring.
 
 ### step-08.5 A site
 
-Quarto makes a website from Markdown. Quarto is a program of its own, and you install it apart from uv, from
-https://quarto.org/docs/get-started/. The site is in `docs/`. It has a front page, `index.qmd`, and a reference
-page for each module. Before every render, `apidocs.py build` writes the reference pages from the code.
+smalldocs also makes a website from Markdown. The site is in `docs/`. It has a front page, `index.qmd`, and a
+reference page for each module. Each build writes the reference pages from the code, before it builds the site.
+A name in backticks, such as `random_page`, becomes a link to its entry.
 
-The move adds four files:
-
-- `docs/_quarto.yml`, the settings of the site
-- `docs/index.qmd`, the front page
-- `docs/linkify.lua`, which turns a name in backticks into a link to its entry
-- `docs/.gitignore`
-
-`apidocs.py` gets the command `build`, which puts an id on each heading and a link to the line of the source.
-`just docs` with no words renders the site. `just setup` is now a script of several lines, and it says when
-Quarto is missing. Take the move with **Apply the whole move** in timewalk, or from the move's commit on GitHub,
-and read `docs/_quarto.yml`.
+The move adds the front page, `docs/index.qmd`. A `.qmd` file is Markdown, with a header between two `---` lines
+that gives the title of the page. It also adds the settings of the site to `docs/_smalldocs.yml`.
+The settings are the type of the project, its output folder, the title, the sidebar, the theme and a table of
+contents on each page. `just docs` with no words builds the site. Take the move
+with **Apply the whole move** in timewalk, or from the move's commit on GitHub, and read `docs/_smalldocs.yml`.
 
 The move changed these files:
 
-- `docs/_quarto.yml`: a new file, with the settings of the site, and the script to run before each render.
+- `docs/_smalldocs.yml`: the settings of the site above the section `api`, and a comment above `api`. The
+  comment at the top now says that `just docs` builds the site.
 - `docs/index.qmd`: a new file, the front page.
-- `docs/linkify.lua`: a new file, which turns a name in backticks into a link.
-- `docs/.gitignore`: a new file, which lists what Quarto makes and git must not track.
-- `docs/apidocs.py`: the command `build`. `entry` and `markdown` take `page`, which adds an id to each heading
-  and a link to the source. With `page`, the reference leaves out the heading of the module, because Quarto writes the title.
-- `justfile`: `docs` renders the site, and `setup` checks for Quarto.
+- `justfile`: with no words, `docs` builds the site, and its comment says so. The recipe is now a script of
+  several lines.
 
 files:
-- file `docs/_quarto.yml`: `pre-render` runs the script.
-  show: `pre-render: python apidocs.py build  # the reference pages are made from the code, never by hand`
-- diff `docs/apidocs.py`: `build`.
-  show: `def build() -> int:  # The exit code, always 0`
-- diff `justfile`: with no words, `docs` renders the site.
-  show: `if [ "$#" -eq 0 ]; then exec uv run quarto render docs; fi`
+- diff `docs/_smalldocs.yml`: the site. The sidebar lists the front page, then the reference pages.
+  show: `contents: api/*  # the reference pages, which each build makes from the code`
+- file `docs/index.qmd`: the front page, written by hand.
+  show: `Each build of the site makes the pages under Reference from the code.`
+- diff `justfile`: with no words, `docs` builds the site.
+  show: `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
+
+$ uv run smalldocs render docs
+
+$ just --show docs
 
 $ just docs
 
-Quarto prints `Output created: _site/index.html`. Open `docs/_site/index.html` in a browser. On the front page,
-`random_page` is a link to its entry.
+smalldocs prints `wrote 3 page(s) to docs/_site`. Open `docs/_site/index.html` in a browser. On the front page,
+`random_page` is a link to its entry. The site and the reference pages are made by each build, and git ignores
+them.
 
 ### step-08.6 The docs check in `just check`
 
@@ -1947,36 +1964,31 @@ In the `justfile`, in `check`, run `just docs check` after the tests, and say so
     just docs check
 ```
 
-The README gets Quarto among the tools, and `tests/` and `docs/` among the folders. It also says that
-`wikipedia.py` is the library and `console.py` the command. Take the README with **Apply this file** in timewalk, or from the
-move's commit on GitHub. Or copy the rows below. Put the Quarto row under the row of `just`, and the three rows
-in place of the `src/wikiapp/` row.
-
-```markdown
-| [Quarto](https://quarto.org/) | The docs site, from `just docs` |
-```
+The README gets `tests/` and `docs/` among the folders. It also says that `wikipedia.py` is the library and
+`console.py` the command. Take the README with **Apply this file** in timewalk, or from the move's commit on
+GitHub. Or copy the rows below, in place of the `src/wikiapp/` row.
 
 ```markdown
 | `src/wikiapp/` | The code. `wikipedia.py` is the library, `console.py` the `wikiapp` command |
 | `tests/` | The tests. `just test` runs them |
-| `docs/` | The docs site. `apidocs.py` makes its reference from the code |
+| `docs/` | The docs site. smalldocs makes its reference from the code |
 ```
 
 The move changed these files:
 
 - `justfile`: the docs check in `check`.
-- `README.md`: rows for Quarto, `tests/` and `docs/`.
+- `README.md`: rows for `tests/` and `docs/`, and the `src/wikiapp/` row names the library and the command.
 
 files:
 - diff `justfile`: the comment, and one line in `check`.
   show: `just docs check`
-- diff `README.md`: the tools and the folders.
-  show: `| [Quarto](https://quarto.org/) | The docs site, from`
+- diff `README.md`: the folders.
+  show: `| The docs site. smalldocs makes its reference from the code |`
 
 $ just check
 
-The docs check prints `30 of 30`. The thirtieth is `build`, from the move before. Now the git hook refuses a
-commit that leaves a function, a parameter or a field without documentation.
+The docs check prints `15 of 15`. Now the git hook refuses a commit that leaves a function, a parameter or a
+field without documentation.
 
 ## step-09 The library as a package
 
@@ -2157,32 +2169,30 @@ $ just docs check
 
 The tests print `7 passed, 2 deselected`, and the coverage table lists
 `packages/wikirandom/src/wikirandom/__init__.py`. `uv tree` shows that wikiapp needs click and wikirandom, and
-that wikirandom needs requests and pydantic. `just docs check` still counts the app alone, 27 of 27. The next
+that wikirandom needs requests and pydantic. `just docs check` still counts the app and the tests alone, 12 of 12. The next
 move adds the library.
 
 ### step-09.4 The docs name both packages
 
-`docs/apidocs.py` documented one package, and only its modules. It now documents a list of packages. It also
-documents the `__init__.py` of each package, because wikirandom is a single module. Take it with **Apply this file** in
-timewalk, or from the move's commit on GitHub. The main changes are `PACKAGES` and `package_modules`. `check` and
-`build` follow from them, and `build` writes a page only for a module that defines something.
+`docs/_smalldocs.yml` named one package. It now names both, the app and the library. Change the line
+`packages:` in the section `api`.
 
-```python
-PACKAGES = ("wikiapp", "wikirandom")  # the app, and the library in packages/wikirandom
+```yaml
+  packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
 ```
 
 The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
-contains two packages. Take both files with **Apply this file** too, in timewalk, or from the move's commit on GitHub.
+contains two packages. Take both files with **Apply this file** in timewalk, or from the move's commit on GitHub.
 
 The move changed these files:
 
-- `docs/apidocs.py`: two packages.
+- `docs/_smalldocs.yml`: two packages.
 - `docs/index.qmd`: two packages, the library and the app.
 - `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
 
 files:
-- diff `docs/apidocs.py`: the list, and the package's own module.
-  show: `mods += [pkg, *(importlib.import_module(f"{name}.{s}") for s in subs)]`
+- diff `docs/_smalldocs.yml`: the list.
+  show: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
 - diff `docs/index.qmd`: two packages.
   show: `The code has two packages, in one repository:`
 - diff `README.md`: one row more, and the `src/wikiapp/` row says the app.
@@ -2192,7 +2202,7 @@ $ just docs check
 
 $ just check
 
-The docs check prints `wikirandom 3 of 3`, and `30 of 30` in all.
+The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
 
 ## step-10 Build
 

@@ -72,7 +72,7 @@ Each link opens its section of TUTORIAL.md.
   - [step-07.3](walks/tutorial/TUTORIAL.md#step-073-an-answer-that-is-not-a-page) An answer that is not a page
   - [step-07.4](walks/tutorial/TUTORIAL.md#step-074-only-a-language-code-goes-into-the-address) Only a language code goes into the address
 - [step-08](walks/tutorial/TUTORIAL.md#step-08-docs-from-the-code) **Docs from the code**
-  - [step-08.1](walks/tutorial/TUTORIAL.md#step-081-the-script-docsapidocspy) The script docs/apidocs.py
+  - [step-08.1](walks/tutorial/TUTORIAL.md#step-081-smalldocs) smalldocs
   - [step-08.2](walks/tutorial/TUTORIAL.md#step-082-the-library-documented) The library documented
   - [step-08.3](walks/tutorial/TUTORIAL.md#step-083-the-command-documented) The command documented
   - [step-08.4](walks/tutorial/TUTORIAL.md#step-084-the-tests-documented) The tests documented
@@ -111,7 +111,6 @@ and gives the command that brings a file back.
 
 - [uv](https://docs.astral.sh/uv/), which also runs timewalk
 - [git](https://git-scm.com/) and [just](https://just.systems/)
-- [Quarto](https://quarto.org/), from step 08, for the docs site
 - Chrome, Edge or another recent browser
 
 ## Start

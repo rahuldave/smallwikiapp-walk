@@ -10,18 +10,18 @@ just setup
 
 The moves of this step add documentation:
 
-- a script that makes the reference from the code, and says what has no documentation
+- smalldocs, which makes the reference from the code, and says what has no documentation
 - the documentation of the library, of the command and of the tests
 - a site
 - the check of the documentation in `just check`
 
-## step-08.1 The script docs/apidocs.py
+## step-08.1 smalldocs
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3ba5bbb1f3df12a205ddc8dd984e8964e5f469be) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/de475b1681b472502b7d667993cb6f361b59ba12) shows exactly what the move changes.
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and
 the types are in the code. The docstring says what the function does. A docment says what each parameter is. A
-docment is the comment beside a parameter, with one parameter to a line, and fastcore reads it.
+docment is the comment beside a parameter, with one parameter to a line.
 
 The block below shows `random_page` with its docments. You write it in the next move, not in this move.
 
@@ -31,8 +31,9 @@ def random_page(
 ) -> Page:  # A page chosen at random
 ```
 
-fastcore goes in a fourth dependency group, `docs`, and `dev` includes that group. In `pyproject.toml`, change
-the line `dev = ...`, and add the group.
+smalldocs reads all three, and writes the reference as Markdown. It is a Python package, so uv installs it like
+any other. smalldocs goes in a fourth dependency group, `docs`, and `dev` includes that group. In
+`pyproject.toml`, change the line `dev = ...`, and add the group on the line after it.
 
 ```toml
 dev = [{ include-group = "test" }, { include-group = "lint" }, { include-group = "docs" }]
@@ -40,58 +41,67 @@ docs = []
 ```
 
 ```
-uv add --group docs fastcore
+uv add --group docs smalldocs
 ```
 
-`docs/apidocs.py` is a script of 218 lines. Take it from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/3ba5bbb1f3df12a205ddc8dd984e8964e5f469be). The script has two commands:
+smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has one section, `api`, the
+reference. Make the file with these lines.
+
+```yaml
+# The settings of smalldocs. `api` is the reference, made from the code of the packages
+api:
+  packages: [wikiapp]
+  source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+  check: ["tests/**/*.py"]  # the tests are held to the same rule as the package
+```
+
+`smalldocs api` has two commands that this step uses:
 
 - `module NAME` prints the reference of one module as Markdown.
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
-  docstring. It looks in the package, the tests and the script itself.
-
-Read the docstring of the script, and any one function. The script follows its own rule.
+  docstring. It looks in the package and in the files of `check`, here the tests.
 
 Add a recipe at the end of the `justfile`.
 
 ```just
 
-# The reference, from the code: just docs check, just docs module wikipedia. Words go to docs/apidocs.py
+# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
 [group('docs')]
 [no-exit-message]
 docs *args:
-    {{ if args == "help" { "just help docs" } else { 'uv run python docs/apidocs.py "$@"' } }}
+    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
 ```
 
 The move changed these files:
 
-- `docs/apidocs.py`: a new file, with the commands `check` and `module`.
+- `docs/_smalldocs.yml`: a new file, with the settings of the reference.
 - `justfile`: the recipe `docs`.
-- `pyproject.toml`: the group `docs`, with fastcore.
-- `uv.lock`: the exact version of fastcore.
+- `pyproject.toml`: the group `docs`, with smalldocs.
+- `uv.lock`: the exact version of smalldocs and of the packages it needs.
 
 Files to read:
-- [`docs/apidocs.py`](https://github.com/rahuldave/smallwikiapp/blob/3ba5bbb1f3df12a205ddc8dd984e8964e5f469be/docs/apidocs.py): the script. Every function in it has its docments.
-  - look at: `def gaps_of(`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/3ba5bbb1f3df12a205ddc8dd984e8964e5f469be/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/3ba5bbb1f3df12a205ddc8dd984e8964e5f469be#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group.
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/de475b1681b472502b7d667993cb6f361b59ba12/docs/_smalldocs.yml): the package to document, and the tests to check.
+  - look at: `packages: [wikiapp]`
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/de475b1681b472502b7d667993cb6f361b59ba12/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/de475b1681b472502b7d667993cb6f361b59ba12#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group.
   - look at: `docs = [`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/3ba5bbb1f3df12a205ddc8dd984e8964e5f469be/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/3ba5bbb1f3df12a205ddc8dd984e8964e5f469be#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/de475b1681b472502b7d667993cb6f361b59ba12/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/de475b1681b472502b7d667993cb6f361b59ba12#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `docs *args:`
 
 ```bash
-uv run python docs/apidocs.py module wikipedia
+uv run smalldocs api module wikipedia --dir docs
+uv run smalldocs api check --dir docs
 just --show docs
 just docs check
 ```
 
-`module` prints the reference of wikipedia.py, with empty descriptions. For each module, `check` counts the
-functions and classes that are complete. Then it lists every gap, and fails with `15 of 29 functions and
-classes are typed and documented`. Fourteen of the 15 are in the script. The fifteenth is `WikipediaError`,
-which needs only its docstring. Above the total, `check` names every gap, and the six modules without a
-docstring are among them.
+`module` prints the reference of `wikipedia.py`, with empty descriptions. For each module and each test file,
+`check` counts the functions and classes that are complete. Then it lists every gap, and fails with `1 of 15
+functions, methods and classes are typed and documented`. The one is `WikipediaError`, which needs only its
+docstring. Above the total, `check` names every gap, and the five modules without a docstring are among them.
 
 ## step-08.2 The library documented
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/54d471e703a705581d3cfc3d8a992ee09bcda797) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/91b565b61a0ba64920b6f3e51ee10561b1eba63d) shows exactly what the move changes.
 
 In `src/wikiapp/wikipedia.py`, add these:
 
@@ -122,12 +132,17 @@ def random_page(
     """
 ```
 
+A pydantic field can also take its description as `Field(description="...")`. pydantic keeps that description
+in the schema of the model, which other programs read. smalldocs uses the description when a field has one, and
+the comment beside the field when it has none. `Page` only parses the answer of Wikipedia, so the comment is
+enough.
+
 The move changed this file:
 
 - `src/wikiapp/wikipedia.py`: a docstring for the module, docments, and a longer docstring.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/54d471e703a705581d3cfc3d8a992ee09bcda797/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/54d471e703a705581d3cfc3d8a992ee09bcda797#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the comments are the documentation.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/91b565b61a0ba64920b6f3e51ee10561b1eba63d/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/91b565b61a0ba64920b6f3e51ee10561b1eba63d#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the comments are the documentation.
   - look at: `) -> Page:  # A page chosen at random`
 
 ```bash
@@ -138,7 +153,7 @@ The tables now have their descriptions.
 
 ## step-08.3 The command documented
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/64a6f678d104d644aabb5e878d4daab9a78f60b9) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/04f743dcd7d246d646f43c3b6649292cda3243e9) shows exactly what the move changes.
 
 Add a docstring at the top of `src/wikiapp/__init__.py` and of `src/wikiapp/console.py`.
 
@@ -151,6 +166,9 @@ Add a docstring at the top of `src/wikiapp/__init__.py` and of `src/wikiapp/cons
 """The wikiapp command."""
 
 ```
+
+`check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class. Python
+still shows it, in `help(wikiapp)`.
 
 In `console.py`, give `main` one parameter to a line, with its docment, and a docstring that says what `main`
 prints. A function that returns None needs no docment for its return. `wikiapp --help` prints the docstring and
@@ -177,7 +195,7 @@ The move changed these files:
 - `src/wikiapp/console.py`: a docstring for the module, the documentation of `main`, and the help of `--language`.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/64a6f678d104d644aabb5e878d4daab9a78f60b9/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/64a6f678d104d644aabb5e878d4daab9a78f60b9#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the docment, the docstring and the help.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/04f743dcd7d246d646f43c3b6649292cda3243e9/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/04f743dcd7d246d646f43c3b6649292cda3243e9#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the docment, the docstring and the help.
   - look at: `language: str,  # The language of the Wikipedia to ask, from --language`
 
 ```bash
@@ -185,15 +203,16 @@ just docs module console
 uv run wikiapp --help
 ```
 
-The reference of `main` now has its description. `--help` shows the new docstring and the help of the option.
+`main` is a click command, and smalldocs documents it like a function, with one more table. The table of
+options shows the new help of `--language`, the same help that `--help` prints.
 
 ## step-08.4 The tests documented
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d241a8ff0ff2a6fddc6f5202ce2801ec282efb4d) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74) shows exactly what the move changes.
 
 Each test file says what it tests, and each fixture says what it returns. Each test says in one line what it
 checks. The docstrings say in words what the asserts say in code. The three files are long to type, so take
-them from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/d241a8ff0ff2a6fddc6f5202ce2801ec282efb4d). The test below shows the
+them from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74). The test below shows the
 pattern.
 
 ```python
@@ -212,67 +231,63 @@ The move changed these files:
 - `tests/test_wikipedia.py`: a docstring for the file and each test, and a docment for each parameter.
 
 Files to read:
-- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/d241a8ff0ff2a6fddc6f5202ce2801ec282efb4d/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d241a8ff0ff2a6fddc6f5202ce2801ec282efb4d#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/1a6219cd046dd65cc213112e246842eb872dde74/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
   - look at: `mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/d241a8ff0ff2a6fddc6f5202ce2801ec282efb4d/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d241a8ff0ff2a6fddc6f5202ce2801ec282efb4d#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): seven functions.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/1a6219cd046dd65cc213112e246842eb872dde74/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): seven functions.
   - look at: `"""The command prints the title of the page."""`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/d241a8ff0ff2a6fddc6f5202ce2801ec282efb4d/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d241a8ff0ff2a6fddc6f5202ce2801ec282efb4d#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/1a6219cd046dd65cc213112e246842eb872dde74/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
   - look at: `"""The language chooses the Wikipedia that is asked."""`
 
 ```bash
 just docs check
 ```
 
-`check` prints `29 of 29 functions and classes are typed and documented`, and every module has its docstring.
+`check` prints `15 of 15 functions, methods and classes are typed and documented`, and every module has its
+docstring.
 
 ## step-08.5 A site
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/abd10aaf9d3fff19d36cddee58e1cfb2553b0497) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/078c22ccf3ca3790ee247c15d28e9b50c6c7d693) shows exactly what the move changes.
 
-Quarto makes a website from Markdown. Quarto is a program of its own, and you install it apart from uv, from
-https://quarto.org/docs/get-started/. The site is in `docs/`. It has a front page, `index.qmd`, and a reference
-page for each module. Before every render, `apidocs.py build` writes the reference pages from the code.
+smalldocs also makes a website from Markdown. The site is in `docs/`. It has a front page, `index.qmd`, and a
+reference page for each module. Each build writes the reference pages from the code, before it builds the site.
+A name in backticks, such as `random_page`, becomes a link to its entry.
 
-The move adds four files:
-
-- `docs/_quarto.yml`, the settings of the site
-- `docs/index.qmd`, the front page
-- `docs/linkify.lua`, which turns a name in backticks into a link to its entry
-- `docs/.gitignore`
-
-`apidocs.py` gets the command `build`, which puts an id on each heading and a link to the line of the source.
-`just docs` with no words renders the site. `just setup` is now a script of several lines, and it says when
-Quarto is missing. Take the move from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/abd10aaf9d3fff19d36cddee58e1cfb2553b0497),
-and read `docs/_quarto.yml`.
+The move adds the front page, `docs/index.qmd`. A `.qmd` file is Markdown, with a header between two `---` lines
+that gives the title of the page. It also adds the settings of the site to `docs/_smalldocs.yml`.
+The settings are the type of the project, its output folder, the title, the sidebar, the theme and a table of
+contents on each page. `just docs` with no words builds the site. Take the move
+from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/078c22ccf3ca3790ee247c15d28e9b50c6c7d693), and read `docs/_smalldocs.yml`.
 
 The move changed these files:
 
-- `docs/_quarto.yml`: a new file, with the settings of the site, and the script to run before each render.
+- `docs/_smalldocs.yml`: the settings of the site above the section `api`, and a comment above `api`. The
+  comment at the top now says that `just docs` builds the site.
 - `docs/index.qmd`: a new file, the front page.
-- `docs/linkify.lua`: a new file, which turns a name in backticks into a link.
-- `docs/.gitignore`: a new file, which lists what Quarto makes and git must not track.
-- `docs/apidocs.py`: the command `build`. `entry` and `markdown` take `page`, which adds an id to each heading
-  and a link to the source. With `page`, the reference leaves out the heading of the module, because Quarto writes the title.
-- `justfile`: `docs` renders the site, and `setup` checks for Quarto.
+- `justfile`: with no words, `docs` builds the site, and its comment says so. The recipe is now a script of
+  several lines.
 
 Files to read:
-- [`docs/_quarto.yml`](https://github.com/rahuldave/smallwikiapp/blob/abd10aaf9d3fff19d36cddee58e1cfb2553b0497/docs/_quarto.yml): `pre-render` runs the script.
-  - look at: `pre-render: python apidocs.py build  # the reference pages are made from the code, never by hand`
-- [`docs/apidocs.py`](https://github.com/rahuldave/smallwikiapp/blob/abd10aaf9d3fff19d36cddee58e1cfb2553b0497/docs/apidocs.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/abd10aaf9d3fff19d36cddee58e1cfb2553b0497#diff-da01f36fbf3b920a98c35ef6b70581a4f7a056ee5fce1a3cf3ca0c713601f832): `build`.
-  - look at: `def build() -> int:  # The exit code, always 0`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/abd10aaf9d3fff19d36cddee58e1cfb2553b0497/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/abd10aaf9d3fff19d36cddee58e1cfb2553b0497#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): with no words, `docs` renders the site.
-  - look at: `if [ "$#" -eq 0 ]; then exec uv run quarto render docs; fi`
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/078c22ccf3ca3790ee247c15d28e9b50c6c7d693/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/078c22ccf3ca3790ee247c15d28e9b50c6c7d693#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the site. The sidebar lists the front page, then the reference pages.
+  - look at: `contents: api/*  # the reference pages, which each build makes from the code`
+- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/078c22ccf3ca3790ee247c15d28e9b50c6c7d693/docs/index.qmd): the front page, written by hand.
+  - look at: `Each build of the site makes the pages under Reference from the code.`
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/078c22ccf3ca3790ee247c15d28e9b50c6c7d693/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/078c22ccf3ca3790ee247c15d28e9b50c6c7d693#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): with no words, `docs` builds the site.
+  - look at: `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
 
 ```bash
+uv run smalldocs render docs
+just --show docs
 just docs
 ```
 
-Quarto prints `Output created: _site/index.html`. Open `docs/_site/index.html` in a browser. On the front page,
-`random_page` is a link to its entry.
+smalldocs prints `wrote 3 page(s) to docs/_site`. Open `docs/_site/index.html` in a browser. On the front page,
+`random_page` is a link to its entry. The site and the reference pages are made by each build, and git ignores
+them.
 
 ## step-08.6 The docs check in `just check`
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2ec28cc8ec6fcaf18d1cc6e94ce60efa2a385d53) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a1942b5fc1668dac9c9e8b814b5d901076a204bc) shows exactly what the move changes.
 
 In the `justfile`, in `check`, run `just docs check` after the tests, and say so in the comment.
 
@@ -285,34 +300,29 @@ In the `justfile`, in `check`, run `just docs check` after the tests, and say so
     just docs check
 ```
 
-The README gets Quarto among the tools, and `tests/` and `docs/` among the folders. It also says that
-`wikipedia.py` is the library and `console.py` the command. Take the README from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/2ec28cc8ec6fcaf18d1cc6e94ce60efa2a385d53). Or copy the rows below. Put the Quarto row under the row of `just`, and the three rows
-in place of the `src/wikiapp/` row.
-
-```markdown
-| [Quarto](https://quarto.org/) | The docs site, from `just docs` |
-```
+The README gets `tests/` and `docs/` among the folders. It also says that `wikipedia.py` is the library and
+`console.py` the command. Take the README from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/a1942b5fc1668dac9c9e8b814b5d901076a204bc). Or copy the rows below, in place of the `src/wikiapp/` row.
 
 ```markdown
 | `src/wikiapp/` | The code. `wikipedia.py` is the library, `console.py` the `wikiapp` command |
 | `tests/` | The tests. `just test` runs them |
-| `docs/` | The docs site. `apidocs.py` makes its reference from the code |
+| `docs/` | The docs site. smalldocs makes its reference from the code |
 ```
 
 The move changed these files:
 
 - `justfile`: the docs check in `check`.
-- `README.md`: rows for Quarto, `tests/` and `docs/`.
+- `README.md`: rows for `tests/` and `docs/`, and the `src/wikiapp/` row names the library and the command.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/2ec28cc8ec6fcaf18d1cc6e94ce60efa2a385d53/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/2ec28cc8ec6fcaf18d1cc6e94ce60efa2a385d53#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in `check`.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/a1942b5fc1668dac9c9e8b814b5d901076a204bc/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/a1942b5fc1668dac9c9e8b814b5d901076a204bc#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in `check`.
   - look at: `just docs check`
-- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/2ec28cc8ec6fcaf18d1cc6e94ce60efa2a385d53/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/2ec28cc8ec6fcaf18d1cc6e94ce60efa2a385d53#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): the tools and the folders.
-  - look at: `| [Quarto](https://quarto.org/) | The docs site, from`
+- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/a1942b5fc1668dac9c9e8b814b5d901076a204bc/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/a1942b5fc1668dac9c9e8b814b5d901076a204bc#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): the folders.
+  - look at: `| The docs site. smalldocs makes its reference from the code |`
 
 ```bash
 just check
 ```
 
-The docs check prints `30 of 30`. The thirtieth is `build`, from the move before. Now the git hook refuses a
-commit that leaves a function, a parameter or a field without documentation.
+The docs check prints `15 of 15`. Now the git hook refuses a commit that leaves a function, a parameter or a
+field without documentation.
