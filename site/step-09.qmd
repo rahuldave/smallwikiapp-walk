@@ -9,12 +9,13 @@ just setup
 ```
 
 The code that asks Wikipedia becomes a package of its own, `wikirandom`, in the same repository. The first move
-makes an empty package. The next moves add the code, make the app use the library, and update the docs. Any other
+makes an empty package. The next moves add the code, and make the app use the library. The last two moves update the docs and the
+README. Any other
 program could then install wikirandom without wikiapp and click.
 
 ## step-09.1 An empty library, wikirandom
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b787509a67035755bc2f5bb06cddb162b7dfa4ba) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/677e1d1f52c3f1c57b4ec0914618f43ddf62123c) shows exactly what the move changes.
 
 uv can make a second package inside a project. The two packages then form a *workspace*, which has one lockfile
 and one `.venv` for both.
@@ -64,9 +65,9 @@ The move changed these files:
 - `uv.lock`: the second package.
 
 Files to read:
-- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b787509a67035755bc2f5bb06cddb162b7dfa4ba/packages/wikirandom/pyproject.toml): a package of its own.
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/677e1d1f52c3f1c57b4ec0914618f43ddf62123c/packages/wikirandom/pyproject.toml): a package of its own.
   - look at: `name = "wikirandom"`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b787509a67035755bc2f5bb06cddb162b7dfa4ba/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b787509a67035755bc2f5bb06cddb162b7dfa4ba#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the workspace.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/677e1d1f52c3f1c57b4ec0914618f43ddf62123c/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/677e1d1f52c3f1c57b4ec0914618f43ddf62123c#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the workspace.
   - look at: `"packages/wikirandom",`
 
 ```bash
@@ -79,7 +80,7 @@ and runs the command there. The app does not depend on the library yet, so a pla
 
 ## step-09.2 The code goes into wikirandom
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1322f96144fa231907e8511b11b3200d41b5356e) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7) shows exactly what the move changes.
 
 The library needs requests and pydantic.
 
@@ -105,9 +106,9 @@ The move changed these files:
 - `uv.lock`: the library's dependencies.
 
 Files to read:
-- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/1322f96144fa231907e8511b11b3200d41b5356e/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1322f96144fa231907e8511b11b3200d41b5356e#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the library.
+- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the library.
   - look at: `def random_page(`
-- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/1322f96144fa231907e8511b11b3200d41b5356e/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/1322f96144fa231907e8511b11b3200d41b5356e#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): its dependencies.
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): its dependencies.
   - look at: `"pydantic>=2.14.0",`
 
 ```bash
@@ -119,7 +120,7 @@ library yet.
 
 ## step-09.3 The app uses wikirandom
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c174b50669218b5582b8df1e74d1b511530a9174) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897) shows exactly what the move changes.
 
 Make the library a dependency of the app. Take requests and pydantic out of the app's dependencies, because the
 app no longer imports them.
@@ -178,11 +179,11 @@ The move changed these files:
 - `tests/test_wikirandom.py`: renamed from `tests/test_wikipedia.py`, and it tests wikirandom.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c174b50669218b5582b8df1e74d1b511530a9174/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/c174b50669218b5582b8df1e74d1b511530a9174#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app depends on the library.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/517abf247f7a42038536d843fe7585f745d57897/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app depends on the library.
   - look at: `wikirandom = { workspace = true }`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/c174b50669218b5582b8df1e74d1b511530a9174/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/c174b50669218b5582b8df1e74d1b511530a9174#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): one import.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/517abf247f7a42038536d843fe7585f745d57897/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): one import.
   - look at: `from wikirandom import WikipediaError, random_page`
-- [`tests/test_wikirandom.py`](https://github.com/rahuldave/smallwikiapp/blob/c174b50669218b5582b8df1e74d1b511530a9174/tests/test_wikirandom.py): the same three tests.
+- [`tests/test_wikirandom.py`](https://github.com/rahuldave/smallwikiapp/blob/517abf247f7a42038536d843fe7585f745d57897/tests/test_wikirandom.py): the same three tests.
   - look at: `wikirandom.random_page(language="es")`
 
 ```bash
@@ -194,39 +195,56 @@ just docs check
 The tests print `7 passed, 2 deselected`, and the coverage table lists
 `packages/wikirandom/src/wikirandom/__init__.py`. `uv tree` shows that wikiapp needs click and wikirandom, and
 that wikirandom needs requests and pydantic. `just docs check` still counts the app and the tests alone, 12 of 12. The next
-move adds the library.
+move adds the library. The README still names `wikipedia.py`, and the front page of the site
+`wikiapp.wikipedia`, until step-09.5.
 
-## step-09.4 The docs name both packages
+## step-09.4 The docs check counts the library
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c) shows exactly what the move changes.
 
-`docs/_smalldocs.yml` named one package. It now names both, the app and the library. Change the line
-`packages:` in the section `api`.
+Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
+`docs/_smalldocs.yml` names only `wikiapp`. Change the line `packages:` in the section `api`, so that it names
+both.
 
 ```yaml
   packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
 ```
 
+The move changed this file:
+
+- `docs/_smalldocs.yml`: two packages.
+
+Files to read:
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/426d87e7d66b979bbc8b1d6067583395ab08e01c/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+  - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+```bash
+just docs check
+```
+
+The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
+
+## step-09.5 The front page and the README name both packages
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309) shows exactly what the move changes.
+
 The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
-contains two packages. Take both files from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd).
+contains two packages. Take both files from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309).
 
 The move changed these files:
 
-- `docs/_smalldocs.yml`: two packages.
 - `docs/index.qmd`: two packages, the library and the app.
 - `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
 
 Files to read:
-- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/63319ec56a56ac471c74c758524bc2542b604ecd/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
-  - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
-- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/63319ec56a56ac471c74c758524bc2542b604ecd/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
+- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
   - look at: `The code has two packages, in one repository:`
-- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/63319ec56a56ac471c74c758524bc2542b604ecd/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): one row more, and the `src/wikiapp/` row says the app.
+- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): one row more, and the `src/wikiapp/` row says the app.
   - look at: `| The library the app uses: a random page of Wikipedia. A package of its own |`
 
 ```bash
-just docs check
+just docs
 just check
 ```
 
-The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
+`just docs` writes 3 pages, and the front page names both packages. `just check` passes.

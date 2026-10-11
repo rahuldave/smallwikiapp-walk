@@ -217,8 +217,8 @@ decorators and the docstring.
 
 $ just setup
 
-The moves of this step add pytest and a first test, a recipe for the tests, and a mock in place of Wikipedia.
-Then they add four more tests, and coverage on every run. One test asks the real Wikipedia, so the tests need
+The moves of this step add pytest and a first test, a recipe for the tests, and a fixture. Next comes a mock in
+place of Wikipedia, with a test of the title. Then they add three more tests, and coverage on every run. One test asks the real Wikipedia, so the tests need
 the network until step 06.
 
 ### step-02.1 pytest and the first test
@@ -301,7 +301,40 @@ $ just test
 
 The result is the same, `1 passed`.
 
-### step-02.3 A mock in place of Wikipedia
+### step-02.3 The runner as a fixture
+
+Each test of the command needs a `CliRunner`. A fixture makes one for every test that asks for it. A fixture is a
+function that pytest calls for each test that names it as a parameter. Replace `tests/test_console.py` with the
+code below.
+
+```python
+import click.testing
+import pytest
+
+@pytest.fixture
+def runner():
+    return click.testing.CliRunner()
+
+from wikiapp import console
+
+def test_main_succeeds(runner):
+    result = runner.invoke(console.main)
+    assert result.exit_code == 0
+```
+
+The move changed this file:
+
+- `tests/test_console.py`: the fixture `runner`, and `test_main_succeeds` takes the runner from it.
+
+files:
+- diff `tests/test_console.py`: the fixture, and the test that names it.
+  show: `def test_main_succeeds(runner):`
+
+$ just test
+
+The test passes as before, with `1 passed`. It still asks the real Wikipedia.
+
+### step-02.4 A mock in place of Wikipedia
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page.
 pytest-mock can replace `requests.get` with a mock for the length of one test.
@@ -340,19 +373,18 @@ def test_main_succeeds(runner):
     assert result.exit_code == 0
 ```
 
-A fixture is a function that pytest calls for each test that names it as a parameter. `mocker` is the fixture
-of pytest-mock. `mocker.patch("requests.get")` replaces the function, and puts it back after the test. The long
+`mocker` is the fixture of pytest-mock. `mocker.patch("requests.get")` replaces the function, and puts it back after the test. The long
 line sets what the mock returns when the code calls `response.json()` inside the `with` block. The mock returns
 a page with the title Lorem Ipsum.
 
 The move changed these files:
 
-- `tests/test_console.py`: two fixtures, and a test of the title.
+- `tests/test_console.py`: the fixture of the mock, and a test of the title.
 - `pyproject.toml`: pytest-mock in the group `test`.
 - `uv.lock`: the exact version of pytest-mock.
 
 files:
-- diff `tests/test_console.py`: the fixtures and the new test. `test_main_succeeds` takes the runner from its fixture.
+- diff `tests/test_console.py`: the fixture of the mock, and the new test.
   show: `mock = mocker.patch("requests.get")`
 - diff `pyproject.toml`: pytest-mock in the group `test`.
   show: `"pytest-mock>=3.16.0",`
@@ -361,7 +393,7 @@ $ just test -k title -v
 
 The output shows `test_main_prints_title PASSED`, without the network.
 
-### step-02.4 Tests of the request
+### step-02.5 Tests of the request
 
 A mock keeps a record of each call to it. Add two tests to `tests/test_console.py`, after `test_main_prints_title`.
 
@@ -390,7 +422,7 @@ $ just test
 
 The result is `4 passed`.
 
-### step-02.5 A test of a failed request
+### step-02.6 A test of a failed request
 
 The mock can raise an exception as well as return a value. If `side_effect` is an exception, a call to the
 mock raises it. Add the test below before `test_main_succeeds`.
@@ -414,7 +446,7 @@ $ just test
 
 The result is `5 passed`.
 
-### step-02.6 Coverage
+### step-02.7 Coverage
 
 pytest-cov measures which lines of the code the tests run.
 
@@ -713,9 +745,9 @@ The first command prints `Error:` and the message in place of a traceback, then 
 
 $ just setup
 
-The eight moves of this step add a formatter, and then the changes that it makes. Next, a linter finds five
-problems, and the next three moves fix them. Then a recipe checks the configuration, and another recipe runs every
-check. Last, a git hook runs every check before each commit.
+The ten moves of this step add a formatter, and then the changes that it makes. Next, a linter finds five
+problems, and the next three moves fix them. Then a recipe checks the configuration, `uv run` stops updating the
+lockfile, and another recipe runs every check. Last, a git hook runs every check before each commit.
 
 A tool comes in one move, and its changes come in the next move. So you see what the tool does before you accept
 it. The tests still need the network. Also, pre-commit downloads its hooks from GitHub the first time.
@@ -811,7 +843,7 @@ $ just fmt --check
 $ just test
 
 The check prints `7 files already formatted`, and the tests pass as before. The formatter changes how the code
-looks, and never what it does.
+looks, and never what it does. One test asks the real Wikipedia, so the tests need the network until step 06.
 
 ### step-04.3 The linter's rules, and the recipe lint
 
@@ -953,7 +985,7 @@ $ just lint
 
 `All checks passed!`
 
-### step-04.7 The recipes lint-config and check
+### step-04.7 The recipe lint-config
 
 validate-pyproject checks `pyproject.toml` against the standard for it.
 
@@ -961,16 +993,7 @@ validate-pyproject checks `pyproject.toml` against the standard for it.
 uv add --group lint validate-pyproject
 ```
 
-In the `justfile`, under `set positional-arguments`, add the line below. With it, every `uv run` of a recipe
-refuses a lockfile that is out of date. Without it, `uv run` quietly updates the lockfile.
-
-```just
-
-export UV_LOCKED := "1"
-```
-
-Then add two recipes at the end. `lint-config` checks the configuration. `check` runs every check in order, and
-stops at the first check that fails.
+Add a recipe at the end of the `justfile`. `lint-config` checks the configuration.
 
 ```just
 
@@ -984,6 +1007,62 @@ lint-config *args:
     uv run validate-pyproject pyproject.toml
     uv lock --check
     just --fmt --check --unstable
+```
+
+The move changed these files:
+
+- `justfile`: the recipe `lint-config`.
+- `pyproject.toml`: validate-pyproject in the group `lint`.
+- `uv.lock`: the exact version of validate-pyproject, and of what it needs.
+
+files:
+- diff `justfile`: the recipe, with its three checks.
+  show: `uv run validate-pyproject pyproject.toml`
+- diff `pyproject.toml`: one package more in `lint`.
+  show: `"validate-pyproject>=0.26",`
+
+$ uv run validate-pyproject pyproject.toml
+
+$ uv lock --check
+
+$ just --fmt --check --unstable
+
+$ just --show lint-config
+
+$ just lint-config
+
+The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `uv lock --check` prints
+`Resolved 19 packages` and exits with 0, because the lockfile matches `pyproject.toml`.
+
+### step-04.8 A locked lockfile
+
+In the `justfile`, under `set positional-arguments`, add the line below. With it, every `uv run` of a recipe
+refuses a lockfile that is out of date. Without it, `uv run` quietly updates the lockfile.
+
+```just
+
+export UV_LOCKED := "1"
+```
+
+The move changed this file:
+
+- `justfile`: the variable `UV_LOCKED`, exported to every recipe.
+
+files:
+- diff `justfile`: one line.
+  show: `export UV_LOCKED := "1"`
+
+$ just --evaluate UV_LOCKED
+
+It prints `1`. `just` puts the variable in the environment of every command of every recipe, so each `uv run`
+sees it.
+
+### step-04.9 The recipe check
+
+Add a recipe at the end of the `justfile`. `check` runs every check in order, and stops at the first check
+that fails.
+
+```just
 
 # Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
 [group('quality')]
@@ -998,27 +1077,13 @@ check *args:
     just lint-config
 ```
 
-The move changed these files:
+The move changed this file:
 
-- `justfile`: `UV_LOCKED`, and the recipes `lint-config` and `check`.
-- `pyproject.toml`: validate-pyproject in the group `lint`.
-- `uv.lock`: the exact version of validate-pyproject, and of what it needs.
+- `justfile`: the recipe `check`.
 
 files:
-- diff `justfile`: the recipes.
+- diff `justfile`: the recipe, with its four checks.
   show: `just test -q --cov-fail-under=90`
-- diff `pyproject.toml`: one package more in `lint`.
-  show: `"validate-pyproject>=0.26",`
-
-$ uv run validate-pyproject pyproject.toml
-
-$ uv lock --check
-
-$ just --fmt --check --unstable
-
-$ just --show lint-config
-
-$ just lint-config
 
 $ just --show check
 
@@ -1027,7 +1092,7 @@ $ just check
 `just check` runs the format, the linter, the tests and the configuration, in that order. The
 tests must run at least 90% of the statements. The coverage is 96.77%.
 
-### step-04.8 A git hook
+### step-04.10 A git hook
 
 pre-commit installs a git hook. A git hook is a program that git runs before every commit. If the program
 fails, git refuses the commit.
@@ -1175,7 +1240,7 @@ $ just types
 
 ### step-05.3 A type on every parameter and return
 
-ty checks the types that the code states. ruff's `ANN` rules make sure that the code states a type for every
+ty, the type checker that `just types` runs, checks the types that the code states. ruff's `ANN` rules make sure that the code states a type for every
 parameter and return. In `pyproject.toml`, add a line to `select`, after `"N"`.
 
 ```toml
@@ -1233,6 +1298,9 @@ $ just lint --statistics
 The 22 problems that are left are all in the tests. They are 13 parameters and 9 returns.
 
 ### step-05.5 Types in the tests
+
+Since step-05.3, ruff's `ANN` rules ask for a type on every parameter and return. The code has its types, and
+`just lint` finds 22 missing in the tests.
 
 The return type of a fixture is the type of what a test receives. The runner is a `CliRunner`, and the mock of
 `requests.get` is a `Mock`. `mocker` is pytest-mock's `MockerFixture`, the name that replaced the original
@@ -1692,6 +1760,7 @@ The moves of this step add documentation:
 - smalldocs, which makes the reference from the code, and says what has no documentation
 - the documentation of the library, of the command and of the tests
 - a site
+- the tests and the docs in the README's table of folders
 - the check of the documentation in `just check`
 
 ### step-08.1 smalldocs
@@ -1880,6 +1949,10 @@ options shows the new help of `--language`, the same help that `--help` prints.
 
 ### step-08.4 The tests documented
 
+A docment is the comment beside a parameter, or after the colon of the `def` line for the return.
+`just docs check`, from step-08.1, counts the functions and classes that have their types, docments and
+docstrings.
+
 Each test file says what it tests, and each fixture says what it returns. Each test says in one line what it
 checks. The docstrings say in words what the asserts say in code. The three files are long to type, so take
 them with **Apply the whole move** in timewalk, or from the move's commit on GitHub. The test below shows the
@@ -1951,18 +2024,7 @@ smalldocs prints `wrote 3 page(s) to docs/_site`. Open `docs/_site/index.html` i
 `random_page` is a link to its entry. The site and the reference pages are made by each build, and git ignores
 them.
 
-### step-08.6 The docs check in `just check`
-
-In the `justfile`, in `check`, run `just docs check` after the tests, and say so in the comment.
-
-```just
-# Everything a commit must pass: format, lint, types, tests over the coverage floor, docs, configuration
-```
-
-```just
-    just test -q --cov-fail-under=90
-    just docs check
-```
+### step-08.6 The README names the tests and the docs
 
 The README gets `tests/` and `docs/` among the folders. It also says that `wikipedia.py` is the library and
 `console.py` the command. Take the README with **Apply this file** in timewalk, or from the move's commit on
@@ -1974,16 +2036,39 @@ GitHub. Or copy the rows below, in place of the `src/wikiapp/` row.
 | `docs/` | The docs site. smalldocs makes its reference from the code |
 ```
 
-The move changed these files:
+The move changed this file:
 
-- `justfile`: the docs check in `check`.
 - `README.md`: rows for `tests/` and `docs/`, and the `src/wikiapp/` row names the library and the command.
+
+files:
+- diff `README.md`: the folders.
+  show: `| The docs site. smalldocs makes its reference from the code |`
+
+$ grep -n -E 'tests/|docs/' README.md
+
+`grep` prints the two new rows of the table.
+
+### step-08.7 The docs check in `just check`
+
+In the `justfile`, in `check`, run `just docs check` after the tests. Replace the comment above `check` with
+the first line below.
+
+```just
+# Everything a commit must pass: format, lint, types, tests over the coverage floor, docs, configuration
+```
+
+```just
+    just test -q --cov-fail-under=90
+    just docs check
+```
+
+The move changed this file:
+
+- `justfile`: the docs check in `check`, and the comment.
 
 files:
 - diff `justfile`: the comment, and one line in `check`.
   show: `just docs check`
-- diff `README.md`: the folders.
-  show: `| The docs site. smalldocs makes its reference from the code |`
 
 $ just check
 
@@ -1995,7 +2080,8 @@ field without documentation.
 $ just setup
 
 The code that asks Wikipedia becomes a package of its own, `wikirandom`, in the same repository. The first move
-makes an empty package. The next moves add the code, make the app use the library, and update the docs. Any other
+makes an empty package. The next moves add the code, and make the app use the library. The last two moves update the docs and the
+README. Any other
 program could then install wikirandom without wikiapp and click.
 
 ### step-09.1 An empty library, wikirandom
@@ -2170,46 +2256,60 @@ $ just docs check
 The tests print `7 passed, 2 deselected`, and the coverage table lists
 `packages/wikirandom/src/wikirandom/__init__.py`. `uv tree` shows that wikiapp needs click and wikirandom, and
 that wikirandom needs requests and pydantic. `just docs check` still counts the app and the tests alone, 12 of 12. The next
-move adds the library.
+move adds the library. The README still names `wikipedia.py`, and the front page of the site
+`wikiapp.wikipedia`, until step-09.5.
 
-### step-09.4 The docs name both packages
+### step-09.4 The docs check counts the library
 
-`docs/_smalldocs.yml` named one package. It now names both, the app and the library. Change the line
-`packages:` in the section `api`.
+Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
+`docs/_smalldocs.yml` names only `wikiapp`. Change the line `packages:` in the section `api`, so that it names
+both.
 
 ```yaml
   packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
 ```
+
+The move changed this file:
+
+- `docs/_smalldocs.yml`: two packages.
+
+files:
+- diff `docs/_smalldocs.yml`: the list.
+  show: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+$ just docs check
+
+The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
+
+### step-09.5 The front page and the README name both packages
 
 The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
 contains two packages. Take both files with **Apply this file** in timewalk, or from the move's commit on GitHub.
 
 The move changed these files:
 
-- `docs/_smalldocs.yml`: two packages.
 - `docs/index.qmd`: two packages, the library and the app.
 - `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
 
 files:
-- diff `docs/_smalldocs.yml`: the list.
-  show: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
 - diff `docs/index.qmd`: two packages.
   show: `The code has two packages, in one repository:`
 - diff `README.md`: one row more, and the `src/wikiapp/` row says the app.
   show: `| The library the app uses: a random page of Wikipedia. A package of its own |`
 
-$ just docs check
+$ just docs
 
 $ just check
 
-The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
+`just docs` writes 3 pages, and the front page names both packages. `just check` passes.
 
 ## step-10 Build
 
 $ just setup
 
 The moves of this step build each package into a wheel, the file that pip and uv install. Then the app says
-which versions of the library it accepts. Both packages say their licence and where their source is. Last, the
+which versions of the library it accepts, and `just lint-config` checks the library's `pyproject.toml` too.
+Both packages say their licence and where their source is. Last, the
 library's User-Agent says the version that is installed.
 
 ### step-10.1 The recipe `build`
@@ -2276,7 +2376,28 @@ $ unzip -p dist/wikiapp-0.1.0-py3-none-any.whl wikiapp-0.1.0.dist-info/METADATA
 
 The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 
-### step-10.3 A licence and a repository link for both
+### step-10.3 lint-config checks both pyproject.toml files
+
+Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. In
+the `justfile`, in `lint-config`, replace the line `uv run validate-pyproject pyproject.toml` with the line below.
+
+```just
+    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
+```
+
+The move changed this file:
+
+- `justfile`: `lint-config` checks both files.
+
+files:
+- diff `justfile`: two files.
+  show: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+$ just lint-config
+
+`just lint-config` prints `Valid file` twice, once for each file.
+
+### step-10.4 A licence and a repository link for both
 
 The library's wheel has no licence, and neither package says where its source is. Copy the project's `LICENSE`
 into `packages/wikirandom/`. In `packages/wikirandom/pyproject.toml`, under `readme`, give the licence and the
@@ -2293,7 +2414,8 @@ authors = [{ name = "Rahul Dave" }]
 ```
 
 Add the repository to both `pyproject.toml` files. PyPI shows it on the package's page. In the library's file,
-put it above `[build-system]`. In the app's file, put it under `[project.scripts]`.
+put it after the list `dependencies`, so that one blank line comes before it and one after it. In the app's file, put it after the line
+`wikiapp = "wikiapp.console:main"` of `[project.scripts]`.
 
 ```toml
 
@@ -2301,39 +2423,28 @@ put it above `[build-system]`. In the app's file, put it under `[project.scripts
 Repository = "https://github.com/rahuldave/smallwikiapp"
 ```
 
-In the `justfile`, make `lint-config` check both files.
-
-```just
-    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
-```
-
 The move changed these files:
 
 - `packages/wikirandom/LICENSE`: new. It has the same licence as the app.
 - `packages/wikirandom/pyproject.toml`: the licence, the author, the repository.
 - `pyproject.toml`: the repository.
-- `justfile`: `lint-config` checks both.
 
 files:
 - diff `packages/wikirandom/pyproject.toml`: what PyPI would show.
   show: `license = "Apache-2.0"`
-- diff `justfile`: two files.
-  show: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 - diff `pyproject.toml`: the app's repository.
   show: `[project.urls]`
 - file `packages/wikirandom/LICENSE`: the same Apache-2.0 licence as the app's.
   show: `Apache License`
 
-$ just lint-config
-
 $ just build
 
 $ unzip -p dist/wikirandom-0.1.0-py3-none-any.whl wikirandom-0.1.0.dist-info/METADATA
 
-`just lint-config` prints `Valid file` twice. The library's metadata has `License-Expression: Apache-2.0`,
+The library's metadata has `License-Expression: Apache-2.0`,
 `License-File: LICENSE` and `Project-URL: Repository, https://github.com/rahuldave/smallwikiapp`.
 
-### step-10.4 The User-Agent says the installed version
+### step-10.5 The User-Agent says the installed version
 
 The User-Agent says `0.1.0`, written by hand. It would still say `0.1.0` after a change of the version in
 `packages/wikirandom/pyproject.toml`. In `packages/wikirandom/src/wikirandom/__init__.py`, read the version from

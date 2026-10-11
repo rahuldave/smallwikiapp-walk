@@ -14,7 +14,7 @@ language code.
 
 ## step-07.1 The model Page
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/f96531ee993aba285a9efa30ae851fbd6e454754) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/570c70fe5d6de269121f442425d0e941f09cdbd5) shows exactly what the move changes.
 
 The command uses two of the many keys that Wikipedia sends. Until now, the code expects these keys to be there,
 with strings as values, but nothing checks it. A pydantic model states the two keys and their types in code.
@@ -45,9 +45,9 @@ The move changed these files:
 - `uv.lock`: the exact version of pydantic, and of what it needs.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/f96531ee993aba285a9efa30ae851fbd6e454754/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/f96531ee993aba285a9efa30ae851fbd6e454754#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the model.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/570c70fe5d6de269121f442425d0e941f09cdbd5/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/570c70fe5d6de269121f442425d0e941f09cdbd5#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the model.
   - look at: `class Page(BaseModel):`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/f96531ee993aba285a9efa30ae851fbd6e454754/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/f96531ee993aba285a9efa30ae851fbd6e454754#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pydantic, a dependency of the package.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/570c70fe5d6de269121f442425d0e941f09cdbd5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/570c70fe5d6de269121f442425d0e941f09cdbd5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pydantic, a dependency of the package.
   - look at: `"pydantic>=2.14.0",`
 
 ```bash
@@ -60,7 +60,7 @@ with a ValidationError, because `extract` is missing.
 
 ## step-07.2 random_page returns a Page
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/74979c326765aeb45020789badcefa8e0b974676) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4) shows exactly what the move changes.
 
 In `src/wikiapp/wikipedia.py`, `random_page` makes a Page of the answer and returns the Page. The code no
 longer uses `Any`, so delete its import, and the blank line under it.
@@ -102,11 +102,11 @@ The move changed these files:
 - `tests/test_wikipedia.py`: the e2e test.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/74979c326765aeb45020789badcefa8e0b974676/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/74979c326765aeb45020789badcefa8e0b974676#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
   - look at: `return Page.model_validate(response.json())`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/74979c326765aeb45020789badcefa8e0b974676/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/74979c326765aeb45020789badcefa8e0b974676#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): attributes, not keys.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): attributes, not keys.
   - look at: `click.secho(page.title, fg="green")`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/74979c326765aeb45020789badcefa8e0b974676/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/74979c326765aeb45020789badcefa8e0b974676#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
   - look at: `assert isinstance(page, wikipedia.Page)`
 
 ```bash
@@ -118,7 +118,7 @@ uv run wikiapp
 
 ## step-07.3 An answer that is not a page
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/efa25843aed2675ec9d414143ee2f3a697854170) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9) shows exactly what the move changes.
 
 When the answer has no title, `model_validate` raises the ValidationError of pydantic. `random_page` turns it
 into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, import ValidationError,
@@ -149,9 +149,9 @@ The move changed these files:
 - `tests/test_wikipedia.py`: a test of the ValidationError.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/efa25843aed2675ec9d414143ee2f3a697854170/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/efa25843aed2675ec9d414143ee2f3a697854170#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
   - look at: `except (requests.RequestException, ValidationError) as error:`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/efa25843aed2675ec9d414143ee2f3a697854170/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/efa25843aed2675ec9d414143ee2f3a697854170#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `with pytest.raises(wikipedia.WikipediaError):`
 
 ```bash
@@ -162,7 +162,7 @@ The output is `1 passed, 8 deselected`.
 
 ## step-07.4 Only a language code goes into the address
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3c6bd593501b9142938ee1c00423b898dea61c56) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/55822322c0a870d808bd25cc2f934169cf7a5386) shows exactly what the move changes.
 
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as
 `example.com/x?` sends the request to example.com, with the User-Agent. The code of every Wikipedia has only
@@ -190,7 +190,7 @@ The move changed this file:
 - `src/wikiapp/wikipedia.py`: the pattern, and the check.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3c6bd593501b9142938ee1c00423b898dea61c56/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3c6bd593501b9142938ee1c00423b898dea61c56#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the code checks a language before it uses it.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/55822322c0a870d808bd25cc2f934169cf7a5386/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/55822322c0a870d808bd25cc2f934169cf7a5386#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the code checks a language before it uses it.
   - look at: `if not LANGUAGE.fullmatch(language):`
 
 ```bash

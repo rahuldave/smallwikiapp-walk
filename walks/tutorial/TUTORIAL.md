@@ -238,8 +238,8 @@ decorators and the docstring.
 just setup
 ```
 
-The moves of this step add pytest and a first test, a recipe for the tests, and a mock in place of Wikipedia.
-Then they add four more tests, and coverage on every run. One test asks the real Wikipedia, so the tests need
+The moves of this step add pytest and a first test, a recipe for the tests, and a fixture. Next comes a mock in
+place of Wikipedia, with a test of the title. Then they add three more tests, and coverage on every run. One test asks the real Wikipedia, so the tests need
 the network until step 06.
 
 ### step-02.1 pytest and the first test
@@ -329,9 +329,46 @@ just test
 
 The result is the same, `1 passed`.
 
-### step-02.3 A mock in place of Wikipedia
+### step-02.3 The runner as a fixture
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d89d19049d5d51e8bb53502187cd2b9716377974) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534) shows exactly what the move changes.
+
+Each test of the command needs a `CliRunner`. A fixture makes one for every test that asks for it. A fixture is a
+function that pytest calls for each test that names it as a parameter. Replace `tests/test_console.py` with the
+code below.
+
+```python
+import click.testing
+import pytest
+
+@pytest.fixture
+def runner():
+    return click.testing.CliRunner()
+
+from wikiapp import console
+
+def test_main_succeeds(runner):
+    result = runner.invoke(console.main)
+    assert result.exit_code == 0
+```
+
+The move changed this file:
+
+- `tests/test_console.py`: the fixture `runner`, and `test_main_succeeds` takes the runner from it.
+
+Files to read:
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/cd31b8a082b8c3ecf168413a21e06b9888480534/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture, and the test that names it.
+  - look at: `def test_main_succeeds(runner):`
+
+```bash
+just test
+```
+
+The test passes as before, with `1 passed`. It still asks the real Wikipedia.
+
+### step-02.4 A mock in place of Wikipedia
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5) shows exactly what the move changes.
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page.
 pytest-mock can replace `requests.get` with a mock for the length of one test.
@@ -370,21 +407,20 @@ def test_main_succeeds(runner):
     assert result.exit_code == 0
 ```
 
-A fixture is a function that pytest calls for each test that names it as a parameter. `mocker` is the fixture
-of pytest-mock. `mocker.patch("requests.get")` replaces the function, and puts it back after the test. The long
+`mocker` is the fixture of pytest-mock. `mocker.patch("requests.get")` replaces the function, and puts it back after the test. The long
 line sets what the mock returns when the code calls `response.json()` inside the `with` block. The mock returns
 a page with the title Lorem Ipsum.
 
 The move changed these files:
 
-- `tests/test_console.py`: two fixtures, and a test of the title.
+- `tests/test_console.py`: the fixture of the mock, and a test of the title.
 - `pyproject.toml`: pytest-mock in the group `test`.
 - `uv.lock`: the exact version of pytest-mock.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/d89d19049d5d51e8bb53502187cd2b9716377974/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d89d19049d5d51e8bb53502187cd2b9716377974#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixtures and the new test. `test_main_succeeds` takes the runner from its fixture.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/2aaab1063eca2f40fbc281e2e038c18419ca88c5/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture of the mock, and the new test.
   - look at: `mock = mocker.patch("requests.get")`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/d89d19049d5d51e8bb53502187cd2b9716377974/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/d89d19049d5d51e8bb53502187cd2b9716377974#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pytest-mock in the group `test`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/2aaab1063eca2f40fbc281e2e038c18419ca88c5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pytest-mock in the group `test`.
   - look at: `"pytest-mock>=3.16.0",`
 
 ```bash
@@ -393,9 +429,9 @@ just test -k title -v
 
 The output shows `test_main_prints_title PASSED`, without the network.
 
-### step-02.4 Tests of the request
+### step-02.5 Tests of the request
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/55dc8d7a868a50c8c4cb6623780320900a0b332d) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f) shows exactly what the move changes.
 
 A mock keeps a record of each call to it. Add two tests to `tests/test_console.py`, after `test_main_prints_title`.
 
@@ -417,7 +453,7 @@ The move changed this file:
 - `tests/test_console.py`: two tests of the request.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/55dc8d7a868a50c8c4cb6623780320900a0b332d/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/55dc8d7a868a50c8c4cb6623780320900a0b332d#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the code makes the request, to the right address.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the code makes the request, to the right address.
   - look at: `assert mock_requests_get.called`
 
 ```bash
@@ -426,9 +462,9 @@ just test
 
 The result is `4 passed`.
 
-### step-02.5 A test of a failed request
+### step-02.6 A test of a failed request
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/dafaaa5d658ad97bdad2feb6be772ae374596beb) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/16b52dc4f9ec6e997b6954efde180ba6d7f521c7) shows exactly what the move changes.
 
 The mock can raise an exception as well as return a value. If `side_effect` is an exception, a call to the
 mock raises it. Add the test below before `test_main_succeeds`.
@@ -445,7 +481,7 @@ The move changed this file:
 - `tests/test_console.py`: a test that a failed request ends the command with exit code 1.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/dafaaa5d658ad97bdad2feb6be772ae374596beb/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/dafaaa5d658ad97bdad2feb6be772ae374596beb#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the mock raises.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/16b52dc4f9ec6e997b6954efde180ba6d7f521c7/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/16b52dc4f9ec6e997b6954efde180ba6d7f521c7#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the mock raises.
   - look at: `mock_requests_get.side_effect = Exception("Boom")`
 
 ```bash
@@ -454,9 +490,9 @@ just test
 
 The result is `5 passed`.
 
-### step-02.6 Coverage
+### step-02.7 Coverage
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/771c68643276dd8ee526f1d699f0d59b14004fd5) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef) shows exactly what the move changes.
 
 pytest-cov measures which lines of the code the tests run.
 
@@ -483,7 +519,7 @@ The move changed these files:
 - `uv.lock`: pytest-cov and coverage.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/771c68643276dd8ee526f1d699f0d59b14004fd5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/771c68643276dd8ee526f1d699f0d59b14004fd5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): coverage on every run.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/bed3c6029878c71bef05322712c388dfb8c058ef/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): coverage on every run.
   - look at: `addopts = "--cov=wikiapp --cov-report=term-missing"`
 
 ```bash
@@ -508,7 +544,7 @@ nothing of the command line, and console.py is the app that uses it.
 
 ### step-03.1 random_page moves to wikipedia.py
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/391c412bea34a01ae7839405e6d1a9acc494faa1) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fec316ee50d27867f0dab60a755372ce1d1839d1) shows exactly what the move changes.
 
 Make `src/wikiapp/wikipedia.py`.
 
@@ -556,9 +592,9 @@ The move changed these files:
 - `src/wikiapp/console.py`: `main` calls `random_page`.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/391c412bea34a01ae7839405e6d1a9acc494faa1/src/wikiapp/wikipedia.py): the code that talks to Wikipedia.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/fec316ee50d27867f0dab60a755372ce1d1839d1/src/wikiapp/wikipedia.py): the code that talks to Wikipedia.
   - look at: `def random_page():`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/391c412bea34a01ae7839405e6d1a9acc494faa1/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/391c412bea34a01ae7839405e6d1a9acc494faa1#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): only the command stays.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/fec316ee50d27867f0dab60a755372ce1d1839d1/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/fec316ee50d27867f0dab60a755372ce1d1839d1#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): only the command stays.
   - look at: `data = random_page()`
 
 ```bash
@@ -570,7 +606,7 @@ The result is `5 passed`, with no change to the tests. The mock replaces the fun
 
 ### step-03.2 The mock moves to conftest.py
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9ec234616a58f22995fce7e758ccc7228b92a89a) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/dcb1e4c7102be3c1feec309ed88e1097ce28f32e) shows exactly what the move changes.
 
 pytest reads `tests/conftest.py` before the tests, and every test file can use a fixture in it. The tests of
 wikipedia.py, in the next move, need the mock too. Make `tests/conftest.py` with the mock in it. Then delete the
@@ -595,9 +631,9 @@ The move changed these files:
 - `tests/test_console.py`: the mock is gone.
 
 Files to read:
-- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/9ec234616a58f22995fce7e758ccc7228b92a89a/tests/conftest.py): the fixture, for every test file.
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/dcb1e4c7102be3c1feec309ed88e1097ce28f32e/tests/conftest.py): the fixture, for every test file.
   - look at: `def mock_requests_get(mocker):`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/9ec234616a58f22995fce7e758ccc7228b92a89a/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ec234616a58f22995fce7e758ccc7228b92a89a#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture is gone, but the tests still name it.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/dcb1e4c7102be3c1feec309ed88e1097ce28f32e/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/dcb1e4c7102be3c1feec309ed88e1097ce28f32e#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture is gone, but the tests still name it.
 
 ```bash
 just test
@@ -607,7 +643,7 @@ The result is `5 passed`. pytest finds the fixture in conftest.py.
 
 ### step-03.3 A language
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5e287166cccb14a53832a1bed597217f55f9d41d) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3d9dfef45760f1ce2cfa78841f554e08f62d32f4) shows exactly what the move changes.
 
 Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, put a
 placeholder for the language in the address. Fill it in `random_page`, with English as the default.
@@ -639,9 +675,9 @@ The move changed these files:
 - `tests/test_wikipedia.py`: a new file with a test that the language chooses the Wikipedia.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/5e287166cccb14a53832a1bed597217f55f9d41d/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/5e287166cccb14a53832a1bed597217f55f9d41d#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the placeholder, and the code that fills it.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3d9dfef45760f1ce2cfa78841f554e08f62d32f4/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3d9dfef45760f1ce2cfa78841f554e08f62d32f4#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the placeholder, and the code that fills it.
   - look at: `def random_page(language="en"):`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/5e287166cccb14a53832a1bed597217f55f9d41d/tests/test_wikipedia.py): the test uses the mock from conftest.py.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3d9dfef45760f1ce2cfa78841f554e08f62d32f4/tests/test_wikipedia.py): the test uses the mock from conftest.py.
   - look at: `assert "es.wikipedia.org" in args[0]`
 
 ```bash
@@ -652,7 +688,7 @@ The result is `6 passed`.
 
 ### step-03.4 wikiapp --language
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/f475e93628b27d42225ebd39a1318f3c5074cebb) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3bd5616ab15d6b2b526784e8b3b014bceef2548f) shows exactly what the move changes.
 
 In `src/wikiapp/console.py`, add an option between `@click.command()` and `@click.version_option`, and pass it
 on.
@@ -681,7 +717,7 @@ The move changed this file:
 - `src/wikiapp/console.py`: the option `--language`, or `-l`.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/f475e93628b27d42225ebd39a1318f3c5074cebb/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/f475e93628b27d42225ebd39a1318f3c5074cebb#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the option, which `main` gives to `random_page`.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/3bd5616ab15d6b2b526784e8b3b014bceef2548f/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3bd5616ab15d6b2b526784e8b3b014bceef2548f#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the option, which `main` gives to `random_page`.
   - look at: `data = random_page(language=language)`
 
 ```bash
@@ -693,7 +729,7 @@ The first command prints a French page. `--help` lists the option, its short for
 
 ### step-03.5 WikipediaError
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/dd34484bcae2c31d3c4641c0330cef1c04158598) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/56214d31141adcc3dab1ecdd7545b94b03c7f0ea) shows exactly what the move changes.
 
 If a request fails for any reason, requests raises a `RequestException`. Code that uses the library should
 not need to know the exceptions of requests. So the library raises an exception of its own. In
@@ -720,7 +756,7 @@ The move changed this file:
 - `src/wikiapp/wikipedia.py`: the class `WikipediaError`, which `random_page` raises.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/dd34484bcae2c31d3c4641c0330cef1c04158598/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/dd34484bcae2c31d3c4641c0330cef1c04158598#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the exception, and the line that raises it.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/56214d31141adcc3dab1ecdd7545b94b03c7f0ea/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/56214d31141adcc3dab1ecdd7545b94b03c7f0ea#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the exception, and the line that raises it.
   - look at: `raise WikipediaError(str(error)) from error`
 
 ```bash
@@ -732,7 +768,7 @@ a traceback, and the last line is the `WikipediaError`. No code catches the erro
 
 ### step-03.6 The command prints the error
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/45df3bf5574b751403c80b3a16a3d59301df3369) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7) shows exactly what the move changes.
 
 In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click,
 which click prints as a message.
@@ -766,9 +802,9 @@ The move changed these files:
 - `tests/test_console.py`: a test of the message.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/45df3bf5574b751403c80b3a16a3d59301df3369/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/45df3bf5574b751403c80b3a16a3d59301df3369#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the error becomes a message.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/b090ad74622ee6109dd72ae66feec36377eef7d7/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the error becomes a message.
   - look at: `raise click.ClickException(str(error)) from error`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/45df3bf5574b751403c80b3a16a3d59301df3369/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/45df3bf5574b751403c80b3a16a3d59301df3369#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/b090ad74622ee6109dd72ae66feec36377eef7d7/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test.
   - look at: `assert "Error" in result.output`
 
 ```bash
@@ -787,16 +823,16 @@ The first command prints `Error:` and the message in place of a traceback, then 
 just setup
 ```
 
-The eight moves of this step add a formatter, and then the changes that it makes. Next, a linter finds five
-problems, and the next three moves fix them. Then a recipe checks the configuration, and another recipe runs every
-check. Last, a git hook runs every check before each commit.
+The ten moves of this step add a formatter, and then the changes that it makes. Next, a linter finds five
+problems, and the next three moves fix them. Then a recipe checks the configuration, `uv run` stops updating the
+lockfile, and another recipe runs every check. Last, a git hook runs every check before each commit.
 
 A tool comes in one move, and its changes come in the next move. So you see what the tool does before you accept
 it. The tests still need the network. Also, pre-commit downloads its hooks from GitHub the first time.
 
 ### step-04.1 ruff, and the recipe fmt
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4f08f0b070bbe5b766befab81559cb51da7e1b04) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9) shows exactly what the move changes.
 
 ruff is a formatter and a linter in one program. It goes in a third dependency group, `lint`, which `dev`
 includes. In `pyproject.toml`, change the line `dev = ...`, and add the group.
@@ -844,9 +880,9 @@ The move changed these files:
 - `uv.lock`: ruff.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4f08f0b070bbe5b766befab81559cb51da7e1b04/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4f08f0b070bbe5b766befab81559cb51da7e1b04#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group and the settings.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/693240e344546dda08ad8fee3951675a0302dbc9/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group and the settings.
   - look at: `line-length = 100`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4f08f0b070bbe5b766befab81559cb51da7e1b04/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4f08f0b070bbe5b766befab81559cb51da7e1b04#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/693240e344546dda08ad8fee3951675a0302dbc9/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `fmt *args:`
 
 ```bash
@@ -861,7 +897,7 @@ passes on the words after `just fmt`.
 
 ### step-04.2 The code, formatted
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fb72b298c10f0a359f16ba2f222aeb8137e2b1cc) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986) shows exactly what the move changes.
 
 Run the formatter.
 
@@ -879,9 +915,9 @@ The move changed these files:
 - `tests/test_wikipedia.py`: two blank lines before the test.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/fb72b298c10f0a359f16ba2f222aeb8137e2b1cc/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/fb72b298c10f0a359f16ba2f222aeb8137e2b1cc#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the long line of the request, split into three.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/ca8685e532e9d372857667484e1c94c91ac9e986/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the long line of the request, split into three.
   - look at: `API_URL.format(language=language), headers={"User-Agent": USER_AGENT}`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/fb72b298c10f0a359f16ba2f222aeb8137e2b1cc/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/fb72b298c10f0a359f16ba2f222aeb8137e2b1cc#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): blank lines, and the long address split.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/ca8685e532e9d372857667484e1c94c91ac9e986/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): blank lines, and the long address split.
   - look at: `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
 
 ```bash
@@ -890,11 +926,11 @@ just test
 ```
 
 The check prints `7 files already formatted`, and the tests pass as before. The formatter changes how the code
-looks, and never what it does.
+looks, and never what it does. One test asks the real Wikipedia, so the tests need the network until step 06.
 
 ### step-04.3 The linter's rules, and the recipe lint
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/246c1c4e67996c5f3949c5ceab25350b01aa75ee) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e) shows exactly what the move changes.
 
 The linter checks the code against rules. At the end of `pyproject.toml`, choose the families of rules. Also
 let the tests use `assert`. The rest of the code may not use it, because Python skips every `assert` when it runs
@@ -938,9 +974,9 @@ The move changed these files:
 - `justfile`: the recipe `lint`.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/246c1c4e67996c5f3949c5ceab25350b01aa75ee/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/246c1c4e67996c5f3949c5ceab25350b01aa75ee#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): a family of rules on each line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): a family of rules on each line.
   - look at: `"tests/**" = ["S101"]`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/246c1c4e67996c5f3949c5ceab25350b01aa75ee/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/246c1c4e67996c5f3949c5ceab25350b01aa75ee#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `lint *args:`
 
 ```bash
@@ -960,7 +996,7 @@ The linter finds five problems, each with its code:
 
 ### step-04.4 The linter sorts the imports
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/0d87ad19fee9979ad4748d1964f5a3c821fe6b34) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf) shows exactly what the move changes.
 
 ruff can fix one of the five problems itself.
 
@@ -974,7 +1010,7 @@ The move changed this file:
   installed, and then wikiapp's own.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/0d87ad19fee9979ad4748d1964f5a3c821fe6b34/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/0d87ad19fee9979ad4748d1964f5a3c821fe6b34#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the imports, sorted.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the imports, sorted.
   - look at: `from wikiapp import __version__`
 
 ```bash
@@ -986,7 +1022,7 @@ person must fix them.
 
 ### step-04.5 The tests' imports at the top, and no unused variables
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e114efe5b5b4ec0d1d7772d7fa5119f5c710dad2) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3ba5d239ff4f171c58d4249a33caafc510883b46) shows exactly what the move changes.
 
 In `tests/test_console.py`, move `from wikiapp import console` up, under `import requests`. A reader looks for
 imports there. Put a blank line between the two imports. wikiapp's own imports are a block of their own, after
@@ -1005,7 +1041,7 @@ The move changed this file:
 - `tests/test_console.py`: the import at the top, and two assignments gone.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/e114efe5b5b4ec0d1d7772d7fa5119f5c710dad2/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e114efe5b5b4ec0d1d7772d7fa5119f5c710dad2#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the import moves, and two lines lose `result =`.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/3ba5d239ff4f171c58d4249a33caafc510883b46/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3ba5d239ff4f171c58d4249a33caafc510883b46#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the import moves, and two lines lose `result =`.
   - look at: `from wikiapp import console`
 
 ```bash
@@ -1017,7 +1053,7 @@ One problem is left, `S113`. The format is unchanged, and the check prints `7 fi
 
 ### step-04.6 A timeout
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2ad231a2d872d7643196a7cc03f2a85960e0d01f) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/80c33d4cfaf4b157cd44482712e520c77378cf9c) shows exactly what the move changes.
 
 Without a timeout, requests waits as long as the server keeps the connection open. So the command can wait for
 ever. In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
@@ -1036,7 +1072,7 @@ The move changed this file:
 - `src/wikiapp/wikipedia.py`: the timeout.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/2ad231a2d872d7643196a7cc03f2a85960e0d01f/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2ad231a2d872d7643196a7cc03f2a85960e0d01f#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): one more argument.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/80c33d4cfaf4b157cd44482712e520c77378cf9c/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/80c33d4cfaf4b157cd44482712e520c77378cf9c#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): one more argument.
   - look at: `timeout=10`
 
 ```bash
@@ -1045,9 +1081,9 @@ just lint
 
 `All checks passed!`
 
-### step-04.7 The recipes lint-config and check
+### step-04.7 The recipe lint-config
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/62a77e368185ac5a5ef888ebaa8944ae8d353db2) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a) shows exactly what the move changes.
 
 validate-pyproject checks `pyproject.toml` against the standard for it.
 
@@ -1055,16 +1091,7 @@ validate-pyproject checks `pyproject.toml` against the standard for it.
 uv add --group lint validate-pyproject
 ```
 
-In the `justfile`, under `set positional-arguments`, add the line below. With it, every `uv run` of a recipe
-refuses a lockfile that is out of date. Without it, `uv run` quietly updates the lockfile.
-
-```just
-
-export UV_LOCKED := "1"
-```
-
-Then add two recipes at the end. `lint-config` checks the configuration. `check` runs every check in order, and
-stops at the first check that fails.
+Add a recipe at the end of the `justfile`. `lint-config` checks the configuration.
 
 ```just
 
@@ -1078,6 +1105,66 @@ lint-config *args:
     uv run validate-pyproject pyproject.toml
     uv lock --check
     just --fmt --check --unstable
+```
+
+The move changed these files:
+
+- `justfile`: the recipe `lint-config`.
+- `pyproject.toml`: validate-pyproject in the group `lint`.
+- `uv.lock`: the exact version of validate-pyproject, and of what it needs.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its three checks.
+  - look at: `uv run validate-pyproject pyproject.toml`
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one package more in `lint`.
+  - look at: `"validate-pyproject>=0.26",`
+
+```bash
+uv run validate-pyproject pyproject.toml
+uv lock --check
+just --fmt --check --unstable
+just --show lint-config
+just lint-config
+```
+
+The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `uv lock --check` prints
+`Resolved 19 packages` and exits with 0, because the lockfile matches `pyproject.toml`.
+
+### step-04.8 A locked lockfile
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a45828b7972f3de77bd6a8d7a00a6b55833832cb) shows exactly what the move changes.
+
+In the `justfile`, under `set positional-arguments`, add the line below. With it, every `uv run` of a recipe
+refuses a lockfile that is out of date. Without it, `uv run` quietly updates the lockfile.
+
+```just
+
+export UV_LOCKED := "1"
+```
+
+The move changed this file:
+
+- `justfile`: the variable `UV_LOCKED`, exported to every recipe.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/a45828b7972f3de77bd6a8d7a00a6b55833832cb/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/a45828b7972f3de77bd6a8d7a00a6b55833832cb#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): one line.
+  - look at: `export UV_LOCKED := "1"`
+
+```bash
+just --evaluate UV_LOCKED
+```
+
+It prints `1`. `just` puts the variable in the environment of every command of every recipe, so each `uv run`
+sees it.
+
+### step-04.9 The recipe check
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d) shows exactly what the move changes.
+
+Add a recipe at the end of the `justfile`. `check` runs every check in order, and stops at the first check
+that fails.
+
+```just
 
 # Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
 [group('quality')]
@@ -1092,24 +1179,15 @@ check *args:
     just lint-config
 ```
 
-The move changed these files:
+The move changed this file:
 
-- `justfile`: `UV_LOCKED`, and the recipes `lint-config` and `check`.
-- `pyproject.toml`: validate-pyproject in the group `lint`.
-- `uv.lock`: the exact version of validate-pyproject, and of what it needs.
+- `justfile`: the recipe `check`.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/62a77e368185ac5a5ef888ebaa8944ae8d353db2/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/62a77e368185ac5a5ef888ebaa8944ae8d353db2#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipes.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/06ea9e2af2238f070b1e33f16aeb70002e25e44d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its four checks.
   - look at: `just test -q --cov-fail-under=90`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/62a77e368185ac5a5ef888ebaa8944ae8d353db2/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/62a77e368185ac5a5ef888ebaa8944ae8d353db2#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one package more in `lint`.
-  - look at: `"validate-pyproject>=0.26",`
 
 ```bash
-uv run validate-pyproject pyproject.toml
-uv lock --check
-just --fmt --check --unstable
-just --show lint-config
-just lint-config
 just --show check
 just check
 ```
@@ -1117,9 +1195,9 @@ just check
 `just check` runs the format, the linter, the tests and the configuration, in that order. The
 tests must run at least 90% of the statements. The coverage is 96.77%.
 
-### step-04.8 A git hook
+### step-04.10 A git hook
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/360d85b55658d104f4f6cab9589c69b5b3c8fca5) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9) shows exactly what the move changes.
 
 pre-commit installs a git hook. A git hook is a program that git runs before every commit. If the program
 fails, git refuses the commit.
@@ -1171,11 +1249,11 @@ The move changed these files:
 - `uv.lock`: the exact version of pre-commit, and of what it needs.
 
 Files to read:
-- [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/360d85b55658d104f4f6cab9589c69b5b3c8fca5/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
+- [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
   - look at: `entry: just check`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/360d85b55658d104f4f6cab9589c69b5b3c8fca5/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/360d85b55658d104f4f6cab9589c69b5b3c8fca5#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
   - look at: `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/360d85b55658d104f4f6cab9589c69b5b3c8fca5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/360d85b55658d104f4f6cab9589c69b5b3c8fca5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/eb43634c9c0a1fe39912ebdfb84f7994ef6a81a9#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
   - look at: `"pre-commit>=4.6.2",`
 
 ```bash
@@ -1208,7 +1286,7 @@ a type on every parameter and return. The last moves add the types, and put the 
 
 ### step-05.1 ty, and the recipe types
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5ca9fc40e4f90a45bc570189c38426a204c1391d) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/efda1ef33393ff8f9969a981ff8e3760efe05d67) shows exactly what the move changes.
 
 ty reads the code without running it. It finds code whose types cannot fit, for example a call whose
 arguments cannot have the types that the function asks for.
@@ -1235,9 +1313,9 @@ The move changed these files:
 - `uv.lock`: the exact version of ty.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5ca9fc40e4f90a45bc570189c38426a204c1391d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/5ca9fc40e4f90a45bc570189c38426a204c1391d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/efda1ef33393ff8f9969a981ff8e3760efe05d67/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/efda1ef33393ff8f9969a981ff8e3760efe05d67#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `types *args:`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/5ca9fc40e4f90a45bc570189c38426a204c1391d/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/5ca9fc40e4f90a45bc570189c38426a204c1391d#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): ty in the group `lint`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/efda1ef33393ff8f9969a981ff8e3760efe05d67/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/efda1ef33393ff8f9969a981ff8e3760efe05d67#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): ty in the group `lint`.
   - look at: `"ty>=0.0.86",`
 
 ```bash
@@ -1251,7 +1329,7 @@ ty can tell, `__name__ or __package__` could be None. But `importlib.metadata.ve
 
 ### step-05.2 The version of "wikiapp", by name
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/af87796f7617cf492419acf9b6e7cf5015f84074) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9d95e1a48037b527b275be02d576cf464baf7df0) shows exactly what the move changes.
 
 `pyproject.toml` gives the name of the installed package, `wikiapp`. Ask for the version of that name. Change
 the last line of `src/wikiapp/__init__.py`.
@@ -1265,7 +1343,7 @@ The move changed this file:
 - `src/wikiapp/__init__.py`: the name, written out.
 
 Files to read:
-- [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/af87796f7617cf492419acf9b6e7cf5015f84074/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/af87796f7617cf492419acf9b6e7cf5015f84074#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): a string that is never None.
+- [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/9d95e1a48037b527b275be02d576cf464baf7df0/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9d95e1a48037b527b275be02d576cf464baf7df0#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): a string that is never None.
   - look at: `__version__ = importlib.metadata.version("wikiapp")`
 
 ```bash
@@ -1276,9 +1354,9 @@ just types
 
 ### step-05.3 A type on every parameter and return
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/053d24746b2557671a57d7102e11028c4aa0a8ae) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c2da7ec65f0a74620c5e411d96dc516b8d63ad15) shows exactly what the move changes.
 
-ty checks the types that the code states. ruff's `ANN` rules make sure that the code states a type for every
+ty, the type checker that `just types` runs, checks the types that the code states. ruff's `ANN` rules make sure that the code states a type for every
 parameter and return. In `pyproject.toml`, add a line to `select`, after `"N"`.
 
 ```toml
@@ -1290,7 +1368,7 @@ The move changed this file:
 - `pyproject.toml`: the rules `ANN`.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/053d24746b2557671a57d7102e11028c4aa0a8ae/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/053d24746b2557671a57d7102e11028c4aa0a8ae#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c2da7ec65f0a74620c5e411d96dc516b8d63ad15/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/c2da7ec65f0a74620c5e411d96dc516b8d63ad15#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `"ANN", # annotations: every parameter and every return value has a type`
 
 ```bash
@@ -1304,7 +1382,7 @@ project's history, they are commits made past the hook.
 
 ### step-05.4 Types in the code
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/7c204b3d278ca361ea5d94f8f711778982fddcab) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/37ff4096c6af3750178af2e961cf2c61a6fa8d6a) shows exactly what the move changes.
 
 In `src/wikiapp/wikipedia.py`, `random_page` takes a string. It returns the JSON that Wikipedia sends, which is
 a dictionary from strings to values of any kind. `Any` says that ty cannot check the values. Import `Any` at the
@@ -1330,9 +1408,9 @@ The move changed these files:
 - `src/wikiapp/console.py`: the type of `main`'s parameter.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/7c204b3d278ca361ea5d94f8f711778982fddcab/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/7c204b3d278ca361ea5d94f8f711778982fddcab#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the parameter and the return.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/37ff4096c6af3750178af2e961cf2c61a6fa8d6a/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/37ff4096c6af3750178af2e961cf2c61a6fa8d6a#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the parameter and the return.
   - look at: `def random_page(language: str = "en") -> dict[str, Any]:`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/7c204b3d278ca361ea5d94f8f711778982fddcab/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/7c204b3d278ca361ea5d94f8f711778982fddcab#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the parameter.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/37ff4096c6af3750178af2e961cf2c61a6fa8d6a/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/37ff4096c6af3750178af2e961cf2c61a6fa8d6a#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the parameter.
   - look at: `def main(language: str) -> None:`
 
 ```bash
@@ -1343,7 +1421,10 @@ The 22 problems that are left are all in the tests. They are 13 parameters and 9
 
 ### step-05.5 Types in the tests
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8413f26ff5a5e3a549dfd6f6691a6cbab4cedaff) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1) shows exactly what the move changes.
+
+Since step-05.3, ruff's `ANN` rules ask for a type on every parameter and return. The code has its types, and
+`just lint` finds 22 missing in the tests.
 
 The return type of a fixture is the type of what a test receives. The runner is a `CliRunner`, and the mock of
 `requests.get` is a `Mock`. `mocker` is pytest-mock's `MockerFixture`, the name that replaced the original
@@ -1398,11 +1479,11 @@ The move changed these files:
 - `tests/test_wikipedia.py`: the types of the test.
 
 Files to read:
-- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/8413f26ff5a5e3a549dfd6f6691a6cbab4cedaff/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8413f26ff5a5e3a549dfd6f6691a6cbab4cedaff#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.
   - look at: `def mock_requests_get(mocker: MockerFixture) -> Mock:`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/8413f26ff5a5e3a549dfd6f6691a6cbab4cedaff/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8413f26ff5a5e3a549dfd6f6691a6cbab4cedaff#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the runner is a CliRunner.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the runner is a CliRunner.
   - look at: `def runner() -> CliRunner:`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8413f26ff5a5e3a549dfd6f6691a6cbab4cedaff/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8413f26ff5a5e3a549dfd6f6691a6cbab4cedaff#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): one test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/77ef292e5c0f3aa6474f3a9a027ae3186d23ecc1#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): one test.
   - look at: `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
 ```bash
@@ -1414,7 +1495,7 @@ Both commands pass. If `just lint` reports `I001`, the imports are not in the bl
 
 ### step-05.6 The recipe check runs the type checker
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/680ff6e2c66787e68c2183e35099738721e12016) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fd2af757335e7569c44a38ef4d4f76a3e71f2989) shows exactly what the move changes.
 
 In the `justfile`, in `check`, run `just types` after `just lint`. Also add the types to the comment of `check`.
 
@@ -1432,7 +1513,7 @@ The move changed this file:
 - `justfile`: `check` runs the type checker.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/680ff6e2c66787e68c2183e35099738721e12016/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/680ff6e2c66787e68c2183e35099738721e12016#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in check.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/fd2af757335e7569c44a38ef4d4f76a3e71f2989/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/fd2af757335e7569c44a38ef4d4f76a3e71f2989#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in check.
   - look at: `just types`
 
 ```bash
@@ -1454,7 +1535,7 @@ The project accepts every Python from 3.11 on. GitHub runs the tests on three sy
 
 ### step-06.1 The end-to-end test runs only on request
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8d75386f3f3ca99fc721fc5c1f8beaa07595af76) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26) shows exactly what the move changes.
 
 `test_main_succeeds` is the one test that goes over the network. It fails without a network, and its result
 depends on Wikipedia. In `tests/test_console.py`, mark it `e2e`, which means end to end, and give it a name that
@@ -1482,9 +1563,9 @@ The move changed these files:
 - `pyproject.toml`: the marker, declared, and the e2e tests left out of a plain run.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/8d75386f3f3ca99fc721fc5c1f8beaa07595af76/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8d75386f3f3ca99fc721fc5c1f8beaa07595af76#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test, marked.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/49b28350bd9b8bb19f0b98431f81e523953eea26/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test, marked.
   - look at: `@pytest.mark.e2e`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/8d75386f3f3ca99fc721fc5c1f8beaa07595af76/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/8d75386f3f3ca99fc721fc5c1f8beaa07595af76#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the option `-m 'not e2e'`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/49b28350bd9b8bb19f0b98431f81e523953eea26/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/49b28350bd9b8bb19f0b98431f81e523953eea26#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the option `-m 'not e2e'`.
   - look at: `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
 
 ```bash
@@ -1496,7 +1577,7 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
 
 ### step-06.2 An end-to-end test of the library
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e29f69df62b57fed3039ec18cb619df916973a47) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d0d10f6aeb1359ed5e93081dccde0435d9f7395d) shows exactly what the move changes.
 
 The mocks return a dictionary with a title and an extract. The test below comes from the original wikiapp. It
 checks that the real Wikipedia still returns the same keys. Add it at the end of `tests/test_wikipedia.py`. Put
@@ -1517,7 +1598,7 @@ The move changed this file:
 - `tests/test_wikipedia.py`: an e2e test.
 
 Files to read:
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e29f69df62b57fed3039ec18cb619df916973a47/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e29f69df62b57fed3039ec18cb619df916973a47#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/d0d10f6aeb1359ed5e93081dccde0435d9f7395d/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d0d10f6aeb1359ed5e93081dccde0435d9f7395d#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `assert "extract" in page`
 
 ```bash
@@ -1528,7 +1609,7 @@ The output is `2 passed, 6 deselected`.
 
 ### step-06.3 Any Python from 3.11 on
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3b93848070715d9408a11f20db5709db2301fb6c) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e8933c57a023759eeee6db0b3683ca8aa51a6b8e) shows exactly what the move changes.
 
 `uv init` wrote `requires-python = ">=3.13"`, because the command asked for Python 3.13. Nothing here needs
 more than 3.11. Python 3.10 reached its end of life on 1 October 2026, so 3.11 is now the oldest Python that
@@ -1550,7 +1631,7 @@ The move changed these files:
 - `uv.lock`: solved for every Python from 3.11 on.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/3b93848070715d9408a11f20db5709db2301fb6c/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b93848070715d9408a11f20db5709db2301fb6c#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/e8933c57a023759eeee6db0b3683ca8aa51a6b8e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/e8933c57a023759eeee6db0b3683ca8aa51a6b8e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `requires-python = ">=3.11"`
 
 ```bash
@@ -1563,7 +1644,7 @@ uv run --isolated --python 3.11 pytest -q
 
 ### step-06.4 GitHub runs the tests
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/90dc2a59b80dcef09cabce64b8cbe6f4e9b49780) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/0ca4b5a3e8f67d2394b5b96e001a706bf2df20e6) shows exactly what the move changes.
 
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push
 to main and on every pull request. Make `.github/workflows/test.yaml`.
@@ -1616,7 +1697,7 @@ The move changed this file:
 - `.github/workflows/test.yaml`: a new file with two jobs. GitHub runs one of the jobs twelve times.
 
 Files to read:
-- [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/90dc2a59b80dcef09cabce64b8cbe6f4e9b49780/.github/workflows/test.yaml): the matrix of systems and Pythons.
+- [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/0ca4b5a3e8f67d2394b5b96e001a706bf2df20e6/.github/workflows/test.yaml): the matrix of systems and Pythons.
   - look at: `python: ["3.11", "3.12", "3.13", "3.14"]`
 
 ```bash
@@ -1640,7 +1721,7 @@ language code.
 
 ### step-07.1 The model Page
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/f96531ee993aba285a9efa30ae851fbd6e454754) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/570c70fe5d6de269121f442425d0e941f09cdbd5) shows exactly what the move changes.
 
 The command uses two of the many keys that Wikipedia sends. Until now, the code expects these keys to be there,
 with strings as values, but nothing checks it. A pydantic model states the two keys and their types in code.
@@ -1671,9 +1752,9 @@ The move changed these files:
 - `uv.lock`: the exact version of pydantic, and of what it needs.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/f96531ee993aba285a9efa30ae851fbd6e454754/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/f96531ee993aba285a9efa30ae851fbd6e454754#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the model.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/570c70fe5d6de269121f442425d0e941f09cdbd5/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/570c70fe5d6de269121f442425d0e941f09cdbd5#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the model.
   - look at: `class Page(BaseModel):`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/f96531ee993aba285a9efa30ae851fbd6e454754/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/f96531ee993aba285a9efa30ae851fbd6e454754#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pydantic, a dependency of the package.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/570c70fe5d6de269121f442425d0e941f09cdbd5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/570c70fe5d6de269121f442425d0e941f09cdbd5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pydantic, a dependency of the package.
   - look at: `"pydantic>=2.14.0",`
 
 ```bash
@@ -1686,7 +1767,7 @@ with a ValidationError, because `extract` is missing.
 
 ### step-07.2 random_page returns a Page
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/74979c326765aeb45020789badcefa8e0b974676) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4) shows exactly what the move changes.
 
 In `src/wikiapp/wikipedia.py`, `random_page` makes a Page of the answer and returns the Page. The code no
 longer uses `Any`, so delete its import, and the blank line under it.
@@ -1728,11 +1809,11 @@ The move changed these files:
 - `tests/test_wikipedia.py`: the e2e test.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/74979c326765aeb45020789badcefa8e0b974676/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/74979c326765aeb45020789badcefa8e0b974676#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
   - look at: `return Page.model_validate(response.json())`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/74979c326765aeb45020789badcefa8e0b974676/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/74979c326765aeb45020789badcefa8e0b974676#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): attributes, not keys.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): attributes, not keys.
   - look at: `click.secho(page.title, fg="green")`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/74979c326765aeb45020789badcefa8e0b974676/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/74979c326765aeb45020789badcefa8e0b974676#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e7c47feb06c01fae6f047f9202b768016f2113e4/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e7c47feb06c01fae6f047f9202b768016f2113e4#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
   - look at: `assert isinstance(page, wikipedia.Page)`
 
 ```bash
@@ -1744,7 +1825,7 @@ uv run wikiapp
 
 ### step-07.3 An answer that is not a page
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/efa25843aed2675ec9d414143ee2f3a697854170) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9) shows exactly what the move changes.
 
 When the answer has no title, `model_validate` raises the ValidationError of pydantic. `random_page` turns it
 into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, import ValidationError,
@@ -1775,9 +1856,9 @@ The move changed these files:
 - `tests/test_wikipedia.py`: a test of the ValidationError.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/efa25843aed2675ec9d414143ee2f3a697854170/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/efa25843aed2675ec9d414143ee2f3a697854170#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
   - look at: `except (requests.RequestException, ValidationError) as error:`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/efa25843aed2675ec9d414143ee2f3a697854170/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/efa25843aed2675ec9d414143ee2f3a697854170#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/9ff635a09d07020b2a36f0d76b3005cbd489d2e9/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/9ff635a09d07020b2a36f0d76b3005cbd489d2e9#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `with pytest.raises(wikipedia.WikipediaError):`
 
 ```bash
@@ -1788,7 +1869,7 @@ The output is `1 passed, 8 deselected`.
 
 ### step-07.4 Only a language code goes into the address
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3c6bd593501b9142938ee1c00423b898dea61c56) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/55822322c0a870d808bd25cc2f934169cf7a5386) shows exactly what the move changes.
 
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as
 `example.com/x?` sends the request to example.com, with the User-Agent. The code of every Wikipedia has only
@@ -1816,7 +1897,7 @@ The move changed this file:
 - `src/wikiapp/wikipedia.py`: the pattern, and the check.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3c6bd593501b9142938ee1c00423b898dea61c56/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3c6bd593501b9142938ee1c00423b898dea61c56#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the code checks a language before it uses it.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/55822322c0a870d808bd25cc2f934169cf7a5386/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/55822322c0a870d808bd25cc2f934169cf7a5386#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the code checks a language before it uses it.
   - look at: `if not LANGUAGE.fullmatch(language):`
 
 ```bash
@@ -1842,11 +1923,12 @@ The moves of this step add documentation:
 - smalldocs, which makes the reference from the code, and says what has no documentation
 - the documentation of the library, of the command and of the tests
 - a site
+- the tests and the docs in the README's table of folders
 - the check of the documentation in `just check`
 
 ### step-08.1 smalldocs
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/de475b1681b472502b7d667993cb6f361b59ba12) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/36d19bddbbb90c669475d6ffbdf26b7b346c4f18) shows exactly what the move changes.
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and
 the types are in the code. The docstring says what the function does. A docment says what each parameter is. A
@@ -1909,11 +1991,11 @@ The move changed these files:
 - `uv.lock`: the exact version of smalldocs and of the packages it needs.
 
 Files to read:
-- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/de475b1681b472502b7d667993cb6f361b59ba12/docs/_smalldocs.yml): the package to document, and the tests to check.
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/36d19bddbbb90c669475d6ffbdf26b7b346c4f18/docs/_smalldocs.yml): the package to document, and the tests to check.
   - look at: `packages: [wikiapp]`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/de475b1681b472502b7d667993cb6f361b59ba12/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/de475b1681b472502b7d667993cb6f361b59ba12#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/36d19bddbbb90c669475d6ffbdf26b7b346c4f18/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/36d19bddbbb90c669475d6ffbdf26b7b346c4f18#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group.
   - look at: `docs = [`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/de475b1681b472502b7d667993cb6f361b59ba12/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/de475b1681b472502b7d667993cb6f361b59ba12#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/36d19bddbbb90c669475d6ffbdf26b7b346c4f18/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/36d19bddbbb90c669475d6ffbdf26b7b346c4f18#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `docs *args:`
 
 ```bash
@@ -1930,7 +2012,7 @@ docstring. Above the total, `check` names every gap, and the five modules withou
 
 ### step-08.2 The library documented
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/91b565b61a0ba64920b6f3e51ee10561b1eba63d) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5a169fc1223a30099ff265f93e2c061b1ef2ed7c) shows exactly what the move changes.
 
 In `src/wikiapp/wikipedia.py`, add these:
 
@@ -1971,7 +2053,7 @@ The move changed this file:
 - `src/wikiapp/wikipedia.py`: a docstring for the module, docments, and a longer docstring.
 
 Files to read:
-- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/91b565b61a0ba64920b6f3e51ee10561b1eba63d/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/91b565b61a0ba64920b6f3e51ee10561b1eba63d#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the comments are the documentation.
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/5a169fc1223a30099ff265f93e2c061b1ef2ed7c/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/5a169fc1223a30099ff265f93e2c061b1ef2ed7c#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the comments are the documentation.
   - look at: `) -> Page:  # A page chosen at random`
 
 ```bash
@@ -1982,7 +2064,7 @@ The tables now have their descriptions.
 
 ### step-08.3 The command documented
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/04f743dcd7d246d646f43c3b6649292cda3243e9) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367) shows exactly what the move changes.
 
 Add a docstring at the top of `src/wikiapp/__init__.py` and of `src/wikiapp/console.py`.
 
@@ -2024,7 +2106,7 @@ The move changed these files:
 - `src/wikiapp/console.py`: a docstring for the module, the documentation of `main`, and the help of `--language`.
 
 Files to read:
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/04f743dcd7d246d646f43c3b6649292cda3243e9/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/04f743dcd7d246d646f43c3b6649292cda3243e9#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the docment, the docstring and the help.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/42df8640d4b5d1bdd4e6b30befe47bd0d8b4a367#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the docment, the docstring and the help.
   - look at: `language: str,  # The language of the Wikipedia to ask, from --language`
 
 ```bash
@@ -2037,11 +2119,15 @@ options shows the new help of `--language`, the same help that `--help` prints.
 
 ### step-08.4 The tests documented
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/632adbffca8dee5475b394b877bb642da3ed1aff) shows exactly what the move changes.
+
+A docment is the comment beside a parameter, or after the colon of the `def` line for the return.
+`just docs check`, from step-08.1, counts the functions and classes that have their types, docments and
+docstrings.
 
 Each test file says what it tests, and each fixture says what it returns. Each test says in one line what it
 checks. The docstrings say in words what the asserts say in code. The three files are long to type, so take
-them from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74). The test below shows the
+them from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/632adbffca8dee5475b394b877bb642da3ed1aff). The test below shows the
 pattern.
 
 ```python
@@ -2060,11 +2146,11 @@ The move changed these files:
 - `tests/test_wikipedia.py`: a docstring for the file and each test, and a docment for each parameter.
 
 Files to read:
-- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/1a6219cd046dd65cc213112e246842eb872dde74/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/632adbffca8dee5475b394b877bb642da3ed1aff/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/632adbffca8dee5475b394b877bb642da3ed1aff#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
   - look at: `mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test`
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/1a6219cd046dd65cc213112e246842eb872dde74/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): seven functions.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/632adbffca8dee5475b394b877bb642da3ed1aff/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/632adbffca8dee5475b394b877bb642da3ed1aff#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): seven functions.
   - look at: `"""The command prints the title of the page."""`
-- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/1a6219cd046dd65cc213112e246842eb872dde74/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1a6219cd046dd65cc213112e246842eb872dde74#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
+- [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/632adbffca8dee5475b394b877bb642da3ed1aff/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/632adbffca8dee5475b394b877bb642da3ed1aff#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
   - look at: `"""The language chooses the Wikipedia that is asked."""`
 
 ```bash
@@ -2076,7 +2162,7 @@ docstring.
 
 ### step-08.5 A site
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/078c22ccf3ca3790ee247c15d28e9b50c6c7d693) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/49e01b4ba130cbba887a160c8d845e4196897e8a) shows exactly what the move changes.
 
 smalldocs also makes a website from Markdown. The site is in `docs/`. It has a front page, `index.qmd`, and a
 reference page for each module. Each build writes the reference pages from the code, before it builds the site.
@@ -2086,7 +2172,7 @@ The move adds the front page, `docs/index.qmd`. A `.qmd` file is Markdown, with 
 that gives the title of the page. It also adds the settings of the site to `docs/_smalldocs.yml`.
 The settings are the type of the project, its output folder, the title, the sidebar, the theme and a table of
 contents on each page. `just docs` with no words builds the site. Take the move
-from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/078c22ccf3ca3790ee247c15d28e9b50c6c7d693), and read `docs/_smalldocs.yml`.
+from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/49e01b4ba130cbba887a160c8d845e4196897e8a), and read `docs/_smalldocs.yml`.
 
 The move changed these files:
 
@@ -2097,11 +2183,11 @@ The move changed these files:
   several lines.
 
 Files to read:
-- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/078c22ccf3ca3790ee247c15d28e9b50c6c7d693/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/078c22ccf3ca3790ee247c15d28e9b50c6c7d693#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the site. The sidebar lists the front page, then the reference pages.
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/49e01b4ba130cbba887a160c8d845e4196897e8a/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/49e01b4ba130cbba887a160c8d845e4196897e8a#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the site. The sidebar lists the front page, then the reference pages.
   - look at: `contents: api/*  # the reference pages, which each build makes from the code`
-- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/078c22ccf3ca3790ee247c15d28e9b50c6c7d693/docs/index.qmd): the front page, written by hand.
+- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/49e01b4ba130cbba887a160c8d845e4196897e8a/docs/index.qmd): the front page, written by hand.
   - look at: `Each build of the site makes the pages under Reference from the code.`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/078c22ccf3ca3790ee247c15d28e9b50c6c7d693/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/078c22ccf3ca3790ee247c15d28e9b50c6c7d693#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): with no words, `docs` builds the site.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/49e01b4ba130cbba887a160c8d845e4196897e8a/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/49e01b4ba130cbba887a160c8d845e4196897e8a#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): with no words, `docs` builds the site.
   - look at: `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
 
 ```bash
@@ -2114,11 +2200,39 @@ smalldocs prints `wrote 3 page(s) to docs/_site`. Open `docs/_site/index.html` i
 `random_page` is a link to its entry. The site and the reference pages are made by each build, and git ignores
 them.
 
-### step-08.6 The docs check in `just check`
+### step-08.6 The README names the tests and the docs
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a1942b5fc1668dac9c9e8b814b5d901076a204bc) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e1f81d1d14b883402dc65cc0129bf99a139c387b) shows exactly what the move changes.
 
-In the `justfile`, in `check`, run `just docs check` after the tests, and say so in the comment.
+The README gets `tests/` and `docs/` among the folders. It also says that `wikipedia.py` is the library and
+`console.py` the command. Take the README from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/e1f81d1d14b883402dc65cc0129bf99a139c387b). Or copy the rows below, in place of the `src/wikiapp/` row.
+
+```markdown
+| `src/wikiapp/` | The code. `wikipedia.py` is the library, `console.py` the `wikiapp` command |
+| `tests/` | The tests. `just test` runs them |
+| `docs/` | The docs site. smalldocs makes its reference from the code |
+```
+
+The move changed this file:
+
+- `README.md`: rows for `tests/` and `docs/`, and the `src/wikiapp/` row names the library and the command.
+
+Files to read:
+- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/e1f81d1d14b883402dc65cc0129bf99a139c387b/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/e1f81d1d14b883402dc65cc0129bf99a139c387b#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): the folders.
+  - look at: `| The docs site. smalldocs makes its reference from the code |`
+
+```bash
+grep -n -E 'tests/|docs/' README.md
+```
+
+`grep` prints the two new rows of the table.
+
+### step-08.7 The docs check in `just check`
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/86367b4256bbe5096403d613a77fd3f8da6ead58) shows exactly what the move changes.
+
+In the `justfile`, in `check`, run `just docs check` after the tests. Replace the comment above `check` with
+the first line below.
 
 ```just
 # Everything a commit must pass: format, lint, types, tests over the coverage floor, docs, configuration
@@ -2129,25 +2243,13 @@ In the `justfile`, in `check`, run `just docs check` after the tests, and say so
     just docs check
 ```
 
-The README gets `tests/` and `docs/` among the folders. It also says that `wikipedia.py` is the library and
-`console.py` the command. Take the README from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/a1942b5fc1668dac9c9e8b814b5d901076a204bc). Or copy the rows below, in place of the `src/wikiapp/` row.
+The move changed this file:
 
-```markdown
-| `src/wikiapp/` | The code. `wikipedia.py` is the library, `console.py` the `wikiapp` command |
-| `tests/` | The tests. `just test` runs them |
-| `docs/` | The docs site. smalldocs makes its reference from the code |
-```
-
-The move changed these files:
-
-- `justfile`: the docs check in `check`.
-- `README.md`: rows for `tests/` and `docs/`, and the `src/wikiapp/` row names the library and the command.
+- `justfile`: the docs check in `check`, and the comment.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/a1942b5fc1668dac9c9e8b814b5d901076a204bc/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/a1942b5fc1668dac9c9e8b814b5d901076a204bc#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in `check`.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/86367b4256bbe5096403d613a77fd3f8da6ead58/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/86367b4256bbe5096403d613a77fd3f8da6ead58#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in `check`.
   - look at: `just docs check`
-- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/a1942b5fc1668dac9c9e8b814b5d901076a204bc/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/a1942b5fc1668dac9c9e8b814b5d901076a204bc#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): the folders.
-  - look at: `| The docs site. smalldocs makes its reference from the code |`
 
 ```bash
 just check
@@ -2165,12 +2267,13 @@ just setup
 ```
 
 The code that asks Wikipedia becomes a package of its own, `wikirandom`, in the same repository. The first move
-makes an empty package. The next moves add the code, make the app use the library, and update the docs. Any other
+makes an empty package. The next moves add the code, and make the app use the library. The last two moves update the docs and the
+README. Any other
 program could then install wikirandom without wikiapp and click.
 
 ### step-09.1 An empty library, wikirandom
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b787509a67035755bc2f5bb06cddb162b7dfa4ba) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/677e1d1f52c3f1c57b4ec0914618f43ddf62123c) shows exactly what the move changes.
 
 uv can make a second package inside a project. The two packages then form a *workspace*, which has one lockfile
 and one `.venv` for both.
@@ -2220,9 +2323,9 @@ The move changed these files:
 - `uv.lock`: the second package.
 
 Files to read:
-- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b787509a67035755bc2f5bb06cddb162b7dfa4ba/packages/wikirandom/pyproject.toml): a package of its own.
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/677e1d1f52c3f1c57b4ec0914618f43ddf62123c/packages/wikirandom/pyproject.toml): a package of its own.
   - look at: `name = "wikirandom"`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b787509a67035755bc2f5bb06cddb162b7dfa4ba/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b787509a67035755bc2f5bb06cddb162b7dfa4ba#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the workspace.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/677e1d1f52c3f1c57b4ec0914618f43ddf62123c/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/677e1d1f52c3f1c57b4ec0914618f43ddf62123c#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the workspace.
   - look at: `"packages/wikirandom",`
 
 ```bash
@@ -2235,7 +2338,7 @@ and runs the command there. The app does not depend on the library yet, so a pla
 
 ### step-09.2 The code goes into wikirandom
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1322f96144fa231907e8511b11b3200d41b5356e) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7) shows exactly what the move changes.
 
 The library needs requests and pydantic.
 
@@ -2261,9 +2364,9 @@ The move changed these files:
 - `uv.lock`: the library's dependencies.
 
 Files to read:
-- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/1322f96144fa231907e8511b11b3200d41b5356e/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1322f96144fa231907e8511b11b3200d41b5356e#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the library.
+- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the library.
   - look at: `def random_page(`
-- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/1322f96144fa231907e8511b11b3200d41b5356e/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/1322f96144fa231907e8511b11b3200d41b5356e#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): its dependencies.
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/2b9c4a770d2ebe370f77b3dd93bc3f02b0c27bf7#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): its dependencies.
   - look at: `"pydantic>=2.14.0",`
 
 ```bash
@@ -2275,7 +2378,7 @@ library yet.
 
 ### step-09.3 The app uses wikirandom
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c174b50669218b5582b8df1e74d1b511530a9174) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897) shows exactly what the move changes.
 
 Make the library a dependency of the app. Take requests and pydantic out of the app's dependencies, because the
 app no longer imports them.
@@ -2334,11 +2437,11 @@ The move changed these files:
 - `tests/test_wikirandom.py`: renamed from `tests/test_wikipedia.py`, and it tests wikirandom.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c174b50669218b5582b8df1e74d1b511530a9174/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/c174b50669218b5582b8df1e74d1b511530a9174#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app depends on the library.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/517abf247f7a42038536d843fe7585f745d57897/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app depends on the library.
   - look at: `wikirandom = { workspace = true }`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/c174b50669218b5582b8df1e74d1b511530a9174/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/c174b50669218b5582b8df1e74d1b511530a9174#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): one import.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/517abf247f7a42038536d843fe7585f745d57897/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/517abf247f7a42038536d843fe7585f745d57897#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): one import.
   - look at: `from wikirandom import WikipediaError, random_page`
-- [`tests/test_wikirandom.py`](https://github.com/rahuldave/smallwikiapp/blob/c174b50669218b5582b8df1e74d1b511530a9174/tests/test_wikirandom.py): the same three tests.
+- [`tests/test_wikirandom.py`](https://github.com/rahuldave/smallwikiapp/blob/517abf247f7a42038536d843fe7585f745d57897/tests/test_wikirandom.py): the same three tests.
   - look at: `wikirandom.random_page(language="es")`
 
 ```bash
@@ -2350,42 +2453,59 @@ just docs check
 The tests print `7 passed, 2 deselected`, and the coverage table lists
 `packages/wikirandom/src/wikirandom/__init__.py`. `uv tree` shows that wikiapp needs click and wikirandom, and
 that wikirandom needs requests and pydantic. `just docs check` still counts the app and the tests alone, 12 of 12. The next
-move adds the library.
+move adds the library. The README still names `wikipedia.py`, and the front page of the site
+`wikiapp.wikipedia`, until step-09.5.
 
-### step-09.4 The docs name both packages
+### step-09.4 The docs check counts the library
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c) shows exactly what the move changes.
 
-`docs/_smalldocs.yml` named one package. It now names both, the app and the library. Change the line
-`packages:` in the section `api`.
+Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
+`docs/_smalldocs.yml` names only `wikiapp`. Change the line `packages:` in the section `api`, so that it names
+both.
 
 ```yaml
   packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
 ```
 
+The move changed this file:
+
+- `docs/_smalldocs.yml`: two packages.
+
+Files to read:
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/426d87e7d66b979bbc8b1d6067583395ab08e01c/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/426d87e7d66b979bbc8b1d6067583395ab08e01c#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+  - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+```bash
+just docs check
+```
+
+The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
+
+### step-09.5 The front page and the README name both packages
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309) shows exactly what the move changes.
+
 The front page of the site, `docs/index.qmd`, and the README's table of folders now say that the repository
-contains two packages. Take both files from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd).
+contains two packages. Take both files from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309).
 
 The move changed these files:
 
-- `docs/_smalldocs.yml`: two packages.
 - `docs/index.qmd`: two packages, the library and the app.
 - `README.md`: a row for the library, and the `src/wikiapp/` row says the app.
 
 Files to read:
-- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/63319ec56a56ac471c74c758524bc2542b604ecd/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
-  - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
-- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/63319ec56a56ac471c74c758524bc2542b604ecd/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
+- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
   - look at: `The code has two packages, in one repository:`
-- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/63319ec56a56ac471c74c758524bc2542b604ecd/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/63319ec56a56ac471c74c758524bc2542b604ecd#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): one row more, and the `src/wikiapp/` row says the app.
+- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/43da298fbb7d16f7cb11bd3e3406fe8631a3e309/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/43da298fbb7d16f7cb11bd3e3406fe8631a3e309#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): one row more, and the `src/wikiapp/` row says the app.
   - look at: `| The library the app uses: a random page of Wikipedia. A package of its own |`
 
 ```bash
-just docs check
+just docs
 just check
 ```
 
-The docs check prints `wikirandom 3 of 3`, and `15 of 15` in all.
+`just docs` writes 3 pages, and the front page names both packages. `just check` passes.
 
 ## step-10 Build
 
@@ -2396,12 +2516,13 @@ just setup
 ```
 
 The moves of this step build each package into a wheel, the file that pip and uv install. Then the app says
-which versions of the library it accepts. Both packages say their licence and where their source is. Last, the
+which versions of the library it accepts, and `just lint-config` checks the library's `pyproject.toml` too.
+Both packages say their licence and where their source is. Last, the
 library's User-Agent says the version that is installed.
 
 ### step-10.1 The recipe `build`
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4c4f8ddccf16dcedf9c7d26b28ad0366a1c9d92b) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4903a582a9fae628e6544b2182f77f8caf386dbe) shows exactly what the move changes.
 
 `uv build --all-packages` builds every package of the workspace into `dist/`, which `.gitignore` lists. Add a
 recipe for it at the end of the `justfile`.
@@ -2420,7 +2541,7 @@ The move changed this file:
 - `justfile`: the recipe `build`.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4c4f8ddccf16dcedf9c7d26b28ad0366a1c9d92b/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4c4f8ddccf16dcedf9c7d26b28ad0366a1c9d92b#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4903a582a9fae628e6544b2182f77f8caf386dbe/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4903a582a9fae628e6544b2182f77f8caf386dbe#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `build *args:`
 
 ```bash
@@ -2439,7 +2560,7 @@ first.
 
 ### step-10.2 The app needs wikirandom 0.1
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9bc32c320abdf3441a2a288baceeb18d11e09c08) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/663682b805962a82b4c0e8d18ede21e3cd5188d9) shows exactly what the move changes.
 
 The app's wheel says that the app needs `wikirandom`, of any version. An install from PyPI would take any package
 that anyone publishes under that name. Give the app the range of versions that it was built and tested with.
@@ -2456,7 +2577,7 @@ The move changed this file:
 - `pyproject.toml`: a version range on wikirandom.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/9bc32c320abdf3441a2a288baceeb18d11e09c08/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/9bc32c320abdf3441a2a288baceeb18d11e09c08#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/663682b805962a82b4c0e8d18ede21e3cd5188d9/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/663682b805962a82b4c0e8d18ede21e3cd5188d9#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `"wikirandom>=0.1.0,<0.2",`
 
 ```bash
@@ -2466,9 +2587,34 @@ unzip -p dist/wikiapp-0.1.0-py3-none-any.whl wikiapp-0.1.0.dist-info/METADATA
 
 The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 
-### step-10.3 A licence and a repository link for both
+### step-10.3 lint-config checks both pyproject.toml files
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9805a003102ee0eb3b4e4cebd589b368cb3bed9f) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5e6110fbb134015850291ff3558eed9d1951d4c6) shows exactly what the move changes.
+
+Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. In
+the `justfile`, in `lint-config`, replace the line `uv run validate-pyproject pyproject.toml` with the line below.
+
+```just
+    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
+```
+
+The move changed this file:
+
+- `justfile`: `lint-config` checks both files.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5e6110fbb134015850291ff3558eed9d1951d4c6/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/5e6110fbb134015850291ff3558eed9d1951d4c6#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
+  - look at: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+```bash
+just lint-config
+```
+
+`just lint-config` prints `Valid file` twice, once for each file.
+
+### step-10.4 A licence and a repository link for both
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b4ecef0371b625e151bdbbbaa89187074347c2a8) shows exactly what the move changes.
 
 The library's wheel has no licence, and neither package says where its source is. Copy the project's `LICENSE`
 into `packages/wikirandom/`. In `packages/wikirandom/pyproject.toml`, under `readme`, give the licence and the
@@ -2485,7 +2631,8 @@ authors = [{ name = "Rahul Dave" }]
 ```
 
 Add the repository to both `pyproject.toml` files. PyPI shows it on the package's page. In the library's file,
-put it above `[build-system]`. In the app's file, put it under `[project.scripts]`.
+put it after the list `dependencies`, so that one blank line comes before it and one after it. In the app's file, put it after the line
+`wikiapp = "wikiapp.console:main"` of `[project.scripts]`.
 
 ```toml
 
@@ -2493,41 +2640,31 @@ put it above `[build-system]`. In the app's file, put it under `[project.scripts
 Repository = "https://github.com/rahuldave/smallwikiapp"
 ```
 
-In the `justfile`, make `lint-config` check both files.
-
-```just
-    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
-```
-
 The move changed these files:
 
 - `packages/wikirandom/LICENSE`: new. It has the same licence as the app.
 - `packages/wikirandom/pyproject.toml`: the licence, the author, the repository.
 - `pyproject.toml`: the repository.
-- `justfile`: `lint-config` checks both.
 
 Files to read:
-- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/9805a003102ee0eb3b4e4cebd589b368cb3bed9f/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/9805a003102ee0eb3b4e4cebd589b368cb3bed9f#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): what PyPI would show.
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b4ecef0371b625e151bdbbbaa89187074347c2a8/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b4ecef0371b625e151bdbbbaa89187074347c2a8#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): what PyPI would show.
   - look at: `license = "Apache-2.0"`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/9805a003102ee0eb3b4e4cebd589b368cb3bed9f/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/9805a003102ee0eb3b4e4cebd589b368cb3bed9f#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
-  - look at: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/9805a003102ee0eb3b4e4cebd589b368cb3bed9f/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/9805a003102ee0eb3b4e4cebd589b368cb3bed9f#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app's repository.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b4ecef0371b625e151bdbbbaa89187074347c2a8/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b4ecef0371b625e151bdbbbaa89187074347c2a8#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app's repository.
   - look at: `[project.urls]`
-- [`packages/wikirandom/LICENSE`](https://github.com/rahuldave/smallwikiapp/blob/9805a003102ee0eb3b4e4cebd589b368cb3bed9f/packages/wikirandom/LICENSE): the same Apache-2.0 licence as the app's.
+- [`packages/wikirandom/LICENSE`](https://github.com/rahuldave/smallwikiapp/blob/b4ecef0371b625e151bdbbbaa89187074347c2a8/packages/wikirandom/LICENSE): the same Apache-2.0 licence as the app's.
   - look at: `Apache License`
 
 ```bash
-just lint-config
 just build
 unzip -p dist/wikirandom-0.1.0-py3-none-any.whl wikirandom-0.1.0.dist-info/METADATA
 ```
 
-`just lint-config` prints `Valid file` twice. The library's metadata has `License-Expression: Apache-2.0`,
+The library's metadata has `License-Expression: Apache-2.0`,
 `License-File: LICENSE` and `Project-URL: Repository, https://github.com/rahuldave/smallwikiapp`.
 
-### step-10.4 The User-Agent says the installed version
+### step-10.5 The User-Agent says the installed version
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ccd7f161245360637229fb5203e4d8edfa623b7d) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bf2c5d6a7fc39320ac0a9cda0ef3343d35364ac8) shows exactly what the move changes.
 
 The User-Agent says `0.1.0`, written by hand. It would still say `0.1.0` after a change of the version in
 `packages/wikirandom/pyproject.toml`. In `packages/wikirandom/src/wikirandom/__init__.py`, read the version from
@@ -2549,7 +2686,7 @@ The move changed this file:
 - `packages/wikirandom/src/wikirandom/__init__.py`: the package reads its version once, when Python imports it.
 
 Files to read:
-- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/ccd7f161245360637229fb5203e4d8edfa623b7d/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ccd7f161245360637229fb5203e4d8edfa623b7d#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the version now comes from one place, pyproject.toml.
+- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/bf2c5d6a7fc39320ac0a9cda0ef3343d35364ac8/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/bf2c5d6a7fc39320ac0a9cda0ef3343d35364ac8#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the version now comes from one place, pyproject.toml.
   - look at: `VERSION = importlib.metadata.version("wikirandom")`
 
 ```bash

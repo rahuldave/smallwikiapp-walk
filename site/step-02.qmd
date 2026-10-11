@@ -8,8 +8,8 @@ title: "step-02: Tests, with mocks"
 just setup
 ```
 
-The moves of this step add pytest and a first test, a recipe for the tests, and a mock in place of Wikipedia.
-Then they add four more tests, and coverage on every run. One test asks the real Wikipedia, so the tests need
+The moves of this step add pytest and a first test, a recipe for the tests, and a fixture. Next comes a mock in
+place of Wikipedia, with a test of the title. Then they add three more tests, and coverage on every run. One test asks the real Wikipedia, so the tests need
 the network until step 06.
 
 ## step-02.1 pytest and the first test
@@ -99,9 +99,46 @@ just test
 
 The result is the same, `1 passed`.
 
-## step-02.3 A mock in place of Wikipedia
+## step-02.3 The runner as a fixture
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d89d19049d5d51e8bb53502187cd2b9716377974) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534) shows exactly what the move changes.
+
+Each test of the command needs a `CliRunner`. A fixture makes one for every test that asks for it. A fixture is a
+function that pytest calls for each test that names it as a parameter. Replace `tests/test_console.py` with the
+code below.
+
+```python
+import click.testing
+import pytest
+
+@pytest.fixture
+def runner():
+    return click.testing.CliRunner()
+
+from wikiapp import console
+
+def test_main_succeeds(runner):
+    result = runner.invoke(console.main)
+    assert result.exit_code == 0
+```
+
+The move changed this file:
+
+- `tests/test_console.py`: the fixture `runner`, and `test_main_succeeds` takes the runner from it.
+
+Files to read:
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/cd31b8a082b8c3ecf168413a21e06b9888480534/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture, and the test that names it.
+  - look at: `def test_main_succeeds(runner):`
+
+```bash
+just test
+```
+
+The test passes as before, with `1 passed`. It still asks the real Wikipedia.
+
+## step-02.4 A mock in place of Wikipedia
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5) shows exactly what the move changes.
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page.
 pytest-mock can replace `requests.get` with a mock for the length of one test.
@@ -140,21 +177,20 @@ def test_main_succeeds(runner):
     assert result.exit_code == 0
 ```
 
-A fixture is a function that pytest calls for each test that names it as a parameter. `mocker` is the fixture
-of pytest-mock. `mocker.patch("requests.get")` replaces the function, and puts it back after the test. The long
+`mocker` is the fixture of pytest-mock. `mocker.patch("requests.get")` replaces the function, and puts it back after the test. The long
 line sets what the mock returns when the code calls `response.json()` inside the `with` block. The mock returns
 a page with the title Lorem Ipsum.
 
 The move changed these files:
 
-- `tests/test_console.py`: two fixtures, and a test of the title.
+- `tests/test_console.py`: the fixture of the mock, and a test of the title.
 - `pyproject.toml`: pytest-mock in the group `test`.
 - `uv.lock`: the exact version of pytest-mock.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/d89d19049d5d51e8bb53502187cd2b9716377974/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d89d19049d5d51e8bb53502187cd2b9716377974#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixtures and the new test. `test_main_succeeds` takes the runner from its fixture.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/2aaab1063eca2f40fbc281e2e038c18419ca88c5/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture of the mock, and the new test.
   - look at: `mock = mocker.patch("requests.get")`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/d89d19049d5d51e8bb53502187cd2b9716377974/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/d89d19049d5d51e8bb53502187cd2b9716377974#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pytest-mock in the group `test`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/2aaab1063eca2f40fbc281e2e038c18419ca88c5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pytest-mock in the group `test`.
   - look at: `"pytest-mock>=3.16.0",`
 
 ```bash
@@ -163,9 +199,9 @@ just test -k title -v
 
 The output shows `test_main_prints_title PASSED`, without the network.
 
-## step-02.4 Tests of the request
+## step-02.5 Tests of the request
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/55dc8d7a868a50c8c4cb6623780320900a0b332d) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f) shows exactly what the move changes.
 
 A mock keeps a record of each call to it. Add two tests to `tests/test_console.py`, after `test_main_prints_title`.
 
@@ -187,7 +223,7 @@ The move changed this file:
 - `tests/test_console.py`: two tests of the request.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/55dc8d7a868a50c8c4cb6623780320900a0b332d/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/55dc8d7a868a50c8c4cb6623780320900a0b332d#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the code makes the request, to the right address.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the code makes the request, to the right address.
   - look at: `assert mock_requests_get.called`
 
 ```bash
@@ -196,9 +232,9 @@ just test
 
 The result is `4 passed`.
 
-## step-02.5 A test of a failed request
+## step-02.6 A test of a failed request
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/dafaaa5d658ad97bdad2feb6be772ae374596beb) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/16b52dc4f9ec6e997b6954efde180ba6d7f521c7) shows exactly what the move changes.
 
 The mock can raise an exception as well as return a value. If `side_effect` is an exception, a call to the
 mock raises it. Add the test below before `test_main_succeeds`.
@@ -215,7 +251,7 @@ The move changed this file:
 - `tests/test_console.py`: a test that a failed request ends the command with exit code 1.
 
 Files to read:
-- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/dafaaa5d658ad97bdad2feb6be772ae374596beb/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/dafaaa5d658ad97bdad2feb6be772ae374596beb#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the mock raises.
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/16b52dc4f9ec6e997b6954efde180ba6d7f521c7/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/16b52dc4f9ec6e997b6954efde180ba6d7f521c7#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the mock raises.
   - look at: `mock_requests_get.side_effect = Exception("Boom")`
 
 ```bash
@@ -224,9 +260,9 @@ just test
 
 The result is `5 passed`.
 
-## step-02.6 Coverage
+## step-02.7 Coverage
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/771c68643276dd8ee526f1d699f0d59b14004fd5) shows exactly what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef) shows exactly what the move changes.
 
 pytest-cov measures which lines of the code the tests run.
 
@@ -253,7 +289,7 @@ The move changed these files:
 - `uv.lock`: pytest-cov and coverage.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/771c68643276dd8ee526f1d699f0d59b14004fd5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/771c68643276dd8ee526f1d699f0d59b14004fd5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): coverage on every run.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/bed3c6029878c71bef05322712c388dfb8c058ef/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): coverage on every run.
   - look at: `addopts = "--cov=wikiapp --cov-report=term-missing"`
 
 ```bash

@@ -34,10 +34,11 @@ Each link opens its section of TUTORIAL.md.
 - [step-02](walks/tutorial/TUTORIAL.md#step-02-tests-with-mocks) **Tests, with mocks**
   - [step-02.1](walks/tutorial/TUTORIAL.md#step-021-pytest-and-the-first-test) pytest and the first test
   - [step-02.2](walks/tutorial/TUTORIAL.md#step-022-the-recipe-just-test) The recipe `just test`
-  - [step-02.3](walks/tutorial/TUTORIAL.md#step-023-a-mock-in-place-of-wikipedia) A mock in place of Wikipedia
-  - [step-02.4](walks/tutorial/TUTORIAL.md#step-024-tests-of-the-request) Tests of the request
-  - [step-02.5](walks/tutorial/TUTORIAL.md#step-025-a-test-of-a-failed-request) A test of a failed request
-  - [step-02.6](walks/tutorial/TUTORIAL.md#step-026-coverage) Coverage
+  - [step-02.3](walks/tutorial/TUTORIAL.md#step-023-the-runner-as-a-fixture) The runner as a fixture
+  - [step-02.4](walks/tutorial/TUTORIAL.md#step-024-a-mock-in-place-of-wikipedia) A mock in place of Wikipedia
+  - [step-02.5](walks/tutorial/TUTORIAL.md#step-025-tests-of-the-request) Tests of the request
+  - [step-02.6](walks/tutorial/TUTORIAL.md#step-026-a-test-of-a-failed-request) A test of a failed request
+  - [step-02.7](walks/tutorial/TUTORIAL.md#step-027-coverage) Coverage
 - [step-03](walks/tutorial/TUTORIAL.md#step-03-a-library-and-an-app) **A library and an app**
   - [step-03.1](walks/tutorial/TUTORIAL.md#step-031-random_page-moves-to-wikipediapy) random_page moves to wikipedia.py
   - [step-03.2](walks/tutorial/TUTORIAL.md#step-032-the-mock-moves-to-conftestpy) The mock moves to conftest.py
@@ -52,8 +53,10 @@ Each link opens its section of TUTORIAL.md.
   - [step-04.4](walks/tutorial/TUTORIAL.md#step-044-the-linter-sorts-the-imports) The linter sorts the imports
   - [step-04.5](walks/tutorial/TUTORIAL.md#step-045-the-tests-imports-at-the-top-and-no-unused-variables) The tests' imports at the top, and no unused variables
   - [step-04.6](walks/tutorial/TUTORIAL.md#step-046-a-timeout) A timeout
-  - [step-04.7](walks/tutorial/TUTORIAL.md#step-047-the-recipes-lint-config-and-check) The recipes lint-config and check
-  - [step-04.8](walks/tutorial/TUTORIAL.md#step-048-a-git-hook) A git hook
+  - [step-04.7](walks/tutorial/TUTORIAL.md#step-047-the-recipe-lint-config) The recipe lint-config
+  - [step-04.8](walks/tutorial/TUTORIAL.md#step-048-a-locked-lockfile) A locked lockfile
+  - [step-04.9](walks/tutorial/TUTORIAL.md#step-049-the-recipe-check) The recipe check
+  - [step-04.10](walks/tutorial/TUTORIAL.md#step-0410-a-git-hook) A git hook
 - [step-05](walks/tutorial/TUTORIAL.md#step-05-types) **Types**
   - [step-05.1](walks/tutorial/TUTORIAL.md#step-051-ty-and-the-recipe-types) ty, and the recipe types
   - [step-05.2](walks/tutorial/TUTORIAL.md#step-052-the-version-of-wikiapp-by-name) The version of "wikiapp", by name
@@ -77,17 +80,20 @@ Each link opens its section of TUTORIAL.md.
   - [step-08.3](walks/tutorial/TUTORIAL.md#step-083-the-command-documented) The command documented
   - [step-08.4](walks/tutorial/TUTORIAL.md#step-084-the-tests-documented) The tests documented
   - [step-08.5](walks/tutorial/TUTORIAL.md#step-085-a-site) A site
-  - [step-08.6](walks/tutorial/TUTORIAL.md#step-086-the-docs-check-in-just-check) The docs check in `just check`
+  - [step-08.6](walks/tutorial/TUTORIAL.md#step-086-the-readme-names-the-tests-and-the-docs) The README names the tests and the docs
+  - [step-08.7](walks/tutorial/TUTORIAL.md#step-087-the-docs-check-in-just-check) The docs check in `just check`
 - [step-09](walks/tutorial/TUTORIAL.md#step-09-the-library-as-a-package) **The library as a package**
   - [step-09.1](walks/tutorial/TUTORIAL.md#step-091-an-empty-library-wikirandom) An empty library, wikirandom
   - [step-09.2](walks/tutorial/TUTORIAL.md#step-092-the-code-goes-into-wikirandom) The code goes into wikirandom
   - [step-09.3](walks/tutorial/TUTORIAL.md#step-093-the-app-uses-wikirandom) The app uses wikirandom
-  - [step-09.4](walks/tutorial/TUTORIAL.md#step-094-the-docs-name-both-packages) The docs name both packages
+  - [step-09.4](walks/tutorial/TUTORIAL.md#step-094-the-docs-check-counts-the-library) The docs check counts the library
+  - [step-09.5](walks/tutorial/TUTORIAL.md#step-095-the-front-page-and-the-readme-name-both-packages) The front page and the README name both packages
 - [step-10](walks/tutorial/TUTORIAL.md#step-10-build) **Build**
   - [step-10.1](walks/tutorial/TUTORIAL.md#step-101-the-recipe-build) The recipe `build`
   - [step-10.2](walks/tutorial/TUTORIAL.md#step-102-the-app-needs-wikirandom-01) The app needs wikirandom 0.1
-  - [step-10.3](walks/tutorial/TUTORIAL.md#step-103-a-licence-and-a-repository-link-for-both) A licence and a repository link for both
-  - [step-10.4](walks/tutorial/TUTORIAL.md#step-104-the-user-agent-says-the-installed-version) The User-Agent says the installed version
+  - [step-10.3](walks/tutorial/TUTORIAL.md#step-103-lint-config-checks-both-pyprojecttoml-files) lint-config checks both pyproject.toml files
+  - [step-10.4](walks/tutorial/TUTORIAL.md#step-104-a-licence-and-a-repository-link-for-both) A licence and a repository link for both
+  - [step-10.5](walks/tutorial/TUTORIAL.md#step-105-the-user-agent-says-the-installed-version) The User-Agent says the installed version
 
 ## Two ways to take it
 
