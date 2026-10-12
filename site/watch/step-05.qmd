@@ -2,7 +2,7 @@
 title: "step-05: Types"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Watch mode. [The same step in do mode](../do/step-05.qmd).
 
@@ -36,6 +36,37 @@ Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/68033d47be7dc34e8355c6812eede65f0eedcc7e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/68033d47be7dc34e8355c6812eede65f0eedcc7e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): ty in the group `lint`.
   - look at: `"ty>=0.0.86",`
 
+The change of `justfile`:
+
+```diff
+@@ -45,6 +45,12 @@ fmt *args:
+ lint *args:
+     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
+ 
++# Check the types of every function call, with ty. Extra arguments go to ty: just types --help
++[group('quality')]
++[no-exit-message]
++types *args:
++    {{ if args == "help" { "just help types" } else { 'uv run ty check "$@"' } }}
++
+ # Check the configuration: pyproject.toml, the lockfile, and this justfile
+ [group('quality')]
+ [no-exit-message]
+```
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -25,6 +25,7 @@ dev = [{ include-group = "test" }, { include-group = "lint" }]
+ lint = [
+     "pre-commit>=4.6.2",
+     "ruff>=0.17.0",
++    "ty>=0.0.86",
+     "validate-pyproject>=0.26",
+ ]
+ 
+```
+
 ```bash
 uv run ty check
 just --show types
@@ -60,6 +91,16 @@ Files to read:
 - [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/2c744eaef504d1adcc7fba0938360d140ef49978/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2c744eaef504d1adcc7fba0938360d140ef49978#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): a string that is never None.
   - look at: `__version__ = importlib.metadata.version("wikiapp")`
 
+The change of `src/wikiapp/__init__.py`:
+
+```diff
+@@ -1,3 +1,3 @@
+ import importlib.metadata
+ 
+-__version__ = importlib.metadata.version(__name__ or __package__)
++__version__ = importlib.metadata.version("wikiapp")
+```
+
 ```bash
 just types
 ```
@@ -81,6 +122,19 @@ The move changed this file:
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/50af6273ec0db467642d539935422d0f4fc50991/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/50af6273ec0db467642d539935422d0f4fc50991#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `"ANN", # annotations: every parameter and every return value has a type`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -61,6 +61,7 @@ select = [
+     "SIM", # simplify: code that can be said in fewer words
+     "S",   # bandit: security, from `assert` in production code to a request with no timeout
+     "N",   # pep8-naming: classes CamelCase, functions and variables lower_case
++    "ANN", # annotations: every parameter and every return value has a type
+ ]
+ 
+ [tool.ruff.lint.per-file-ignores]
+```
 
 ```bash
 just lint --statistics
@@ -110,6 +164,40 @@ Files to read:
   - look at: `def random_page(language: str = "en") -> dict[str, Any]:`
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/48523b8748a8bd60f80b73e1b2b2322eb616325b/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/48523b8748a8bd60f80b73e1b2b2322eb616325b#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the parameter.
   - look at: `def main(language: str) -> None:`
+
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++from typing import Any
++
+ import requests
+ 
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+@@ -8,7 +10,7 @@ class WikipediaError(Exception):
+     """Wikipedia could not give a page."""
+ 
+ 
+-def random_page(language="en"):
++def random_page(language: str = "en") -> dict[str, Any]:
+     """Get a random page from Wikipedia."""
+     try:
+         with requests.get(
+```
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -16,7 +16,7 @@ from wikiapp.wikipedia import WikipediaError, random_page
+     show_default=True,
+ )
+ @click.version_option(version=__version__)
+-def main(language) -> None:
++def main(language: str) -> None:
+     """Print the title and summary of a random Wikipedia page."""
+     try:
+         data = random_page(language=language)
+```
 
 ```bash
 just lint --statistics
@@ -147,6 +235,101 @@ Files to read:
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8f6e8938925501f9c1bc198818fbd8fab7b647ff/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8f6e8938925501f9c1bc198818fbd8fab7b647ff#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): one test.
   - look at: `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
+The change of `tests/conftest.py`:
+
+```diff
+@@ -1,8 +1,11 @@
++from unittest.mock import Mock
++
+ import pytest
++from pytest_mock import MockerFixture
+ 
+ 
+ @pytest.fixture
+-def mock_requests_get(mocker):
++def mock_requests_get(mocker: MockerFixture) -> Mock:
+     mock = mocker.patch("requests.get")
+     mock.return_value.__enter__.return_value.json.return_value = {
+         "title": "Lorem Ipsum",
+```
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -1,44 +1,46 @@
+-import click.testing
++from unittest.mock import Mock
++
+ import pytest
+ import requests
++from click.testing import CliRunner
+ 
+ from wikiapp import console
+ 
+ 
+ @pytest.fixture
+-def runner():
+-    return click.testing.CliRunner()
++def runner() -> CliRunner:
++    return CliRunner()
+ 
+ 
+-def test_main_prints_title(runner, mock_requests_get):
++def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
+ 
+-def test_main_invokes_requests_get(runner, mock_requests_get):
++def test_main_invokes_requests_get(runner: CliRunner, mock_requests_get: Mock) -> None:
+     runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
+ 
+-def test_main_uses_correct_url(runner, mock_requests_get):
++def test_main_uses_correct_url(runner: CliRunner, mock_requests_get: Mock) -> None:
+     runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == (
+         "https://en.wikipedia.org/api/rest_v1/page/random/summary",
+     )
+ 
+ 
+-def test_main_fails_on_request_error(runner, mock_requests_get):
++def test_main_fails_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
+     mock_requests_get.side_effect = Exception("Boom")
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
+ 
+-def test_main_prints_message_on_request_error(runner, mock_requests_get):
++def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
+     mock_requests_get.side_effect = requests.RequestException
+     result = runner.invoke(console.main)
+     assert "Error" in result.output
+ 
+ 
+-def test_main_succeeds(runner):
++def test_main_succeeds(runner: CliRunner) -> None:
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -1,7 +1,9 @@
++from unittest.mock import Mock
++
+ from wikiapp import wikipedia
+ 
+ 
+-def test_random_page_uses_given_language(mock_requests_get):
++def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
+```
+
 ```bash
 just lint
 just types
@@ -167,6 +350,27 @@ The move changed this file:
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/41990df7638f0964c66bf4e4433ffc4f5b6a026d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/41990df7638f0964c66bf4e4433ffc4f5b6a026d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in check.
   - look at: `just types`
+
+The change of `justfile`:
+
+```diff
+@@ -62,7 +62,7 @@ lint-config *args:
+     uv lock --check
+     just --fmt --check --unstable
+ 
+-# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
++# Everything a commit must pass: format, lint, types, the tests over the coverage floor, the configuration
+ [group('quality')]
+ [no-exit-message]
+ check *args:
+@@ -71,5 +71,6 @@ check *args:
+     if [ "$*" = help ]; then just help check; exit 0; fi
+     just fmt --check
+     just lint
++    just types
+     just test -q --cov-fail-under=90
+     just lint-config
+```
 
 ```bash
 just check

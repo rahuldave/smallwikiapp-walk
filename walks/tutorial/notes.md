@@ -2909,4 +2909,3 @@ $ uv run python -c "import wikirandom; print(wikirandom.USER_AGENT)"
 $ just check
 
 The first command prints `wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)`, and `just check` passes.
-

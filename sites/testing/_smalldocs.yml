@@ -1,4 +1,4 @@
-# Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again.
+# Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again.
 project:
   type: website
   output-dir: _site

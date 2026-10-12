@@ -2,7 +2,7 @@
 title: "step-08: Docs from the code"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Watch mode. [The same step in do mode](../do/step-08.qmd).
 
@@ -66,6 +66,38 @@ Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/91672a67fa32e65564ae2fe7179d7e53e5923371/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/91672a67fa32e65564ae2fe7179d7e53e5923371#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `docs *args:`
 
+The change of `pyproject.toml`:
+
+```diff
+@@ -22,7 +22,10 @@ test = [
+     "pytest-cov>=7.1.0",
+     "pytest-mock>=3.16.0",
+ ]
+-dev = [{ include-group = "test" }, { include-group = "lint" }]
++dev = [{ include-group = "test" }, { include-group = "lint" }, { include-group = "docs" }]
++docs = [
++    "smalldocs>=0.1.3",
++]
+ lint = [
+     "pre-commit>=4.6.2",
+     "ruff>=0.17.0",
+```
+
+The change of `justfile`:
+
+```diff
+@@ -74,3 +74,9 @@ check *args:
+     just types
+     just test -q --cov-fail-under=90
+     just lint-config
++
++# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
++[group('docs')]
++[no-exit-message]
++docs *args:
++    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
+```
+
 ```bash
 uv run smalldocs api module wikipedia --dir docs
 uv run smalldocs api check --dir docs
@@ -102,6 +134,40 @@ Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e76be496f0f78f882605ca4b8a12eedf0b5b1ca9/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e76be496f0f78f882605ca4b8a12eedf0b5b1ca9#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the comments are the documentation.
   - look at: `) -> Page:  # A page chosen at random`
 
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""Wikipedia's REST API: a random page."""
++
+ import re
+ 
+ import requests
+@@ -15,12 +17,18 @@ class WikipediaError(Exception):
+ class Page(BaseModel):
+     """A page of Wikipedia: its title and the summary of its text."""
+ 
+-    title: str
+-    extract: str
++    title: str  # The title of the page
++    extract: str  # The summary: the first paragraph of the page, as plain text
++
+ 
++def random_page(
++    language: str = "en",  # The language of the Wikipedia to ask, as its code: en, fr, es
++) -> Page:  # A page chosen at random
++    """Get a random page from Wikipedia.
+ 
+-def random_page(language: str = "en") -> Page:
+-    """Get a random page from Wikipedia."""
++    Raises WikipediaError when the language is not a language code, when the request fails, or
++    when the answer is not a page.
++    """
+     if not LANGUAGE.fullmatch(language):
+         raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
+     try:
+```
+
 ```bash
 just docs module wikipedia
 ```
@@ -130,6 +196,39 @@ The move changed these files:
 Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the docment, the docstring and the help.
   - look at: `language: str,  # The language of the Wikipedia to ask, from --language`
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""The wikiapp command."""
++
+ import textwrap
+ 
+ import click
+@@ -11,13 +13,18 @@ from wikiapp.wikipedia import WikipediaError, random_page
+     "--language",
+     "-l",
+     default="en",
+-    help="Gets random page from Wikipedia in given language",
++    help="The language of the Wikipedia to ask, as its code: en, fr, es",
+     metavar="LANG",
+     show_default=True,
+ )
+ @click.version_option(version=__version__)
+-def main(language: str) -> None:
+-    """Print the title and summary of a random Wikipedia page."""
++def main(
++    language: str,  # The language of the Wikipedia to ask, from --language
++) -> None:
++    """Print the title and summary of a random Wikipedia page, in the language asked for.
++
++    The title is in green, and the summary is wrapped to 70 columns.
++    """
+     try:
+         page = random_page(language=language)
+     except WikipediaError as error:
+```
 
 ```bash
 just docs module console
@@ -165,6 +264,152 @@ Files to read:
   - look at: `"""The command prints the title of the page."""`
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
   - look at: `"""The language chooses the Wikipedia that is asked."""`
+
+The change of `tests/conftest.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""What every test file can use: a mock in place of `requests.get`."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ from pytest_mock import MockerFixture
+ 
+ 
+ @pytest.fixture
+-def mock_requests_get(mocker: MockerFixture) -> Mock:
++def mock_requests_get(
++    mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test
++) -> Mock:  # The mock that replaces `requests.get` for the length of one test
++    """Replace `requests.get` with a mock that answers with one page, Lorem Ipsum."""
+     mock = mocker.patch("requests.get")
+     mock.return_value.__enter__.return_value.json.return_value = {
+         "title": "Lorem Ipsum",
+```
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the command, `main`, run in the same process by click's CliRunner."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -8,40 +10,64 @@ from wikiapp import console
+ 
+ 
+ @pytest.fixture
+-def runner() -> CliRunner:
++def runner() -> CliRunner:  # A runner that calls a command and keeps what it prints
++    """Give each test a runner for the command."""
+     return CliRunner()
+ 
+ 
+-def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_title(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command prints the title of the page."""
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
+ 
+-def test_main_invokes_requests_get(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_invokes_requests_get(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command makes a request."""
+     runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
+ 
+-def test_main_uses_correct_url(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_uses_correct_url(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The request goes to the random page of the English Wikipedia."""
+     runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == (
+         "https://en.wikipedia.org/api/rest_v1/page/random/summary",
+     )
+ 
+ 
+-def test_main_fails_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_fails_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An exception in the request ends the command with exit code 1."""
+     mock_requests_get.side_effect = Exception("Boom")
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
+ 
+-def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_message_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """A failed request is printed as an error message, not a traceback."""
+     mock_requests_get.side_effect = requests.RequestException
+     result = runner.invoke(console.main)
+     assert "Error" in result.output
+ 
+ 
+ @pytest.mark.e2e
+-def test_main_succeeds_in_production(runner: CliRunner) -> None:
++def test_main_succeeds_in_production(
++    runner: CliRunner,  # The runner from the fixture
++) -> None:
++    """The command works against the real Wikipedia."""
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the library, wikipedia.py."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ import pytest
+ from wikiapp import wikipedia
+ 
+ 
+-def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
++def test_random_page_uses_given_language(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The language chooses the Wikipedia that is asked."""
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
+@@ -13,11 +18,15 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ 
+ @pytest.mark.e2e
+ def test_random_page_returns_page_in_production() -> None:
++    """The real Wikipedia's answer makes a Page."""
+     page = wikipedia.random_page()
+     assert isinstance(page, wikipedia.Page)
+ 
+ 
+-def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
++def test_random_page_handles_validation_error(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An answer that is not a page raises WikipediaError."""
+     mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
+     with pytest.raises(wikipedia.WikipediaError):
+         wikipedia.random_page()
+```
 
 ```bash
 just docs check
@@ -205,6 +450,52 @@ Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c227651912e42c6e5b04771df7dcfba18b7a3538/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/c227651912e42c6e5b04771df7dcfba18b7a3538#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): with no words, `docs` builds the site.
   - look at: `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
 
+The change of `docs/_smalldocs.yml`:
+
+```diff
+@@ -1,4 +1,20 @@
+-# The settings of smalldocs. `api` is the reference, made from the code of the packages
++# The settings of smalldocs. `just docs` builds the site into docs/_site
++project:
++  type: website
++  output-dir: _site
++
++website:
++  title: "wikiapp"
++  sidebar:
++    contents:
++      - index.qmd
++      - section: Reference
++        contents: api/*  # the reference pages, which each build makes from the code
++
++theme: cosmo
++toc: true
++
++# `api` is the reference, made from the code of the packages. A name in backticks links to its entry
+ api:
+   packages: [wikiapp]
+   source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+```
+
+The change of `justfile`:
+
+```diff
+@@ -75,8 +75,11 @@ check *args:
+     just test -q --cov-fail-under=90
+     just lint-config
+ 
+-# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
++# The docs. Alone, the site in docs/_site; with words, smalldocs api: just docs check
+ [group('docs')]
+ [no-exit-message]
+ docs *args:
+-    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
++    #!/usr/bin/env sh
++    if [ "$*" = help ]; then just help docs; exit 0; fi
++    if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi
++    exec uv run smalldocs api "$@" --dir docs
+```
+
 ```bash
 uv run smalldocs render docs
 just --show docs
@@ -230,6 +521,22 @@ Files to read:
 - [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/e17e12b81330187da0dc5eb6d1ff9f3e6964dcab/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/e17e12b81330187da0dc5eb6d1ff9f3e6964dcab#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): the folders.
   - look at: `| The docs site. smalldocs makes its reference from the code |`
 
+The change of `README.md`:
+
+```diff
+@@ -30,7 +30,9 @@ Then `just setup`, and `uv run wikiapp`.
+ | Path | What it is |
+ |---|---|
+ | `pyproject.toml`, `uv.lock` | The project: its name, its Python, its dependencies, and the exact versions installed |
+-| `src/wikiapp/` | The code. `console.py` is the `wikiapp` command |
++| `src/wikiapp/` | The code. `wikipedia.py` is the library, `console.py` the `wikiapp` command |
++| `tests/` | The tests. `just test` runs them |
++| `docs/` | The docs site. smalldocs makes its reference from the code |
+ | `justfile` | Every task of the project, one recipe each. `just help VERB` explains one |
+ | `.python-version` | The Python version the project uses |
+ | `.gitignore` | Everything a run makes, ignored from the first commit on |
+```
+
 ```bash
 grep -n -E 'tests/|docs/' README.md
 ```
@@ -249,6 +556,28 @@ The move changed this file:
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/f806ffc14ec8d49a03fae320c10058db6d723f5e/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/f806ffc14ec8d49a03fae320c10058db6d723f5e#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in `check`.
   - look at: `just docs check`
+
+The change of `justfile`:
+
+```diff
+@@ -62,7 +62,7 @@ lint-config *args:
+     uv lock --check
+     just --fmt --check --unstable
+ 
+-# Everything a commit must pass: format, lint, types, the tests over the coverage floor, the configuration
++# Everything a commit must pass: format, lint, types, tests over the coverage floor, docs, configuration
+ [group('quality')]
+ [no-exit-message]
+ check *args:
+@@ -73,6 +73,7 @@ check *args:
+     just lint
+     just types
+     just test -q --cov-fail-under=90
++    just docs check
+     just lint-config
+ 
+ # The docs. Alone, the site in docs/_site; with words, smalldocs api: just docs check
+```
 
 ```bash
 just check

@@ -2,7 +2,7 @@
 title: "step-07.2 to step-07.3"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Watch mode. [The same step in do mode](../do/step-07.2-to-step-07.3.qmd).
 
@@ -39,6 +39,70 @@ Files to read:
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
   - look at: `assert isinstance(page, wikipedia.Page)`
 
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,5 +1,3 @@
+-from typing import Any
+-
+ import requests
+ from pydantic import BaseModel
+ 
+@@ -18,13 +16,13 @@ class Page(BaseModel):
+     extract: str
+ 
+ 
+-def random_page(language: str = "en") -> dict[str, Any]:
++def random_page(language: str = "en") -> Page:
+     """Get a random page from Wikipedia."""
+     try:
+         with requests.get(
+             API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10
+         ) as response:
+             response.raise_for_status()
+-            return response.json()
++            return Page.model_validate(response.json())
+     except requests.RequestException as error:
+         raise WikipediaError(str(error)) from error
+```
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -19,13 +19,11 @@ from wikiapp.wikipedia import WikipediaError, random_page
+ def main(language: str) -> None:
+     """Print the title and summary of a random Wikipedia page."""
+     try:
+-        data = random_page(language=language)
++        page = random_page(language=language)
+     except WikipediaError as error:
+         raise click.ClickException(str(error)) from error
+-    title = data["title"]
+-    extract = data["extract"]
+-    click.secho(title, fg="green")
+-    click.echo(textwrap.fill(extract))
++    click.secho(page.title, fg="green")
++    click.echo(textwrap.fill(page.extract))
+ 
+ 
+ if __name__ == "__main__":
+```
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -12,7 +12,6 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ 
+ 
+ @pytest.mark.e2e
+-def test_random_page_returns_dictionary_in_production() -> None:
++def test_random_page_returns_page_in_production() -> None:
+     page = wikipedia.random_page()
+-    assert "title" in page
+-    assert "extract" in page
++    assert isinstance(page, wikipedia.Page)
+```
+
 ```bash
 just check
 uv run wikiapp
@@ -67,6 +131,40 @@ Files to read:
   - look at: `except (requests.RequestException, ValidationError) as error:`
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8ef59a76a8988b6ef39a36c630e5785be2573703/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `with pytest.raises(wikipedia.WikipediaError):`
+
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,5 +1,5 @@
+ import requests
+-from pydantic import BaseModel
++from pydantic import BaseModel, ValidationError
+ 
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+@@ -24,5 +24,5 @@ def random_page(language: str = "en") -> Page:
+         ) as response:
+             response.raise_for_status()
+             return Page.model_validate(response.json())
+-    except requests.RequestException as error:
++    except (requests.RequestException, ValidationError) as error:
+         raise WikipediaError(str(error)) from error
+```
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -15,3 +15,9 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ def test_random_page_returns_page_in_production() -> None:
+     page = wikipedia.random_page()
+     assert isinstance(page, wikipedia.Page)
++
++
++def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
++    mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
++    with pytest.raises(wikipedia.WikipediaError):
++        wikipedia.random_page()
+```
 
 ```bash
 just test -k validation

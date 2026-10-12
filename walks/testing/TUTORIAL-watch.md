@@ -1,4 +1,4 @@
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 # Testing smallwikiapp, one move at a time
 
@@ -81,6 +81,24 @@ Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/645fc59b58e6f49dc92635e2562f949524a4629c/tests/test_console.py): a test that runs the command and checks its exit code.
   - look at: `assert result.exit_code == 0`
 
+The change of `pyproject.toml`:
+
+```diff
+@@ -15,6 +15,12 @@ dependencies = [
+ [project.scripts]
+ wikiapp = "wikiapp.console:main"
+ 
++[dependency-groups]
++test = [
++    "pytest>=9.1.1",
++]
++dev = [{ include-group = "test" }]
++
+ [build-system]
+ requires = ["uv_build>=0.12.13,<0.13.0"]
+ build-backend = "uv_build"
+```
+
 ```bash
 uv run pytest
 ```
@@ -105,6 +123,21 @@ Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/94970c50651566f11d5c9d017cb01004e240821a/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/94970c50651566f11d5c9d017cb01004e240821a#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `test *args:`
 
+The change of `justfile`:
+
+```diff
+@@ -19,3 +19,9 @@ help *verb:
+ [group('setup')]
+ setup *args:
+     @{{ if args == "help" { "just help setup" } else { "uv sync --locked" } }}
++
++# Run the tests. Extra arguments go to pytest: just test -k title
++[group('quality')]
++[no-exit-message]
++test *args:
++    {{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}
+```
+
 ```bash
 just --show test
 just test
@@ -127,6 +160,26 @@ The move changed this file:
 Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/cd31b8a082b8c3ecf168413a21e06b9888480534/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture, and the test that names it.
   - look at: `def test_main_succeeds(runner):`
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -1,8 +1,12 @@
+ import click.testing
++import pytest
++
++@pytest.fixture
++def runner():
++    return click.testing.CliRunner()
+ 
+ from wikiapp import console
+ 
+-def test_main_succeeds():
+-    runner = click.testing.CliRunner()
++def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
 
 ```bash
 just test
@@ -158,6 +211,46 @@ Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/2aaab1063eca2f40fbc281e2e038c18419ca88c5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pytest-mock in the group `test`.
   - look at: `"pytest-mock>=3.16.0",`
 
+The change of `tests/test_console.py`:
+
+```diff
+@@ -5,8 +5,21 @@ import pytest
+ def runner():
+     return click.testing.CliRunner()
+ 
++@pytest.fixture
++def mock_requests_get(mocker):
++    mock = mocker.patch("requests.get")
++    mock.return_value.__enter__.return_value.json.return_value = {
++        "title": "Lorem Ipsum",
++        "extract": "Lorem ipsum dolor sit amet",
++    }
++    return mock
++
+ from wikiapp import console
+ 
++def test_main_prints_title(runner, mock_requests_get):
++    result = runner.invoke(console.main)
++    assert "Lorem Ipsum" in result.output
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -18,6 +18,7 @@ wikiapp = "wikiapp.console:main"
+ [dependency-groups]
+ test = [
+     "pytest>=9.1.1",
++    "pytest-mock>=3.16.0",
+ ]
+ dev = [{ include-group = "test" }]
+ 
+```
+
 ```bash
 just test -k title -v
 ```
@@ -181,6 +274,26 @@ Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the code makes the request, to the right address.
   - look at: `assert mock_requests_get.called`
 
+The change of `tests/test_console.py`:
+
+```diff
+@@ -20,6 +20,14 @@ def test_main_prints_title(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
++def test_main_invokes_requests_get(runner, mock_requests_get):
++    result = runner.invoke(console.main)
++    assert mock_requests_get.called
++
++def test_main_uses_correct_url(runner, mock_requests_get):
++    result = runner.invoke(console.main)
++    assert mock_requests_get.call_args[0] == ("https://en.wikipedia.org/api/rest_v1/page/random/summary",)
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
 ```bash
 just test
 ```
@@ -202,6 +315,23 @@ The move changed this file:
 Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/16b52dc4f9ec6e997b6954efde180ba6d7f521c7/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/16b52dc4f9ec6e997b6954efde180ba6d7f521c7#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the mock raises.
   - look at: `mock_requests_get.side_effect = Exception("Boom")`
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -28,6 +28,11 @@ def test_main_uses_correct_url(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == ("https://en.wikipedia.org/api/rest_v1/page/random/summary",)
+ 
++def test_main_fails_on_request_error(runner, mock_requests_get):
++    mock_requests_get.side_effect = Exception("Boom")
++    result = runner.invoke(console.main)
++    assert result.exit_code == 1
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
 
 ```bash
 just test
@@ -227,6 +357,28 @@ The move changed these files:
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/bed3c6029878c71bef05322712c388dfb8c058ef/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): coverage on every run.
   - look at: `addopts = "--cov=wikiapp --cov-report=term-missing"`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -18,6 +18,7 @@ wikiapp = "wikiapp.console:main"
+ [dependency-groups]
+ test = [
+     "pytest>=9.1.1",
++    "pytest-cov>=7.1.0",
+     "pytest-mock>=3.16.0",
+ ]
+ dev = [{ include-group = "test" }]
+@@ -25,3 +26,8 @@ dev = [{ include-group = "test" }]
+ [build-system]
+ requires = ["uv_build>=0.12.13,<0.13.0"]
+ build-backend = "uv_build"
++
++[tool.pytest.ini_options]
++testpaths = ["tests"]
++# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
++addopts = "--cov=wikiapp --cov-report=term-missing"
+```
 
 ```bash
 just test
@@ -269,6 +421,40 @@ Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/fec316ee50d27867f0dab60a755372ce1d1839d1/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/fec316ee50d27867f0dab60a755372ce1d1839d1#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): only the command stays.
   - look at: `data = random_page()`
 
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -1,22 +1,18 @@
+ import click
+ from wikiapp import __version__
+-import requests
+ import textwrap
+ 
+-API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
+-USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
++from wikiapp.wikipedia import random_page
+ 
+ @click.command()
+ @click.version_option(version=__version__)
+ def main() -> None:
+     """Print the title and summary of a random Wikipedia page."""
+-    with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
+-        response.raise_for_status()
+-        data = response.json()
+-        title = data["title"]
+-        extract = data["extract"]
+-        click.secho(title, fg="green")
+-        click.echo(textwrap.fill(extract))
++    data = random_page()
++    title = data["title"]
++    extract = data["extract"]
++    click.secho(title, fg="green")
++    click.echo(textwrap.fill(extract))
+ 
+ if __name__=="__main__":
+     main()
+```
+
 ```bash
 just test
 ```
@@ -293,6 +479,27 @@ Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/dcb1e4c7102be3c1feec309ed88e1097ce28f32e/tests/conftest.py): the fixture, for every test file.
   - look at: `def mock_requests_get(mocker):`
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/dcb1e4c7102be3c1feec309ed88e1097ce28f32e/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/dcb1e4c7102be3c1feec309ed88e1097ce28f32e#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture is gone, but the tests still name it.
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -5,15 +5,6 @@ import pytest
+ def runner():
+     return click.testing.CliRunner()
+ 
+-@pytest.fixture
+-def mock_requests_get(mocker):
+-    mock = mocker.patch("requests.get")
+-    mock.return_value.__enter__.return_value.json.return_value = {
+-        "title": "Lorem Ipsum",
+-        "extract": "Lorem ipsum dolor sit amet",
+-    }
+-    return mock
+-
+ from wikiapp import console
+ 
+ def test_main_prints_title(runner, mock_requests_get):
+```
 
 ```bash
 just test
@@ -321,6 +528,25 @@ Files to read:
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3d9dfef45760f1ce2cfa78841f554e08f62d32f4/tests/test_wikipedia.py): the test uses the mock from conftest.py.
   - look at: `assert "es.wikipedia.org" in args[0]`
 
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,10 +1,10 @@
+ import requests
+ 
+-API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
++API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
+-def random_page():
++def random_page(language="en"):
+     """Get a random page from Wikipedia."""
+-    with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
++    with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
+         response.raise_for_status()
+         return response.json()
+```
+
 ```bash
 just test
 ```
@@ -343,6 +569,32 @@ The move changed this file:
 Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/3bd5616ab15d6b2b526784e8b3b014bceef2548f/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3bd5616ab15d6b2b526784e8b3b014bceef2548f#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the option, which `main` gives to `random_page`.
   - look at: `data = random_page(language=language)`
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -5,10 +5,18 @@ import textwrap
+ from wikiapp.wikipedia import random_page
+ 
+ @click.command()
++@click.option(
++    "--language",
++    "-l",
++    default="en",
++    help="Gets random page from Wikipedia in given language",
++    metavar="LANG",
++    show_default=True,
++)
+ @click.version_option(version=__version__)
+-def main() -> None:
++def main(language) -> None:
+     """Print the title and summary of a random Wikipedia page."""
+-    data = random_page()
++    data = random_page(language=language)
+     title = data["title"]
+     extract = data["extract"]
+     click.secho(title, fg="green")
+```
 
 ```bash
 uv run wikiapp --language fr
@@ -369,6 +621,29 @@ The move changed this file:
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/56214d31141adcc3dab1ecdd7545b94b03c7f0ea/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/56214d31141adcc3dab1ecdd7545b94b03c7f0ea#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the exception, and the line that raises it.
   - look at: `raise WikipediaError(str(error)) from error`
+
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -3,8 +3,14 @@ import requests
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
++class WikipediaError(Exception):
++    """Wikipedia could not give a page."""
++
+ def random_page(language="en"):
+     """Get a random page from Wikipedia."""
+-    with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
+-        response.raise_for_status()
+-        return response.json()
++    try:
++        with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
++            response.raise_for_status()
++            return response.json()
++    except requests.RequestException as error:
++        raise WikipediaError(str(error)) from error
+```
 
 ```bash
 uv run wikiapp --language xx
@@ -401,6 +676,56 @@ Files to read:
   - look at: `raise click.ClickException(str(error)) from error`
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/b090ad74622ee6109dd72ae66feec36377eef7d7/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test.
   - look at: `assert "Error" in result.output`
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -2,7 +2,7 @@ import click
+ from wikiapp import __version__
+ import textwrap
+ 
+-from wikiapp.wikipedia import random_page
++from wikiapp.wikipedia import WikipediaError, random_page
+ 
+ @click.command()
+ @click.option(
+@@ -16,7 +16,10 @@ from wikiapp.wikipedia import random_page
+ @click.version_option(version=__version__)
+ def main(language) -> None:
+     """Print the title and summary of a random Wikipedia page."""
+-    data = random_page(language=language)
++    try:
++        data = random_page(language=language)
++    except WikipediaError as error:
++        raise click.ClickException(str(error)) from error
+     title = data["title"]
+     extract = data["extract"]
+     click.secho(title, fg="green")
+```
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -1,5 +1,6 @@
+ import click.testing
+ import pytest
++import requests
+ 
+ @pytest.fixture
+ def runner():
+@@ -24,6 +25,11 @@ def test_main_fails_on_request_error(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
++def test_main_prints_message_on_request_error(runner, mock_requests_get):
++    mock_requests_get.side_effect = requests.RequestException
++    result = runner.invoke(console.main)
++    assert "Error" in result.output
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
 
 ```bash
 uv run wikiapp --language xx; echo "exit code $?"
@@ -448,6 +773,101 @@ Files to read:
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8f6e8938925501f9c1bc198818fbd8fab7b647ff/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/48523b8748a8bd60f80b73e1b2b2322eb616325b...8f6e8938925501f9c1bc198818fbd8fab7b647ff#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): one test.
   - look at: `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
+The change of `tests/conftest.py`:
+
+```diff
+@@ -1,8 +1,11 @@
++from unittest.mock import Mock
++
+ import pytest
++from pytest_mock import MockerFixture
+ 
+ 
+ @pytest.fixture
+-def mock_requests_get(mocker):
++def mock_requests_get(mocker: MockerFixture) -> Mock:
+     mock = mocker.patch("requests.get")
+     mock.return_value.__enter__.return_value.json.return_value = {
+         "title": "Lorem Ipsum",
+```
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -1,44 +1,46 @@
+-import click.testing
++from unittest.mock import Mock
++
+ import pytest
+ import requests
++from click.testing import CliRunner
+ 
+ from wikiapp import console
+ 
+ 
+ @pytest.fixture
+-def runner():
+-    return click.testing.CliRunner()
++def runner() -> CliRunner:
++    return CliRunner()
+ 
+ 
+-def test_main_prints_title(runner, mock_requests_get):
++def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
+ 
+-def test_main_invokes_requests_get(runner, mock_requests_get):
++def test_main_invokes_requests_get(runner: CliRunner, mock_requests_get: Mock) -> None:
+     runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
+ 
+-def test_main_uses_correct_url(runner, mock_requests_get):
++def test_main_uses_correct_url(runner: CliRunner, mock_requests_get: Mock) -> None:
+     runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == (
+         "https://en.wikipedia.org/api/rest_v1/page/random/summary",
+     )
+ 
+ 
+-def test_main_fails_on_request_error(runner, mock_requests_get):
++def test_main_fails_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
+     mock_requests_get.side_effect = Exception("Boom")
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
+ 
+-def test_main_prints_message_on_request_error(runner, mock_requests_get):
++def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
+     mock_requests_get.side_effect = requests.RequestException
+     result = runner.invoke(console.main)
+     assert "Error" in result.output
+ 
+ 
+-def test_main_succeeds(runner):
++def test_main_succeeds(runner: CliRunner) -> None:
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -1,7 +1,9 @@
++from unittest.mock import Mock
++
+ from wikiapp import wikipedia
+ 
+ 
+-def test_random_page_uses_given_language(mock_requests_get):
++def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
+```
+
 ```bash
 just lint
 just types
@@ -486,6 +906,39 @@ Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4ccfe3566846e64d7383837ef3e936e151c6c9d5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4ccfe3566846e64d7383837ef3e936e151c6c9d5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the option `-m 'not e2e'`.
   - look at: `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
 
+The change of `tests/test_console.py`:
+
+```diff
+@@ -41,6 +41,7 @@ def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_g
+     assert "Error" in result.output
+ 
+ 
+-def test_main_succeeds(runner: CliRunner) -> None:
++@pytest.mark.e2e
++def test_main_succeeds_in_production(runner: CliRunner) -> None:
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -35,8 +35,11 @@ build-backend = "uv_build"
+ 
+ [tool.pytest.ini_options]
+ testpaths = ["tests"]
+-# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
+-addopts = "--cov=wikiapp --cov-report=term-missing"
++# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not. A test
++# marked e2e asks the real Wikipedia, so it needs the network, and runs only when asked for:
++# just test -m e2e
++addopts = "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"
++markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]
+ 
+ [tool.ruff]
+ # The one setting the formatter and the linter share. Ruff's own default is 88; this project reads
+```
+
 ```bash
 just test -q
 just test -q -m e2e
@@ -509,6 +962,30 @@ The move changed this file:
 Files to read:
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/41e5681a18bc9975f383d1520b8781c4e836e90d/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/41e5681a18bc9975f383d1520b8781c4e836e90d#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `assert "extract" in page`
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -1,5 +1,7 @@
+ from unittest.mock import Mock
+ 
++import pytest
++
+ from wikiapp import wikipedia
+ 
+ 
+@@ -7,3 +9,10 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
++
++
++@pytest.mark.e2e
++def test_random_page_returns_dictionary_in_production() -> None:
++    page = wikipedia.random_page()
++    assert "title" in page
++    assert "extract" in page
+```
 
 ```bash
 just test -q -m e2e
@@ -534,6 +1011,20 @@ The move changed these files:
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/15ba9fa843e3f055dac9c8f1a844b7382858b761/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `requires-python = ">=3.11"`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -6,7 +6,7 @@ readme = "README.md"
+ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [{ name = "Rahul Dave" }]
+-requires-python = ">=3.13"
++requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
+     "requests>=2.34.2",
+```
 
 ```bash
 uv run --isolated --python 3.11 python --version
@@ -604,6 +1095,70 @@ Files to read:
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the e2e test checks for a Page.
   - look at: `assert isinstance(page, wikipedia.Page)`
 
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,5 +1,3 @@
+-from typing import Any
+-
+ import requests
+ from pydantic import BaseModel
+ 
+@@ -18,13 +16,13 @@ class Page(BaseModel):
+     extract: str
+ 
+ 
+-def random_page(language: str = "en") -> dict[str, Any]:
++def random_page(language: str = "en") -> Page:
+     """Get a random page from Wikipedia."""
+     try:
+         with requests.get(
+             API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10
+         ) as response:
+             response.raise_for_status()
+-            return response.json()
++            return Page.model_validate(response.json())
+     except requests.RequestException as error:
+         raise WikipediaError(str(error)) from error
+```
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -19,13 +19,11 @@ from wikiapp.wikipedia import WikipediaError, random_page
+ def main(language: str) -> None:
+     """Print the title and summary of a random Wikipedia page."""
+     try:
+-        data = random_page(language=language)
++        page = random_page(language=language)
+     except WikipediaError as error:
+         raise click.ClickException(str(error)) from error
+-    title = data["title"]
+-    extract = data["extract"]
+-    click.secho(title, fg="green")
+-    click.echo(textwrap.fill(extract))
++    click.secho(page.title, fg="green")
++    click.echo(textwrap.fill(page.extract))
+ 
+ 
+ if __name__ == "__main__":
+```
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -12,7 +12,6 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ 
+ 
+ @pytest.mark.e2e
+-def test_random_page_returns_dictionary_in_production() -> None:
++def test_random_page_returns_page_in_production() -> None:
+     page = wikipedia.random_page()
+-    assert "title" in page
+-    assert "extract" in page
++    assert isinstance(page, wikipedia.Page)
+```
+
 ```bash
 just check
 uv run wikiapp
@@ -632,6 +1187,40 @@ Files to read:
   - look at: `except (requests.RequestException, ValidationError) as error:`
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8ef59a76a8988b6ef39a36c630e5785be2573703/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `with pytest.raises(wikipedia.WikipediaError):`
+
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,5 +1,5 @@
+ import requests
+-from pydantic import BaseModel
++from pydantic import BaseModel, ValidationError
+ 
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+@@ -24,5 +24,5 @@ def random_page(language: str = "en") -> Page:
+         ) as response:
+             response.raise_for_status()
+             return Page.model_validate(response.json())
+-    except requests.RequestException as error:
++    except (requests.RequestException, ValidationError) as error:
+         raise WikipediaError(str(error)) from error
+```
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -15,3 +15,9 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ def test_random_page_returns_page_in_production() -> None:
+     page = wikipedia.random_page()
+     assert isinstance(page, wikipedia.Page)
++
++
++def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
++    mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
++    with pytest.raises(wikipedia.WikipediaError):
++        wikipedia.random_page()
+```
 
 ```bash
 just test -k validation
@@ -673,6 +1262,152 @@ Files to read:
   - look at: `"""The command prints the title of the page."""`
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0...d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
   - look at: `"""The language chooses the Wikipedia that is asked."""`
+
+The change of `tests/conftest.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""What every test file can use: a mock in place of `requests.get`."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ from pytest_mock import MockerFixture
+ 
+ 
+ @pytest.fixture
+-def mock_requests_get(mocker: MockerFixture) -> Mock:
++def mock_requests_get(
++    mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test
++) -> Mock:  # The mock that replaces `requests.get` for the length of one test
++    """Replace `requests.get` with a mock that answers with one page, Lorem Ipsum."""
+     mock = mocker.patch("requests.get")
+     mock.return_value.__enter__.return_value.json.return_value = {
+         "title": "Lorem Ipsum",
+```
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the command, `main`, run in the same process by click's CliRunner."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -8,40 +10,64 @@ from wikiapp import console
+ 
+ 
+ @pytest.fixture
+-def runner() -> CliRunner:
++def runner() -> CliRunner:  # A runner that calls a command and keeps what it prints
++    """Give each test a runner for the command."""
+     return CliRunner()
+ 
+ 
+-def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_title(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command prints the title of the page."""
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
+ 
+-def test_main_invokes_requests_get(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_invokes_requests_get(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command makes a request."""
+     runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
+ 
+-def test_main_uses_correct_url(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_uses_correct_url(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The request goes to the random page of the English Wikipedia."""
+     runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == (
+         "https://en.wikipedia.org/api/rest_v1/page/random/summary",
+     )
+ 
+ 
+-def test_main_fails_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_fails_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An exception in the request ends the command with exit code 1."""
+     mock_requests_get.side_effect = Exception("Boom")
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
+ 
+-def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_message_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """A failed request is printed as an error message, not a traceback."""
+     mock_requests_get.side_effect = requests.RequestException
+     result = runner.invoke(console.main)
+     assert "Error" in result.output
+ 
+ 
+ @pytest.mark.e2e
+-def test_main_succeeds_in_production(runner: CliRunner) -> None:
++def test_main_succeeds_in_production(
++    runner: CliRunner,  # The runner from the fixture
++) -> None:
++    """The command works against the real Wikipedia."""
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the library, wikipedia.py."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ import pytest
+ from wikiapp import wikipedia
+ 
+ 
+-def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
++def test_random_page_uses_given_language(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The language chooses the Wikipedia that is asked."""
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
+@@ -13,11 +18,15 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ 
+ @pytest.mark.e2e
+ def test_random_page_returns_page_in_production() -> None:
++    """The real Wikipedia's answer makes a Page."""
+     page = wikipedia.random_page()
+     assert isinstance(page, wikipedia.Page)
+ 
+ 
+-def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
++def test_random_page_handles_validation_error(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An answer that is not a page raises WikipediaError."""
+     mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
+     with pytest.raises(wikipedia.WikipediaError):
+         wikipedia.random_page()
+```
 
 ```bash
 just docs check

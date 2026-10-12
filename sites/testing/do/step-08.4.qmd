@@ -2,7 +2,7 @@
 title: "step-08.4: The tests documented"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Do mode. [The same step in watch mode](../watch/step-08.4.qmd).
 
@@ -48,6 +48,152 @@ Files to read:
   - look at: `"""The command prints the title of the page."""`
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0...d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): three tests.
   - look at: `"""The language chooses the Wikipedia that is asked."""`
+
+The change of `tests/conftest.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""What every test file can use: a mock in place of `requests.get`."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ from pytest_mock import MockerFixture
+ 
+ 
+ @pytest.fixture
+-def mock_requests_get(mocker: MockerFixture) -> Mock:
++def mock_requests_get(
++    mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test
++) -> Mock:  # The mock that replaces `requests.get` for the length of one test
++    """Replace `requests.get` with a mock that answers with one page, Lorem Ipsum."""
+     mock = mocker.patch("requests.get")
+     mock.return_value.__enter__.return_value.json.return_value = {
+         "title": "Lorem Ipsum",
+```
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the command, `main`, run in the same process by click's CliRunner."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -8,40 +10,64 @@ from wikiapp import console
+ 
+ 
+ @pytest.fixture
+-def runner() -> CliRunner:
++def runner() -> CliRunner:  # A runner that calls a command and keeps what it prints
++    """Give each test a runner for the command."""
+     return CliRunner()
+ 
+ 
+-def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_title(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command prints the title of the page."""
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
+ 
+-def test_main_invokes_requests_get(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_invokes_requests_get(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command makes a request."""
+     runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
+ 
+-def test_main_uses_correct_url(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_uses_correct_url(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The request goes to the random page of the English Wikipedia."""
+     runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == (
+         "https://en.wikipedia.org/api/rest_v1/page/random/summary",
+     )
+ 
+ 
+-def test_main_fails_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_fails_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An exception in the request ends the command with exit code 1."""
+     mock_requests_get.side_effect = Exception("Boom")
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
+ 
+-def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_message_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """A failed request is printed as an error message, not a traceback."""
+     mock_requests_get.side_effect = requests.RequestException
+     result = runner.invoke(console.main)
+     assert "Error" in result.output
+ 
+ 
+ @pytest.mark.e2e
+-def test_main_succeeds_in_production(runner: CliRunner) -> None:
++def test_main_succeeds_in_production(
++    runner: CliRunner,  # The runner from the fixture
++) -> None:
++    """The command works against the real Wikipedia."""
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the library, wikipedia.py."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ import pytest
+ from wikiapp import wikipedia
+ 
+ 
+-def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
++def test_random_page_uses_given_language(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The language chooses the Wikipedia that is asked."""
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
+@@ -13,11 +18,15 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ 
+ @pytest.mark.e2e
+ def test_random_page_returns_page_in_production() -> None:
++    """The real Wikipedia's answer makes a Page."""
+     page = wikipedia.random_page()
+     assert isinstance(page, wikipedia.Page)
+ 
+ 
+-def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
++def test_random_page_handles_validation_error(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An answer that is not a page raises WikipediaError."""
+     mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
+     with pytest.raises(wikipedia.WikipediaError):
+         wikipedia.random_page()
+```
 
 ```bash
 just docs check

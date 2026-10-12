@@ -2,7 +2,7 @@
 title: "step-10: Build"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Watch mode. [The same step in do mode](../do/step-10.qmd).
 
@@ -31,6 +31,21 @@ The move changed this file:
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/14aed169df3350fa2bf674e896bdf6921cf4efcf/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/14aed169df3350fa2bf674e896bdf6921cf4efcf#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `build *args:`
+
+The change of `justfile`:
+
+```diff
+@@ -84,3 +84,9 @@ docs *args:
+     if [ "$*" = help ]; then just help docs; exit 0; fi
+     if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi
+     exec uv run smalldocs api "$@" --dir docs
++
++# Build the wheel and the source archive of both packages into dist/, as they would go to PyPI
++[group('setup')]
++[no-exit-message]
++build *args:
++    {{ if args == "help" { "just help build" } else { 'uv build --all-packages "$@"' } }}
+```
 
 ```bash
 uv build --all-packages
@@ -64,6 +79,20 @@ Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b3d6fbbeca8cbdd86523b9e767092d8b4fe06b29/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b3d6fbbeca8cbdd86523b9e767092d8b4fe06b29#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `"wikirandom>=0.1.0,<0.2",`
 
+The change of `pyproject.toml`:
+
+```diff
+@@ -9,7 +9,7 @@ authors = [{ name = "Rahul Dave" }]
+ requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
+-    "wikirandom",
++    "wikirandom>=0.1.0,<0.2",
+ ]
+ 
+ [project.scripts]
+```
+
 ```bash
 just build
 unzip -p dist/wikiapp-0.1.0-py3-none-any.whl wikiapp-0.1.0.dist-info/METADATA
@@ -85,6 +114,20 @@ The move changed this file:
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5680a827b9d6a412d145df259dd161119c4cd776/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/5680a827b9d6a412d145df259dd161119c4cd776#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
   - look at: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+The change of `justfile`:
+
+```diff
+@@ -58,7 +58,7 @@ lint-config *args:
+     #!/usr/bin/env sh
+     set -e
+     if [ "$*" = help ]; then just help lint-config; exit 0; fi
+-    uv run validate-pyproject pyproject.toml
++    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
+     uv lock --check
+     just --fmt --check --unstable
+ 
+```
 
 ```bash
 just lint-config
@@ -115,6 +158,45 @@ Files to read:
 - [`packages/wikirandom/LICENSE`](https://github.com/rahuldave/smallwikiapp/blob/2aebc089ca4228042b83c2158c10484a3b495800/packages/wikirandom/LICENSE): the same Apache-2.0 licence as the app's.
   - look at: `Apache License`
 
+The change of `packages/wikirandom/pyproject.toml`:
+
+```diff
+@@ -3,12 +3,18 @@ name = "wikirandom"
+ version = "0.1.0"
+ description = "A random page of Wikipedia, in any language"
+ readme = "README.md"
++license = "Apache-2.0"
++license-files = ["LICENSE"]
++authors = [{ name = "Rahul Dave" }]
+ requires-python = ">=3.11"
+ dependencies = [
+     "pydantic>=2.14.0",
+     "requests>=2.34.2",
+ ]
+ 
++[project.urls]
++Repository = "https://github.com/rahuldave/smallwikiapp"
++
+ [build-system]
+ requires = ["uv_build>=0.12.13,<0.13.0"]
+ build-backend = "uv_build"
+```
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -15,6 +15,9 @@ dependencies = [
+ [project.scripts]
+ wikiapp = "wikiapp.console:main"
+ 
++[project.urls]
++Repository = "https://github.com/rahuldave/smallwikiapp"
++
+ [dependency-groups]
+ test = [
+     "pytest>=9.1.1",
+```
+
 ```bash
 just build
 unzip -p dist/wikirandom-0.1.0-py3-none-any.whl wikirandom-0.1.0.dist-info/METADATA
@@ -139,6 +221,28 @@ The move changed this file:
 Files to read:
 - [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/1c85536347dae57de53a25fc84b7797180a6ae27/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1c85536347dae57de53a25fc84b7797180a6ae27#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the version now comes from one place, pyproject.toml.
   - look at: `VERSION = importlib.metadata.version("wikirandom")`
+
+The change of `packages/wikirandom/src/wikirandom/__init__.py`:
+
+```diff
+@@ -1,5 +1,6 @@
+ """wikirandom: a random page of Wikipedia, in any language, from its REST API."""
+ 
++import importlib.metadata
+ import re
+ 
+ import requests
+@@ -7,7 +8,8 @@ from pydantic import BaseModel, ValidationError
+ 
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ LANGUAGE = re.compile(r"[a-z]+(-[a-z]+)*")  # en, fr, simple, zh-yue: letters and hyphens
+-USER_AGENT = "wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
++VERSION = importlib.metadata.version("wikirandom")
++USER_AGENT = f"wikirandom/{VERSION} (https://github.com/rahuldave/smallwikiapp)"
+ 
+ 
+ class WikipediaError(Exception):
+```
 
 ```bash
 uv run python -c "import wikirandom; print(wikirandom.USER_AGENT)"

@@ -2,7 +2,7 @@
 title: "step-02: Tests, with mocks"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Do mode. [The same step in watch mode](../watch/step-02.qmd).
 
@@ -67,6 +67,24 @@ Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/645fc59b58e6f49dc92635e2562f949524a4629c/tests/test_console.py): a test that runs the command and checks its exit code.
   - look at: `assert result.exit_code == 0`
 
+The change of `pyproject.toml`:
+
+```diff
+@@ -15,6 +15,12 @@ dependencies = [
+ [project.scripts]
+ wikiapp = "wikiapp.console:main"
+ 
++[dependency-groups]
++test = [
++    "pytest>=9.1.1",
++]
++dev = [{ include-group = "test" }]
++
+ [build-system]
+ requires = ["uv_build>=0.12.13,<0.13.0"]
+ build-backend = "uv_build"
+```
+
 ```bash
 uv run pytest
 ```
@@ -101,6 +119,21 @@ The move changed this file:
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/94970c50651566f11d5c9d017cb01004e240821a/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/94970c50651566f11d5c9d017cb01004e240821a#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `test *args:`
+
+The change of `justfile`:
+
+```diff
+@@ -19,3 +19,9 @@ help *verb:
+ [group('setup')]
+ setup *args:
+     @{{ if args == "help" { "just help setup" } else { "uv sync --locked" } }}
++
++# Run the tests. Extra arguments go to pytest: just test -k title
++[group('quality')]
++[no-exit-message]
++test *args:
++    {{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}
+```
 
 ```bash
 just --show test
@@ -141,6 +174,26 @@ The move changed this file:
 Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/cd31b8a082b8c3ecf168413a21e06b9888480534/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture, and the test that names it.
   - look at: `def test_main_succeeds(runner):`
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -1,8 +1,12 @@
+ import click.testing
++import pytest
++
++@pytest.fixture
++def runner():
++    return click.testing.CliRunner()
+ 
+ from wikiapp import console
+ 
+-def test_main_succeeds():
+-    runner = click.testing.CliRunner()
++def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
 
 ```bash
 just test
@@ -208,6 +261,46 @@ Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/2aaab1063eca2f40fbc281e2e038c18419ca88c5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/2aaab1063eca2f40fbc281e2e038c18419ca88c5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pytest-mock in the group `test`.
   - look at: `"pytest-mock>=3.16.0",`
 
+The change of `tests/test_console.py`:
+
+```diff
+@@ -5,8 +5,21 @@ import pytest
+ def runner():
+     return click.testing.CliRunner()
+ 
++@pytest.fixture
++def mock_requests_get(mocker):
++    mock = mocker.patch("requests.get")
++    mock.return_value.__enter__.return_value.json.return_value = {
++        "title": "Lorem Ipsum",
++        "extract": "Lorem ipsum dolor sit amet",
++    }
++    return mock
++
+ from wikiapp import console
+ 
++def test_main_prints_title(runner, mock_requests_get):
++    result = runner.invoke(console.main)
++    assert "Lorem Ipsum" in result.output
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -18,6 +18,7 @@ wikiapp = "wikiapp.console:main"
+ [dependency-groups]
+ test = [
+     "pytest>=9.1.1",
++    "pytest-mock>=3.16.0",
+ ]
+ dev = [{ include-group = "test" }]
+ 
+```
+
 ```bash
 just test -k title -v
 ```
@@ -243,6 +336,26 @@ Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d5b4cd09ab495ecb8043176f8cca3f9a657fe00f#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the code makes the request, to the right address.
   - look at: `assert mock_requests_get.called`
 
+The change of `tests/test_console.py`:
+
+```diff
+@@ -20,6 +20,14 @@ def test_main_prints_title(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
++def test_main_invokes_requests_get(runner, mock_requests_get):
++    result = runner.invoke(console.main)
++    assert mock_requests_get.called
++
++def test_main_uses_correct_url(runner, mock_requests_get):
++    result = runner.invoke(console.main)
++    assert mock_requests_get.call_args[0] == ("https://en.wikipedia.org/api/rest_v1/page/random/summary",)
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
 ```bash
 just test
 ```
@@ -273,6 +386,23 @@ The move changed this file:
 Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/16b52dc4f9ec6e997b6954efde180ba6d7f521c7/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/16b52dc4f9ec6e997b6954efde180ba6d7f521c7#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the mock raises.
   - look at: `mock_requests_get.side_effect = Exception("Boom")`
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -28,6 +28,11 @@ def test_main_uses_correct_url(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == ("https://en.wikipedia.org/api/rest_v1/page/random/summary",)
+ 
++def test_main_fails_on_request_error(runner, mock_requests_get):
++    mock_requests_get.side_effect = Exception("Boom")
++    result = runner.invoke(console.main)
++    assert result.exit_code == 1
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
 
 ```bash
 just test
@@ -314,6 +444,28 @@ The move changed these files:
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/bed3c6029878c71bef05322712c388dfb8c058ef/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): coverage on every run.
   - look at: `addopts = "--cov=wikiapp --cov-report=term-missing"`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -18,6 +18,7 @@ wikiapp = "wikiapp.console:main"
+ [dependency-groups]
+ test = [
+     "pytest>=9.1.1",
++    "pytest-cov>=7.1.0",
+     "pytest-mock>=3.16.0",
+ ]
+ dev = [{ include-group = "test" }]
+@@ -25,3 +26,8 @@ dev = [{ include-group = "test" }]
+ [build-system]
+ requires = ["uv_build>=0.12.13,<0.13.0"]
+ build-backend = "uv_build"
++
++[tool.pytest.ini_options]
++testpaths = ["tests"]
++# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
++addopts = "--cov=wikiapp --cov-report=term-missing"
+```
 
 ```bash
 just test

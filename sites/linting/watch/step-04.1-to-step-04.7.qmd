@@ -2,7 +2,7 @@
 title: "step-04.1 to step-04.7"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Watch mode. [The same step in do mode](../do/step-04.1-to-step-04.7.qmd).
 
@@ -36,6 +36,53 @@ Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/693240e344546dda08ad8fee3951675a0302dbc9/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `fmt *args:`
 
+The change of `pyproject.toml`:
+
+```diff
+@@ -21,7 +21,10 @@ test = [
+     "pytest-cov>=7.1.0",
+     "pytest-mock>=3.16.0",
+ ]
+-dev = [{ include-group = "test" }]
++dev = [{ include-group = "test" }, { include-group = "lint" }]
++lint = [
++    "ruff>=0.17.0",
++]
+ 
+ [build-system]
+ requires = ["uv_build>=0.12.13,<0.13.0"]
+@@ -31,3 +34,14 @@ build-backend = "uv_build"
+ testpaths = ["tests"]
+ # Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
+ addopts = "--cov=wikiapp --cov-report=term-missing"
++
++[tool.ruff]
++# The one setting the formatter and the linter share. Ruff's own default is 88; this project reads
++# better at 100.
++line-length = 100
++
++[tool.ruff.format]
++# The formatter has no style to argue about. These are ruff's defaults, written out so they are visible.
++quote-style = "double"            # "text", not 'text'
++indent-style = "space"            # four spaces, never tabs
++skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
+```
+
+The change of `justfile`:
+
+```diff
+@@ -25,3 +25,9 @@ setup *args:
+ [no-exit-message]
+ test *args:
+     {{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}
++
++# Format the code, one way. Extra arguments go to ruff: just fmt --check, just fmt --diff
++[group('quality')]
++[no-exit-message]
++fmt *args:
++    {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
+```
+
 ```bash
 uv run ruff format --check
 just --show fmt
@@ -68,6 +115,81 @@ Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/ca8685e532e9d372857667484e1c94c91ac9e986/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): blank lines, and the long address split.
   - look at: `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
 
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -3,13 +3,17 @@ import requests
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
++
+ class WikipediaError(Exception):
+     """Wikipedia could not give a page."""
+ 
++
+ def random_page(language="en"):
+     """Get a random page from Wikipedia."""
+     try:
+-        with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
++        with requests.get(
++            API_URL.format(language=language), headers={"User-Agent": USER_AGENT}
++        ) as response:
+             response.raise_for_status()
+             return response.json()
+     except requests.RequestException as error:
+```
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -2,34 +2,44 @@ import click.testing
+ import pytest
+ import requests
+ 
++
+ @pytest.fixture
+ def runner():
+     return click.testing.CliRunner()
+ 
++
+ from wikiapp import console
+ 
++
+ def test_main_prints_title(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
++
+ def test_main_invokes_requests_get(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
++
+ def test_main_uses_correct_url(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+-    assert mock_requests_get.call_args[0] == ("https://en.wikipedia.org/api/rest_v1/page/random/summary",)
++    assert mock_requests_get.call_args[0] == (
++        "https://en.wikipedia.org/api/rest_v1/page/random/summary",
++    )
++
+ 
+ def test_main_fails_on_request_error(runner, mock_requests_get):
+     mock_requests_get.side_effect = Exception("Boom")
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
++
+ def test_main_prints_message_on_request_error(runner, mock_requests_get):
+     mock_requests_get.side_effect = requests.RequestException
+     result = runner.invoke(console.main)
+     assert "Error" in result.output
+ 
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
 ```bash
 just fmt --check
 just test
@@ -96,6 +218,48 @@ Files to read:
   - look at: `"tests/**" = ["S101"]`
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `lint *args:`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -45,3 +45,21 @@ line-length = 100
+ quote-style = "double"            # "text", not 'text'
+ indent-style = "space"            # four spaces, never tabs
+ skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
++
++[tool.ruff.lint]
++# What the linter checks: a family of rules on each line, and why it is on
++select = [
++    "E",   # pycodestyle errors: the basics, from indentation to line length
++    "W",   # pycodestyle warnings: stray whitespace and the like
++    "F",   # pyflakes: names that are unused, undefined or redefined
++    "I",   # isort: imports in one order, standard library first
++    "B",   # bugbear: constructs that are likely bugs, such as a mutable default argument
++    "UP",  # pyupgrade: older syntax that this Python has a newer form for
++    "SIM", # simplify: code that can be said in fewer words
++    "S",   # bandit: security, from `assert` in production code to a request with no timeout
++    "N",   # pep8-naming: classes CamelCase, functions and variables lower_case
++]
++
++[tool.ruff.lint.per-file-ignores]
++# A test is written with assert
++"tests/**" = ["S101"]
+```
+
+The change of `justfile`:
+
+```diff
+@@ -31,3 +31,9 @@ test *args:
+ [no-exit-message]
+ fmt *args:
+     {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
++
++# Check the code against the rules in pyproject.toml. Extra arguments go to ruff: just lint --fix
++[group('quality')]
++[no-exit-message]
++lint *args:
++    {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
+```
 
 ```bash
 uv run ruff check --statistics
@@ -127,6 +291,22 @@ Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the imports, sorted.
   - look at: `from wikiapp import __version__`
 
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -1,7 +1,8 @@
+-import click
+-from wikiapp import __version__
+ import textwrap
+ 
++import click
++
++from wikiapp import __version__
+ from wikiapp.wikipedia import WikipediaError, random_page
+ 
+ 
+```
+
 ```bash
 just lint --statistics
 ```
@@ -153,6 +333,43 @@ Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/3ba5d239ff4f171c58d4249a33caafc510883b46/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3ba5d239ff4f171c58d4249a33caafc510883b46#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the import moves, and two lines lose `result =`.
   - look at: `from wikiapp import console`
 
+The change of `tests/test_console.py`:
+
+```diff
+@@ -2,27 +2,26 @@ import click.testing
+ import pytest
+ import requests
+ 
++from wikiapp import console
++
+ 
+ @pytest.fixture
+ def runner():
+     return click.testing.CliRunner()
+ 
+ 
+-from wikiapp import console
+-
+-
+ def test_main_prints_title(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
+ 
+ def test_main_invokes_requests_get(runner, mock_requests_get):
+-    result = runner.invoke(console.main)
++    runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
+ 
+ def test_main_uses_correct_url(runner, mock_requests_get):
+-    result = runner.invoke(console.main)
++    runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == (
+         "https://en.wikipedia.org/api/rest_v1/page/random/summary",
+     )
+```
+
 ```bash
 just lint --statistics
 just fmt --check
@@ -177,6 +394,20 @@ The move changed this file:
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/80c33d4cfaf4b157cd44482712e520c77378cf9c/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/80c33d4cfaf4b157cd44482712e520c77378cf9c#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): one more argument.
   - look at: `timeout=10`
+
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -12,7 +12,7 @@ def random_page(language="en"):
+     """Get a random page from Wikipedia."""
+     try:
+         with requests.get(
+-            API_URL.format(language=language), headers={"User-Agent": USER_AGENT}
++            API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10
+         ) as response:
+             response.raise_for_status()
+             return response.json()
+```
 
 ```bash
 just lint
@@ -203,6 +434,39 @@ Files to read:
   - look at: `uv run validate-pyproject pyproject.toml`
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one package more in `lint`.
   - look at: `"validate-pyproject>=0.26",`
+
+The change of `justfile`:
+
+```diff
+@@ -37,3 +37,14 @@ fmt *args:
+ [no-exit-message]
+ lint *args:
+     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
++
++# Check the configuration: pyproject.toml, the lockfile, and this justfile
++[group('quality')]
++[no-exit-message]
++lint-config *args:
++    #!/usr/bin/env sh
++    set -e
++    if [ "$*" = help ]; then just help lint-config; exit 0; fi
++    uv run validate-pyproject pyproject.toml
++    uv lock --check
++    just --fmt --check --unstable
+```
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -24,6 +24,7 @@ test = [
+ dev = [{ include-group = "test" }, { include-group = "lint" }]
+ lint = [
+     "ruff>=0.17.0",
++    "validate-pyproject>=0.26",
+ ]
+ 
+ [build-system]
+```
 
 ```bash
 uv run validate-pyproject pyproject.toml

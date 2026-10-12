@@ -2,7 +2,7 @@
 title: "step-04.9 to step-04.10"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Do mode. [The same step in watch mode](../watch/step-04.9-to-step-04.10.qmd).
 
@@ -43,6 +43,27 @@ The move changed this file:
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/06ea9e2af2238f070b1e33f16aeb70002e25e44d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its four checks.
   - look at: `just test -q --cov-fail-under=90`
+
+The change of `justfile`:
+
+```diff
+@@ -50,3 +50,15 @@ lint-config *args:
+     uv run validate-pyproject pyproject.toml
+     uv lock --check
+     just --fmt --check --unstable
++
++# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
++[group('quality')]
++[no-exit-message]
++check *args:
++    #!/usr/bin/env sh
++    set -e
++    if [ "$*" = help ]; then just help check; exit 0; fi
++    just fmt --check
++    just lint
++    just test -q --cov-fail-under=90
++    just lint-config
+```
 
 ```bash
 just --show check
@@ -120,6 +141,36 @@ Files to read:
   - look at: `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
   - look at: `"pre-commit>=4.6.2",`
+
+The change of `justfile`:
+
+```diff
+@@ -22,6 +22,11 @@ help *verb:
+ setup *args:
+     @{{ if args == "help" { "just help setup" } else { "uv sync --locked" } }}
+ 
++# Install the git hook: just check before every commit. Once per clone; just setup never touches git
++[group('setup')]
++hook *args:
++    @{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}
++
+ # Run the tests. Extra arguments go to pytest: just test -k title
+ [group('quality')]
+ [no-exit-message]
+```
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -23,6 +23,7 @@ test = [
+ ]
+ dev = [{ include-group = "test" }, { include-group = "lint" }]
+ lint = [
++    "pre-commit>=4.6.2",
+     "ruff>=0.17.0",
+     "validate-pyproject>=0.26",
+ ]
+```
 
 ```bash
 uv run pre-commit install

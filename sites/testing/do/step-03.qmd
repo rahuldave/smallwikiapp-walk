@@ -2,7 +2,7 @@
 title: "step-03: A library and an app"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Do mode. [The same step in watch mode](../watch/step-03.qmd).
 
@@ -75,6 +75,40 @@ Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/fec316ee50d27867f0dab60a755372ce1d1839d1/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/fec316ee50d27867f0dab60a755372ce1d1839d1#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): only the command stays.
   - look at: `data = random_page()`
 
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -1,22 +1,18 @@
+ import click
+ from wikiapp import __version__
+-import requests
+ import textwrap
+ 
+-API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
+-USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
++from wikiapp.wikipedia import random_page
+ 
+ @click.command()
+ @click.version_option(version=__version__)
+ def main() -> None:
+     """Print the title and summary of a random Wikipedia page."""
+-    with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
+-        response.raise_for_status()
+-        data = response.json()
+-        title = data["title"]
+-        extract = data["extract"]
+-        click.secho(title, fg="green")
+-        click.echo(textwrap.fill(extract))
++    data = random_page()
++    title = data["title"]
++    extract = data["extract"]
++    click.secho(title, fg="green")
++    click.echo(textwrap.fill(extract))
+ 
+ if __name__=="__main__":
+     main()
+```
+
 ```bash
 just test
 ```
@@ -116,6 +150,27 @@ Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/dcb1e4c7102be3c1feec309ed88e1097ce28f32e/tests/conftest.py): the fixture, for every test file.
   - look at: `def mock_requests_get(mocker):`
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/dcb1e4c7102be3c1feec309ed88e1097ce28f32e/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/dcb1e4c7102be3c1feec309ed88e1097ce28f32e#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture is gone, but the tests still name it.
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -5,15 +5,6 @@ import pytest
+ def runner():
+     return click.testing.CliRunner()
+ 
+-@pytest.fixture
+-def mock_requests_get(mocker):
+-    mock = mocker.patch("requests.get")
+-    mock.return_value.__enter__.return_value.json.return_value = {
+-        "title": "Lorem Ipsum",
+-        "extract": "Lorem ipsum dolor sit amet",
+-    }
+-    return mock
+-
+ from wikiapp import console
+ 
+ def test_main_prints_title(runner, mock_requests_get):
+```
 
 ```bash
 just test
@@ -168,6 +223,25 @@ Files to read:
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3d9dfef45760f1ce2cfa78841f554e08f62d32f4/tests/test_wikipedia.py): the test uses the mock from conftest.py.
   - look at: `assert "es.wikipedia.org" in args[0]`
 
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,10 +1,10 @@
+ import requests
+ 
+-API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
++API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
+-def random_page():
++def random_page(language="en"):
+     """Get a random page from Wikipedia."""
+-    with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
++    with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
+         response.raise_for_status()
+         return response.json()
+```
+
 ```bash
 just test
 ```
@@ -211,6 +285,32 @@ Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/3bd5616ab15d6b2b526784e8b3b014bceef2548f/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3bd5616ab15d6b2b526784e8b3b014bceef2548f#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the option, which `main` gives to `random_page`.
   - look at: `data = random_page(language=language)`
 
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -5,10 +5,18 @@ import textwrap
+ from wikiapp.wikipedia import random_page
+ 
+ @click.command()
++@click.option(
++    "--language",
++    "-l",
++    default="en",
++    help="Gets random page from Wikipedia in given language",
++    metavar="LANG",
++    show_default=True,
++)
+ @click.version_option(version=__version__)
+-def main() -> None:
++def main(language) -> None:
+     """Print the title and summary of a random Wikipedia page."""
+-    data = random_page()
++    data = random_page(language=language)
+     title = data["title"]
+     extract = data["extract"]
+     click.secho(title, fg="green")
+```
+
 ```bash
 uv run wikiapp --language fr
 uv run wikiapp --help
@@ -252,6 +352,29 @@ The move changed this file:
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/56214d31141adcc3dab1ecdd7545b94b03c7f0ea/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/56214d31141adcc3dab1ecdd7545b94b03c7f0ea#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the exception, and the line that raises it.
   - look at: `raise WikipediaError(str(error)) from error`
+
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -3,8 +3,14 @@ import requests
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
++class WikipediaError(Exception):
++    """Wikipedia could not give a page."""
++
+ def random_page(language="en"):
+     """Get a random page from Wikipedia."""
+-    with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
+-        response.raise_for_status()
+-        return response.json()
++    try:
++        with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
++            response.raise_for_status()
++            return response.json()
++    except requests.RequestException as error:
++        raise WikipediaError(str(error)) from error
+```
 
 ```bash
 uv run wikiapp --language xx
@@ -306,6 +429,56 @@ Files to read:
   - look at: `raise click.ClickException(str(error)) from error`
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/b090ad74622ee6109dd72ae66feec36377eef7d7/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test.
   - look at: `assert "Error" in result.output`
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -2,7 +2,7 @@ import click
+ from wikiapp import __version__
+ import textwrap
+ 
+-from wikiapp.wikipedia import random_page
++from wikiapp.wikipedia import WikipediaError, random_page
+ 
+ @click.command()
+ @click.option(
+@@ -16,7 +16,10 @@ from wikiapp.wikipedia import random_page
+ @click.version_option(version=__version__)
+ def main(language) -> None:
+     """Print the title and summary of a random Wikipedia page."""
+-    data = random_page(language=language)
++    try:
++        data = random_page(language=language)
++    except WikipediaError as error:
++        raise click.ClickException(str(error)) from error
+     title = data["title"]
+     extract = data["extract"]
+     click.secho(title, fg="green")
+```
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -1,5 +1,6 @@
+ import click.testing
+ import pytest
++import requests
+ 
+ @pytest.fixture
+ def runner():
+@@ -24,6 +25,11 @@ def test_main_fails_on_request_error(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
++def test_main_prints_message_on_request_error(runner, mock_requests_get):
++    mock_requests_get.side_effect = requests.RequestException
++    result = runner.invoke(console.main)
++    assert "Error" in result.output
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
 
 ```bash
 uv run wikiapp --language xx; echo "exit code $?"

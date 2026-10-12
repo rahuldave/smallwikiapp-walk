@@ -2,7 +2,7 @@
 title: "step-06: End to end, and CI"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 Watch mode. [The same step in do mode](../do/step-06.qmd).
 
@@ -35,6 +35,39 @@ Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4ccfe3566846e64d7383837ef3e936e151c6c9d5/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4ccfe3566846e64d7383837ef3e936e151c6c9d5#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the option `-m 'not e2e'`.
   - look at: `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
 
+The change of `tests/test_console.py`:
+
+```diff
+@@ -41,6 +41,7 @@ def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_g
+     assert "Error" in result.output
+ 
+ 
+-def test_main_succeeds(runner: CliRunner) -> None:
++@pytest.mark.e2e
++def test_main_succeeds_in_production(runner: CliRunner) -> None:
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -35,8 +35,11 @@ build-backend = "uv_build"
+ 
+ [tool.pytest.ini_options]
+ testpaths = ["tests"]
+-# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
+-addopts = "--cov=wikiapp --cov-report=term-missing"
++# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not. A test
++# marked e2e asks the real Wikipedia, so it needs the network, and runs only when asked for:
++# just test -m e2e
++addopts = "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"
++markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]
+ 
+ [tool.ruff]
+ # The one setting the formatter and the linter share. Ruff's own default is 88; this project reads
+```
+
 ```bash
 just test -q
 just test -q -m e2e
@@ -58,6 +91,30 @@ The move changed this file:
 Files to read:
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/41e5681a18bc9975f383d1520b8781c4e836e90d/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/41e5681a18bc9975f383d1520b8781c4e836e90d#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
   - look at: `assert "extract" in page`
+
+The change of `tests/test_wikipedia.py`:
+
+```diff
+@@ -1,5 +1,7 @@
+ from unittest.mock import Mock
+ 
++import pytest
++
+ from wikiapp import wikipedia
+ 
+ 
+@@ -7,3 +9,10 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
++
++
++@pytest.mark.e2e
++def test_random_page_returns_dictionary_in_production() -> None:
++    page = wikipedia.random_page()
++    assert "title" in page
++    assert "extract" in page
+```
 
 ```bash
 just test -q -m e2e
@@ -83,6 +140,20 @@ The move changed these files:
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/15ba9fa843e3f055dac9c8f1a844b7382858b761/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `requires-python = ">=3.11"`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -6,7 +6,7 @@ readme = "README.md"
+ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [{ name = "Rahul Dave" }]
+-requires-python = ">=3.13"
++requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
+     "requests>=2.34.2",
+```
 
 ```bash
 uv run --isolated --python 3.11 python --version

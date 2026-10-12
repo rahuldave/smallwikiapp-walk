@@ -2,7 +2,7 @@
 title: "Linting smallwikiapp, one move at a time"
 ---
 
-<!-- Made by timewalk-tutorial from the notes of the walk. Do not edit it by hand: run timewalk-tutorial again. -->
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
 This walk takes the moves about format and lint out of the whole tutorial of smallwikiapp. `wikiapp` is a small
 command that prints the title and the summary of a random Wikipedia page. The walk starts when the command and

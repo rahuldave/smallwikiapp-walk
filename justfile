@@ -97,12 +97,12 @@ check: setup
 site:
     #!/usr/bin/env bash
     set -euo pipefail
-    uvx --from 'smalldocs>=0.1.3' smalldocs render site
+    uvx --from 'smalldocs>=0.1.4' smalldocs render site
     # Each small walk's site, from sites/ID, goes into site/_site/ID
     for small in sites/*/; do
         [ -d "$small" ] || continue  # no small walk: the glob stays as written
         id=$(basename "$small")
-        uvx --from 'smalldocs>=0.1.3' smalldocs render "sites/$id"
+        uvx --from 'smalldocs>=0.1.4' smalldocs render "sites/$id"
         mkdir -p "site/_site/$id"
         cp -R "sites/$id/_site/." "site/_site/$id/"
     done
