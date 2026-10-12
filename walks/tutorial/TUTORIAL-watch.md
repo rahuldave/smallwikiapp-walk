@@ -3499,7 +3499,7 @@ Files to read:
 - [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/7a3ba49a14ea0f4e049e19ecb934346025e354cb/packages/wikirandom/pyproject.toml): a package of its own.
   - look at: `name = "wikirandom"`
 - [`packages/wikirandom/README.md`](https://github.com/rahuldave/smallwikiapp/blob/7a3ba49a14ea0f4e049e19ecb934346025e354cb/packages/wikirandom/README.md): a heading, and what the library is.
-  - look at: `# wikirandom`
+  - look at: ``A random page of Wikipedia, in any language. The command `wikiapp` will use this library.``
 - [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/7a3ba49a14ea0f4e049e19ecb934346025e354cb/packages/wikirandom/src/wikirandom/__init__.py): uv's example function.
   - look at: `def hello() -> str:`
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/7a3ba49a14ea0f4e049e19ecb934346025e354cb/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/7a3ba49a14ea0f4e049e19ecb934346025e354cb#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the workspace.
@@ -3685,6 +3685,7 @@ Files to read:
 - [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/21b69a2c7ff628cf5726eec4eb986c7f3e8a6482/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/commit/21b69a2c7ff628cf5726eec4eb986c7f3e8a6482#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
   - look at: `The code has two packages, in one repository:`
 - [`packages/wikirandom/README.md`](https://github.com/rahuldave/smallwikiapp/blob/21b69a2c7ff628cf5726eec4eb986c7f3e8a6482/packages/wikirandom/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/21b69a2c7ff628cf5726eec4eb986c7f3e8a6482#diff-67c60576149738029c3a79bb8233bfb2720f590c0a16b6e4a7dab774bf98d1f9): the library's README says that the app uses it.
+  - look at: ``A random page of Wikipedia, in any language. The command `wikiapp` uses this library.``
 
 The change of `pyproject.toml`:
 

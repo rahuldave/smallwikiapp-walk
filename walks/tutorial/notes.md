@@ -2848,7 +2848,7 @@ files:
 - file `packages/wikirandom/pyproject.toml`: a package of its own.
   show: `name = "wikirandom"`
 - file `packages/wikirandom/README.md`: a heading, and what the library is.
-  show: `# wikirandom`
+  show: ``A random page of Wikipedia, in any language. The command `wikiapp` will use this library.``
 - file `packages/wikirandom/src/wikirandom/__init__.py`: uv's example function.
   show: `def hello() -> str:`
 - diff `pyproject.toml`: the workspace.
@@ -3045,6 +3045,7 @@ files:
 - diff `docs/index.qmd`: two packages.
   show: `The code has two packages, in one repository:`
 - diff `packages/wikirandom/README.md`: the library's README says that the app uses it.
+  show: ``A random page of Wikipedia, in any language. The command `wikiapp` uses this library.``
 
 $ just test -q
 
