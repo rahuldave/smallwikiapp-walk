@@ -67,6 +67,8 @@ def random_page(
 ) -> Page:  # A page chosen at random
 ```
 
+The block above is only to read.
+
 smalldocs reads all three, and writes Markdown. It is a Python package, so uv installs it like
 any other. smalldocs goes in a fourth dependency group, `docs`, and `dev` includes that group.
 
@@ -77,9 +79,7 @@ dev = [{ include-group = "test" }, { include-group = "lint" }, { include-group =
 docs = []
 ```
 
-Then add smalldocs to the group `docs`.
-
-```
+```bash
 uv add --group docs smalldocs
 ```
 

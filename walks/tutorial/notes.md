@@ -79,13 +79,7 @@ The moves of step-01 add these things:
 Now we add two packages, click and requests, to the dependencies of wikiapp. click makes command lines.
 requests gets pages over HTTP.
 
-::: do
-Add both packages.
-
-```
-uv add click requests
-```
-:::
+do$ uv add click requests
 
 ::: watch
 Read the change of `pyproject.toml`.
@@ -99,14 +93,14 @@ The move changes these files:
 files:
 - diff `pyproject.toml`: the dependencies of the package, which anyone who installs it gets.
   show: `"click>=8.5.0",`
-- diff `uv.lock`: the exact versions, for every platform.
+- file `uv.lock`: the exact versions, for every platform.
 
 $ uv tree --depth 1
 
 `uv tree` shows the two packages under `wikiapp`. A newer version of a package can come out after these notes.
 
 ::: do
-If your numbers are newer, your `uv.lock` differs from the one here, and the move is still correct.
+If your versions are newer, your `uv.lock` differs from the one here, and the move is still correct.
 :::
 
 ### step-01.2 Ask Wikipedia for a page
@@ -275,13 +269,9 @@ test = []
 dev = [{ include-group = "test" }]
 
 ```
-
-Then add pytest to the group `test`.
-
-```
-uv add --group test pytest
-```
 :::
+
+do$ uv add --group test pytest
 
 ::: watch
 Read the change of `pyproject.toml`.
@@ -417,14 +407,10 @@ The call replaces the function, and puts it back after the test. The line `mock.
 the code calls `response.json()` inside the `with` block. The mock returns a page with the title Lorem Ipsum. A
 new test, `test_main_prints_title`, checks that the command prints that title.
 
+do$ uv add --group test pytest-mock
+
 ::: do
-Add pytest-mock to the group `test`.
-
-```
-uv add --group test pytest-mock
-```
-
-Then replace `tests/test_console.py` with the code below.
+Replace `tests/test_console.py` with the code below.
 
 ```python
 import click.testing
@@ -551,14 +537,10 @@ The result is `5 passed`.
 Now we measure the coverage of the tests on every run. pytest-cov measures which lines of the code the tests run.
 It goes in the group `test`, and pytest's settings, at the end of `pyproject.toml`, turn coverage on for every run.
 
+do$ uv add --group test pytest-cov
+
 ::: do
-Add pytest-cov to the group `test`.
-
-```
-uv add --group test pytest-cov
-```
-
-Then add the settings at the end of `pyproject.toml`.
+Add the settings at the end of `pyproject.toml`.
 
 ```toml
 
@@ -958,13 +940,9 @@ In `pyproject.toml`, change the line `dev = ...`, and add the group.
 dev = [{ include-group = "test" }, { include-group = "lint" }]
 lint = []
 ```
-
-Then add ruff to the group.
-
-```
-uv add --group lint ruff
-```
 :::
+
+do$ uv add --group lint ruff
 
 ::: watch
 Find `dev = [{ include-group = "test" }, { include-group = "lint" }]` in the change of `pyproject.toml`.
@@ -1041,13 +1019,7 @@ passes on the words after `just fmt`.
 Now we run the formatter, which rewrites six files. It adds blank lines, puts spaces around `==`, and splits the
 lines longer than 100 characters.
 
-::: do
-Run the formatter.
-
-```
-just fmt
-```
-:::
+do$ just fmt
 
 ::: watch
 Find `if __name__ == "__main__":` in the change of `src/wikiapp/console.py`. Then read the changes of
@@ -1161,15 +1133,9 @@ The linter finds five problems, each with its code:
 ### step-04.4 The linter sorts the imports
 
 Now we let ruff fix the one problem of the five that it can fix itself. `just lint --fix` sorts the imports of
-`console.py`.
+`console.py`. The command still ends with exit code 1, because four problems are left.
 
-::: do
-Let the linter fix what it can. The command still fails, with exit code 1, because four problems are left.
-
-```
-just lint --fix
-```
-:::
+do$ just lint --fix
 
 ::: watch
 Find `from wikiapp import __version__` in the change of `src/wikiapp/console.py`.
@@ -1275,13 +1241,9 @@ Now we add validate-pyproject to the group `lint`, and a recipe `lint-config` th
 The recipe runs three commands. validate-pyproject checks `pyproject.toml` against the standard for it,
 `uv lock --check` checks the lockfile, and `just --fmt --check --unstable` checks the `justfile`.
 
+do$ uv add --group lint validate-pyproject
+
 ::: do
-Add validate-pyproject to the group `lint`.
-
-```
-uv add --group lint validate-pyproject
-```
-
 Add a recipe at the end of the `justfile`.
 
 ```just
@@ -1407,13 +1369,7 @@ $ just check
 Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
 before every commit. If the program fails, git refuses the commit.
 
-::: do
-Add pre-commit to the group `lint`.
-
-```
-uv add --group lint pre-commit
-```
-:::
+do$ uv add --group lint pre-commit
 
 ::: watch
 Find `"pre-commit>=4.6.2",` in the change of `pyproject.toml`.
@@ -1517,13 +1473,7 @@ a type on every parameter and return. The last moves add the types, and put the 
 Now we add ty, a type checker, to the group `lint`. ty reads the code without running it. It finds code whose
 types cannot fit, for example a call whose arguments cannot have the types that the function asks for.
 
-::: do
-Add ty to the group `lint`.
-
-```
-uv add --group lint ty
-```
-:::
+do$ uv add --group lint ty
 
 ::: watch
 Find `"ty>=0.0.86",` in the change of `pyproject.toml`.
@@ -1532,7 +1482,8 @@ Find `"ty>=0.0.86",` in the change of `pyproject.toml`.
 Next we add a recipe `types`, which runs ty, after the recipe `lint` in the `justfile`.
 
 ::: do
-In the `justfile`, add a recipe after the recipe `lint` and the blank line under it.
+In the `justfile`, after the recipe `lint` and the blank line under it, add the recipe `types`, with a blank line
+after it.
 
 ```just
 # Check the types of every function call, with ty. Extra arguments go to ty: just types --help
@@ -1540,7 +1491,6 @@ In the `justfile`, add a recipe after the recipe `lint` and the blank line under
 [no-exit-message]
 types *args:
     {{ if args == "help" { "just help types" } else { 'uv run ty check "$@"' } }}
-
 ```
 :::
 
@@ -1919,16 +1869,14 @@ command asked for Python 3.13. Nothing here needs more than 3.11. Python 3.10 re
 and uv solves the lockfile again.
 
 ::: do
-In `pyproject.toml`, change the line, and solve the lockfile again.
+In `pyproject.toml`, change the line.
 
 ```toml
 requires-python = ">=3.11"
 ```
-
-```
-uv lock
-```
 :::
+
+do$ uv lock
 
 ::: watch
 Find `requires-python = ">=3.11"` in the change of `pyproject.toml`.
@@ -2038,14 +1986,11 @@ Wikipedia sends. Until now, the code expects these keys to be there, with string
 A pydantic model states the two keys and their types in code. pydantic is a dependency of the package, as click and
 requests are.
 
+do$ uv add pydantic
+
 ::: do
-Add pydantic to the dependencies of the package.
-
-```
-uv add pydantic
-```
-
-If a newer pydantic is out, `uv add` writes its version as the lower bound, and that line then differs from the commit.
+If a newer pydantic is out, `uv add` writes its version as the lower bound, so that line differs from the commit.
+timewalk still finds that your files match, since it compares `pyproject.toml` without the versions.
 :::
 
 ::: watch
@@ -2316,6 +2261,10 @@ def random_page(
 ) -> Page:  # A page chosen at random
 ```
 
+::: do
+The block above is only to read.
+:::
+
 smalldocs reads all three, and writes Markdown. It is a Python package, so uv installs it like
 any other. smalldocs goes in a fourth dependency group, `docs`, and `dev` includes that group.
 
@@ -2326,13 +2275,9 @@ In `pyproject.toml`, change the line `dev = ...`, and add the group on the line 
 dev = [{ include-group = "test" }, { include-group = "lint" }, { include-group = "docs" }]
 docs = []
 ```
-
-Then add smalldocs to the group `docs`.
-
-```
-uv add --group docs smalldocs
-```
 :::
+
+do$ uv add --group docs smalldocs
 
 ::: watch
 Read the change of `pyproject.toml`.
@@ -2781,15 +2726,11 @@ uv makes `packages/wikirandom/`, with these files in it:
 In the project's `pyproject.toml`, uv adds `[tool.uv.workspace]`. uv copies the Python version from
 `.python-version`.
 
+do$ uv init --lib --author-from none packages/wikirandom
+
 ::: do
-Make the library.
-
-```
-uv init --lib --author-from none packages/wikirandom
-```
-
-Another version of uv writes another range for `uv_build` in the library's `pyproject.toml`, and that line then
-differs from the commit.
+Another version of uv writes another range for `uv_build` in the library's `pyproject.toml`, so that line differs
+from the commit. timewalk still finds that your files match, since it compares the file without the versions.
 :::
 
 ::: watch
@@ -2801,7 +2742,8 @@ Next we give the library's `pyproject.toml` Python 3.11, as the app has, and a d
 heading and one line of what it is.
 
 ::: do
-In `packages/wikirandom/pyproject.toml`, make the library need 3.11, and give it a description.
+In `packages/wikirandom/pyproject.toml`, replace the lines `description` and `requires-python` that `uv init` wrote
+with the lines below.
 
 ```toml
 description = "A random page of Wikipedia, in any language"
@@ -2827,13 +2769,7 @@ Find `requires-python = ">=3.11"` in `packages/wikirandom/pyproject.toml`, a new
 
 Then we make the lockfile again with `uv lock`, for the workspace of two packages.
 
-::: do
-Make the lockfile again.
-
-```
-uv lock
-```
-:::
+do$ uv lock
 
 The move changes these files:
 
@@ -2866,13 +2802,9 @@ The library needs requests and pydantic. `packages/wikirandom/src/wikirandom/__i
 `src/wikiapp/wikipedia.py`. Its docstring says what the package is. Its User-Agent names the program that makes
 the request.
 
+do$ uv add --package wikirandom requests pydantic
+
 ::: do
-Add requests and pydantic to the library.
-
-```
-uv add --package wikirandom requests pydantic
-```
-
 Replace `packages/wikirandom/src/wikirandom/__init__.py` with the code of `src/wikiapp/wikipedia.py`. Change its
 docstring to say what the package is. Change its User-Agent to name the program that makes the request.
 
@@ -2920,14 +2852,10 @@ library's code then takes effect in the app with no new install. `src/wikiapp/co
 library. The import goes with the installed packages, under `import click`, so the lines are already in ruff's
 order.
 
+do$ uv add wikirandom
+do$ uv remove requests pydantic
+
 ::: do
-Make the library a dependency of the app, and take requests and pydantic out of the app's dependencies.
-
-```
-uv add wikirandom
-uv remove requests pydantic
-```
-
 In `src/wikiapp/console.py`, import from the library, in place of the import from `wikiapp.wikipedia`.
 
 ```python
@@ -2945,14 +2873,8 @@ Find `wikirandom = { workspace = true }` in the change of `pyproject.toml`. Find
 
 Next we delete `src/wikiapp/wikipedia.py`, and rename `tests/test_wikipedia.py` to `tests/test_wikirandom.py`.
 
-::: do
-Delete `src/wikiapp/wikipedia.py`, and rename `tests/test_wikipedia.py` to `tests/test_wikirandom.py`.
-
-```
-git rm src/wikiapp/wikipedia.py
-git mv tests/test_wikipedia.py tests/test_wikirandom.py
-```
-:::
+do$ git rm src/wikiapp/wikipedia.py
+do$ git mv tests/test_wikipedia.py tests/test_wikirandom.py
 
 Next we make the renamed file, `tests/test_wikirandom.py`, test the library.
 Its docstring is `Tests of the library, wikirandom.`, and it imports
@@ -3159,13 +3081,7 @@ says that the app needs `wikirandom`, of any version. An install from PyPI would
 publishes under that name. The app works with wikirandom 0.1.0, and `<0.2` keeps out a later release that may
 change the library.
 
-::: do
-Give the app the range of versions of wikirandom.
-
-```
-uv add "wikirandom>=0.1.0,<0.2"
-```
-:::
+do$ uv add "wikirandom>=0.1.0,<0.2"
 
 ::: watch
 Find `"wikirandom>=0.1.0,<0.2",` in the change of `pyproject.toml`.
@@ -3227,13 +3143,10 @@ project's `LICENSE`. Its `pyproject.toml` gives the licence and the author under
 `pyproject.toml` does. Both `pyproject.toml` files now name the repository, in `[project.urls]`. PyPI shows it on
 the package's page.
 
-::: do
-Copy the project's `LICENSE` into `packages/wikirandom/`. In `packages/wikirandom/pyproject.toml`, under `readme`,
-give the licence and the author.
+do$ cp LICENSE packages/wikirandom/LICENSE
 
-```
-cp LICENSE packages/wikirandom/LICENSE
-```
+::: do
+In `packages/wikirandom/pyproject.toml`, under `readme`, give the licence and the author.
 
 ```toml
 license = "Apache-2.0"

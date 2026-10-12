@@ -37,19 +37,18 @@ uv makes `packages/wikirandom/`, with these files in it:
 In the project's `pyproject.toml`, uv adds `[tool.uv.workspace]`. uv copies the Python version from
 `.python-version`.
 
-Make the library.
-
-```
+```bash
 uv init --lib --author-from none packages/wikirandom
 ```
 
-Another version of uv writes another range for `uv_build` in the library's `pyproject.toml`, and that line then
-differs from the commit.
+Another version of uv writes another range for `uv_build` in the library's `pyproject.toml`, so that line differs
+from the commit. timewalk still finds that your files match, since it compares the file without the versions.
 
 Next we give the library's `pyproject.toml` Python 3.11, as the app has, and a description. Its `README.md` gets a
 heading and one line of what it is.
 
-In `packages/wikirandom/pyproject.toml`, make the library need 3.11, and give it a description.
+In `packages/wikirandom/pyproject.toml`, replace the lines `description` and `requires-python` that `uv init` wrote
+with the lines below.
 
 ```toml
 description = "A random page of Wikipedia, in any language"
@@ -69,9 +68,7 @@ A random page of Wikipedia, in any language. The command `wikiapp` will use this
 
 Then we make the lockfile again with `uv lock`, for the workspace of two packages.
 
-Make the lockfile again.
-
-```
+```bash
 uv lock
 ```
 
@@ -124,9 +121,7 @@ The library needs requests and pydantic. `packages/wikirandom/src/wikirandom/__i
 `src/wikiapp/wikipedia.py`. Its docstring says what the package is. Its User-Agent names the program that makes
 the request.
 
-Add requests and pydantic to the library.
-
-```
+```bash
 uv add --package wikirandom requests pydantic
 ```
 
@@ -240,10 +235,11 @@ library's code then takes effect in the app with no new install. `src/wikiapp/co
 library. The import goes with the installed packages, under `import click`, so the lines are already in ruff's
 order.
 
-Make the library a dependency of the app, and take requests and pydantic out of the app's dependencies.
-
-```
+```bash
 uv add wikirandom
+```
+
+```bash
 uv remove requests pydantic
 ```
 
@@ -258,10 +254,11 @@ from wikiapp import __version__
 
 Next we delete `src/wikiapp/wikipedia.py`, and rename `tests/test_wikipedia.py` to `tests/test_wikirandom.py`.
 
-Delete `src/wikiapp/wikipedia.py`, and rename `tests/test_wikipedia.py` to `tests/test_wikirandom.py`.
-
-```
+```bash
 git rm src/wikiapp/wikipedia.py
+```
+
+```bash
 git mv tests/test_wikipedia.py tests/test_wikirandom.py
 ```
 

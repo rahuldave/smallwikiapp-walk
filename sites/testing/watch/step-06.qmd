@@ -137,6 +137,8 @@ command asked for Python 3.13. Nothing here needs more than 3.11. Python 3.10 re
 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in `pyproject.toml` now says 3.11,
 and uv solves the lockfile again.
 
+The move ran: `uv lock`
+
 Find `requires-python = ">=3.11"` in the change of `pyproject.toml`.
 
 The project still runs on 3.13, from `.python-version`.

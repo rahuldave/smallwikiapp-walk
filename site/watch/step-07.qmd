@@ -25,6 +25,8 @@ Wikipedia sends. Until now, the code expects these keys to be there, with string
 A pydantic model states the two keys and their types in code. pydantic is a dependency of the package, as click and
 requests are.
 
+The move ran: `uv add pydantic`
+
 Find `"pydantic>=2.14.0",` in the change of `pyproject.toml`.
 
 Next we write the model `Page` in `src/wikiapp/wikipedia.py`, after `WikipediaError`. It has a title and an

@@ -27,6 +27,8 @@ time.
 Now we add ruff, a formatter and a linter in one program, to a third dependency group, `lint`, which `dev`
 includes.
 
+The move ran: `uv add --group lint ruff`
+
 Find `dev = [{ include-group = "test" }, { include-group = "lint" }]` in the change of `pyproject.toml`.
 
 Next we give ruff its settings, at the end of `pyproject.toml`. They set lines of up to 100 characters, and
@@ -113,6 +115,8 @@ passes on the words after `just fmt`.
 
 Now we run the formatter, which rewrites six files. It adds blank lines, puts spaces around `==`, and splits the
 lines longer than 100 characters.
+
+The move ran: `just fmt`
 
 Find `if __name__ == "__main__":` in the change of `src/wikiapp/console.py`. Then read the changes of
 `src/wikiapp/wikipedia.py` and `tests/test_console.py`.
@@ -325,7 +329,9 @@ The linter finds five problems, each with its code:
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf) shows what the move changes.
 
 Now we let ruff fix the one problem of the five that it can fix itself. `just lint --fix` sorts the imports of
-`console.py`.
+`console.py`. The command still ends with exit code 1, because four problems are left.
+
+The move ran: `just lint --fix`
 
 Find `from wikiapp import __version__` in the change of `src/wikiapp/console.py`.
 
@@ -477,6 +483,8 @@ Now we add validate-pyproject to the group `lint`, and a recipe `lint-config` th
 The recipe runs three commands. validate-pyproject checks `pyproject.toml` against the standard for it,
 `uv lock --check` checks the lockfile, and `just --fmt --check --unstable` checks the `justfile`.
 
+The move ran: `uv add --group lint validate-pyproject`
+
 Find `"validate-pyproject>=0.26",` in the change of `pyproject.toml`. Then find `lint-config *args:` in the
 change of `justfile`.
 
@@ -625,6 +633,8 @@ just check
 
 Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
 before every commit. If the program fails, git refuses the commit.
+
+The move ran: `uv add --group lint pre-commit`
 
 Find `"pre-commit>=4.6.2",` in the change of `pyproject.toml`.
 

@@ -81,9 +81,7 @@ says that the app needs `wikirandom`, of any version. An install from PyPI would
 publishes under that name. The app works with wikirandom 0.1.0, and `<0.2` keeps out a later release that may
 change the library.
 
-Give the app the range of versions of wikirandom.
-
-```
+```bash
 uv add "wikirandom>=0.1.0,<0.2"
 ```
 
@@ -172,12 +170,11 @@ project's `LICENSE`. Its `pyproject.toml` gives the licence and the author under
 `pyproject.toml` does. Both `pyproject.toml` files now name the repository, in `[project.urls]`. PyPI shows it on
 the package's page.
 
-Copy the project's `LICENSE` into `packages/wikirandom/`. In `packages/wikirandom/pyproject.toml`, under `readme`,
-give the licence and the author.
-
-```
+```bash
 cp LICENSE packages/wikirandom/LICENSE
 ```
+
+In `packages/wikirandom/pyproject.toml`, under `readme`, give the licence and the author.
 
 ```toml
 license = "Apache-2.0"

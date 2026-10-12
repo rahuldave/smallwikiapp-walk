@@ -25,13 +25,12 @@ Wikipedia sends. Until now, the code expects these keys to be there, with string
 A pydantic model states the two keys and their types in code. pydantic is a dependency of the package, as click and
 requests are.
 
-Add pydantic to the dependencies of the package.
-
-```
+```bash
 uv add pydantic
 ```
 
-If a newer pydantic is out, `uv add` writes its version as the lower bound, and that line then differs from the commit.
+If a newer pydantic is out, `uv add` writes its version as the lower bound, so that line differs from the commit.
+timewalk still finds that your files match, since it compares `pyproject.toml` without the versions.
 
 Next we write the model `Page` in `src/wikiapp/wikipedia.py`, after `WikipediaError`. It has a title and an
 extract, both strings. The file imports `BaseModel` under `import requests`.

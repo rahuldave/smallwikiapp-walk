@@ -66,6 +66,8 @@ Now we install pytest, the tool that runs the tests. The tests need pytest, but 
 installs wikiapp should not get pytest. So pytest goes in a dependency group of its own, `test`. uv installs the
 group `dev` by default, so `dev` includes `test`.
 
+The move ran: `uv add --group test pytest`
+
 Read the change of `pyproject.toml`.
 
 Next we write the first test, in `tests/test_console.py`, which runs the command and checks that it ends with exit
@@ -208,6 +210,8 @@ one test. It goes in the group `test`.
 The call replaces the function, and puts it back after the test. The line `mock.return_value.__enter__.return_value.json.return_value = {` sets what the mock returns when
 the code calls `response.json()` inside the `with` block. The mock returns a page with the title Lorem Ipsum. A
 new test, `test_main_prints_title`, checks that the command prints that title.
+
+The move ran: `uv add --group test pytest-mock`
 
 Read the change of `pyproject.toml`. Find `mock = mocker.patch("requests.get")` in the change of
 `tests/test_console.py`.
@@ -362,6 +366,8 @@ The result is `5 passed`.
 
 Now we measure the coverage of the tests on every run. pytest-cov measures which lines of the code the tests run.
 It goes in the group `test`, and pytest's settings, at the end of `pyproject.toml`, turn coverage on for every run.
+
+The move ran: `uv add --group test pytest-cov`
 
 Read the change of `pyproject.toml`.
 
@@ -1055,6 +1061,8 @@ Now we let the project accept every Python from 3.11 on. `uv init` wrote `requir
 command asked for Python 3.13. Nothing here needs more than 3.11. Python 3.10 reached its end of life on 1 October
 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in `pyproject.toml` now says 3.11,
 and uv solves the lockfile again.
+
+The move ran: `uv lock`
 
 Find `requires-python = ">=3.11"` in the change of `pyproject.toml`.
 

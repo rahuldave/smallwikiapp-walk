@@ -41,6 +41,8 @@ def random_page(
 smalldocs reads all three, and writes Markdown. It is a Python package, so uv installs it like
 any other. smalldocs goes in a fourth dependency group, `docs`, and `dev` includes that group.
 
+The move ran: `uv add --group docs smalldocs`
+
 Read the change of `pyproject.toml`.
 
 Next we write `docs/_smalldocs.yml`, the file of settings that smalldocs reads. For now the file has one section,

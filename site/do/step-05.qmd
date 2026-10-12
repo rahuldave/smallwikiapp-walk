@@ -22,15 +22,14 @@ a type on every parameter and return. The last moves add the types, and put the 
 Now we add ty, a type checker, to the group `lint`. ty reads the code without running it. It finds code whose
 types cannot fit, for example a call whose arguments cannot have the types that the function asks for.
 
-Add ty to the group `lint`.
-
-```
+```bash
 uv add --group lint ty
 ```
 
 Next we add a recipe `types`, which runs ty, after the recipe `lint` in the `justfile`.
 
-In the `justfile`, add a recipe after the recipe `lint` and the blank line under it.
+In the `justfile`, after the recipe `lint` and the blank line under it, add the recipe `types`, with a blank line
+after it.
 
 ```just
 # Check the types of every function call, with ty. Extra arguments go to ty: just types --help
@@ -38,7 +37,6 @@ In the `justfile`, add a recipe after the recipe `lint` and the blank line under
 [no-exit-message]
 types *args:
     {{ if args == "help" { "just help types" } else { 'uv run ty check "$@"' } }}
-
 ```
 
 The move changes these files:

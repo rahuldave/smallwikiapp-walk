@@ -75,9 +75,7 @@ dev = [{ include-group = "test" }]
 
 ```
 
-Then add pytest to the group `test`.
-
-```
+```bash
 uv add --group test pytest
 ```
 
@@ -257,13 +255,11 @@ The call replaces the function, and puts it back after the test. The line `mock.
 the code calls `response.json()` inside the `with` block. The mock returns a page with the title Lorem Ipsum. A
 new test, `test_main_prints_title`, checks that the command prints that title.
 
-Add pytest-mock to the group `test`.
-
-```
+```bash
 uv add --group test pytest-mock
 ```
 
-Then replace `tests/test_console.py` with the code below.
+Replace `tests/test_console.py` with the code below.
 
 ```python
 import click.testing
@@ -461,13 +457,11 @@ The result is `5 passed`.
 Now we measure the coverage of the tests on every run. pytest-cov measures which lines of the code the tests run.
 It goes in the group `test`, and pytest's settings, at the end of `pyproject.toml`, turn coverage on for every run.
 
-Add pytest-cov to the group `test`.
-
-```
+```bash
 uv add --group test pytest-cov
 ```
 
-Then add the settings at the end of `pyproject.toml`.
+Add the settings at the end of `pyproject.toml`.
 
 ```toml
 
@@ -1359,13 +1353,13 @@ command asked for Python 3.13. Nothing here needs more than 3.11. Python 3.10 re
 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in `pyproject.toml` now says 3.11,
 and uv solves the lockfile again.
 
-In `pyproject.toml`, change the line, and solve the lockfile again.
+In `pyproject.toml`, change the line.
 
 ```toml
 requires-python = ">=3.11"
 ```
 
-```
+```bash
 uv lock
 ```
 

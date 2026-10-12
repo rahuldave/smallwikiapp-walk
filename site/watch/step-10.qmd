@@ -72,6 +72,8 @@ says that the app needs `wikirandom`, of any version. An install from PyPI would
 publishes under that name. The app works with wikirandom 0.1.0, and `<0.2` keeps out a later release that may
 change the library.
 
+The move ran: `uv add "wikirandom>=0.1.0,<0.2"`
+
 Find `"wikirandom>=0.1.0,<0.2",` in the change of `pyproject.toml`.
 
 Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
@@ -153,6 +155,8 @@ The library's wheel has no licence, and neither package says where its source is
 project's `LICENSE`. Its `pyproject.toml` gives the licence and the author under `readme`, as the app's
 `pyproject.toml` does. Both `pyproject.toml` files now name the repository, in `[project.urls]`. PyPI shows it on
 the package's page.
+
+The move ran: `cp LICENSE packages/wikirandom/LICENSE`
 
 Open `packages/wikirandom/LICENSE`, a new file. Read the change of `packages/wikirandom/pyproject.toml` and of
 `pyproject.toml`.

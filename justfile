@@ -8,7 +8,7 @@
 project := "smallwikiapp"
 upstream := "rahuldave"
 # timewalk is not pinned: each run fetches the newest. TIMEWALK names another source, a working copy say
-timewalk := env("TIMEWALK", "git+https://github.com/rahuldave/timewalk@walks")
+timewalk := env("TIMEWALK", "git+https://github.com/rahuldave/timewalk")
 
 # Recipes get their arguments as "$1", "$@": a word with a space or a quote stays one word
 set positional-arguments
@@ -97,12 +97,12 @@ check: setup
 site:
     #!/usr/bin/env bash
     set -euo pipefail
-    uvx --from 'smalldocs>=0.1.4' smalldocs render site
+    uvx --from 'smalldocs>=0.1.5' smalldocs render site
     # Each small walk's site, from sites/ID, goes into site/_site/ID
     for small in sites/*/; do
         [ -d "$small" ] || continue  # no small walk: the glob stays as written
         id=$(basename "$small")
-        uvx --from 'smalldocs>=0.1.4' smalldocs render "sites/$id"
+        uvx --from 'smalldocs>=0.1.5' smalldocs render "sites/$id"
         mkdir -p "site/_site/$id"
         cp -R "sites/$id/_site/." "site/_site/$id/"
     done

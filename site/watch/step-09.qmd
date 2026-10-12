@@ -37,6 +37,8 @@ uv makes `packages/wikirandom/`, with these files in it:
 In the project's `pyproject.toml`, uv adds `[tool.uv.workspace]`. uv copies the Python version from
 `.python-version`.
 
+The move ran: `uv init --lib --author-from none packages/wikirandom`
+
 Open `packages/wikirandom/src/wikirandom/__init__.py`, a new file. Find `[tool.uv.workspace]` in the change of
 `pyproject.toml`.
 
@@ -47,6 +49,8 @@ Find `requires-python = ">=3.11"` in `packages/wikirandom/pyproject.toml`, a new
 `packages/wikirandom/README.md`, a new file.
 
 Then we make the lockfile again with `uv lock`, for the workspace of two packages.
+
+The move ran: `uv lock`
 
 The move changes these files:
 
@@ -96,6 +100,8 @@ Now we give the library the code of `src/wikiapp/wikipedia.py`, and the packages
 The library needs requests and pydantic. `packages/wikirandom/src/wikirandom/__init__.py` now contains the code of
 `src/wikiapp/wikipedia.py`. Its docstring says what the package is. Its User-Agent names the program that makes
 the request.
+
+The move ran: `uv add --package wikirandom requests pydantic`
 
 Read the change of `packages/wikirandom/pyproject.toml`. Find
 `USER_AGENT = "wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)"` in the change of
@@ -200,10 +206,18 @@ library's code then takes effect in the app with no new install. `src/wikiapp/co
 library. The import goes with the installed packages, under `import click`, so the lines are already in ruff's
 order.
 
+The move ran: `uv add wikirandom`
+
+The move ran: `uv remove requests pydantic`
+
 Find `wikirandom = { workspace = true }` in the change of `pyproject.toml`. Find
 `from wikirandom import WikipediaError, random_page` in the change of `src/wikiapp/console.py`.
 
 Next we delete `src/wikiapp/wikipedia.py`, and rename `tests/test_wikipedia.py` to `tests/test_wikirandom.py`.
+
+The move ran: `git rm src/wikiapp/wikipedia.py`
+
+The move ran: `git mv tests/test_wikipedia.py tests/test_wikirandom.py`
 
 Next we make the renamed file, `tests/test_wikirandom.py`, test the library.
 Its docstring is `Tests of the library, wikirandom.`, and it imports

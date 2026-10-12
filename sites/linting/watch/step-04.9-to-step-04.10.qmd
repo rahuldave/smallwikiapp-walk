@@ -64,6 +64,8 @@ just check
 Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
 before every commit. If the program fails, git refuses the commit.
 
+The move ran: `uv add --group lint pre-commit`
+
 Find `"pre-commit>=4.6.2",` in the change of `pyproject.toml`.
 
 Next we make `.pre-commit-config.yaml`, a new file that names the hooks. Three come from pre-commit's collection.

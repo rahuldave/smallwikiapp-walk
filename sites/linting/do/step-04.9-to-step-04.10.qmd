@@ -79,9 +79,7 @@ just check
 Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
 before every commit. If the program fails, git refuses the commit.
 
-Add pre-commit to the group `lint`.
-
-```
+```bash
 uv add --group lint pre-commit
 ```
 

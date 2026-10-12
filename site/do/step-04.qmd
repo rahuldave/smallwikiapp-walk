@@ -34,9 +34,7 @@ dev = [{ include-group = "test" }, { include-group = "lint" }]
 lint = []
 ```
 
-Then add ruff to the group.
-
-```
+```bash
 uv add --group lint ruff
 ```
 
@@ -148,9 +146,7 @@ passes on the words after `just fmt`.
 Now we run the formatter, which rewrites six files. It adds blank lines, puts spaces around `==`, and splits the
 lines longer than 100 characters.
 
-Run the formatter.
-
-```
+```bash
 just fmt
 ```
 
@@ -392,11 +388,9 @@ The linter finds five problems, each with its code:
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf) shows what the move changes.
 
 Now we let ruff fix the one problem of the five that it can fix itself. `just lint --fix` sorts the imports of
-`console.py`.
+`console.py`. The command still ends with exit code 1, because four problems are left.
 
-Let the linter fix what it can. The command still fails, with exit code 1, because four problems are left.
-
-```
+```bash
 just lint --fix
 ```
 
@@ -559,9 +553,7 @@ Now we add validate-pyproject to the group `lint`, and a recipe `lint-config` th
 The recipe runs three commands. validate-pyproject checks `pyproject.toml` against the standard for it,
 `uv lock --check` checks the lockfile, and `just --fmt --check --unstable` checks the `justfile`.
 
-Add validate-pyproject to the group `lint`.
-
-```
+```bash
 uv add --group lint validate-pyproject
 ```
 
@@ -747,9 +739,7 @@ just check
 Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
 before every commit. If the program fails, git refuses the commit.
 
-Add pre-commit to the group `lint`.
-
-```
+```bash
 uv add --group lint pre-commit
 ```
 

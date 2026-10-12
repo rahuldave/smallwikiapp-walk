@@ -22,6 +22,8 @@ a type on every parameter and return. The last moves add the types, and put the 
 Now we add ty, a type checker, to the group `lint`. ty reads the code without running it. It finds code whose
 types cannot fit, for example a call whose arguments cannot have the types that the function asks for.
 
+The move ran: `uv add --group lint ty`
+
 Find `"ty>=0.0.86",` in the change of `pyproject.toml`.
 
 Next we add a recipe `types`, which runs ty, after the recipe `lint` in the `justfile`.
