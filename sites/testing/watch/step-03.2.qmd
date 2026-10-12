@@ -1,0 +1,60 @@
+---
+title: "step-03.2: A shared mock in conftest.py"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Watch mode. [The same step in do mode](../do/step-03.2.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/fec316ee50d27867f0dab60a755372ce1d1839d1), the commit before step-03.2.
+
+```bash
+just setup
+```
+
+## step-03.2 The mock moves to conftest.py {#step-03.2}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/dcb1e4c7102be3c1feec309ed88e1097ce28f32e) shows what the move changes.
+
+Now we share the mock with every test file. pytest reads `tests/conftest.py` before the tests, and every test file
+can use a fixture in it. The tests of wikipedia.py, in the next move, need the mock too. So the fixture
+`mock_requests_get` moves from `tests/test_console.py` to a new file, `tests/conftest.py`.
+
+Open `tests/conftest.py`, a new file. Read the change of `tests/test_console.py`.
+
+The move changes these files:
+
+- `tests/conftest.py`: 10 lines added; a new file with the mock.
+- `tests/test_console.py`: 9 lines removed; the mock is gone.
+
+Files to read:
+- [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/dcb1e4c7102be3c1feec309ed88e1097ce28f32e/tests/conftest.py): the fixture, for every test file.
+  - look at: `def mock_requests_get(mocker):`
+- [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/dcb1e4c7102be3c1feec309ed88e1097ce28f32e/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/fec316ee50d27867f0dab60a755372ce1d1839d1...dcb1e4c7102be3c1feec309ed88e1097ce28f32e#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the fixture is gone, but the tests still name it.
+
+The change of `tests/test_console.py`:
+
+```diff
+@@ -5,15 +5,6 @@ import pytest
+ def runner():
+     return click.testing.CliRunner()
+ 
+-@pytest.fixture
+-def mock_requests_get(mocker):
+-    mock = mocker.patch("requests.get")
+-    mock.return_value.__enter__.return_value.json.return_value = {
+-        "title": "Lorem Ipsum",
+-        "extract": "Lorem ipsum dolor sit amet",
+-    }
+-    return mock
+-
+ from wikiapp import console
+ 
+ def test_main_prints_title(runner, mock_requests_get):
+```
+
+```bash
+just test
+```
+
+The result is `5 passed`. pytest finds the fixture in conftest.py.

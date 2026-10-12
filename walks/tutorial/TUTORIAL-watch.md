@@ -40,10 +40,11 @@ the shape of the project:
 - `pyproject.toml`
 - `src/wikiapp/__init__.py`, with a function `main`
 - `.python-version`, with the Python version
+- `README.md` and `.gitignore`
 
 Then the author changed the project by hand. `main` moved to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and it names `wikiapp.console:main` as the command. `uv lock` wrote the
-lockfile, `uv.lock`. The author also wrote the justfile, the README, `.gitignore` and `LICENSE` by hand.
+lockfile, `uv.lock`. The author also wrote the justfile and `LICENSE`, and wrote the README and `.gitignore` again, by hand.
 
 `just setup` runs `uv sync --locked`. The command makes `.venv` with Python 3.13, from `.python-version`. It
 installs exactly the packages that the lockfile names. Here, the only package is `wikiapp` itself.
@@ -135,8 +136,8 @@ uv tree --depth 1
 
 Now we make `main` ask Wikipedia for a random page, and print it.
 
-`src/wikiapp/console.py` now has the first code of wikiapp, from 2024, with a docstring that says what the
-command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
+`src/wikiapp/console.py` now has a command, as in the first commit of the original wikiapp, from 2024. Its
+docstring is new, and says what the command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
 `main` here keeps the annotation that `uv init` gave it at step-00.
 
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.

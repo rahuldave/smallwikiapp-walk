@@ -1,19 +1,16 @@
 ---
-title: "step-06: End to end, and CI"
+title: "step-06.1 to step-06.2: End-to-end tests, on request"
 ---
 
 <!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
-Watch mode. [The same step in do mode](../do/step-06.qmd).
+Do mode. [The same step in watch mode](../watch/step-06.1-to-step-06.2.qmd).
 
-[The code at step-06](https://github.com/rahuldave/smallwikiapp/tree/step-06)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/41990df7638f0964c66bf4e4433ffc4f5b6a026d), the commit before step-06.1.
 
 ```bash
 just setup
 ```
-
-The moves of this step do three things. The tests that ask the real Wikipedia run only when you ask for them.
-The project accepts every Python from 3.11 on. GitHub runs the tests on three systems and four Pythons.
 
 ## step-06.1 The end-to-end test runs only on request {#step-06.1}
 
@@ -26,7 +23,22 @@ depends on Wikipedia. In `tests/test_console.py`, it now has the marker `e2e`, w
 name says so, `test_main_succeeds_in_production`. `pyproject.toml` declares the marker in `markers`. The option
 `-m 'not e2e'` in `addopts` leaves the e2e tests out of every run that does not ask for them.
 
-Find `@pytest.mark.e2e` in the change of `tests/test_console.py`. Then read the change of `pyproject.toml`.
+In `tests/test_console.py`, mark the test `e2e`, and give it the new name.
+
+```python
+@pytest.mark.e2e
+def test_main_succeeds_in_production(runner: CliRunner) -> None:
+```
+
+In `pyproject.toml`, replace the comment and the line `addopts`.
+
+```toml
+# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not. A test
+# marked e2e asks the real Wikipedia, so it needs the network, and runs only when asked for:
+# just test -m e2e
+addopts = "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"
+markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]
+```
 
 The move changes these files:
 
@@ -88,7 +100,18 @@ extract. A second e2e test, from the original wikiapp, checks that the real Wiki
 It is `test_random_page_returns_dictionary_in_production`, at the end of `tests/test_wikipedia.py`. The file now
 imports pytest, in a block of its own.
 
-Find `def test_random_page_returns_dictionary_in_production() -> None:` in the change of `tests/test_wikipedia.py`.
+Add the test at the end of `tests/test_wikipedia.py`. Put `import pytest` in a block of its own between
+`from unittest.mock import Mock` and `from wikiapp import wikipedia`, with a blank line on each side.
+
+```python
+
+
+@pytest.mark.e2e
+def test_random_page_returns_dictionary_in_production() -> None:
+    page = wikipedia.random_page()
+    assert "title" in page
+    assert "extract" in page
+```
 
 The move changes one file:
 
@@ -127,78 +150,3 @@ just test -q -m e2e
 ```
 
 The output is `2 passed, 6 deselected`.
-
-## step-06.3 Any Python from 3.11 on {#step-06.3}
-
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761) shows what the move changes.
-
-Now we let the project accept every Python from 3.11 on. `uv init` wrote `requires-python = ">=3.13"`, because the
-command asked for Python 3.13. Nothing here needs more than 3.11. Python 3.10 reached its end of life on 1 October
-2026, so 3.11 is now the oldest Python that still gets security fixes. The line in `pyproject.toml` now says 3.11,
-and uv solves the lockfile again.
-
-The move ran: `uv lock`
-
-Find `requires-python = ">=3.11"` in the change of `pyproject.toml`.
-
-The project still runs on 3.13, from `.python-version`.
-
-The move changes these files:
-
-- `pyproject.toml`: 1 line added, 1 removed; the oldest Python that the project accepts.
-- `uv.lock`: 160 lines added, 2 removed; solved for every Python from 3.11 on.
-
-Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/15ba9fa843e3f055dac9c8f1a844b7382858b761/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
-  - look at: `requires-python = ">=3.11"`
-
-The change of `pyproject.toml`:
-
-```diff
-@@ -6,7 +6,7 @@ readme = "README.md"
- license = "Apache-2.0"
- license-files = ["LICENSE"]
- authors = [{ name = "Rahul Dave" }]
--requires-python = ">=3.13"
-+requires-python = ">=3.11"
- dependencies = [
-     "click>=8.5.0",
-     "requests>=2.34.2",
-```
-
-```bash
-uv run --isolated --python 3.11 python --version
-uv run --isolated --python 3.11 pytest -q
-```
-
-`--isolated` makes a temporary environment with Python 3.11, and does not change `.venv`. The tests pass on
-3.11.
-
-## step-06.4 GitHub runs the tests {#step-06.4}
-
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d3f84ea883f0e41f64fb397f436c89e372c83bff) shows what the move changes.
-
-Now we add a GitHub Actions workflow, which runs the tests on the machines of GitHub. A GitHub Actions workflow is
-a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push to main and on every pull
-request. The workflow `.github/workflows/test.yaml` has two jobs. The job `tests` runs the tests on three systems
-and four Pythons. The job `check` runs `just check` once.
-
-Open `.github/workflows/test.yaml`, a new file. Find `python: ["3.11", "3.12", "3.13", "3.14"]` in it.
-
-The original wikiapp used pixi for the same work, with one environment for each Python. Here, `setup-uv` tells
-uv which Python to use. If that Python is missing, `uv run` installs it.
-
-The move changes one file:
-
-- `.github/workflows/test.yaml`: 37 lines added; a new file with two jobs. GitHub runs one of the jobs twelve times.
-
-Files to read:
-- [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/d3f84ea883f0e41f64fb397f436c89e372c83bff/.github/workflows/test.yaml): the matrix of systems and Pythons.
-  - look at: `python: ["3.11", "3.12", "3.13", "3.14"]`
-
-```bash
-uv run pre-commit run check-yaml --files .github/workflows/test.yaml
-```
-
-The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
-thirteen jobs.

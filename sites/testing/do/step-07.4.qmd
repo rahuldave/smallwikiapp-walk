@@ -1,0 +1,87 @@
+---
+title: "step-07.4: A drop in coverage"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Do mode. [The same step in watch mode](../watch/step-07.4.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/8ef59a76a8988b6ef39a36c630e5785be2573703), the commit before step-07.4.
+
+```bash
+just setup
+```
+
+## step-07.4 Only a language code goes into the address {#step-07.4}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc) shows what the move changes.
+
+Now we check, in `random_page`, that the language is a language code before it goes into the address.
+
+The code puts the language into the host name, `{language}.wikipedia.org`. A language such as
+`example.com/x?` sends the request to example.com, with the User-Agent. The code of every Wikipedia has only
+letters and hyphens, for example `en`, `fr`, `simple` and `zh-yue`. In `src/wikiapp/wikipedia.py`, a pattern
+`LANGUAGE` under `API_URL` matches such a code. `random_page` checks the language first, before the `try`. Any
+other language raises a WikipediaError.
+
+In `src/wikiapp/wikipedia.py`, import `re` at the top, in a block of its own above `import requests`. Add a
+pattern under `API_URL`.
+
+```python
+import re
+
+```
+
+```python
+LANGUAGE = re.compile(r"[a-z]+(-[a-z]+)*")  # en, fr, simple, zh-yue: letters and hyphens
+```
+
+Add the check at the top of the body of `random_page`, under its docstring and before the `try`.
+
+```python
+    if not LANGUAGE.fullmatch(language):
+        raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
+```
+
+The move changes one file:
+
+- `src/wikiapp/wikipedia.py`: 5 lines added; the pattern, and the check.
+
+Files to read:
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/8ef59a76a8988b6ef39a36c630e5785be2573703...fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the code checks a language before it uses it.
+  - look at: `if not LANGUAGE.fullmatch(language):`
+
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,7 +1,10 @@
++import re
++
+ import requests
+ from pydantic import BaseModel, ValidationError
+ 
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
++LANGUAGE = re.compile(r"[a-z]+(-[a-z]+)*")  # en, fr, simple, zh-yue: letters and hyphens
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
+ 
+@@ -18,6 +21,8 @@ class Page(BaseModel):
+ 
+ def random_page(language: str = "en") -> Page:
+     """Get a random page from Wikipedia."""
++    if not LANGUAGE.fullmatch(language):
++        raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
+     try:
+         with requests.get(
+             API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10
+```
+
+```bash
+uv run wikiapp --language 'example.com/x?'
+just test -q
+```
+
+The command prints `Error: 'example.com/x?' is not a language code, such as en, fr or zh-yue`, and sends no
+request. The tests print `7 passed, 2 deselected`. No test reaches the new `raise`, so the coverage table lists
+its line as missing. The coverage is 95% in all, which is still over the floor of 90%. A drop in coverage is
+something to know about. The tutorial adds no test to hide it.

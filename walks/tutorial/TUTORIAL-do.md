@@ -40,10 +40,11 @@ the shape of the project:
 - `pyproject.toml`
 - `src/wikiapp/__init__.py`, with a function `main`
 - `.python-version`, with the Python version
+- `README.md` and `.gitignore`
 
 Then the author changed the project by hand. `main` moved to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and it names `wikiapp.console:main` as the command. `uv lock` wrote the
-lockfile, `uv.lock`. The author also wrote the justfile, the README, `.gitignore` and `LICENSE` by hand.
+lockfile, `uv.lock`. The author also wrote the justfile and `LICENSE`, and wrote the README and `.gitignore` again, by hand.
 
 `just setup` runs `uv sync --locked`. The command makes `.venv` with Python 3.13, from `.python-version`. It
 installs exactly the packages that the lockfile names. Here, the only package is `wikiapp` itself.
@@ -137,8 +138,8 @@ If your versions are newer, your `uv.lock` differs from the one here, and the mo
 
 Now we make `main` ask Wikipedia for a random page, and print it.
 
-`src/wikiapp/console.py` now has the first code of wikiapp, from 2024, with a docstring that says what the
-command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
+`src/wikiapp/console.py` now has a command, as in the first commit of the original wikiapp, from 2024. Its
+docstring is new, and says what the command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
 `main` here keeps the annotation that `uv init` gave it at step-00.
 
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.
@@ -703,7 +704,7 @@ Now we add a test, `test_main_fails_on_request_error`, to `tests/test_console.py
 checks that a failed request ends the command with exit code 1. A mock can raise an exception as well as return a
 value. If `side_effect` is an exception, a call to the mock raises it.
 
-Add the test below to `tests/test_console.py`, before `test_main_succeeds`.
+Add the test below to `tests/test_console.py`, before `test_main_succeeds`, with a blank line after it.
 
 ```python
 def test_main_fails_on_request_error(runner, mock_requests_get):
@@ -988,12 +989,15 @@ Now we let `random_page` ask the Wikipedia of a language. Each language has its 
 LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, the address has a placeholder for the language.
 `random_page` fills it, with English as the default.
 
-In `src/wikiapp/wikipedia.py`, put a placeholder for the language in the address. Fill it in `random_page`, with
-English as the default.
+In `src/wikiapp/wikipedia.py`, replace the line `API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"`
+with this one.
 
 ```python
 API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
 ```
+
+Then replace the first three lines of `random_page`, from `def random_page():` to the line `with requests.get`, with
+these.
 
 ```python
 def random_page(language="en"):
@@ -1200,11 +1204,13 @@ In the original wikiapp, the library raised the exception of click itself, with 
 console one day. In this move, the exception of click moves to console.py. wikipedia.py knows Wikipedia and
 requests, and console.py knows click.
 
-In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click.
+In `src/wikiapp/console.py`, replace the line `from wikiapp.wikipedia import random_page` with this one.
 
 ```python
 from wikiapp.wikipedia import WikipediaError, random_page
 ```
+
+In `main`, replace the line `data = random_page(language=language)` with these four lines.
 
 ```python
     try:
@@ -1216,7 +1222,8 @@ from wikiapp.wikipedia import WikipediaError, random_page
 Then we add a test, `test_main_prints_message_on_request_error`, which makes the mock raise a `RequestException`.
 It checks that the output contains `Error`. `tests/test_console.py` now imports `requests`.
 
-Add the test to `tests/test_console.py`, before `test_main_succeeds`. Put `import requests` under `import pytest`.
+Add the test to `tests/test_console.py`, before `test_main_succeeds`, with a blank line after it. Put
+`import requests` under `import pytest`.
 
 ```python
 def test_main_prints_message_on_request_error(runner, mock_requests_get):

@@ -71,8 +71,8 @@ If your versions are newer, your `uv.lock` differs from the one here, and the mo
 
 Now we make `main` ask Wikipedia for a random page, and print it.
 
-`src/wikiapp/console.py` now has the first code of wikiapp, from 2024, with a docstring that says what the
-command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
+`src/wikiapp/console.py` now has a command, as in the first commit of the original wikiapp, from 2024. Its
+docstring is new, and says what the command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
 `main` here keeps the annotation that `uv init` gave it at step-00.
 
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.

@@ -368,7 +368,7 @@ Now we add a test, `test_main_fails_on_request_error`, to `tests/test_console.py
 checks that a failed request ends the command with exit code 1. A mock can raise an exception as well as return a
 value. If `side_effect` is an exception, a call to the mock raises it.
 
-Add the test below to `tests/test_console.py`, before `test_main_succeeds`.
+Add the test below to `tests/test_console.py`, before `test_main_succeeds`, with a blank line after it.
 
 ```python
 def test_main_fails_on_request_error(runner, mock_requests_get):

@@ -186,12 +186,15 @@ Now we let `random_page` ask the Wikipedia of a language. Each language has its 
 LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, the address has a placeholder for the language.
 `random_page` fills it, with English as the default.
 
-In `src/wikiapp/wikipedia.py`, put a placeholder for the language in the address. Fill it in `random_page`, with
-English as the default.
+In `src/wikiapp/wikipedia.py`, replace the line `API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"`
+with this one.
 
 ```python
 API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
 ```
+
+Then replace the first three lines of `random_page`, from `def random_page():` to the line `with requests.get`, with
+these.
 
 ```python
 def random_page(language="en"):
@@ -398,11 +401,13 @@ In the original wikiapp, the library raised the exception of click itself, with 
 console one day. In this move, the exception of click moves to console.py. wikipedia.py knows Wikipedia and
 requests, and console.py knows click.
 
-In `src/wikiapp/console.py`, import the error with `random_page`. Catch it, and raise the exception of click.
+In `src/wikiapp/console.py`, replace the line `from wikiapp.wikipedia import random_page` with this one.
 
 ```python
 from wikiapp.wikipedia import WikipediaError, random_page
 ```
+
+In `main`, replace the line `data = random_page(language=language)` with these four lines.
 
 ```python
     try:
@@ -414,7 +419,8 @@ from wikiapp.wikipedia import WikipediaError, random_page
 Then we add a test, `test_main_prints_message_on_request_error`, which makes the mock raise a `RequestException`.
 It checks that the output contains `Error`. `tests/test_console.py` now imports `requests`.
 
-Add the test to `tests/test_console.py`, before `test_main_succeeds`. Put `import requests` under `import pytest`.
+Add the test to `tests/test_console.py`, before `test_main_succeeds`, with a blank line after it. Put
+`import requests` under `import pytest`.
 
 ```python
 def test_main_prints_message_on_request_error(runner, mock_requests_get):

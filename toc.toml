@@ -28,14 +28,28 @@ moves = "do"                      # the student makes each move from the notes, 
 [[walk]]
 id = "testing"
 title = "Testing smallwikiapp, one move at a time"
-description = "The moves of smallwikiapp that add pytest, a fixture, a mock, coverage, and the tests of the library."
+description = "The project and its command, then the moves of smallwikiapp that add pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
 notes = "walks/tutorial/notes.md"
 slides = "walks/tutorial/slides/slides.toml"
 intro = "walks/testing/intro.md"  # what the copies say before the first step
 moves = "watch"
-select = ["step-02", "step-03", "step-05.5", "step-06", "step-07.2..step-07.3", "step-08.4"]
+select = [
+  { range = "step-00", title = "The project" },
+  { range = "step-01", title = "The command under test" },
+  { range = "step-02.1..step-02.2", title = "pytest and a first test" },
+  { range = "step-02.3..step-02.6", title = "Fixtures and mocks" },
+  { range = "step-02.7", title = "Coverage" },
+  { range = "step-03.2", title = "A shared mock in conftest.py" },
+  { range = "step-03.3", title = "A test of the language" },
+  { range = "step-03.6", title = "A test of an error message" },
+  { range = "step-04.9", title = "just check, with a coverage floor" },
+  { range = "step-06.1..step-06.2", title = "End-to-end tests, on request" },
+  { range = "step-06.3..step-06.4", title = "The tests on GitHub" },
+  { range = "step-07.2..step-07.3", title = "Tests of a model" },
+  { range = "step-07.4", title = "A drop in coverage" },
+]
 
 [[walk]]
 id = "linting"

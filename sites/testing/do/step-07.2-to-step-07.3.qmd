@@ -1,5 +1,5 @@
 ---
-title: "step-07.2 to step-07.3"
+title: "step-07.2 to step-07.3: Tests of a model"
 ---
 
 <!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->

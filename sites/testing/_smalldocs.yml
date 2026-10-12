@@ -14,128 +14,172 @@ website:
       - index.qmd
       - section: "Watch"
         contents:
-          - section: "step-02: Tests, with mocks"
-            href: watch/step-02.qmd
+          - text: "step-00: The project"
+            href: watch/step-00.qmd
+          - section: "step-01: The command under test"
+            href: watch/step-01.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: watch/step-01.qmd#step-01.1
+              - text: "step-01.2 Ask Wikipedia for a page"
+                href: watch/step-01.qmd#step-01.2
+              - text: "step-01.3 A User-Agent"
+                href: watch/step-01.qmd#step-01.3
+              - text: "step-01.4 --version"
+                href: watch/step-01.qmd#step-01.4
+          - section: "step-02.1 to step-02.2: pytest and a first test"
+            href: watch/step-02.1-to-step-02.2.qmd
             contents:
               - text: "step-02.1 pytest and the first test"
-                href: watch/step-02.qmd#step-02.1
+                href: watch/step-02.1-to-step-02.2.qmd#step-02.1
               - text: "step-02.2 The recipe `just test`"
-                href: watch/step-02.qmd#step-02.2
+                href: watch/step-02.1-to-step-02.2.qmd#step-02.2
+          - section: "step-02.3 to step-02.6: Fixtures and mocks"
+            href: watch/step-02.3-to-step-02.6.qmd
+            contents:
               - text: "step-02.3 The runner as a fixture"
-                href: watch/step-02.qmd#step-02.3
+                href: watch/step-02.3-to-step-02.6.qmd#step-02.3
               - text: "step-02.4 A mock in place of Wikipedia"
-                href: watch/step-02.qmd#step-02.4
+                href: watch/step-02.3-to-step-02.6.qmd#step-02.4
               - text: "step-02.5 Tests of the request"
-                href: watch/step-02.qmd#step-02.5
+                href: watch/step-02.3-to-step-02.6.qmd#step-02.5
               - text: "step-02.6 A test of a failed request"
-                href: watch/step-02.qmd#step-02.6
+                href: watch/step-02.3-to-step-02.6.qmd#step-02.6
+          - section: "step-02.7: Coverage"
+            href: watch/step-02.7.qmd
+            contents:
               - text: "step-02.7 Coverage"
-                href: watch/step-02.qmd#step-02.7
-          - section: "step-03: A library and an app"
-            href: watch/step-03.qmd
+                href: watch/step-02.7.qmd#step-02.7
+          - section: "step-03.2: A shared mock in conftest.py"
+            href: watch/step-03.2.qmd
             contents:
-              - text: "step-03.1 random_page moves to wikipedia.py"
-                href: watch/step-03.qmd#step-03.1
               - text: "step-03.2 The mock moves to conftest.py"
-                href: watch/step-03.qmd#step-03.2
-              - text: "step-03.3 A language"
-                href: watch/step-03.qmd#step-03.3
-              - text: "step-03.4 wikiapp --language"
-                href: watch/step-03.qmd#step-03.4
-              - text: "step-03.5 WikipediaError"
-                href: watch/step-03.qmd#step-03.5
-              - text: "step-03.6 The command prints the error"
-                href: watch/step-03.qmd#step-03.6
-          - section: "step-05.5: Types in the tests"
-            href: watch/step-05.5.qmd
+                href: watch/step-03.2.qmd#step-03.2
+          - section: "step-03.3: A test of the language"
+            href: watch/step-03.3.qmd
             contents:
-              - text: "step-05.5 Types in the tests"
-                href: watch/step-05.5.qmd#step-05.5
-          - section: "step-06: End to end, and CI"
-            href: watch/step-06.qmd
+              - text: "step-03.3 A language"
+                href: watch/step-03.3.qmd#step-03.3
+          - section: "step-03.6: A test of an error message"
+            href: watch/step-03.6.qmd
+            contents:
+              - text: "step-03.6 The command prints the error"
+                href: watch/step-03.6.qmd#step-03.6
+          - section: "step-04.9: just check, with a coverage floor"
+            href: watch/step-04.9.qmd
+            contents:
+              - text: "step-04.9 The recipe check"
+                href: watch/step-04.9.qmd#step-04.9
+          - section: "step-06.1 to step-06.2: End-to-end tests, on request"
+            href: watch/step-06.1-to-step-06.2.qmd
             contents:
               - text: "step-06.1 The end-to-end test runs only on request"
-                href: watch/step-06.qmd#step-06.1
+                href: watch/step-06.1-to-step-06.2.qmd#step-06.1
               - text: "step-06.2 An end-to-end test of the library"
-                href: watch/step-06.qmd#step-06.2
+                href: watch/step-06.1-to-step-06.2.qmd#step-06.2
+          - section: "step-06.3 to step-06.4: The tests on GitHub"
+            href: watch/step-06.3-to-step-06.4.qmd
+            contents:
               - text: "step-06.3 Any Python from 3.11 on"
-                href: watch/step-06.qmd#step-06.3
+                href: watch/step-06.3-to-step-06.4.qmd#step-06.3
               - text: "step-06.4 GitHub runs the tests"
-                href: watch/step-06.qmd#step-06.4
-          - section: "step-07.2 to step-07.3"
+                href: watch/step-06.3-to-step-06.4.qmd#step-06.4
+          - section: "step-07.2 to step-07.3: Tests of a model"
             href: watch/step-07.2-to-step-07.3.qmd
             contents:
               - text: "step-07.2 random_page returns a Page"
                 href: watch/step-07.2-to-step-07.3.qmd#step-07.2
               - text: "step-07.3 An answer that is not a page"
                 href: watch/step-07.2-to-step-07.3.qmd#step-07.3
-          - section: "step-08.4: The tests documented"
-            href: watch/step-08.4.qmd
+          - section: "step-07.4: A drop in coverage"
+            href: watch/step-07.4.qmd
             contents:
-              - text: "step-08.4 The tests documented"
-                href: watch/step-08.4.qmd#step-08.4
+              - text: "step-07.4 Only a language code goes into the address"
+                href: watch/step-07.4.qmd#step-07.4
       - section: "Do"
         contents:
-          - section: "step-02: Tests, with mocks"
-            href: do/step-02.qmd
+          - text: "step-00: The project"
+            href: do/step-00.qmd
+          - section: "step-01: The command under test"
+            href: do/step-01.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: do/step-01.qmd#step-01.1
+              - text: "step-01.2 Ask Wikipedia for a page"
+                href: do/step-01.qmd#step-01.2
+              - text: "step-01.3 A User-Agent"
+                href: do/step-01.qmd#step-01.3
+              - text: "step-01.4 --version"
+                href: do/step-01.qmd#step-01.4
+          - section: "step-02.1 to step-02.2: pytest and a first test"
+            href: do/step-02.1-to-step-02.2.qmd
             contents:
               - text: "step-02.1 pytest and the first test"
-                href: do/step-02.qmd#step-02.1
+                href: do/step-02.1-to-step-02.2.qmd#step-02.1
               - text: "step-02.2 The recipe `just test`"
-                href: do/step-02.qmd#step-02.2
+                href: do/step-02.1-to-step-02.2.qmd#step-02.2
+          - section: "step-02.3 to step-02.6: Fixtures and mocks"
+            href: do/step-02.3-to-step-02.6.qmd
+            contents:
               - text: "step-02.3 The runner as a fixture"
-                href: do/step-02.qmd#step-02.3
+                href: do/step-02.3-to-step-02.6.qmd#step-02.3
               - text: "step-02.4 A mock in place of Wikipedia"
-                href: do/step-02.qmd#step-02.4
+                href: do/step-02.3-to-step-02.6.qmd#step-02.4
               - text: "step-02.5 Tests of the request"
-                href: do/step-02.qmd#step-02.5
+                href: do/step-02.3-to-step-02.6.qmd#step-02.5
               - text: "step-02.6 A test of a failed request"
-                href: do/step-02.qmd#step-02.6
+                href: do/step-02.3-to-step-02.6.qmd#step-02.6
+          - section: "step-02.7: Coverage"
+            href: do/step-02.7.qmd
+            contents:
               - text: "step-02.7 Coverage"
-                href: do/step-02.qmd#step-02.7
-          - section: "step-03: A library and an app"
-            href: do/step-03.qmd
+                href: do/step-02.7.qmd#step-02.7
+          - section: "step-03.2: A shared mock in conftest.py"
+            href: do/step-03.2.qmd
             contents:
-              - text: "step-03.1 random_page moves to wikipedia.py"
-                href: do/step-03.qmd#step-03.1
               - text: "step-03.2 The mock moves to conftest.py"
-                href: do/step-03.qmd#step-03.2
-              - text: "step-03.3 A language"
-                href: do/step-03.qmd#step-03.3
-              - text: "step-03.4 wikiapp --language"
-                href: do/step-03.qmd#step-03.4
-              - text: "step-03.5 WikipediaError"
-                href: do/step-03.qmd#step-03.5
-              - text: "step-03.6 The command prints the error"
-                href: do/step-03.qmd#step-03.6
-          - section: "step-05.5: Types in the tests"
-            href: do/step-05.5.qmd
+                href: do/step-03.2.qmd#step-03.2
+          - section: "step-03.3: A test of the language"
+            href: do/step-03.3.qmd
             contents:
-              - text: "step-05.5 Types in the tests"
-                href: do/step-05.5.qmd#step-05.5
-          - section: "step-06: End to end, and CI"
-            href: do/step-06.qmd
+              - text: "step-03.3 A language"
+                href: do/step-03.3.qmd#step-03.3
+          - section: "step-03.6: A test of an error message"
+            href: do/step-03.6.qmd
+            contents:
+              - text: "step-03.6 The command prints the error"
+                href: do/step-03.6.qmd#step-03.6
+          - section: "step-04.9: just check, with a coverage floor"
+            href: do/step-04.9.qmd
+            contents:
+              - text: "step-04.9 The recipe check"
+                href: do/step-04.9.qmd#step-04.9
+          - section: "step-06.1 to step-06.2: End-to-end tests, on request"
+            href: do/step-06.1-to-step-06.2.qmd
             contents:
               - text: "step-06.1 The end-to-end test runs only on request"
-                href: do/step-06.qmd#step-06.1
+                href: do/step-06.1-to-step-06.2.qmd#step-06.1
               - text: "step-06.2 An end-to-end test of the library"
-                href: do/step-06.qmd#step-06.2
+                href: do/step-06.1-to-step-06.2.qmd#step-06.2
+          - section: "step-06.3 to step-06.4: The tests on GitHub"
+            href: do/step-06.3-to-step-06.4.qmd
+            contents:
               - text: "step-06.3 Any Python from 3.11 on"
-                href: do/step-06.qmd#step-06.3
+                href: do/step-06.3-to-step-06.4.qmd#step-06.3
               - text: "step-06.4 GitHub runs the tests"
-                href: do/step-06.qmd#step-06.4
-          - section: "step-07.2 to step-07.3"
+                href: do/step-06.3-to-step-06.4.qmd#step-06.4
+          - section: "step-07.2 to step-07.3: Tests of a model"
             href: do/step-07.2-to-step-07.3.qmd
             contents:
               - text: "step-07.2 random_page returns a Page"
                 href: do/step-07.2-to-step-07.3.qmd#step-07.2
               - text: "step-07.3 An answer that is not a page"
                 href: do/step-07.2-to-step-07.3.qmd#step-07.3
-          - section: "step-08.4: The tests documented"
-            href: do/step-08.4.qmd
+          - section: "step-07.4: A drop in coverage"
+            href: do/step-07.4.qmd
             contents:
-              - text: "step-08.4 The tests documented"
-                href: do/step-08.4.qmd#step-08.4
+              - text: "step-07.4 Only a language code goes into the address"
+                href: do/step-07.4.qmd#step-07.4
 
 theme: cosmo
 css: styles.css
