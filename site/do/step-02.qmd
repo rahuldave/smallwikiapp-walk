@@ -41,6 +41,9 @@ Next we write the first test, in `tests/test_console.py`, which runs the command
 code 0. click's `CliRunner` runs a command in the same process as the test. It keeps the output and the exit code
 of the command.
 
+This first test is an end-to-end test. It runs the whole command, and the command asks the real Wikipedia. So a
+failure can come from the code, from the network or from Wikipedia.
+
 Make `tests/test_console.py`.
 
 ```python
@@ -212,6 +215,9 @@ one test. It goes in the group `test`.
 The call replaces the function, and puts it back after the test. The line `mock.return_value.__enter__.return_value.json.return_value = {` sets what the mock returns when
 the code calls `response.json()` inside the `with` block. The mock returns a page with the title Lorem Ipsum. A
 new test, `test_main_prints_title`, checks that the command prints that title.
+
+A test that uses the mock is a unit test of the command. It checks the command alone, without the network, so a
+failure points at the command. `test_main_succeeds` still asks the real Wikipedia.
 
 ```bash
 uv add --group test pytest-mock

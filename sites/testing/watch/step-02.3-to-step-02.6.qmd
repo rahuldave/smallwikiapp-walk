@@ -69,6 +69,9 @@ The call replaces the function, and puts it back after the test. The line `mock.
 the code calls `response.json()` inside the `with` block. The mock returns a page with the title Lorem Ipsum. A
 new test, `test_main_prints_title`, checks that the command prints that title.
 
+A test that uses the mock is a unit test of the command. It checks the command alone, without the network, so a
+failure points at the command. `test_main_succeeds` still asks the real Wikipedia.
+
 The move ran: `uv add --group test pytest-mock`
 
 Read the change of `pyproject.toml`. Find `mock = mocker.patch("requests.get")` in the change of

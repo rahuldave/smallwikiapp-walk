@@ -23,6 +23,9 @@ depends on Wikipedia. In `tests/test_console.py`, it now has the marker `e2e`, w
 name says so, `test_main_succeeds_in_production`. `pyproject.toml` declares the marker in `markers`. The option
 `-m 'not e2e'` in `addopts` leaves the e2e tests out of every run that does not ask for them.
 
+The other tests use the mock in place of Wikipedia. They run without the network, and give the same result on
+every run.
+
 Find `@pytest.mark.e2e` in the change of `tests/test_console.py`. Then read the change of `pyproject.toml`.
 
 The move changes these files:
@@ -84,6 +87,9 @@ Now we add an end-to-end test of the library, `random_page`. The mocks return a 
 extract. A second e2e test, from the original wikiapp, checks that the real Wikipedia still returns the same keys.
 It is `test_random_page_returns_dictionary_in_production`, at the end of `tests/test_wikipedia.py`. The file now
 imports pytest, in a block of its own.
+
+This test is also a contract test. It checks that the real Wikipedia still returns the two keys that the mocks
+return.
 
 Find `def test_random_page_returns_dictionary_in_production() -> None:` in the change of `tests/test_wikipedia.py`.
 

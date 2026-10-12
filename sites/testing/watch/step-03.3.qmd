@@ -23,7 +23,8 @@ LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, the address has a placeho
 Read the change of `src/wikiapp/wikipedia.py`.
 
 Then we write the first test of the library, in `tests/test_wikipedia.py`, which asks for a page in Spanish. It
-checks that the address of the request contains `es.wikipedia.org`.
+checks that the address of the request contains `es.wikipedia.org`. It calls `random_page` alone, with the mock,
+so it is a unit test of the library.
 
 Open `tests/test_wikipedia.py`, a new file.
 

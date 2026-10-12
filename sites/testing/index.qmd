@@ -37,6 +37,19 @@ The walk has thirteen stops. Each stop takes a whole step, one move, or a few mo
 
 Each stop starts with `just setup`. From the second stop on, it starts from the code before it.
 
+## Kinds of tests
+
+The walk names each kind of test where it first comes in. The tutorial adds no test for the sake of a kind.
+
+| Kind | What it checks | Where |
+|---|---|---|
+| End to end | The code against the real Wikipedia, with no mock | Stop 3. From stop 10, it runs only when you ask for it |
+| Unit | One part of the code alone, with a mock in place of the network | Stop 4 for the command, until the code splits in two. Stop 7 for the library |
+| Integration | The command and the library together, with only the network a mock | Stop 6. The unit tests of the command become integration tests |
+| Contract | That the real Wikipedia still answers as the mocks do | Stop 10 |
+
+On GitHub, from stop 11, the unit and integration tests run on every push to main and every pull request. The end-to-end tests do not.
+
 ## What the walk leaves out
 
 Between its stops, the whole tutorial makes moves that this walk does not show:

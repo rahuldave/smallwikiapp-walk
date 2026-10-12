@@ -37,6 +37,19 @@ The walk has thirteen stops. Each stop takes a whole step, one move, or a few mo
 
 Each stop starts with `just setup`. From the second stop on, it starts from the code before it.
 
+## Kinds of tests
+
+The walk names each kind of test where it first comes in. The tutorial adds no test for the sake of a kind.
+
+| Kind | What it checks | Where |
+|---|---|---|
+| End to end | The code against the real Wikipedia, with no mock | Stop 3. From stop 10, it runs only when you ask for it |
+| Unit | One part of the code alone, with a mock in place of the network | Stop 4 for the command, until the code splits in two. Stop 7 for the library |
+| Integration | The command and the library together, with only the network a mock | Stop 6. The unit tests of the command become integration tests |
+| Contract | That the real Wikipedia still answers as the mocks do | Stop 10 |
+
+On GitHub, from stop 11, the unit and integration tests run on every push to main and every pull request. The end-to-end tests do not.
+
 ## What the walk leaves out
 
 Between its stops, the whole tutorial makes moves that this walk does not show:
@@ -354,6 +367,9 @@ Next we write the first test, in `tests/test_console.py`, which runs the command
 code 0. click's `CliRunner` runs a command in the same process as the test. It keeps the output and the exit code
 of the command.
 
+This first test is an end-to-end test. It runs the whole command, and the command asks the real Wikipedia. So a
+failure can come from the code, from the network or from Wikipedia.
+
 Open `tests/test_console.py`, a new file.
 
 The move changes these files:
@@ -498,6 +514,9 @@ one test. It goes in the group `test`.
 The call replaces the function, and puts it back after the test. The line `mock.return_value.__enter__.return_value.json.return_value = {` sets what the mock returns when
 the code calls `response.json()` inside the `with` block. The mock returns a page with the title Lorem Ipsum. A
 new test, `test_main_prints_title`, checks that the command prints that title.
+
+A test that uses the mock is a unit test of the command. It checks the command alone, without the network, so a
+failure points at the command. `test_main_succeeds` still asks the real Wikipedia.
 
 The move ran: `uv add --group test pytest-mock`
 
@@ -725,6 +744,11 @@ Now we share the mock with every test file. pytest reads `tests/conftest.py` bef
 can use a fixture in it. The tests of wikipedia.py, in the next move, need the mock too. So the fixture
 `mock_requests_get` moves from `tests/test_console.py` to a new file, `tests/conftest.py`.
 
+In step-03.1, the request moved from `main` into `random_page`, in wikipedia.py, and `main` now calls it. Only
+`requests.get` is a mock. So a test of the command that uses the mock runs two parts of the code together, the
+command and the library. A test of parts together is an integration test. Since step-03.1, the four tests of the
+command that use the mock are integration tests, and no longer unit tests.
+
 Open `tests/conftest.py`, a new file. Read the change of `tests/test_console.py`.
 
 The move changes these files:
@@ -783,7 +807,8 @@ LANGUAGE.wikipedia.org. In `src/wikiapp/wikipedia.py`, the address has a placeho
 Read the change of `src/wikiapp/wikipedia.py`.
 
 Then we write the first test of the library, in `tests/test_wikipedia.py`, which asks for a page in Spanish. It
-checks that the address of the request contains `es.wikipedia.org`.
+checks that the address of the request contains `es.wikipedia.org`. It calls `random_page` alone, with the mock,
+so it is a unit test of the library.
 
 Open `tests/test_wikipedia.py`, a new file.
 
@@ -991,6 +1016,9 @@ depends on Wikipedia. In `tests/test_console.py`, it now has the marker `e2e`, w
 name says so, `test_main_succeeds_in_production`. `pyproject.toml` declares the marker in `markers`. The option
 `-m 'not e2e'` in `addopts` leaves the e2e tests out of every run that does not ask for them.
 
+The other tests use the mock in place of Wikipedia. They run without the network, and give the same result on
+every run.
+
 Find `@pytest.mark.e2e` in the change of `tests/test_console.py`. Then read the change of `pyproject.toml`.
 
 The move changes these files:
@@ -1052,6 +1080,9 @@ Now we add an end-to-end test of the library, `random_page`. The mocks return a 
 extract. A second e2e test, from the original wikiapp, checks that the real Wikipedia still returns the same keys.
 It is `test_random_page_returns_dictionary_in_production`, at the end of `tests/test_wikipedia.py`. The file now
 imports pytest, in a block of its own.
+
+This test is also a contract test. It checks that the real Wikipedia still returns the two keys that the mocks
+return.
 
 Find `def test_random_page_returns_dictionary_in_production() -> None:` in the change of `tests/test_wikipedia.py`.
 
@@ -1155,6 +1186,10 @@ Now we add a GitHub Actions workflow, which runs the tests on the machines of Gi
 a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push to main and on every pull
 request. The workflow `.github/workflows/test.yaml` has two jobs. The job `tests` runs the tests on three systems
 and four Pythons. The job `check` runs `just check` once.
+
+Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub runs the unit
+tests and the integration tests on every push to main and every pull request. GitHub never runs the e2e tests. A
+person runs them, with `just test -m e2e`.
 
 Open `.github/workflows/test.yaml`, a new file. Find `python: ["3.11", "3.12", "3.13", "3.14"]` in it.
 

@@ -20,6 +20,11 @@ Now we share the mock with every test file. pytest reads `tests/conftest.py` bef
 can use a fixture in it. The tests of wikipedia.py, in the next move, need the mock too. So the fixture
 `mock_requests_get` moves from `tests/test_console.py` to a new file, `tests/conftest.py`.
 
+In step-03.1, the request moved from `main` into `random_page`, in wikipedia.py, and `main` now calls it. Only
+`requests.get` is a mock. So a test of the command that uses the mock runs two parts of the code together, the
+command and the library. A test of parts together is an integration test. Since step-03.1, the four tests of the
+command that use the mock are integration tests, and no longer unit tests.
+
 Make `tests/conftest.py` with the mock in it.
 
 ```python

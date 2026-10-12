@@ -282,6 +282,9 @@ Next we write the first test, in `tests/test_console.py`, which runs the command
 code 0. click's `CliRunner` runs a command in the same process as the test. It keeps the output and the exit code
 of the command.
 
+This first test is an end-to-end test. It runs the whole command, and the command asks the real Wikipedia. So a
+failure can come from the code, from the network or from Wikipedia.
+
 ::: do
 Make `tests/test_console.py`.
 
@@ -407,6 +410,9 @@ one test. It goes in the group `test`.
 The call replaces the function, and puts it back after the test. The line `mock.return_value.__enter__.return_value.json.return_value = {` sets what the mock returns when
 the code calls `response.json()` inside the `with` block. The mock returns a page with the title Lorem Ipsum. A
 new test, `test_main_prints_title`, checks that the command prints that title.
+
+A test that uses the mock is a unit test of the command. It checks the command alone, without the network, so a
+failure points at the command. `test_main_succeeds` still asks the real Wikipedia.
 
 do$ uv add --group test pytest-mock
 
@@ -662,6 +668,11 @@ Now we share the mock with every test file. pytest reads `tests/conftest.py` bef
 can use a fixture in it. The tests of wikipedia.py, in the next move, need the mock too. So the fixture
 `mock_requests_get` moves from `tests/test_console.py` to a new file, `tests/conftest.py`.
 
+In step-03.1, the request moved from `main` into `random_page`, in wikipedia.py, and `main` now calls it. Only
+`requests.get` is a mock. So a test of the command that uses the mock runs two parts of the code together, the
+command and the library. A test of parts together is an integration test. Since step-03.1, the four tests of the
+command that use the mock are integration tests, and no longer unit tests.
+
 ::: do
 Make `tests/conftest.py` with the mock in it.
 
@@ -728,7 +739,8 @@ Read the change of `src/wikiapp/wikipedia.py`.
 :::
 
 Then we write the first test of the library, in `tests/test_wikipedia.py`, which asks for a page in Spanish. It
-checks that the address of the request contains `es.wikipedia.org`.
+checks that the address of the request contains `es.wikipedia.org`. It calls `random_page` alone, with the mock,
+so it is a unit test of the library.
 
 ::: do
 Make `tests/test_wikipedia.py`.
@@ -1790,6 +1802,9 @@ depends on Wikipedia. In `tests/test_console.py`, it now has the marker `e2e`, w
 name says so, `test_main_succeeds_in_production`. `pyproject.toml` declares the marker in `markers`. The option
 `-m 'not e2e'` in `addopts` leaves the e2e tests out of every run that does not ask for them.
 
+The other tests use the mock in place of Wikipedia. They run without the network, and give the same result on
+every run.
+
 ::: do
 In `tests/test_console.py`, mark the test `e2e`, and give it the new name.
 
@@ -1836,6 +1851,9 @@ Now we add an end-to-end test of the library, `random_page`. The mocks return a 
 extract. A second e2e test, from the original wikiapp, checks that the real Wikipedia still returns the same keys.
 It is `test_random_page_returns_dictionary_in_production`, at the end of `tests/test_wikipedia.py`. The file now
 imports pytest, in a block of its own.
+
+This test is also a contract test. It checks that the real Wikipedia still returns the two keys that the mocks
+return.
 
 ::: do
 Add the test at the end of `tests/test_wikipedia.py`. Put `import pytest` in a block of its own between
@@ -1913,6 +1931,10 @@ Now we add a GitHub Actions workflow, which runs the tests on the machines of Gi
 a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push to main and on every pull
 request. The workflow `.github/workflows/test.yaml` has two jobs. The job `tests` runs the tests on three systems
 and four Pythons. The job `check` runs `just check` once.
+
+Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub runs the unit
+tests and the integration tests on every push to main and every pull request. GitHub never runs the e2e tests. A
+person runs them, with `just test -m e2e`.
 
 ::: do
 Make `.github/workflows/test.yaml`.

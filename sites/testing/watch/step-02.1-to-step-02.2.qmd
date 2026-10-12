@@ -28,6 +28,9 @@ Next we write the first test, in `tests/test_console.py`, which runs the command
 code 0. click's `CliRunner` runs a command in the same process as the test. It keeps the output and the exit code
 of the command.
 
+This first test is an end-to-end test. It runs the whole command, and the command asks the real Wikipedia. So a
+failure can come from the code, from the network or from Wikipedia.
+
 Open `tests/test_console.py`, a new file.
 
 The move changes these files:
