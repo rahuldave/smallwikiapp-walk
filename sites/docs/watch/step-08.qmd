@@ -24,9 +24,10 @@ The moves of this step add documentation:
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/91672a67fa32e65564ae2fe7179d7e53e5923371) shows what the move changes.
 
-The reference of a function gives its signature, what it does, and what each parameter is. The signature and
-the types are in the code. The docstring says what the function does. A docment says what each parameter is. A
-docment is the comment beside a parameter, with one parameter to a line.
+Now we add smalldocs, which writes the reference from the code and lists what has no documentation. The reference
+of a function gives its signature, what it does, and what each parameter is. The signature and the types are in the
+code. The docstring says what the function does. A docment says what each parameter is. A docment is the comment
+beside a parameter, with one parameter to a line.
 
 The block below shows `random_page` with its docments, as the next move writes them. This move does not change
 `random_page`.
@@ -37,26 +38,32 @@ def random_page(
 ) -> Page:  # A page chosen at random
 ```
 
-smalldocs reads all three, and writes the reference as Markdown. It is a Python package, so uv installs it like
+smalldocs reads all three, and writes Markdown. It is a Python package, so uv installs it like
 any other. smalldocs goes in a fourth dependency group, `docs`, and `dev` includes that group.
 
-smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has one section, `api`, the
-reference. It names the package to document, the address of its source, and the files of the tests to check.
+Read the change of `pyproject.toml`.
 
-`smalldocs api` has two commands that this step uses:
+Next we write `docs/_smalldocs.yml`, the file of settings that smalldocs reads. For now the file has one section,
+`api`, the reference. It names the package to document, the address of its source, and the files of the tests to
+check.
+
+Open `docs/_smalldocs.yml`, a new file.
+
+Then we add a recipe `docs`, at the end of the `justfile`. `just docs` runs `smalldocs api`, and gives it the words
+after `just docs`. `smalldocs api` has two commands that this step uses:
 
 - `module NAME` prints the reference of one module as Markdown.
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
   docstring. It looks in the package and in the files of `check`, here the tests.
 
-A recipe `docs`, at the end of the `justfile`, gives its words to `smalldocs api`.
+Find `docs *args:` in the change of `justfile`.
 
-The move changed these files:
+The move changes these files:
 
-- `docs/_smalldocs.yml`: a new file, with the settings of the reference.
-- `justfile`: the recipe `docs`.
-- `pyproject.toml`: the group `docs`, with smalldocs.
-- `uv.lock`: the exact version of smalldocs and of the packages it needs.
+- `docs/_smalldocs.yml`: 5 lines added; a new file, with the settings of the reference.
+- `justfile`: 6 lines added; the recipe `docs`.
+- `pyproject.toml`: 4 lines added, 1 removed; the group `docs`, with smalldocs.
+- `uv.lock`: 64 lines added; the exact version of smalldocs and of the packages it needs.
 
 Files to read:
 - [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/91672a67fa32e65564ae2fe7179d7e53e5923371/docs/_smalldocs.yml): the package to document, and the tests to check.
@@ -114,21 +121,23 @@ docstring. Above the total, `check` names every gap, and the five modules withou
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e76be496f0f78f882605ca4b8a12eedf0b5b1ca9) shows what the move changes.
 
-`src/wikiapp/wikipedia.py` gets these:
+Now we document the library, `src/wikiapp/wikipedia.py`, with four additions:
 
 - a docstring at the top of the module
 - a docment beside each field of Page
 - a docment on the parameter and on the return of `random_page`
 - a longer docstring of `random_page`, which says when it raises an error
 
+Find `) -> Page:  # A page chosen at random` in the change of `src/wikiapp/wikipedia.py`.
+
 A pydantic field can also take its description as `Field(description="...")`. pydantic keeps that description
 in the schema of the model, which other programs read. smalldocs uses the description when a field has one, and
 the comment beside the field when it has none. `Page` only parses the answer of Wikipedia, so the comment is
 enough.
 
-The move changed this file:
+The move changes one file:
 
-- `src/wikiapp/wikipedia.py`: a docstring for the module, docments, and a longer docstring.
+- `src/wikiapp/wikipedia.py`: 12 lines added, 4 removed; a docstring for the module, docments, and a longer docstring.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/e76be496f0f78f882605ca4b8a12eedf0b5b1ca9/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/e76be496f0f78f882605ca4b8a12eedf0b5b1ca9#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the comments are the documentation.
@@ -178,24 +187,45 @@ The tables now have their descriptions.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0) shows what the move changes.
 
-`src/wikiapp/__init__.py` and `src/wikiapp/console.py` each get a docstring at the top.
+Now we give `src/wikiapp/__init__.py` and `src/wikiapp/console.py` each a docstring at the top.
+
+Find `"""wikiapp: the title and summary of a random Wikipedia page."""` in the change of
+`src/wikiapp/__init__.py`. Then find `"""The wikiapp command."""` in the change of `src/wikiapp/console.py`.
 
 `check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class.
 Python still shows it, in `help(wikiapp)`.
 
-`wikiapp --help` prints the docstring of `main` and the help of each option, so those are documentation too. The
-help of `--language` now says what a language is. It replaces the help of the original wikiapp, "Gets random
-page from Wikipedia in given language". `main` has one parameter to a line, with its docment, and a docstring
-that says what `main` prints. A function that returns None needs no docment for its return.
+Next we document `main` and its option `--language`. `wikiapp --help` prints the docstring of `main` and the help
+of each option, so those are documentation too. The help of `--language` now says what a language is. It replaces
+the help of the original wikiapp, "Gets random page from Wikipedia in given language". `main` has one parameter to
+a line, with its docment, and a docstring that says what `main` prints. A function that returns None needs no
+docment for its return.
 
-The move changed these files:
+Find `help="The language of the Wikipedia to ask, as its code: en, fr, es",` in the change of
+`src/wikiapp/console.py`. Then find `language: str,  # The language of the Wikipedia to ask, from --language` in
+the change of `src/wikiapp/console.py`.
 
-- `src/wikiapp/__init__.py`: a docstring for the module.
-- `src/wikiapp/console.py`: a docstring for the module, the documentation of `main`, and the help of `--language`.
+The move changes these files:
+
+- `src/wikiapp/__init__.py`: 2 lines added; a docstring for the module.
+- `src/wikiapp/console.py`: 10 lines added, 3 removed; a docstring for the module, the documentation of `main`, and the help of `--language`.
 
 Files to read:
+- [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): a docstring, which `help(wikiapp)` shows.
+  - look at: `"""wikiapp: the title and summary of a random Wikipedia page."""`
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the docment, the docstring and the help.
   - look at: `language: str,  # The language of the Wikipedia to ask, from --language`
+
+The change of `src/wikiapp/__init__.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""wikiapp: the title and summary of a random Wikipedia page."""
++
+ import importlib.metadata
+ 
+ __version__ = importlib.metadata.version("wikiapp")
+```
 
 The change of `src/wikiapp/console.py`:
 
@@ -242,20 +272,23 @@ options shows the new help of `--language`, the same help that `--help` prints.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b) shows what the move changes.
 
-A docment is the comment beside a parameter, or after the colon of the `def` line for the return.
-`just docs check`, from step-08.1, counts the functions and classes that have their types, docments and
-docstrings.
+Now we document the tests, so that `just docs check` finds no gap. A docment is the comment beside a parameter, or
+after the colon of the `def` line for the return. `just docs check`, from step-08.1, counts the functions and
+classes that have their types, docments and docstrings.
 
 Each test file says what it tests, and each fixture says what it returns. Each test says in one line what it
 checks. The docstrings say in words what the asserts say in code. Each parameter of a test has a docment, one
 parameter to a line, and `tests/test_console.py` shows the pattern best.
 
-The move changed these files:
+Read the changes of `tests/conftest.py`, `tests/test_console.py` and `tests/test_wikipedia.py`. Find
+`"""The command prints the title of the page."""` in the change of `tests/test_console.py`.
 
-- `tests/conftest.py`: a docstring for the file and the fixture, and docments for its parameter and return.
-- `tests/test_console.py`: a docstring for the file, the fixture and each test, and a docment for each parameter
+The move changes these files:
+
+- `tests/conftest.py`: 6 lines added, 1 removed; a docstring for the file and the fixture, and docments for its parameter and return.
+- `tests/test_console.py`: 33 lines added, 7 removed; docstrings for the file, the fixture and each test, and docments for each parameter
   and the fixture's return.
-- `tests/test_wikipedia.py`: a docstring for the file and each test, and a docment for each parameter.
+- `tests/test_wikipedia.py`: 11 lines added, 2 removed; a docstring for the file and each test, and a docment for each parameter.
 
 Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.
@@ -422,24 +455,29 @@ and classes are typed and documented`.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c227651912e42c6e5b04771df7dcfba18b7a3538) shows what the move changes.
 
-smalldocs also makes a website from Markdown. The site is in `docs/`. It has a front page, `index.qmd`, and a
-reference page for each module. Each build writes the reference pages from the code, before it builds the site.
-A name in backticks, such as `random_page`, becomes a link to its entry.
+Now we make a docs site, because smalldocs also makes a website from Markdown. The site is in `docs/`. It has a
+front page, `index.qmd`, and a reference page for each module. Each build writes the reference pages from the code,
+before it builds the site. A name in backticks, such as `random_page`, becomes a link to its entry.
 
 The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, which stays as it is. They are
 the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
 page. The comment at the top now says that `just docs` builds the site. The front page, `docs/index.qmd`, is
 new. A `.qmd` file is Markdown, with a header between two `---` lines that gives the title of the page.
 
-`just docs` with no words builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api` as
-before. The recipe is now a script of several lines.
+Find `contents: api/*  # the reference pages, which each build makes from the code` in the change of
+`docs/_smalldocs.yml`. Then open `docs/index.qmd`, a new file.
 
-The move changed these files:
+Next we change the recipe `docs`, so that `just docs` with no words builds the site, with `smalldocs render docs`.
+With words, it runs `smalldocs api` as before. The recipe is now a script of several lines.
 
-- `docs/_smalldocs.yml`: the settings of the site above the section `api`, and a comment above `api`. The
+Find `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi` in the change of `justfile`.
+
+The move changes these files:
+
+- `docs/_smalldocs.yml`: 17 lines added, 1 removed; the settings of the site above the section `api`, and a comment above `api`. The
   comment at the top now says that `just docs` builds the site.
-- `docs/index.qmd`: a new file, the front page.
-- `justfile`: with no words, `docs` builds the site, and its comment says so. The recipe is now a script of
+- `docs/index.qmd`: 35 lines added; a new file, the front page.
+- `justfile`: 5 lines added, 2 removed; with no words, `docs` builds the site, and its comment says so. The recipe is now a script of
   several lines.
 
 Files to read:
@@ -510,12 +548,14 @@ pages, and git ignores them.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/e17e12b81330187da0dc5eb6d1ff9f3e6964dcab) shows what the move changes.
 
-The README gets `tests/` and `docs/` among the folders. It also says that `wikipedia.py` is the library and
-`console.py` the command.
+Now we bring the table of folders in the README up to date. The README gets `tests/` and `docs/` among the
+folders. It also says that `wikipedia.py` is the library and `console.py` the command.
 
-The move changed this file:
+Read the change of `README.md`.
 
-- `README.md`: rows for `tests/` and `docs/`, and the `src/wikiapp/` row names the library and the command.
+The move changes one file:
+
+- `README.md`: 3 lines added, 1 removed; rows for `tests/` and `docs/`, and the `src/wikiapp/` row names the library and the command.
 
 Files to read:
 - [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/e17e12b81330187da0dc5eb6d1ff9f3e6964dcab/README.md), [its change](https://github.com/rahuldave/smallwikiapp/commit/e17e12b81330187da0dc5eb6d1ff9f3e6964dcab#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): the folders.
@@ -547,11 +587,13 @@ grep -n -E 'tests/|docs/' README.md
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/f806ffc14ec8d49a03fae320c10058db6d723f5e) shows what the move changes.
 
-`check` now runs `just docs check` after the tests, and the comment above it names the docs among the checks.
+Now we add `just docs check` to the recipe `check`, after the tests, and name the docs in the comment above it.
 
-The move changed this file:
+Find `just docs check` in the change of `justfile`, and read the new comment above `check`.
 
-- `justfile`: the docs check in `check`, and the comment.
+The move changes one file:
+
+- `justfile`: 2 lines added, 1 removed; the docs check in `check`, and the comment.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/f806ffc14ec8d49a03fae320c10058db6d723f5e/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/f806ffc14ec8d49a03fae320c10058db6d723f5e#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in `check`.

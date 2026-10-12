@@ -16,8 +16,8 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a) shows what the move changes.
 
-In `src/wikiapp/wikipedia.py`, `random_page` makes a Page of the answer and returns the Page. The code no
-longer uses `Any`, so its import and the blank line under it are gone.
+Now we make `random_page`, in `src/wikiapp/wikipedia.py`, return a Page made from the answer. The code no longer
+uses `Any`, so its import and the blank line under it are gone.
 
 In `src/wikiapp/wikipedia.py`, delete the import of `Any`, and the blank line under it. Then change the return
 type of `random_page`, and its `return` line.
@@ -30,8 +30,8 @@ def random_page(language: str = "en") -> Page:
             return Page.model_validate(response.json())
 ```
 
-In `src/wikiapp/console.py`, `main` prints the attributes of the page. ty and an editor know the names of the
-attributes. A misspelled key of a dictionary shows up only when the program runs.
+Next we make `main`, in `src/wikiapp/console.py`, print the attributes of the page. ty and an editor know the names
+of the attributes. A misspelled key of a dictionary shows up only when the program runs.
 
 In `src/wikiapp/console.py`, replace the code under the docstring of `main` with the code below.
 
@@ -44,11 +44,12 @@ In `src/wikiapp/console.py`, replace the code under the docstring of `main` with
     click.echo(textwrap.fill(page.extract))
 ```
 
-In `tests/test_wikipedia.py`, the e2e test is now `test_random_page_returns_page_in_production`, with the same
-marker. Its new name says that it checks for a Page.
+Then we rename the e2e test in `tests/test_wikipedia.py` to `test_random_page_returns_page_in_production`, with the
+same marker. Its new name says that it checks for a Page. Its two asserts on the keys become one,
+`assert isinstance(page, wikipedia.Page)`.
 
-In `tests/test_wikipedia.py`, replace the e2e test `test_random_page_returns_dictionary_in_production`, and
-keep its marker.
+In `tests/test_wikipedia.py`, replace the e2e test `test_random_page_returns_dictionary_in_production`, with its
+marker, by the code below.
 
 ```python
 @pytest.mark.e2e
@@ -57,11 +58,11 @@ def test_random_page_returns_page_in_production() -> None:
     assert isinstance(page, wikipedia.Page)
 ```
 
-The move changed these files:
+The move changes these files:
 
-- `src/wikiapp/wikipedia.py`: returns a Page.
-- `src/wikiapp/console.py`: prints the attributes of the Page.
-- `tests/test_wikipedia.py`: the e2e test.
+- `src/wikiapp/wikipedia.py`: 2 lines added, 4 removed; returns a Page.
+- `src/wikiapp/console.py`: 3 lines added, 5 removed; prints the attributes of the Page.
+- `tests/test_wikipedia.py`: 2 lines added, 3 removed; the e2e test.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
@@ -146,9 +147,9 @@ uv run wikiapp
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703) shows what the move changes.
 
-When the answer has no title, `model_validate` raises the ValidationError of pydantic. `random_page` turns it
-into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, the `except` catches
-ValidationError together with the exception of requests.
+Now we make `random_page` catch an answer that is not a page. When the answer has no title, `model_validate` raises
+the ValidationError of pydantic. `random_page` turns it into a WikipediaError, as it does with a failed request. In
+`src/wikiapp/wikipedia.py`, the `except` catches ValidationError together with the exception of requests.
 
 In `src/wikiapp/wikipedia.py`, import ValidationError, and catch it together with the exception of requests.
 
@@ -160,7 +161,7 @@ from pydantic import BaseModel, ValidationError
     except (requests.RequestException, ValidationError) as error:
 ```
 
-A test from the original wikiapp, `test_random_page_handles_validation_error`, is at the end of
+Next we add a test from the original wikiapp, `test_random_page_handles_validation_error`, at the end of
 `tests/test_wikipedia.py`. In the test, the mock answers with an empty dictionary.
 
 Add the test at the end of `tests/test_wikipedia.py`.
@@ -174,10 +175,10 @@ def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
         wikipedia.random_page()
 ```
 
-The move changed these files:
+The move changes these files:
 
-- `src/wikiapp/wikipedia.py`: a ValidationError is a WikipediaError too.
-- `tests/test_wikipedia.py`: a test of the ValidationError.
+- `src/wikiapp/wikipedia.py`: 2 lines added, 2 removed; a ValidationError is a WikipediaError too.
+- `tests/test_wikipedia.py`: 6 lines added; a test of the ValidationError.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8ef59a76a8988b6ef39a36c630e5785be2573703/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.

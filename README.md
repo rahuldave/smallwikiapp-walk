@@ -118,9 +118,12 @@ notes, the slides, and terminals in the project at each step.
 | **Do** | You make each move yourself, from its notes. Type the code, run the command in the grey block, run the command at the end of the move, and press **Done**. **Your files match** says when your files are the same as the move's commit. Use **Apply** or **Catch me up** if you are stuck |
 | **Watch** | **Show** checks out each move's commit, and the notes explain what changed. The teacher shows the class in this mode |
 
-The switch **Do / Watch** beside the name of the walk changes the mode at any time. Every step starts from the
-code of the step before, so every step starts with `just setup`. The moves of a step go in order. To go back,
-press **Restart step**, and then run `just setup`.
+The switch **Do / Watch** beside the name of the walk changes the mode at any time. Every step starts from the code
+of the step before, so every step starts with `just setup`. The moves of a step go in order. To go back, press
+**Restart step**, and then run `just setup`.
+
+In the move 04.10, `just hook` installs a git hook. Before each commit you make, it runs pre-commit's checks, and
+`just check` among them. If you start at a later step, run `just hook` once.
 
 **A move keeps your work.** Before a move, timewalk puts your edits and commits in `worktree/` on a branch
 `timewalk/saved/<place>`, for example `timewalk/saved/step-03.2`, and does not ask. The page names the branch,
@@ -144,7 +147,7 @@ just present do         # do mode: you make the moves
 just present            # watch mode: the moves are shown
 ```
 
-`just present` opens the first walk, `show`, and `just present do` opens the other. It runs `just setup` first.
+`just present` opens the first walk, `show`, and `just present do` opens the walk `do`. It runs `just setup` first.
 `just setup` clones smallwikiapp into `repo/`, or your fork of smallwikiapp if you have one, and fetches the
 tags of the steps. To clone from another address, run `just setup <address>` before the first `just present`.
 

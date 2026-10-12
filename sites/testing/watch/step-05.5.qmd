@@ -16,23 +16,30 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8f6e8938925501f9c1bc198818fbd8fab7b647ff) shows what the move changes.
 
-Since step-05.3, ruff's `ANN` rules ask for a type on every parameter and return. The code has its types, and
-`just lint` finds 22 missing in the tests.
+Now we add the types to the tests, first to the fixture in `tests/conftest.py`. Since step-05.3, ruff's `ANN`
+rules ask for a type on every parameter and return. The code has its types, and `just lint` finds 22 missing in
+the tests.
 
-The return type of a fixture is the type of what a test receives. The runner is a `CliRunner`, and the mock of
-`requests.get` is a `Mock`. `mocker` is pytest-mock's `MockerFixture`, the name that replaced the original
-wikiapp's `MockFixture`. `tests/conftest.py` now imports `Mock` and `MockerFixture`, and its fixture states both
-types.
+The return type of a fixture is the type of what a test receives. The mock of `requests.get` is a `Mock`.
+`mocker` is pytest-mock's `MockerFixture`, the name that replaced the original wikiapp's `MockFixture`.
+`tests/conftest.py` now imports `Mock` and `MockerFixture`, and its fixture states both types.
 
-A test returns None. `tests/test_console.py` imports `Mock` and `CliRunner` by name. The fixture `runner` returns
-`CliRunner()`, and every function has its types. `tests/test_wikipedia.py` imports `Mock` at the top, and its
-test has its types.
+Find `def mock_requests_get(mocker: MockerFixture) -> Mock:` in the change of `tests/conftest.py`.
 
-The move changed these files:
+Next we add the types to `tests/test_console.py` and `tests/test_wikipedia.py`. A test returns None.
+`tests/test_console.py` imports `Mock` and `CliRunner` by name. The fixture `runner` returns `CliRunner()`, so its
+return type is `CliRunner`. Every function has its types. `tests/test_wikipedia.py` imports `Mock` at the top, and
+its test has its types.
 
-- `tests/conftest.py`: the types of the fixture.
-- `tests/test_console.py`: the types of the fixture and of every test.
-- `tests/test_wikipedia.py`: the types of the test.
+Read the change of `tests/test_console.py`. Then find
+`def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:` in the change of
+`tests/test_wikipedia.py`.
+
+The move changes these files:
+
+- `tests/conftest.py`: 4 lines added, 1 removed; the types of the fixture.
+- `tests/test_console.py`: 11 lines added, 9 removed; the types of the fixture and of every test.
+- `tests/test_wikipedia.py`: 3 lines added, 1 removed; the types of the test.
 
 Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/8f6e8938925501f9c1bc198818fbd8fab7b647ff/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/48523b8748a8bd60f80b73e1b2b2322eb616325b...8f6e8938925501f9c1bc198818fbd8fab7b647ff#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.

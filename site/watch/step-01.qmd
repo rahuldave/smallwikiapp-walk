@@ -23,12 +23,15 @@ The moves of step-01 add these things:
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1efd5611b90ac42a697374b0ca0449d5a880773e) shows what the move changes.
 
-click makes command lines. requests gets pages over HTTP. Both packages go in the dependencies of wikiapp.
+Now we add two packages, click and requests, to the dependencies of wikiapp. click makes command lines.
+requests gets pages over HTTP.
 
-The move changed these files:
+Read the change of `pyproject.toml`.
 
-- `pyproject.toml`: the two packages in `dependencies`, each with the newest version as its lower bound.
-- `uv.lock`: the exact version of each, and of every package they need.
+The move changes these files:
+
+- `pyproject.toml`: 4 lines added, 1 removed; the two packages in `dependencies`, each with the newest version as its lower bound.
+- `uv.lock`: 176 lines added; the exact version of each, and of every package they need.
 
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/1efd5611b90ac42a697374b0ca0449d5a880773e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/1efd5611b90ac42a697374b0ca0449d5a880773e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the dependencies of the package, which anyone who installs it gets.
@@ -251,7 +254,9 @@ uv tree --depth 1
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a46ba5420b43d7ea47508ae393977935e7bd8bd0) shows what the move changes.
 
-The new `src/wikiapp/console.py` is the first code of wikiapp, from 2024, with a docstring that says what the
+Now we make `main` ask Wikipedia for a random page, and print it.
+
+`src/wikiapp/console.py` now has the first code of wikiapp, from 2024, with a docstring that says what the
 command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
 `main` here keeps the annotation that `uv init` gave it at step-00.
 
@@ -261,9 +266,11 @@ command does. `@click.command()` makes `main` a command. The `main` of the origi
 
 `main` prints the title in green, and the summary wrapped to 70 columns.
 
-The move changed this file:
+Read the change of `src/wikiapp/console.py`.
 
-- `src/wikiapp/console.py`: `main` asks Wikipedia for a page and prints it.
+The move changes one file:
+
+- `src/wikiapp/console.py`: 17 lines added, 2 removed; `main` asks Wikipedia for a page and prints it.
 
 Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/a46ba5420b43d7ea47508ae393977935e7bd8bd0/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/a46ba5420b43d7ea47508ae393977935e7bd8bd0#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): a request, and two lines printed.
@@ -308,13 +315,16 @@ a library. requests sends `python-requests/` and its version.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2dd3e2132565971092bffe6a438a36506f4161cb) shows what the move changes.
 
-The User-Agent header says who sends the request. The policy of Wikimedia asks for the name of the program,
-its version, and a way to reach the person who runs it. In `src/wikiapp/console.py`, a constant `USER_AGENT`
-under `API_URL` gives these three things. The request sends it as a header.
+Now we send a User-Agent header with the request. The User-Agent header says who sends the request. The policy of
+Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. In
+`src/wikiapp/console.py`, a constant `USER_AGENT` under `API_URL` gives these three things.
 
-The move changed this file:
+Find `USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"` in the change of
+`src/wikiapp/console.py`.
 
-- `src/wikiapp/console.py`: a constant `USER_AGENT`, and the request sends it.
+The move changes one file:
+
+- `src/wikiapp/console.py`: 2 lines added, 1 removed; a constant `USER_AGENT`, and the request sends it.
 
 Files to read:
 - [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/2dd3e2132565971092bffe6a438a36506f4161cb/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2dd3e2132565971092bffe6a438a36506f4161cb#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the header.
@@ -349,15 +359,17 @@ A title in green, and a paragraph. Each run prints another page.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/48a829ee985a69171af7c66846bdb8e7345a199c) shows what the move changes.
 
-The package can read its own version from the installed package, which has the version in `pyproject.toml`.
-`src/wikiapp/__init__.py` now sets `__version__` from the metadata of the installed package.
-`src/wikiapp/console.py` imports `__version__`. The decorator `@click.version_option`, above `def main`, gives
-the command the option `--version`.
+Now we let the command print its version. The package can read its own version from the installed package, which
+has the version in `pyproject.toml`. `src/wikiapp/__init__.py` now sets `__version__` from the metadata of the
+installed package. `src/wikiapp/console.py` imports `__version__`. The decorator `@click.version_option`, above
+`def main`, gives the command the option `--version`.
 
-The move changed these files:
+Read the change of `src/wikiapp/__init__.py`, then the change of `src/wikiapp/console.py`.
 
-- `src/wikiapp/__init__.py`: `__version__`, from the installed package.
-- `src/wikiapp/console.py`: the option `--version`.
+The move changes these files:
+
+- `src/wikiapp/__init__.py`: 2 lines added; `__version__`, from the installed package.
+- `src/wikiapp/console.py`: 2 lines added; the option `--version`.
 
 Files to read:
 - [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/48a829ee985a69171af7c66846bdb8e7345a199c/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/48a829ee985a69171af7c66846bdb8e7345a199c#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): the version, which Python reads when it imports the package.

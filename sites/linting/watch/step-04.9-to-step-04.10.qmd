@@ -16,12 +16,14 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d) shows what the move changes.
 
-A recipe `check` runs every check in order, and stops at the first check that fails. The order is the format,
-the linter, the tests with a floor on the coverage, and the configuration.
+Now we add a recipe `check`, which runs every check in order. It stops at the first check that fails. The order is
+the format, the linter, the tests with a floor on the coverage, and the configuration.
 
-The move changed this file:
+Find `just test -q --cov-fail-under=90` in the change of `justfile`.
 
-- `justfile`: the recipe `check`.
+The move changes one file:
+
+- `justfile`: 12 lines added; the recipe `check`.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/06ea9e2af2238f070b1e33f16aeb70002e25e44d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its four checks.
@@ -53,29 +55,34 @@ just --show check
 just check
 ```
 
-`just check` runs the format, the linter, the tests and the configuration, in that order. The
-tests must run at least 90% of the statements. The coverage is 96.77%.
+`just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
 
 ## step-04.10 A git hook {#step-04.10}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db) shows what the move changes.
 
-pre-commit installs a git hook. A git hook is a program that git runs before every commit. If the program
-fails, git refuses the commit. pre-commit goes in the group `lint`.
+Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
+before every commit. If the program fails, git refuses the commit.
 
-The new file `.pre-commit-config.yaml` names the hooks. Three come from pre-commit's collection. They check for
-valid YAML, large files and leftover merge-conflict markers. The last hook runs `just check`, so the hook and
-the terminal run the same thing.
+Find `"pre-commit>=4.6.2",` in the change of `pyproject.toml`.
 
-A recipe `hook`, after `setup` in the `justfile`, installs the hook. It is a recipe of its own, run once in each
-clone, because `just setup` runs at every step and never touches git.
+Next we make `.pre-commit-config.yaml`, a new file that names the hooks. Three come from pre-commit's collection.
+They check for valid YAML, large files and leftover merge-conflict markers. The last hook runs `just check`, so the
+hook and the terminal run the same thing.
 
-The move changed these files:
+Open `.pre-commit-config.yaml`, a new file. Find `entry: just check` in it.
 
-- `.pre-commit-config.yaml`: a new file, with the hooks.
-- `justfile`: the recipe `hook`, which installs the hook.
-- `pyproject.toml`: pre-commit in the group `lint`.
-- `uv.lock`: the exact version of pre-commit, and of what it needs.
+Then we add a recipe `hook`, after `setup` in the `justfile`, which installs the hook. It is a recipe of its own,
+run once in each clone, because `just setup` runs at every step and never touches git.
+
+Find `hook *args:` in the change of `justfile`.
+
+The move changes these files:
+
+- `.pre-commit-config.yaml`: 20 lines added; a new file, with the hooks.
+- `justfile`: 5 lines added; the recipe `hook`, which installs the hook.
+- `pyproject.toml`: 1 line added; pre-commit in the group `lint`.
+- `uv.lock`: 138 lines added; the exact version of pre-commit, and of what it needs.
 
 Files to read:
 - [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
@@ -123,11 +130,11 @@ uv run pre-commit run --files .pre-commit-config.yaml
 ```
 
 `uv run pre-commit install` prints `pre-commit installed at .git/hooks/pre-commit`, and `just hook` prints the
-same line. The hook is in `.git/hooks`, and no step or move changes that folder. So the hook stays for the rest
-of the tutorial. At a later step, `just hook` installs it once.
+same line. The hook is in `.git/hooks`, and no step or move changes that folder. The hook stays installed for the
+rest of the tutorial.
 
-`pre-commit run` now runs every hook on the file named, as git will before a commit. The first time, it prints
-`[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
+`pre-commit run` now runs every hook on the file named, as git will before a commit. The first time on a machine, it
+prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
 
 With `--all-files`, pre-commit would check every file that git tracks. It would skip a new file until git tracks
 it.

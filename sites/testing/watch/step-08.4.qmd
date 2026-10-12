@@ -16,20 +16,23 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b) shows what the move changes.
 
-A docment is the comment beside a parameter, or after the colon of the `def` line for the return.
-`just docs check`, from step-08.1, counts the functions and classes that have their types, docments and
-docstrings.
+Now we document the tests, so that `just docs check` finds no gap. A docment is the comment beside a parameter, or
+after the colon of the `def` line for the return. `just docs check`, from step-08.1, counts the functions and
+classes that have their types, docments and docstrings.
 
 Each test file says what it tests, and each fixture says what it returns. Each test says in one line what it
 checks. The docstrings say in words what the asserts say in code. Each parameter of a test has a docment, one
 parameter to a line, and `tests/test_console.py` shows the pattern best.
 
-The move changed these files:
+Read the changes of `tests/conftest.py`, `tests/test_console.py` and `tests/test_wikipedia.py`. Find
+`"""The command prints the title of the page."""` in the change of `tests/test_console.py`.
 
-- `tests/conftest.py`: a docstring for the file and the fixture, and docments for its parameter and return.
-- `tests/test_console.py`: a docstring for the file, the fixture and each test, and a docment for each parameter
+The move changes these files:
+
+- `tests/conftest.py`: 6 lines added, 1 removed; a docstring for the file and the fixture, and docments for its parameter and return.
+- `tests/test_console.py`: 33 lines added, 7 removed; docstrings for the file, the fixture and each test, and docments for each parameter
   and the fixture's return.
-- `tests/test_wikipedia.py`: a docstring for the file and each test, and a docment for each parameter.
+- `tests/test_wikipedia.py`: 11 lines added, 2 removed; a docstring for the file and each test, and a docment for each parameter.
 
 Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/2b6ea2dc44cbad7957e6c4ea8268a6db8c3f98d0...d1cc2ef9f787d8ab6bb98e782eea5e7723726d9b#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture, documented.

@@ -16,12 +16,15 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5680a827b9d6a412d145df259dd161119c4cd776) shows what the move changes.
 
+Now we make `just lint-config` check the library's `pyproject.toml` too.
 Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
 recipe `lint-config` now gives validate-pyproject both files.
 
-The move changed this file:
+Read the change of `justfile`.
 
-- `justfile`: `lint-config` checks both files.
+The move changes one file:
+
+- `justfile`: 1 line added, 1 removed; `lint-config` checks both files.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5680a827b9d6a412d145df259dd161119c4cd776/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/b3d6fbbeca8cbdd86523b9e767092d8b4fe06b29...5680a827b9d6a412d145df259dd161119c4cd776#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.

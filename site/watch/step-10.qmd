@@ -21,12 +21,14 @@ library's User-Agent says the version that is installed.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/14aed169df3350fa2bf674e896bdf6921cf4efcf) shows what the move changes.
 
-`uv build --all-packages` builds every package of the workspace into `dist/`, which `.gitignore` lists. The
-recipe `build`, at the end of the `justfile`, runs it.
+Now we add a recipe, `build`, at the end of the `justfile`, that builds both packages. It runs
+`uv build --all-packages`, which builds every package of the workspace into `dist/`. `.gitignore` lists `dist/`.
 
-The move changed this file:
+Read the change of `justfile`.
 
-- `justfile`: the recipe `build`.
+The move changes one file:
+
+- `justfile`: 6 lines added; the recipe `build`.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/14aed169df3350fa2bf674e896bdf6921cf4efcf/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/14aed169df3350fa2bf674e896bdf6921cf4efcf#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
@@ -65,15 +67,19 @@ first.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b3d6fbbeca8cbdd86523b9e767092d8b4fe06b29) shows what the move changes.
 
-The app's wheel says that the app needs `wikirandom`, of any version. An install from PyPI would take any package
-that anyone publishes under that name. The app now gives the range of versions that it was built and tested with.
+Now we give the app's dependency on wikirandom a range of versions, `>=0.1.0,<0.2`. Until now, the app's wheel
+says that the app needs `wikirandom`, of any version. An install from PyPI would take any package that anyone
+publishes under that name. The app works with wikirandom 0.1.0, and `<0.2` keeps out a later release that may
+change the library.
 
-Nothing else changes in the workspace. `[tool.uv.sources]` still installs the library from
-`packages/wikirandom`.
+Find `"wikirandom>=0.1.0,<0.2",` in the change of `pyproject.toml`.
 
-The move changed this file:
+Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
+`[tool.uv.sources]` says.
 
-- `pyproject.toml`: a version range on wikirandom.
+The move changes one file:
+
+- `pyproject.toml`: 1 line added, 1 removed; a version range on wikirandom.
 
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/b3d6fbbeca8cbdd86523b9e767092d8b4fe06b29/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/b3d6fbbeca8cbdd86523b9e767092d8b4fe06b29#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
@@ -104,12 +110,15 @@ The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5680a827b9d6a412d145df259dd161119c4cd776) shows what the move changes.
 
+Now we make `just lint-config` check the library's `pyproject.toml` too.
 Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
 recipe `lint-config` now gives validate-pyproject both files.
 
-The move changed this file:
+Read the change of `justfile`.
 
-- `justfile`: `lint-config` checks both files.
+The move changes one file:
+
+- `justfile`: 1 line added, 1 removed; `lint-config` checks both files.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5680a827b9d6a412d145df259dd161119c4cd776/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/5680a827b9d6a412d145df259dd161119c4cd776#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
@@ -139,16 +148,20 @@ just lint-config
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2aebc089ca4228042b83c2158c10484a3b495800) shows what the move changes.
 
+Now we give the library a licence and an author, and both packages a link to the repository.
 The library's wheel has no licence, and neither package says where its source is. The library gets a copy of the
 project's `LICENSE`. Its `pyproject.toml` gives the licence and the author under `readme`, as the app's
 `pyproject.toml` does. Both `pyproject.toml` files now name the repository, in `[project.urls]`. PyPI shows it on
 the package's page.
 
-The move changed these files:
+Open `packages/wikirandom/LICENSE`, a new file. Read the change of `packages/wikirandom/pyproject.toml` and of
+`pyproject.toml`.
 
-- `packages/wikirandom/LICENSE`: new. It has the same licence as the app.
-- `packages/wikirandom/pyproject.toml`: the licence, the author, the repository.
-- `pyproject.toml`: the repository.
+The move changes these files:
+
+- `packages/wikirandom/LICENSE`: 202 lines added; new. It has the same licence as the app.
+- `packages/wikirandom/pyproject.toml`: 6 lines added; the licence, the author, the repository.
+- `pyproject.toml`: 3 lines added; the repository.
 
 Files to read:
 - [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/2aebc089ca4228042b83c2158c10484a3b495800/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/2aebc089ca4228042b83c2158c10484a3b495800#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): what PyPI would show.
@@ -209,14 +222,18 @@ The library's metadata has `License-Expression: Apache-2.0`,
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1c85536347dae57de53a25fc84b7797180a6ae27) shows what the move changes.
 
+Now we make the library's User-Agent say the installed version.
 The User-Agent says `0.1.0`, written by hand. It would still say `0.1.0` after a change of the version in
 `packages/wikirandom/pyproject.toml`. `packages/wikirandom/src/wikirandom/__init__.py` now reads the version
 from the installed package, as `wikiapp --version` does. `import importlib.metadata` comes above `import re`, in
 the same block. `VERSION` is the installed version, and `USER_AGENT` contains it.
 
-The move changed this file:
+Find `import importlib.metadata` and `VERSION = importlib.metadata.version("wikirandom")` in the change of
+`packages/wikirandom/src/wikirandom/__init__.py`.
 
-- `packages/wikirandom/src/wikirandom/__init__.py`: the package reads its version once, when Python imports it.
+The move changes one file:
+
+- `packages/wikirandom/src/wikirandom/__init__.py`: 3 lines added, 1 removed; the package reads its version once, when Python imports it.
 
 Files to read:
 - [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/1c85536347dae57de53a25fc84b7797180a6ae27/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/1c85536347dae57de53a25fc84b7797180a6ae27#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the version now comes from one place, pyproject.toml.

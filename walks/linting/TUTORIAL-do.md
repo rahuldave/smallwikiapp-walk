@@ -48,7 +48,7 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9) shows what the move changes.
 
-ruff is a formatter and a linter in one program. It goes in a third dependency group, `lint`, which `dev`
+Now we add ruff, a formatter and a linter in one program, to a third dependency group, `lint`, which `dev`
 includes.
 
 In `pyproject.toml`, change the line `dev = ...`, and add the group.
@@ -64,8 +64,8 @@ Then add ruff to the group.
 uv add --group lint ruff
 ```
 
-ruff's settings, at the end of `pyproject.toml`, set lines of up to 100 characters. They also write out the
-defaults of the formatter.
+Next we give ruff its settings, at the end of `pyproject.toml`. They set lines of up to 100 characters, and
+write out the defaults of the formatter.
 
 Add the settings at the end of `pyproject.toml`.
 
@@ -83,7 +83,7 @@ indent-style = "space"            # four spaces, never tabs
 skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
 ```
 
-A recipe `fmt` runs the formatter. Its words go to `ruff format`.
+Then we add a recipe `fmt`, which runs the formatter. The words after `just fmt` go to `ruff format`.
 
 Add a recipe at the end of the `justfile`.
 
@@ -96,11 +96,11 @@ fmt *args:
     {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
 ```
 
-The move changed these files:
+The move changes these files:
 
-- `pyproject.toml`: the group `lint`, and ruff's settings.
-- `justfile`: the recipe `fmt`.
-- `uv.lock`: ruff.
+- `pyproject.toml`: 15 lines added, 1 removed; the group `lint`, and ruff's settings.
+- `justfile`: 6 lines added; the recipe `fmt`.
+- `uv.lock`: 31 lines added; ruff.
 
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/693240e344546dda08ad8fee3951675a0302dbc9/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group and the settings.
@@ -169,8 +169,8 @@ passes on the words after `just fmt`.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986) shows what the move changes.
 
-The formatter rewrites six files. It adds blank lines, puts spaces around `==`, and splits the lines longer than
-100 characters.
+Now we run the formatter, which rewrites six files. It adds blank lines, puts spaces around `==`, and splits the
+lines longer than 100 characters.
 
 Run the formatter.
 
@@ -178,20 +178,43 @@ Run the formatter.
 just fmt
 ```
 
-The move changed these files:
+The move changes these files:
 
-- `src/wikiapp/__init__.py`: a blank line after the import.
-- `src/wikiapp/console.py`: two blank lines before the command and before `if __name__`, and spaces around `==`.
-- `src/wikiapp/wikipedia.py`: two blank lines around the class, and the request, longer than 100 characters, split.
-- `tests/conftest.py`: two blank lines before the fixture.
-- `tests/test_console.py`: two blank lines around each function, and the line longer than 100 characters split.
-- `tests/test_wikipedia.py`: two blank lines before the test.
+- `src/wikiapp/__init__.py`: 1 line added; a blank line after the import.
+- `src/wikiapp/console.py`: 3 lines added, 1 removed; two blank lines before the command and before `if __name__`, and spaces around `==`.
+- `src/wikiapp/wikipedia.py`: 5 lines added, 1 removed; two blank lines around the class, and the request, longer than 100 characters, split.
+- `tests/conftest.py`: 1 line added; two blank lines before the fixture.
+- `tests/test_console.py`: 11 lines added, 1 removed; two blank lines around each function, and the line longer than 100 characters split.
+- `tests/test_wikipedia.py`: 1 line added; two blank lines before the test.
 
 Files to read:
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/ca8685e532e9d372857667484e1c94c91ac9e986/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): blank lines, and spaces around `==`.
+  - look at: `if __name__ == "__main__":`
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/ca8685e532e9d372857667484e1c94c91ac9e986/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the long line of the request, split into three.
   - look at: `API_URL.format(language=language), headers={"User-Agent": USER_AGENT}`
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/ca8685e532e9d372857667484e1c94c91ac9e986/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/ca8685e532e9d372857667484e1c94c91ac9e986#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): blank lines, and the long address split.
   - look at: `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -4,6 +4,7 @@ import textwrap
+ 
+ from wikiapp.wikipedia import WikipediaError, random_page
+ 
++
+ @click.command()
+ @click.option(
+     "--language",
+@@ -25,5 +26,6 @@ def main(language) -> None:
+     click.secho(title, fg="green")
+     click.echo(textwrap.fill(extract))
+ 
+-if __name__=="__main__":
++
++if __name__ == "__main__":
+     main()
+```
 
 The change of `src/wikiapp/wikipedia.py`:
 
@@ -280,9 +303,9 @@ looks, and never what it does. One test asks the real Wikipedia, so the tests ne
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e) shows what the move changes.
 
-The linter checks the code against rules. A table at the end of `pyproject.toml` chooses the families of rules,
-one family on each line. The tests may use `assert`. The rest of the code may not use it, because Python skips
-every `assert` when it runs with `-O`.
+Now we choose the linter's rules, in a table at the end of `pyproject.toml`. The linter checks the code against
+rules, and the table chooses the families of rules, one family on each line. The tests may use `assert`. The rest
+of the code may not use it, because Python skips every `assert` when it runs with `-O`.
 
 At the end of `pyproject.toml`, choose the families of rules, and let the tests use `assert`.
 
@@ -307,7 +330,7 @@ select = [
 "tests/**" = ["S101"]
 ```
 
-A recipe `lint` runs the linter. Its words go to `ruff check`.
+Next we add a recipe `lint`, which runs the linter. The words after `just lint` go to `ruff check`.
 
 Add a recipe at the end of the `justfile`.
 
@@ -320,10 +343,10 @@ lint *args:
     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
 ```
 
-The move changed these files:
+The move changes these files:
 
-- `pyproject.toml`: the rules.
-- `justfile`: the recipe `lint`.
+- `pyproject.toml`: 18 lines added; the rules.
+- `justfile`: 6 lines added; the recipe `lint`.
 
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): a family of rules on each line.
@@ -392,7 +415,8 @@ The linter finds five problems, each with its code:
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf) shows what the move changes.
 
-ruff can fix one of the five problems itself. `just lint --fix` sorts the imports of `console.py`.
+Now we let ruff fix the one problem of the five that it can fix itself. `just lint --fix` sorts the imports of
+`console.py`.
 
 Let the linter fix what it can. The command still fails, with exit code 1, because four problems are left.
 
@@ -400,9 +424,9 @@ Let the linter fix what it can. The command still fails, with exit code 1, becau
 just lint --fix
 ```
 
-The move changed this file:
+The move changes one file:
 
-- `src/wikiapp/console.py`: the imports in three blocks, which are the standard library, the packages
+- `src/wikiapp/console.py`: 3 lines added, 2 removed; the imports in three blocks, which are the standard library, the packages
   installed, and then wikiapp's own.
 
 Files to read:
@@ -436,16 +460,16 @@ person must fix them.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3ba5d239ff4f171c58d4249a33caafc510883b46) shows what the move changes.
 
-In `tests/test_console.py`, `from wikiapp import console` moves up, under `import requests`. A reader looks for
-imports there. wikiapp's own imports are a block of their own, after the installed packages, as `--fix` made them
-in console.py.
+Now we move `from wikiapp import console` up in `tests/test_console.py`, under `import requests`. A reader looks
+for imports there. wikiapp's own imports are a block of their own, after the installed packages, as `--fix` made
+them in console.py.
 
 In `tests/test_console.py`, move `from wikiapp import console` up, under `import requests`. Put a blank line
 between the two imports. Where the import was, delete it and the two blank lines after it. The functions are then
 two blank lines apart.
 
-In `test_main_invokes_requests_get` and `test_main_uses_correct_url`, no line reads the result. The two tests
-check the mock, not the result. So the first line of each test is the call alone, without `result =`.
+Next we drop `result =` in `test_main_invokes_requests_get` and `test_main_uses_correct_url`, since no line reads
+the result. The two tests check the mock, not the result.
 
 Make the first line of each of the two tests the call alone.
 
@@ -453,9 +477,9 @@ Make the first line of each of the two tests the call alone.
     runner.invoke(console.main)
 ```
 
-The move changed this file:
+The move changes one file:
 
-- `tests/test_console.py`: the import at the top, and two assignments gone.
+- `tests/test_console.py`: 4 lines added, 5 removed; the import at the top, and two assignments gone.
 
 Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/3ba5d239ff4f171c58d4249a33caafc510883b46/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3ba5d239ff4f171c58d4249a33caafc510883b46#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the import moves, and two lines lose `result =`.
@@ -509,8 +533,8 @@ One problem is left, `S113`. The format is unchanged, and the check prints `7 fi
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/80c33d4cfaf4b157cd44482712e520c77378cf9c) shows what the move changes.
 
-Without a timeout, requests waits as long as the server keeps the connection open. So the command can wait for
-ever. The request in `src/wikiapp/wikipedia.py` now has `timeout=10`.
+Now we give the request a timeout, because without one, requests waits as long as the server keeps the
+connection open. So the command can wait for ever. The request in `src/wikiapp/wikipedia.py` now has `timeout=10`.
 
 In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
 
@@ -523,9 +547,9 @@ In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
 If the server does not answer within 10 seconds, the request now raises an exception. `random_page` turns it
 into a WikipediaError, as it does with every other error of requests.
 
-The move changed this file:
+The move changes one file:
 
-- `src/wikiapp/wikipedia.py`: the timeout.
+- `src/wikiapp/wikipedia.py`: 1 line added, 1 removed; the timeout.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/80c33d4cfaf4b157cd44482712e520c77378cf9c/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/80c33d4cfaf4b157cd44482712e520c77378cf9c#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): one more argument.
@@ -555,8 +579,8 @@ just lint
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a) shows what the move changes.
 
-validate-pyproject checks `pyproject.toml` against the standard for it. It goes in the group `lint`. A recipe
-`lint-config` checks the configuration with three commands. validate-pyproject checks `pyproject.toml`,
+Now we add validate-pyproject to the group `lint`, and a recipe `lint-config` that checks the configuration.
+The recipe runs three commands. validate-pyproject checks `pyproject.toml` against the standard for it,
 `uv lock --check` checks the lockfile, and `just --fmt --check --unstable` checks the `justfile`.
 
 Add validate-pyproject to the group `lint`.
@@ -581,11 +605,11 @@ lint-config *args:
     just --fmt --check --unstable
 ```
 
-The move changed these files:
+The move changes these files:
 
-- `justfile`: the recipe `lint-config`.
-- `pyproject.toml`: validate-pyproject in the group `lint`.
-- `uv.lock`: the exact version of validate-pyproject, and of what it needs.
+- `justfile`: 11 lines added; the recipe `lint-config`.
+- `pyproject.toml`: 1 line added; validate-pyproject in the group `lint`.
+- `uv.lock`: 28 lines added, 1 removed; the exact version of validate-pyproject, and of what it needs.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its three checks.
@@ -649,8 +673,8 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d) shows what the move changes.
 
-A recipe `check` runs every check in order, and stops at the first check that fails. The order is the format,
-the linter, the tests with a floor on the coverage, and the configuration.
+Now we add a recipe `check`, which runs every check in order. It stops at the first check that fails. The order is
+the format, the linter, the tests with a floor on the coverage, and the configuration.
 
 Add a recipe at the end of the `justfile`.
 
@@ -669,9 +693,9 @@ check *args:
     just lint-config
 ```
 
-The move changed this file:
+The move changes one file:
 
-- `justfile`: the recipe `check`.
+- `justfile`: 12 lines added; the recipe `check`.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/06ea9e2af2238f070b1e33f16aeb70002e25e44d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its four checks.
@@ -703,15 +727,14 @@ just --show check
 just check
 ```
 
-`just check` runs the format, the linter, the tests and the configuration, in that order. The
-tests must run at least 90% of the statements. The coverage is 96.77%.
+`just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
 
 ### step-04.10 A git hook
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db) shows what the move changes.
 
-pre-commit installs a git hook. A git hook is a program that git runs before every commit. If the program
-fails, git refuses the commit. pre-commit goes in the group `lint`.
+Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
+before every commit. If the program fails, git refuses the commit.
 
 Add pre-commit to the group `lint`.
 
@@ -719,9 +742,9 @@ Add pre-commit to the group `lint`.
 uv add --group lint pre-commit
 ```
 
-The new file `.pre-commit-config.yaml` names the hooks. Three come from pre-commit's collection. They check for
-valid YAML, large files and leftover merge-conflict markers. The last hook runs `just check`, so the hook and
-the terminal run the same thing.
+Next we make `.pre-commit-config.yaml`, a new file that names the hooks. Three come from pre-commit's collection.
+They check for valid YAML, large files and leftover merge-conflict markers. The last hook runs `just check`, so the
+hook and the terminal run the same thing.
 
 Make `.pre-commit-config.yaml`.
 
@@ -748,8 +771,8 @@ repos:
         always_run: true
 ```
 
-A recipe `hook`, after `setup` in the `justfile`, installs the hook. It is a recipe of its own, run once in each
-clone, because `just setup` runs at every step and never touches git.
+Then we add a recipe `hook`, after `setup` in the `justfile`, which installs the hook. It is a recipe of its own,
+run once in each clone, because `just setup` runs at every step and never touches git.
 
 In the `justfile`, after `setup` and the blank line under it, add the recipe `hook`, with a blank line after it.
 
@@ -760,12 +783,12 @@ hook *args:
     @{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}
 ```
 
-The move changed these files:
+The move changes these files:
 
-- `.pre-commit-config.yaml`: a new file, with the hooks.
-- `justfile`: the recipe `hook`, which installs the hook.
-- `pyproject.toml`: pre-commit in the group `lint`.
-- `uv.lock`: the exact version of pre-commit, and of what it needs.
+- `.pre-commit-config.yaml`: 20 lines added; a new file, with the hooks.
+- `justfile`: 5 lines added; the recipe `hook`, which installs the hook.
+- `pyproject.toml`: 1 line added; pre-commit in the group `lint`.
+- `uv.lock`: 138 lines added; the exact version of pre-commit, and of what it needs.
 
 Files to read:
 - [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
@@ -813,11 +836,11 @@ uv run pre-commit run --files .pre-commit-config.yaml
 ```
 
 `uv run pre-commit install` prints `pre-commit installed at .git/hooks/pre-commit`, and `just hook` prints the
-same line. The hook is in `.git/hooks`, and no step or move changes that folder. So the hook stays for the rest
-of the tutorial. At a later step, `just hook` installs it once.
+same line. The hook is in `.git/hooks`, and no step or move changes that folder. The hook stays installed for the
+rest of the tutorial.
 
-`pre-commit run` now runs every hook on the file named, as git will before a commit. The first time, it prints
-`[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
+`pre-commit run` now runs every hook on the file named, as git will before a commit. The first time on a machine, it
+prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
 
 With `--all-files`, pre-commit would check every file that git tracks. It would skip a new file until git tracks
 it.
@@ -834,9 +857,9 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/50af6273ec0db467642d539935422d0f4fc50991) shows what the move changes.
 
-ty, the type checker that `just types` runs, checks the types that the code states. ruff's `ANN` rules make sure
-that the code states a type for every parameter and return. One line in `select` of `pyproject.toml` turns them
-on, after `"N"`.
+Now we turn on ruff's `ANN` rules, with one line in the list `select` in `pyproject.toml`, after `"N"`. ty, the
+type checker that `just types` runs, checks the types that the code states. The `ANN` rules make sure that the code
+states a type for every parameter and return.
 
 In `pyproject.toml`, add a line to `select`, after `"N"`.
 
@@ -844,9 +867,9 @@ In `pyproject.toml`, add a line to `select`, after `"N"`.
     "ANN", # annotations: every parameter and every return value has a type
 ```
 
-The move changed this file:
+The move changes one file:
 
-- `pyproject.toml`: the rules `ANN`.
+- `pyproject.toml`: 1 line added; the rules `ANN`.
 
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/50af6273ec0db467642d539935422d0f4fc50991/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/50af6273ec0db467642d539935422d0f4fc50991#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
@@ -871,11 +894,13 @@ just lint --statistics
 
 The linter finds 25 missing types, in the code and in the tests. They are 15 parameters (`ANN001`) and 10
 returns (`ANN201`). `just check` fails at this move and at the next move, and passes again at step-05.5. So the
-git hook refuses to commit this move or the next. In the project's history, they are commits made past the hook.
+git hook would refuse a commit of this move or of the next.
 
 ### step-05.4 Types in the code
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/48523b8748a8bd60f80b73e1b2b2322eb616325b) shows what the move changes.
+
+Now we add the types to the code, in `src/wikiapp/wikipedia.py` and `src/wikiapp/console.py`.
 
 In `src/wikiapp/wikipedia.py`, `random_page` takes a string. It returns the JSON that Wikipedia sends, which is
 a dictionary from strings to values of any kind. `Any` says that ty cannot check the values. The file imports
@@ -900,10 +925,10 @@ In `src/wikiapp/console.py`, give the parameter of `main` its type.
 def main(language: str) -> None:
 ```
 
-The move changed these files:
+The move changes these files:
 
-- `src/wikiapp/wikipedia.py`: the types of `random_page`.
-- `src/wikiapp/console.py`: the type of `main`'s parameter.
+- `src/wikiapp/wikipedia.py`: 3 lines added, 1 removed; the types of `random_page`.
+- `src/wikiapp/console.py`: 1 line added, 1 removed; the type of `main`'s parameter.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/48523b8748a8bd60f80b73e1b2b2322eb616325b/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/48523b8748a8bd60f80b73e1b2b2322eb616325b#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the parameter and the return.
@@ -955,13 +980,13 @@ The 22 problems that are left are all in the tests. They are 13 parameters and 9
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8f6e8938925501f9c1bc198818fbd8fab7b647ff) shows what the move changes.
 
-Since step-05.3, ruff's `ANN` rules ask for a type on every parameter and return. The code has its types, and
-`just lint` finds 22 missing in the tests.
+Now we add the types to the tests, first to the fixture in `tests/conftest.py`. Since step-05.3, ruff's `ANN`
+rules ask for a type on every parameter and return. The code has its types, and `just lint` finds 22 missing in
+the tests.
 
-The return type of a fixture is the type of what a test receives. The runner is a `CliRunner`, and the mock of
-`requests.get` is a `Mock`. `mocker` is pytest-mock's `MockerFixture`, the name that replaced the original
-wikiapp's `MockFixture`. `tests/conftest.py` now imports `Mock` and `MockerFixture`, and its fixture states both
-types.
+The return type of a fixture is the type of what a test receives. The mock of `requests.get` is a `Mock`.
+`mocker` is pytest-mock's `MockerFixture`, the name that replaced the original wikiapp's `MockFixture`.
+`tests/conftest.py` now imports `Mock` and `MockerFixture`, and its fixture states both types.
 
 Replace `tests/conftest.py` with this file.
 
@@ -982,13 +1007,15 @@ def mock_requests_get(mocker: MockerFixture) -> Mock:
     return mock
 ```
 
-A test returns None. `tests/test_console.py` imports `Mock` and `CliRunner` by name. The fixture `runner` returns
-`CliRunner()`, and every function has its types. `tests/test_wikipedia.py` imports `Mock` at the top, and its
-test has its types.
+Next we add the types to `tests/test_console.py` and `tests/test_wikipedia.py`. A test returns None.
+`tests/test_console.py` imports `Mock` and `CliRunner` by name. The fixture `runner` returns `CliRunner()`, so its
+return type is `CliRunner`. Every function has its types. `tests/test_wikipedia.py` imports `Mock` at the top, and
+its test has its types.
 
-In `tests/test_console.py`, replace the imports at the top with the ones below: `import click.testing` goes, and
-`Mock` and `CliRunner` come in by name. Use `CliRunner()` in the fixture, and give every function its types. Two
-of the functions are the pattern for the rest.
+In `tests/test_console.py`, replace the lines from the top to the line `def test_main_prints_title`, that line
+included, with the code below. `import click.testing` goes, and `Mock` and `CliRunner` come in by name. Then give
+every other test its types. Each parameter `runner` is a `CliRunner`, each `mock_requests_get` is a `Mock`, and
+each test returns `None`.
 
 ```python
 from unittest.mock import Mock
@@ -1015,11 +1042,11 @@ after it, and give the test its types.
 def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
 ```
 
-The move changed these files:
+The move changes these files:
 
-- `tests/conftest.py`: the types of the fixture.
-- `tests/test_console.py`: the types of the fixture and of every test.
-- `tests/test_wikipedia.py`: the types of the test.
+- `tests/conftest.py`: 4 lines added, 1 removed; the types of the fixture.
+- `tests/test_console.py`: 11 lines added, 9 removed; the types of the fixture and of every test.
+- `tests/test_wikipedia.py`: 3 lines added, 1 removed; the types of the test.
 
 Files to read:
 - [`tests/conftest.py`](https://github.com/rahuldave/smallwikiapp/blob/8f6e8938925501f9c1bc198818fbd8fab7b647ff/tests/conftest.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8f6e8938925501f9c1bc198818fbd8fab7b647ff#diff-e52e4ddd58b7ef887ab03c04116e676f6280b824ab7469d5d3080e5cba4f2128): the fixture returns a Mock.
@@ -1138,7 +1165,8 @@ the blocks, the standard library first, then the other packages, then wikiapp.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/41990df7638f0964c66bf4e4433ffc4f5b6a026d) shows what the move changes.
 
-The recipe `check` in the `justfile` now runs `just types` after `just lint`. Its comment names the types too.
+Now we put the type checker in the recipe `check` of the `justfile`, after `just lint`. The comment of `check`
+names the types too.
 
 In the `justfile`, in `check`, run `just types` after `just lint`. Also add the types to the comment of `check`.
 
@@ -1151,9 +1179,9 @@ In the `justfile`, in `check`, run `just types` after `just lint`. Also add the 
     just types
 ```
 
-The move changed this file:
+The move changes one file:
 
-- `justfile`: `check` runs the type checker.
+- `justfile`: 2 lines added, 1 removed; `check` runs the type checker.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/41990df7638f0964c66bf4e4433ffc4f5b6a026d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/41990df7638f0964c66bf4e4433ffc4f5b6a026d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in check.
@@ -1198,6 +1226,7 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5680a827b9d6a412d145df259dd161119c4cd776) shows what the move changes.
 
+Now we make `just lint-config` check the library's `pyproject.toml` too.
 Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
 recipe `lint-config` now gives validate-pyproject both files.
 
@@ -1208,9 +1237,9 @@ below.
     uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
 ```
 
-The move changed this file:
+The move changes one file:
 
-- `justfile`: `lint-config` checks both files.
+- `justfile`: 1 line added, 1 removed; `lint-config` checks both files.
 
 Files to read:
 - [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5680a827b9d6a412d145df259dd161119c4cd776/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/b3d6fbbeca8cbdd86523b9e767092d8b4fe06b29...5680a827b9d6a412d145df259dd161119c4cd776#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.

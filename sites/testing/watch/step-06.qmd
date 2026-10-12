@@ -19,15 +19,19 @@ The project accepts every Python from 3.11 on. GitHub runs the tests on three sy
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4ccfe3566846e64d7383837ef3e936e151c6c9d5) shows what the move changes.
 
+Now we mark the test that asks the real Wikipedia, so that it runs only on request.
+
 `test_main_succeeds` is the one test that goes over the network. It fails without a network, and its result
 depends on Wikipedia. In `tests/test_console.py`, it now has the marker `e2e`, which means end to end. Its new
 name says so, `test_main_succeeds_in_production`. `pyproject.toml` declares the marker in `markers`. The option
 `-m 'not e2e'` in `addopts` leaves the e2e tests out of every run that does not ask for them.
 
-The move changed these files:
+Find `@pytest.mark.e2e` in the change of `tests/test_console.py`. Then read the change of `pyproject.toml`.
 
-- `tests/test_console.py`: the marker, and the name.
-- `pyproject.toml`: the marker, declared, and the e2e tests left out of a plain run.
+The move changes these files:
+
+- `tests/test_console.py`: 2 lines added, 1 removed; the marker, and the name.
+- `pyproject.toml`: 5 lines added, 2 removed; the marker, declared, and the e2e tests left out of a plain run.
 
 Files to read:
 - [`tests/test_console.py`](https://github.com/rahuldave/smallwikiapp/blob/4ccfe3566846e64d7383837ef3e936e151c6c9d5/tests/test_console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/4ccfe3566846e64d7383837ef3e936e151c6c9d5#diff-b4208c08b7028cf972b84e618100942bedd2eba3f8db6364f6e4bedf162a680f): the test, marked.
@@ -79,14 +83,16 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/41e5681a18bc9975f383d1520b8781c4e836e90d) shows what the move changes.
 
-The mocks return a dictionary with a title and an extract. A second e2e test, from the original wikiapp,
-checks that the real Wikipedia still returns the same keys. It is
-`test_random_page_returns_dictionary_in_production`, at the end of `tests/test_wikipedia.py`. The file now
+Now we add an end-to-end test of the library, `random_page`. The mocks return a dictionary with a title and an
+extract. A second e2e test, from the original wikiapp, checks that the real Wikipedia still returns the same keys.
+It is `test_random_page_returns_dictionary_in_production`, at the end of `tests/test_wikipedia.py`. The file now
 imports pytest, in a block of its own.
 
-The move changed this file:
+Find `def test_random_page_returns_dictionary_in_production() -> None:` in the change of `tests/test_wikipedia.py`.
 
-- `tests/test_wikipedia.py`: an e2e test.
+The move changes one file:
+
+- `tests/test_wikipedia.py`: 9 lines added; an e2e test.
 
 Files to read:
 - [`tests/test_wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/41e5681a18bc9975f383d1520b8781c4e836e90d/tests/test_wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/41e5681a18bc9975f383d1520b8781c4e836e90d#diff-7c364f41c3f9111bc3b1f70b78b315206e7ee9e4baa4bda340fd54919d4d1f7d): the test.
@@ -126,16 +132,19 @@ The output is `2 passed, 6 deselected`.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761) shows what the move changes.
 
-`uv init` wrote `requires-python = ">=3.13"`, because the command asked for Python 3.13. Nothing here needs
-more than 3.11. Python 3.10 reached its end of life on 1 October 2026, so 3.11 is now the oldest Python that
-still gets security fixes. The line in `pyproject.toml` now says 3.11, and uv solves the lockfile again.
+Now we let the project accept every Python from 3.11 on. `uv init` wrote `requires-python = ">=3.13"`, because the
+command asked for Python 3.13. Nothing here needs more than 3.11. Python 3.10 reached its end of life on 1 October
+2026, so 3.11 is now the oldest Python that still gets security fixes. The line in `pyproject.toml` now says 3.11,
+and uv solves the lockfile again.
+
+Find `requires-python = ">=3.11"` in the change of `pyproject.toml`.
 
 The project still runs on 3.13, from `.python-version`.
 
-The move changed these files:
+The move changes these files:
 
-- `pyproject.toml`: the oldest Python that the project accepts.
-- `uv.lock`: solved for every Python from 3.11 on.
+- `pyproject.toml`: 1 line added, 1 removed; the oldest Python that the project accepts.
+- `uv.lock`: 160 lines added, 2 removed; solved for every Python from 3.11 on.
 
 Files to read:
 - [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/15ba9fa843e3f055dac9c8f1a844b7382858b761/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
@@ -167,16 +176,19 @@ uv run --isolated --python 3.11 pytest -q
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d3f84ea883f0e41f64fb397f436c89e372c83bff) shows what the move changes.
 
-A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push
-to main and on every pull request. The workflow `.github/workflows/test.yaml` has two jobs. The job `tests` runs
-the tests on three systems and four Pythons. The job `check` runs `just check` once.
+Now we add a GitHub Actions workflow, which runs the tests on the machines of GitHub. A GitHub Actions workflow is
+a file in `.github/workflows/`. GitHub runs the jobs of the workflow on every push to main and on every pull
+request. The workflow `.github/workflows/test.yaml` has two jobs. The job `tests` runs the tests on three systems
+and four Pythons. The job `check` runs `just check` once.
+
+Open `.github/workflows/test.yaml`, a new file. Find `python: ["3.11", "3.12", "3.13", "3.14"]` in it.
 
 The original wikiapp used pixi for the same work, with one environment for each Python. Here, `setup-uv` tells
 uv which Python to use. If that Python is missing, `uv run` installs it.
 
-The move changed this file:
+The move changes one file:
 
-- `.github/workflows/test.yaml`: a new file with two jobs. GitHub runs one of the jobs twelve times.
+- `.github/workflows/test.yaml`: 37 lines added; a new file with two jobs. GitHub runs one of the jobs twelve times.
 
 Files to read:
 - [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/d3f84ea883f0e41f64fb397f436c89e372c83bff/.github/workflows/test.yaml): the matrix of systems and Pythons.

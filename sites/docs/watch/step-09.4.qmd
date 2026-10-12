@@ -16,12 +16,15 @@ just setup
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a248f43de21ce0b11b11c2b31e8e8e656c2ba465) shows what the move changes.
 
+Now we make the docs check count the library, in `docs/_smalldocs.yml`.
 Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
 `docs/_smalldocs.yml` names only `wikiapp`. The line `packages:` in the section `api` now names both.
 
-The move changed this file:
+Read the change of `docs/_smalldocs.yml`.
 
-- `docs/_smalldocs.yml`: two packages.
+The move changes one file:
+
+- `docs/_smalldocs.yml`: 1 line added, 1 removed; two packages.
 
 Files to read:
 - [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/a248f43de21ce0b11b11c2b31e8e8e656c2ba465/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/21b69a2c7ff628cf5726eec4eb986c7f3e8a6482...a248f43de21ce0b11b11c2b31e8e8e656c2ba465#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.

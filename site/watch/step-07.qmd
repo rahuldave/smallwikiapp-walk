@@ -20,18 +20,23 @@ language code.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a86d7848100f28d4cd5bdca2bc3a8b5ab98bb4c8) shows what the move changes.
 
-The command uses two of the many keys that Wikipedia sends. Until now, the code expects these keys to be there,
-with strings as values, but nothing checks it. A pydantic model states the two keys and their types in code.
-pydantic is a dependency of the package, as click and requests are.
+Now we add pydantic, a library that checks data against a model. The command uses two of the many keys that
+Wikipedia sends. Until now, the code expects these keys to be there, with strings as values, but nothing checks it.
+A pydantic model states the two keys and their types in code. pydantic is a dependency of the package, as click and
+requests are.
 
-In `src/wikiapp/wikipedia.py`, the class `Page` comes after `WikipediaError`. It has a title and an extract, both
-strings. The file imports `BaseModel` under `import requests`.
+Find `"pydantic>=2.14.0",` in the change of `pyproject.toml`.
 
-The move changed these files:
+Next we write the model `Page` in `src/wikiapp/wikipedia.py`, after `WikipediaError`. It has a title and an
+extract, both strings. The file imports `BaseModel` under `import requests`.
 
-- `src/wikiapp/wikipedia.py`: the class `Page`.
-- `pyproject.toml`: pydantic, a dependency of the package, as click and requests are.
-- `uv.lock`: the exact version of pydantic, and of what it needs.
+Find `from pydantic import BaseModel` and `class Page(BaseModel):` in the change of `src/wikiapp/wikipedia.py`.
+
+The move changes these files:
+
+- `src/wikiapp/wikipedia.py`: 8 lines added; the class `Page`.
+- `pyproject.toml`: 1 line added; pydantic, a dependency of the package, as click and requests are.
+- `uv.lock`: 180 lines added; the exact version of pydantic, and of what it needs.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/a86d7848100f28d4cd5bdca2bc3a8b5ab98bb4c8/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/a86d7848100f28d4cd5bdca2bc3a8b5ab98bb4c8#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the model.
@@ -91,20 +96,27 @@ with a ValidationError, because `extract` is missing.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a) shows what the move changes.
 
-In `src/wikiapp/wikipedia.py`, `random_page` makes a Page of the answer and returns the Page. The code no
-longer uses `Any`, so its import and the blank line under it are gone.
+Now we make `random_page`, in `src/wikiapp/wikipedia.py`, return a Page made from the answer. The code no longer
+uses `Any`, so its import and the blank line under it are gone.
 
-In `src/wikiapp/console.py`, `main` prints the attributes of the page. ty and an editor know the names of the
-attributes. A misspelled key of a dictionary shows up only when the program runs.
+Find `return Page.model_validate(response.json())` in the change of `src/wikiapp/wikipedia.py`.
 
-In `tests/test_wikipedia.py`, the e2e test is now `test_random_page_returns_page_in_production`, with the same
-marker. Its new name says that it checks for a Page.
+Next we make `main`, in `src/wikiapp/console.py`, print the attributes of the page. ty and an editor know the names
+of the attributes. A misspelled key of a dictionary shows up only when the program runs.
 
-The move changed these files:
+Find `click.secho(page.title, fg="green")` in the change of `src/wikiapp/console.py`.
 
-- `src/wikiapp/wikipedia.py`: returns a Page.
-- `src/wikiapp/console.py`: prints the attributes of the Page.
-- `tests/test_wikipedia.py`: the e2e test.
+Then we rename the e2e test in `tests/test_wikipedia.py` to `test_random_page_returns_page_in_production`, with the
+same marker. Its new name says that it checks for a Page. Its two asserts on the keys become one,
+`assert isinstance(page, wikipedia.Page)`.
+
+Find `assert isinstance(page, wikipedia.Page)` in the change of `tests/test_wikipedia.py`.
+
+The move changes these files:
+
+- `src/wikiapp/wikipedia.py`: 2 lines added, 4 removed; returns a Page.
+- `src/wikiapp/console.py`: 3 lines added, 5 removed; prints the attributes of the Page.
+- `tests/test_wikipedia.py`: 2 lines added, 3 removed; the e2e test.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/3b24928689614ab7cd0de47f722d95742cc7bb4a/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the return.
@@ -189,17 +201,22 @@ uv run wikiapp
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703) shows what the move changes.
 
-When the answer has no title, `model_validate` raises the ValidationError of pydantic. `random_page` turns it
-into a WikipediaError, as it does with a failed request. In `src/wikiapp/wikipedia.py`, the `except` catches
-ValidationError together with the exception of requests.
+Now we make `random_page` catch an answer that is not a page. When the answer has no title, `model_validate` raises
+the ValidationError of pydantic. `random_page` turns it into a WikipediaError, as it does with a failed request. In
+`src/wikiapp/wikipedia.py`, the `except` catches ValidationError together with the exception of requests.
 
-A test from the original wikiapp, `test_random_page_handles_validation_error`, is at the end of
+Find `except (requests.RequestException, ValidationError) as error:` in the change of `src/wikiapp/wikipedia.py`.
+
+Next we add a test from the original wikiapp, `test_random_page_handles_validation_error`, at the end of
 `tests/test_wikipedia.py`. In the test, the mock answers with an empty dictionary.
 
-The move changed these files:
+Find `def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:` in the change of
+`tests/test_wikipedia.py`.
 
-- `src/wikiapp/wikipedia.py`: a ValidationError is a WikipediaError too.
-- `tests/test_wikipedia.py`: a test of the ValidationError.
+The move changes these files:
+
+- `src/wikiapp/wikipedia.py`: 2 lines added, 2 removed; a ValidationError is a WikipediaError too.
+- `tests/test_wikipedia.py`: 6 lines added; a test of the ValidationError.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/8ef59a76a8988b6ef39a36c630e5785be2573703/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/8ef59a76a8988b6ef39a36c630e5785be2573703#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): two exceptions caught.
@@ -251,15 +268,20 @@ The output is `1 passed, 8 deselected`.
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc) shows what the move changes.
 
+Now we check, in `random_page`, that the language is a language code before it goes into the address.
+
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as
 `example.com/x?` sends the request to example.com, with the User-Agent. The code of every Wikipedia has only
 letters and hyphens, for example `en`, `fr`, `simple` and `zh-yue`. In `src/wikiapp/wikipedia.py`, a pattern
 `LANGUAGE` under `API_URL` matches such a code. `random_page` checks the language first, before the `try`. Any
 other language raises a WikipediaError.
 
-The move changed this file:
+Find `LANGUAGE = re.compile(r"[a-z]+(-[a-z]+)*")  # en, fr, simple, zh-yue: letters and hyphens` and
+`if not LANGUAGE.fullmatch(language):` in the change of `src/wikiapp/wikipedia.py`.
 
-- `src/wikiapp/wikipedia.py`: the pattern, and the check.
+The move changes one file:
+
+- `src/wikiapp/wikipedia.py`: 5 lines added; the pattern, and the check.
 
 Files to read:
 - [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the code checks a language before it uses it.
