@@ -65,5 +65,5 @@ is out of date with `pyproject.toml`. `--locked`, or `UV_LOCKED`, refuses a lock
 uses the lockfile as it is, and does not compare it with `pyproject.toml`.
 
 The project uses `--locked`. So a change to the dependencies, the version or `requires-python` without `uv lock`
-fails in every recipe that runs `uv run` or `uv sync`. `uv build` does not read the lockfile, so `just build` still
-works.
+fails in every recipe that runs `uv run` or `uv sync`. `uv build` does not read the lockfile, so `just build`, from
+stop 11, still works.

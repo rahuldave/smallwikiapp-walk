@@ -311,8 +311,8 @@ is out of date with `pyproject.toml`. `--locked`, or `UV_LOCKED`, refuses a lock
 uses the lockfile as it is, and does not compare it with `pyproject.toml`.
 
 The project uses `--locked`. So a change to the dependencies, the version or `requires-python` without `uv lock`
-fails in every recipe that runs `uv run` or `uv sync`. `uv build` does not read the lockfile, so `just build` still
-works.
+fails in every recipe that runs `uv run` or `uv sync`. `uv build` does not read the lockfile, so `just build`, from
+stop 11, still works.
 
 ## step-06.3 The oldest Python, and other environments
 
@@ -653,16 +653,17 @@ The command prints `Hello from wikirandom!`. `--package wikirandom` installs the
 and runs the command there. The app does not depend on the library yet, so a plain `uv run` would not install it.
 
 A workspace member is a package that the root `pyproject.toml` names under `[tool.uv.workspace]`. With no
-workspace, the app could name the library by its folder. At stop 9, it would write the line below under
+workspace, the app could name the library by its folder. At stop 10, it would write the line below under
 `[tool.uv.sources]`.
 
 ```toml
 wikirandom = { path = "packages/wikirandom" }
 ```
 
-uv would copy the library into `.venv`, so an edit to it would reach the app only after a new sync. uv links a
-workspace member instead. The library would also be a project of its own. `uv lock` in its folder would write a
-second lockfile, `uv run --package wikirandom` would fail, and `uv build --all-packages` would build only the app.
+uv would copy the library into `.venv`. A plain sync does not see an edit to the library, so the edit would reach
+the app only after `uv sync --reinstall-package wikirandom`. uv links a workspace member instead. The library would
+also be a project of its own. `uv lock` in its folder would write a second lockfile, `uv run --package wikirandom`
+would fail, and `uv build --all-packages` would build only the app.
 
 ## step-09.2 A dependency of one member
 

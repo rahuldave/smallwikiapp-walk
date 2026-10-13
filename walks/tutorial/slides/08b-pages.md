@@ -11,4 +11,7 @@ Each job on GitHub installs the group it needs, and no more.
 
 `uv run --locked --no-default-groups --group test pytest`
 
-The site: https://rahuldave.com/smallwikiapp/
+| Repository | Its site |
+|---|---|
+| a fork | `https://OWNER.github.io/smallwikiapp/` |
+| rahuldave/smallwikiapp | https://rahuldave.com/smallwikiapp/ |

@@ -1339,8 +1339,9 @@ Since the last stop, the walk leaves out the last move of
 [09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html), and the first two moves of
 [step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). `just check` runs the type checker too.
 
-The tests that ask the real Wikipedia run only on request. GitHub runs the tests and `just check`, and
-publishes the docs site.
+The tests that ask the real Wikipedia run only on request. GitHub runs the tests and `just check`. In
+[step-08b](https://rahuldave.com/smallwikiapp-walk/watch/step-08b.html), GitHub's tests install the group `test`
+alone, and a workflow publishes the docs site.
 
 `random_page` returns a pydantic model, `Page`. smalldocs documents the code, and `just check` runs the check of
 the docs. The library became a package of its own, `packages/wikirandom`, with its own `pyproject.toml`.
