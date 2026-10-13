@@ -6,7 +6,7 @@ title: "step-09.2: A dependency of one member"
 
 Watch mode. [The same step in do mode](../do/step-09.2.qmd).
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/1808dba30f594a154d3b807f9f2114378572912f), the commit before step-09.2.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/7b4265dd63d20fb624a415b1cbcf1d4dadf950ff), the commit before step-09.2.
 
 ```bash
 just setup
@@ -16,7 +16,7 @@ just setup
 
 ## step-09.2 The code goes into wikirandom {#step-09.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1fe91f675a33daeec87f13a37f893df8dac52450) shows what the move changes.
 
 Now we give the library the code of `src/wikiapp/wikipedia.py`, and the packages that the code imports.
 The library needs requests and pydantic. `packages/wikirandom/src/wikirandom/__init__.py` now contains the code of
@@ -36,9 +36,9 @@ The move changes these files:
 - `uv.lock`: 10 lines added; the library's dependencies.
 
 Files to read:
-- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/1808dba30f594a154d3b807f9f2114378572912f...2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the library.
+- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/1fe91f675a33daeec87f13a37f893df8dac52450/packages/wikirandom/src/wikirandom/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/7b4265dd63d20fb624a415b1cbcf1d4dadf950ff...1fe91f675a33daeec87f13a37f893df8dac52450#diff-872d7a197fe9f160d159d0b82650ce1c3a922c71cfb992ffe8c82113430501cc): the library.
   - look at: `def random_page(`
-- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/1808dba30f594a154d3b807f9f2114378572912f...2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): its dependencies.
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/1fe91f675a33daeec87f13a37f893df8dac52450/packages/wikirandom/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/7b4265dd63d20fb624a415b1cbcf1d4dadf950ff...1fe91f675a33daeec87f13a37f893df8dac52450#diff-dba523fb4ea9a53f2d7b8fd6a67ba45f8fc7242e3da5c00681e0a9fbbe049f53): its dependencies.
   - look at: `"pydantic>=2.14.0",`
 
 The change of `packages/wikirandom/src/wikirandom/__init__.py`:

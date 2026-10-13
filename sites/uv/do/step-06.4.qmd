@@ -85,7 +85,8 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 ```
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
-thirteen jobs.
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The move
+[step-08b.2](https://rahuldave.com/smallwikiapp-walk/watch/step-08b.html#step-08b.2) names the settings.
 
 The job `tests` runs `uv run --locked pytest`, and so it installs the group `dev`, with ruff, ty and pre-commit.
 pytest needs none of them. A dry run shows what the job would leave out with the group `test` alone.

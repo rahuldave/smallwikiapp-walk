@@ -140,6 +140,8 @@ and gives the command that brings a file back.
 - [uv](https://docs.astral.sh/uv/), which also runs timewalk
 - [git](https://git-scm.com/) and [just](https://just.systems/)
 - Chrome, Edge or another recent browser
+- A GitHub account, only to see CI and the docs site run in your own fork of smallwikiapp, from step-06 and
+  step-08b. Those steps use GitHub's website. They need no `gh`, and timewalk has no part in them
 
 ## Start
 

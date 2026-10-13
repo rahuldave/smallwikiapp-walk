@@ -82,25 +82,25 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 ## step-08b.2 A workflow that publishes the docs {#step-08b.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a9e3b523b68b8ab5b9794562651ef38b2bcf62da) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a57b47349e07a6f4ad95c866f2a684dbcf6ec35a) shows what the move changes.
 
 Now we add a second workflow, `.github/workflows/docs.yaml`, which builds the docs site on every push to main.
-GitHub Pages then publishes the site, at https://rahuldave.com/smallwikiapp/ for this repository.
+GitHub Pages then publishes the site. The second piece of this move turns it on for a fork.
 
-The workflow has two jobs. The job `build`, from line 20, installs the package and the group `docs`, and runs
-`smalldocs render docs`, the command behind `just docs`. It does not run `just docs`. The recipe, at line 85 of the
-`justfile`, runs `uv run` with no option, which installs the group `dev`. The job then gives the folder `docs/_site`
-to Pages. The job `deploy`, from line 31, publishes it.
+The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
+`smalldocs render docs`, the command behind `just docs`. It does not run `just docs`. Line 85 of the `justfile`, in the
+recipe `docs`, runs `uv run` with no option, which installs the group `dev`. The job then gives the folder `docs/_site`
+to Pages. The job `deploy`, from line 32, publishes it.
 
-Lines 10 to 13, under `permissions`, let the workflow publish to Pages. Lines 15 to 17, under `concurrency`, stop
-an older publish when a newer push starts one. Pages publishes the site only if the repository's Pages source is
-**GitHub Actions**. For smallwikiapp it is.
+Lines 11 to 14, under `permissions`, let the workflow publish to Pages. Lines 16 to 18, under `concurrency`, stop
+an older publish when a newer push starts one.
 
 Make `.github/workflows/docs.yaml`.
 
 ```yaml
 # The docs site. On every push to main, smalldocs builds the site from the code, and GitHub Pages
-# publishes it at https://rahuldave.com/smallwikiapp/. The job installs the group docs alone.
+# publishes it at https://OWNER.github.io/smallwikiapp/, with the name of the repository's owner. For
+# rahuldave/smallwikiapp, that is https://rahuldave.com/smallwikiapp/. The job installs the group docs alone.
 name: Docs
 
 on:
@@ -140,15 +140,38 @@ jobs:
         uses: actions/deploy-pages@v5
 ```
 
-To publish from your own copy of the repository on GitHub, open its **Settings**, then **Pages**, and choose
-**GitHub Actions** as the source.
+Next we turn on the two settings on GitHub that the workflow needs, in a fork of smallwikiapp. The move changes no
+file for them. Both are on GitHub's website, and need no tool on your machine. timewalk plays no part in them.
+
+- **Actions.** GitHub turns off the workflows of a fork, until its owner turns them on, on the tab **Actions**.
+- **Pages.** Under **Settings**, then **Pages**, the source of the site must be **GitHub Actions**.
+
+GitHub then publishes the site at `https://OWNER.github.io/smallwikiapp/`, where OWNER is the name of the account
+that owns the fork. The account rahuldave has a domain of its own. So the site of rahuldave/smallwikiapp is at
+[rahuldave.com/smallwikiapp](https://rahuldave.com/smallwikiapp/).
+
+In every fork, the links from the reference to the code go to rahuldave/smallwikiapp. Line 20 of
+`docs/_smalldocs.yml` names that repository.
+
+To publish the docs from your own fork of smallwikiapp, do these steps on GitHub's website.
+
+1. Fork https://github.com/rahuldave/smallwikiapp, if you have no fork of it yet.
+2. In your fork, open the tab **Actions**, and turn the workflows on.
+3. Open **Settings**, then **Pages**. Under **Source**, choose **GitHub Actions**.
+4. Open **Actions**, and choose the workflow **Docs**. Press **Run workflow**, keep the branch `main`, and press the
+   green **Run workflow** under it.
+5. When the run ends, open `https://YOU.github.io/smallwikiapp/`, with the name of your account in place of YOU.
+
+Your fork has every step, so the site shows the docs of the last step. The moves that you make in timewalk stay
+in `worktree/`, and do not reach the fork. From then on, each push to the main branch
+of your fork builds the site again.
 
 The move changes one file:
 
-- `.github/workflows/docs.yaml`: 39 lines added; a new file, with the jobs `build` and `deploy`.
+- `.github/workflows/docs.yaml`: 40 lines added; a new file, with the jobs `build` and `deploy`.
 
 Files to read:
-- [`.github/workflows/docs.yaml`](https://github.com/rahuldave/smallwikiapp/blob/a9e3b523b68b8ab5b9794562651ef38b2bcf62da/.github/workflows/docs.yaml): the site, built with the group `docs` alone, then published.
+- [`.github/workflows/docs.yaml`](https://github.com/rahuldave/smallwikiapp/blob/a57b47349e07a6f4ad95c866f2a684dbcf6ec35a/.github/workflows/docs.yaml): the site, built with the group `docs` alone, then published.
   - look at: `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
 
 ```bash
@@ -157,5 +180,4 @@ uv run --isolated --locked --no-default-groups --group docs smalldocs render doc
 ```
 
 The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
-prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`. After a push to main, the **Actions** tab shows
-the workflow `Docs`, and the site is at https://rahuldave.com/smallwikiapp/.
+prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.

@@ -6,7 +6,7 @@ title: "step-09.3: The app uses the library"
 
 Do mode. [The same step in watch mode](../watch/step-09.3.qmd).
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7), the commit before step-09.3.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/1fe91f675a33daeec87f13a37f893df8dac52450), the commit before step-09.3.
 
 ```bash
 just setup
@@ -16,7 +16,7 @@ The app's `pyproject.toml` names the library as a dependency, and `[tool.uv.sour
 
 ## step-09.3 The app uses wikirandom {#step-09.3}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/9277e2440db83837ca7136fb012788e0e1788604) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a99a9a7f0326461f095a2f8a74436efe2faaafba) shows what the move changes.
 
 Now we make the library a dependency of the app, in place of requests and pydantic. In the app's code, only
 `src/wikiapp/wikipedia.py` imports those two, and it goes later in the move. `tests/test_console.py` still imports
@@ -94,7 +94,7 @@ In `README.md`, replace the `src/wikiapp/` row of the table of folders with the 
 | `packages/wikirandom/` | The library the app uses: a random page of Wikipedia. A package of its own |
 ```
 
-The front page is long to type, so take `docs/index.qmd` from [the move's commit](https://github.com/rahuldave/smallwikiapp/compare/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7...9277e2440db83837ca7136fb012788e0e1788604).
+The front page is long to type, so take `docs/index.qmd` from [the move's commit](https://github.com/rahuldave/smallwikiapp/compare/1fe91f675a33daeec87f13a37f893df8dac52450...a99a9a7f0326461f095a2f8a74436efe2faaafba).
 
 In `packages/wikirandom/README.md`, replace the line under the heading with the line below.
 
@@ -114,17 +114,17 @@ The move changes these files:
 - `packages/wikirandom/README.md`: 1 line added, 1 removed; says that wikiapp uses the library now.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/9277e2440db83837ca7136fb012788e0e1788604/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7...9277e2440db83837ca7136fb012788e0e1788604#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app depends on the library.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/a99a9a7f0326461f095a2f8a74436efe2faaafba/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/1fe91f675a33daeec87f13a37f893df8dac52450...a99a9a7f0326461f095a2f8a74436efe2faaafba#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the app depends on the library.
   - look at: `wikirandom = { workspace = true }`
-- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/9277e2440db83837ca7136fb012788e0e1788604/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7...9277e2440db83837ca7136fb012788e0e1788604#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): one import.
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/a99a9a7f0326461f095a2f8a74436efe2faaafba/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/1fe91f675a33daeec87f13a37f893df8dac52450...a99a9a7f0326461f095a2f8a74436efe2faaafba#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): one import.
   - look at: `from wikirandom import WikipediaError, random_page`
-- [`tests/test_wikirandom.py`](https://github.com/rahuldave/smallwikiapp/blob/9277e2440db83837ca7136fb012788e0e1788604/tests/test_wikirandom.py): the same three tests.
+- [`tests/test_wikirandom.py`](https://github.com/rahuldave/smallwikiapp/blob/a99a9a7f0326461f095a2f8a74436efe2faaafba/tests/test_wikirandom.py): the same three tests.
   - look at: `wikirandom.random_page(language="es")`
-- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/9277e2440db83837ca7136fb012788e0e1788604/README.md), [its change](https://github.com/rahuldave/smallwikiapp/compare/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7...9277e2440db83837ca7136fb012788e0e1788604#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): one row more, and the `src/wikiapp/` row says the app.
+- [`README.md`](https://github.com/rahuldave/smallwikiapp/blob/a99a9a7f0326461f095a2f8a74436efe2faaafba/README.md), [its change](https://github.com/rahuldave/smallwikiapp/compare/1fe91f675a33daeec87f13a37f893df8dac52450...a99a9a7f0326461f095a2f8a74436efe2faaafba#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5): one row more, and the `src/wikiapp/` row says the app.
   - look at: `| The library the app uses: a random page of Wikipedia. A package of its own |`
-- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/9277e2440db83837ca7136fb012788e0e1788604/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/compare/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7...9277e2440db83837ca7136fb012788e0e1788604#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
+- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/a99a9a7f0326461f095a2f8a74436efe2faaafba/docs/index.qmd), [its change](https://github.com/rahuldave/smallwikiapp/compare/1fe91f675a33daeec87f13a37f893df8dac52450...a99a9a7f0326461f095a2f8a74436efe2faaafba#diff-bfcaadbc044f4848960f04c96f4ac5930e20671e52514c04dd8347ff6f79ca7b): two packages.
   - look at: `The code has two packages, in one repository:`
-- [`packages/wikirandom/README.md`](https://github.com/rahuldave/smallwikiapp/blob/9277e2440db83837ca7136fb012788e0e1788604/packages/wikirandom/README.md), [its change](https://github.com/rahuldave/smallwikiapp/compare/2c9863c2cc3aa4b0a3f2c553f23412df012cd9d7...9277e2440db83837ca7136fb012788e0e1788604#diff-67c60576149738029c3a79bb8233bfb2720f590c0a16b6e4a7dab774bf98d1f9): the library's README says that the app uses it.
+- [`packages/wikirandom/README.md`](https://github.com/rahuldave/smallwikiapp/blob/a99a9a7f0326461f095a2f8a74436efe2faaafba/packages/wikirandom/README.md), [its change](https://github.com/rahuldave/smallwikiapp/compare/1fe91f675a33daeec87f13a37f893df8dac52450...a99a9a7f0326461f095a2f8a74436efe2faaafba#diff-67c60576149738029c3a79bb8233bfb2720f590c0a16b6e4a7dab774bf98d1f9): the library's README says that the app uses it.
   - look at: ``A random page of Wikipedia, in any language. The command `wikiapp` uses this library.``
 
 The change of `pyproject.toml`:
