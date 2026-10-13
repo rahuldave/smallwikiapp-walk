@@ -51,3 +51,19 @@ just --show setup
 just --show help
 just help setup
 ```
+
+**The parts of a justfile**
+
+A justfile has settings, variables and recipes. `set positional-arguments` is a setting. It gives the words after
+a verb to the shell of the recipe, as `$1`, `$2` and `"$@"`. The first variable comes at stop 6.
+
+A recipe has up to four parts, from the top.
+
+- **A comment.** `just --list` prints it beside the name of the recipe, and `just help VERB` prints it too.
+- **Attributes,** in square brackets. `[group('setup')]` puts the recipe under the heading `[setup]` in the list.
+  `[private]` leaves `default` out of the list.
+- **The name and the parameters.** In `setup *args:`, the star lets `args` take any number of words, or none.
+- **The body,** indented under the name. The body of `setup` is one line. The body of `help` is a script, which
+  stop 5 explains.
+
+`just` with no verb runs the first recipe of the file. Here that is `default`, which lists the others.

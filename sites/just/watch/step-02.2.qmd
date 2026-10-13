@@ -61,3 +61,13 @@ just test
 ```
 
 The result is the same, `1 passed`.
+
+The body of `test` is one line, `{{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}`.
+`just` works out the part between `{{` and `}}` before a shell sees the line. If the only word after the verb is
+`help`, the line is `just help test`. Otherwise it is `uv run pytest "$@"`.
+
+Each later recipe of one line has this form. The longer recipes test the word in the shell, from stop 5. So
+`just VERB help` explains each verb.
+
+`[no-exit-message]` changes what a failed test prints. Without it, `just` adds a line of its own, which starts
+"error: Recipe `test` failed". With it, the report of pytest is the last thing that the recipe prints.

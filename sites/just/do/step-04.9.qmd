@@ -74,5 +74,12 @@ just check
 
 `just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
 
+```bash
+just
+```
+
+`just` lists `help` first, then the other verbs in their groups, each with its comment. `check` is under
+`[quality]`, after the four verbs that it runs.
+
 From this stop on, "a commit must pass `just check`" is the rule of the project. The next stop and stop 11 add
-two callers, which run it with no one typing it. Each later check joins `check`, so each caller runs it too.
+two callers, which run it by themselves. Each later check joins `check`, so each caller runs it too.

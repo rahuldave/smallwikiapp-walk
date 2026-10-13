@@ -1,0 +1,129 @@
+# Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again.
+project:
+  type: website
+  output-dir: _site
+  render: ["index.qmd", "do/*.qmd", "watch/*.qmd"]   # only these pages: never the notes
+
+website:
+  title: "uv in smallwikiapp, one move at a time"
+  page-navigation: true
+  search: true
+  sidebar:
+    style: docked
+    contents:
+      - index.qmd
+      - section: "Watch"
+        contents:
+          - text: "step-00: The project, and its `.venv`"
+            href: watch/step-00.qmd
+          - section: "step-01.1: Two dependencies, and the lockfile"
+            href: watch/step-01.1.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: watch/step-01.1.qmd#step-01.1
+          - section: "step-02.1: A group for the tests, and when uv syncs"
+            href: watch/step-02.1.qmd
+            contents:
+              - text: "step-02.1 pytest and the first test"
+                href: watch/step-02.1.qmd#step-02.1
+          - section: "step-04.8: A lockfile that must be up to date"
+            href: watch/step-04.8.qmd
+            contents:
+              - text: "step-04.8 A locked lockfile"
+                href: watch/step-04.8.qmd#step-04.8
+          - section: "step-06.3: The oldest Python, and other environments"
+            href: watch/step-06.3.qmd
+            contents:
+              - text: "step-06.3 Any Python from 3.11 on"
+                href: watch/step-06.3.qmd#step-06.3
+          - section: "step-06.4: Pythons and groups on GitHub"
+            href: watch/step-06.4.qmd
+            contents:
+              - text: "step-06.4 GitHub runs the tests"
+                href: watch/step-06.4.qmd#step-06.4
+          - section: "step-09.1: A workspace"
+            href: watch/step-09.1.qmd
+            contents:
+              - text: "step-09.1 An empty library, wikirandom"
+                href: watch/step-09.1.qmd#step-09.1
+          - section: "step-09.2: A dependency of one member"
+            href: watch/step-09.2.qmd
+            contents:
+              - text: "step-09.2 The code goes into wikirandom"
+                href: watch/step-09.2.qmd#step-09.2
+          - section: "step-09.3: The app uses the library"
+            href: watch/step-09.3.qmd
+            contents:
+              - text: "step-09.3 The app uses wikirandom"
+                href: watch/step-09.3.qmd#step-09.3
+          - section: "step-10.1: A build of both packages"
+            href: watch/step-10.1.qmd
+            contents:
+              - text: "step-10.1 The recipe `build`"
+                href: watch/step-10.1.qmd#step-10.1
+          - section: "step-10.2: A range of versions for the library"
+            href: watch/step-10.2.qmd
+            contents:
+              - text: "step-10.2 The app needs wikirandom 0.1"
+                href: watch/step-10.2.qmd#step-10.2
+      - section: "Do"
+        contents:
+          - text: "step-00: The project, and its `.venv`"
+            href: do/step-00.qmd
+          - section: "step-01.1: Two dependencies, and the lockfile"
+            href: do/step-01.1.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: do/step-01.1.qmd#step-01.1
+          - section: "step-02.1: A group for the tests, and when uv syncs"
+            href: do/step-02.1.qmd
+            contents:
+              - text: "step-02.1 pytest and the first test"
+                href: do/step-02.1.qmd#step-02.1
+          - section: "step-04.8: A lockfile that must be up to date"
+            href: do/step-04.8.qmd
+            contents:
+              - text: "step-04.8 A locked lockfile"
+                href: do/step-04.8.qmd#step-04.8
+          - section: "step-06.3: The oldest Python, and other environments"
+            href: do/step-06.3.qmd
+            contents:
+              - text: "step-06.3 Any Python from 3.11 on"
+                href: do/step-06.3.qmd#step-06.3
+          - section: "step-06.4: Pythons and groups on GitHub"
+            href: do/step-06.4.qmd
+            contents:
+              - text: "step-06.4 GitHub runs the tests"
+                href: do/step-06.4.qmd#step-06.4
+          - section: "step-09.1: A workspace"
+            href: do/step-09.1.qmd
+            contents:
+              - text: "step-09.1 An empty library, wikirandom"
+                href: do/step-09.1.qmd#step-09.1
+          - section: "step-09.2: A dependency of one member"
+            href: do/step-09.2.qmd
+            contents:
+              - text: "step-09.2 The code goes into wikirandom"
+                href: do/step-09.2.qmd#step-09.2
+          - section: "step-09.3: The app uses the library"
+            href: do/step-09.3.qmd
+            contents:
+              - text: "step-09.3 The app uses wikirandom"
+                href: do/step-09.3.qmd#step-09.3
+          - section: "step-10.1: A build of both packages"
+            href: do/step-10.1.qmd
+            contents:
+              - text: "step-10.1 The recipe `build`"
+                href: do/step-10.1.qmd#step-10.1
+          - section: "step-10.2: A range of versions for the library"
+            href: do/step-10.2.qmd
+            contents:
+              - text: "step-10.2 The app needs wikirandom 0.1"
+                href: do/step-10.2.qmd#step-10.2
+
+theme: cosmo
+css: styles.css
+toc: true
+toc-depth: 3
+code-copy: true
+from: markdown-tex_math_dollars-smart  # a $ is a dollar, not mathematics; -- stays two hyphens

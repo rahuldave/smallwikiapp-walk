@@ -12,8 +12,8 @@ Watch mode. [The same step in do mode](../do/step-04.10.qmd).
 just setup
 ```
 
-pre-commit installs a git hook. The hook is one more caller of `just check`, and its only check of the code is
-`just check`.
+pre-commit installs a git hook. The hook is one more caller of `just check`, and its only check of the Python code
+is `just check`.
 
 ## step-04.10 A git hook {#step-04.10}
 
@@ -106,7 +106,7 @@ The hook makes sure that `just check` runs on this machine before each commit. I
 
 - **It is in one clone only.** git does not copy `.git/hooks` with the repository. A clone has the hook only after
   `just hook` runs in it, and `git commit --no-verify` skips the hook.
-- **It needs the clone's `.venv`.** `pre-commit install` writes the path of `.venv/bin/python` into the
+- **It needs the clone's `.venv`.** `pre-commit install` writes the path of `.venv/bin/python3` into the
   hook, as an absolute path. If `.venv` is gone and no other pre-commit is on the PATH, git refuses every commit.
   The hook prints that `pre-commit` was not found, and asks whether the virtualenv is active. `just setup` makes
   `.venv` again.

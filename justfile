@@ -1,9 +1,9 @@
 # The tutorial through smallwikiapp, in timewalk. Run `just` to see the list.
 #
 # This file names the project and the upstream owner here. `just setup` clones the project into repo/, and
-# timewalk puts its replay copy in worktree/. Both folders are in .gitignore. toc.toml lists six walks over the
-# same notes: show (watch mode, the first) and do, the whole tutorial, and four small walks, testing, linting,
-# docs and just. Made from the walk skill's template, with `site` added.
+# timewalk puts its replay copy in worktree/. Both folders are in .gitignore. toc.toml lists seven walks over the
+# same notes: show (watch mode, the first) and do, the whole tutorial, and five small walks, testing, linting,
+# docs, just and uv. Made from the walk skill's template, with `site` added.
 
 project := "smallwikiapp"
 upstream := "rahuldave"

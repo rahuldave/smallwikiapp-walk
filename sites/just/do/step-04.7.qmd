@@ -107,3 +107,11 @@ just lint-config
 
 The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `uv lock --check` prints
 `Resolved 19 packages` and exits with 0, because the lockfile matches `pyproject.toml`.
+
+A recipe has one of two kinds of body. Each line of a plain body runs in a shell of its own, and the recipe stops
+at the first line that fails. A body whose first line is `#!/usr/bin/env sh` is a script, and one shell runs all of
+it. `help`, from stop 1, is a script too. A script without `set -e` goes on after a command fails. In
+`lint-config`, `set -e` is the line after `#!/usr/bin/env sh`.
+
+In a script, the test of the word `help` is a line of shell, `[ "$*" = help ]`. It does the same as the `{{ if }}`
+of stop 2, since `"$*"` is the words after the verb, joined by spaces.

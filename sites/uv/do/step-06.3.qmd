@@ -1,0 +1,85 @@
+---
+title: "step-06.3: The oldest Python, and other environments"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Do mode. [The same step in watch mode](../watch/step-06.3.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/41e5681a18bc9975f383d1520b8781c4e836e90d), the commit before step-06.3.
+
+```bash
+just setup
+```
+
+Since the last stop, the walk leaves out the moves from
+[step-04.9](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html#step-04.9) to
+[step-06.2](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html#step-06.2). `just check` runs every check,
+and a git hook runs it before each commit. pre-commit and ty, a type checker, came in, in the group `lint`, and
+`just check` runs ty. The tests that ask the real Wikipedia run only on request. This stop starts with that code.
+
+`.python-version` says which Python `.venv` has. `requires-python` says which Pythons the project accepts.
+
+## step-06.3 Any Python from 3.11 on {#step-06.3}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761) shows what the move changes.
+
+Now we let the project accept every Python from 3.11 on. `uv init` wrote `requires-python = ">=3.13"`, because the
+command asked for Python 3.13. Nothing here needs more than 3.11. Python 3.10 reached its end of life on 1 October
+2026, so 3.11 is now the oldest Python that still gets security fixes. The line in `pyproject.toml` now says 3.11,
+and uv solves the lockfile again.
+
+In `pyproject.toml`, change the line.
+
+```toml
+requires-python = ">=3.11"
+```
+
+```bash
+uv lock
+```
+
+The project still runs on 3.13, from `.python-version`.
+
+The move changes these files:
+
+- `pyproject.toml`: 1 line added, 1 removed; the oldest Python that the project accepts.
+- `uv.lock`: 160 lines added, 2 removed; solved for every Python from 3.11 on.
+
+Files to read:
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/15ba9fa843e3f055dac9c8f1a844b7382858b761/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/41e5681a18bc9975f383d1520b8781c4e836e90d...15ba9fa843e3f055dac9c8f1a844b7382858b761#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+  - look at: `requires-python = ">=3.11"`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -6,7 +6,7 @@ readme = "README.md"
+ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [{ name = "Rahul Dave" }]
+-requires-python = ">=3.13"
++requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
+     "requests>=2.34.2",
+```
+
+```bash
+uv run --isolated --python 3.11 python --version
+uv run --isolated --python 3.11 pytest -q
+```
+
+`--isolated` makes a temporary environment with Python 3.11, and does not change `.venv`. The tests pass on
+3.11.
+
+`--isolated` made a second environment, which uv deletes after the command. `uvx` makes a third kind, an
+environment of its own for one tool.
+
+```bash
+uv run python -c "import sys; print(sys.prefix)"
+uvx --from ruff python -c "import sys; print(sys.prefix)"
+```
+
+The first path ends in `.venv`. The second is a folder in the cache of uv, with ruff installed. `uvx ruff` picks a
+ruff of its own, which need not be the version that the lockfile names. So the recipes run ruff with `uv run`, and
+get the version of the lockfile.

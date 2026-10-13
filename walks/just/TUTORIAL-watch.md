@@ -13,7 +13,8 @@ verb names the tool that does the work. A person, a git hook and GitHub each run
 other verbs. A tool can change behind a verb, and the callers of the verb stay the same.
 
 Each new verb comes in the same way. `just --show VERB` shows the recipe, then the verb runs. Most stops that bring
-in a verb also run the tool's own command first. The stops of `test` and `check` do not.
+in a verb also run the tool's own command first. The stops of `test` and `check` do not, and stop 1 runs
+`just setup` before it shows the recipe.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
@@ -69,6 +70,24 @@ Three callers run `just check`, and none of them changes when `check` changes.
 | The git hook | Stop 8 | Before each commit, in a clone where `just hook` ran |
 | GitHub's job `check` | Stop 11 | On every push to main and every pull request |
 
+**The verbs, and what is behind each**
+
+The table gives each verb of the last justfile, and the commands that its recipe runs.
+
+| Verb | What its recipe runs | Stop |
+|---|---|---|
+| `help` | `just --show VERB`, or `just --list --unsorted` | 1 |
+| `setup` | `uv sync --locked` | 1 |
+| `test` | `uv run pytest` | 2 |
+| `fmt` | `uv run ruff format` | 3 |
+| `lint` | `uv run ruff check` | 4 |
+| `lint-config` | `uv run validate-pyproject`, `uv lock --check` and `just --fmt --check --unstable` | 5 and 17 |
+| `check` | `just fmt --check`, `just lint`, `just types`, `just test -q --cov-fail-under=90`, `just docs check` and `just lint-config` | 7, 10 and 14 |
+| `hook` | `uv run pre-commit install` | 8 |
+| `types` | `uv run ty check` | 9 |
+| `docs` | `uv run smalldocs render docs` alone, and `uv run smalldocs api` with words | 12 and 13 |
+| `build` | `uv build --all-packages` | 16 |
+
 ## step-00 The project, and its justfile
 
 [The code at step-00](https://github.com/rahuldave/smallwikiapp/tree/step-00)
@@ -116,6 +135,22 @@ just --show setup
 just --show help
 just help setup
 ```
+
+**The parts of a justfile**
+
+A justfile has settings, variables and recipes. `set positional-arguments` is a setting. It gives the words after
+a verb to the shell of the recipe, as `$1`, `$2` and `"$@"`. The first variable comes at stop 6.
+
+A recipe has up to four parts, from the top.
+
+- **A comment.** `just --list` prints it beside the name of the recipe, and `just help VERB` prints it too.
+- **Attributes,** in square brackets. `[group('setup')]` puts the recipe under the heading `[setup]` in the list.
+  `[private]` leaves `default` out of the list.
+- **The name and the parameters.** In `setup *args:`, the star lets `args` take any number of words, or none.
+- **The body,** indented under the name. The body of `setup` is one line. The body of `help` is a script, which
+  stop 5 explains.
+
+`just` with no verb runs the first recipe of the file. Here that is `default`, which lists the others.
 
 ## step-02.2 `just test`
 
@@ -174,6 +209,16 @@ just test
 ```
 
 The result is the same, `1 passed`.
+
+The body of `test` is one line, `{{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}`.
+`just` works out the part between `{{` and `}}` before a shell sees the line. If the only word after the verb is
+`help`, the line is `just help test`. Otherwise it is `uv run pytest "$@"`.
+
+Each later recipe of one line has this form. The longer recipes test the word in the shell, from stop 5. So
+`just VERB help` explains each verb.
+
+`[no-exit-message]` changes what a failed test prints. Without it, `just` adds a line of its own, which starts
+"error: Recipe `test` failed". With it, the report of pytest is the last thing that the recipe prints.
 
 ## step-04.1 `just fmt`
 
@@ -469,6 +514,14 @@ just lint-config
 The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `uv lock --check` prints
 `Resolved 19 packages` and exits with 0, because the lockfile matches `pyproject.toml`.
 
+A recipe has one of two kinds of body. Each line of a plain body runs in a shell of its own, and the recipe stops
+at the first line that fails. A body whose first line is `#!/usr/bin/env sh` is a script, and one shell runs all of
+it. `help`, from stop 1, is a script too. A script without `set -e` goes on after a command fails. In
+`lint-config`, `set -e` is the line after `#!/usr/bin/env sh`.
+
+In a script, the test of the word `help` is a line of shell, `[ "$*" = help ]`. It does the same as the `{{ if }}`
+of stop 2, since `"$*"` is the words after the verb, joined by spaces.
+
 ## step-04.8 A variable for every recipe
 
 [The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a), the commit before step-04.8.
@@ -572,8 +625,15 @@ just check
 
 `just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
 
+```bash
+just
+```
+
+`just` lists `help` first, then the other verbs in their groups, each with its comment. `check` is under
+`[quality]`, after the four verbs that it runs.
+
 From this stop on, "a commit must pass `just check`" is the rule of the project. The next stop and stop 11 add
-two callers, which run it with no one typing it. Each later check joins `check`, so each caller runs it too.
+two callers, which run it by themselves. Each later check joins `check`, so each caller runs it too.
 
 ## step-04.10 The git hook runs `just check`
 
@@ -583,8 +643,8 @@ two callers, which run it with no one typing it. Each later check joins `check`,
 just setup
 ```
 
-pre-commit installs a git hook. The hook is one more caller of `just check`, and its only check of the code is
-`just check`.
+pre-commit installs a git hook. The hook is one more caller of `just check`, and its only check of the Python code
+is `just check`.
 
 ### step-04.10 A git hook
 
@@ -677,7 +737,7 @@ The hook makes sure that `just check` runs on this machine before each commit. I
 
 - **It is in one clone only.** git does not copy `.git/hooks` with the repository. A clone has the hook only after
   `just hook` runs in it, and `git commit --no-verify` skips the hook.
-- **It needs the clone's `.venv`.** `pre-commit install` writes the path of `.venv/bin/python` into the
+- **It needs the clone's `.venv`.** `pre-commit install` writes the path of `.venv/bin/python3` into the
   hook, as an absolute path. If `.venv` is gone and no other pre-commit is on the PATH, git refuses every commit.
   The hook prints that `pre-commit` was not found, and asks whether the virtualenv is active. `just setup` makes
   `.venv` again.

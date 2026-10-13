@@ -68,3 +68,14 @@ notes = "walks/just/notes.md"
 shared = "walks/tutorial/notes.md"
 slides = "walks/tutorial/slides/slides.toml"
 moves = "watch"
+
+[[walk]]
+id = "uv"
+title = "uv in smallwikiapp, one move at a time"
+description = "The project and its .venv, then the lockfile, dependency groups, when uv syncs, Python versions, environments, a workspace of two packages, and a build."
+kind = "tutorial"
+loose = ["pyproject.toml", "packages/wikirandom/pyproject.toml", "uv.lock"]
+notes = "walks/uv/notes.md"
+shared = "walks/tutorial/notes.md"
+slides = "walks/tutorial/slides/slides.toml"
+moves = "watch"

@@ -1,0 +1,65 @@
+---
+title: "step-10.2: A range of versions for the library"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Watch mode. [The same step in do mode](../do/step-10.2.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/fc6091aa4bb985af8c55e5ed8f55a8df94078587), the commit before step-10.2.
+
+```bash
+just setup
+```
+
+The metadata of the app's wheel lists the dependencies as `dependencies` gives them, in lines `Requires-Dist`. It
+has nothing of `[tool.uv.sources]`.
+
+## step-10.2 The app needs wikirandom 0.1 {#step-10.2}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e) shows what the move changes.
+
+Now we give the app's dependency on wikirandom a range of versions, `>=0.1.0,<0.2`. Until now, the app's wheel
+says that the app needs `wikirandom`, of any version. An install from PyPI would take any package that anyone
+publishes under that name. The app works with wikirandom 0.1.0, and `<0.2` keeps out a later release that may
+change the library.
+
+The move ran: `uv add "wikirandom>=0.1.0,<0.2"`
+
+Find `"wikirandom>=0.1.0,<0.2",` in the change of `pyproject.toml`.
+
+Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
+`[tool.uv.sources]` says.
+
+The move changes one file:
+
+- `pyproject.toml`: 1 line added, 1 removed; a version range on wikirandom.
+
+Files to read:
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/fc6091aa4bb985af8c55e5ed8f55a8df94078587...a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+  - look at: `"wikirandom>=0.1.0,<0.2",`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -9,7 +9,7 @@ authors = [{ name = "Rahul Dave" }]
+ requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
+-    "wikirandom",
++    "wikirandom>=0.1.0,<0.2",
+ ]
+ 
+ [project.scripts]
+```
+
+```bash
+just build
+unzip -p dist/wikiapp-0.1.0-py3-none-any.whl wikiapp-0.1.0.dist-info/METADATA
+```
+
+The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
+
+The walk stops here. After it, the whole tutorial changes the justfile and gives the library a licence and an author.
+Both packages get a link to the repository. The User-Agent says the installed version. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.
