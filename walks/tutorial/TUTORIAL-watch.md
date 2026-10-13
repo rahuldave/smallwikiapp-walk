@@ -73,7 +73,7 @@ just help setup
 
 ## step-01 A random page
 
-[The code at step-01](https://github.com/rahuldave/smallwikiapp/tree/step-01)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830), the commit before step-01.1. [The code at step-01](https://github.com/rahuldave/smallwikiapp/tree/step-01) is the code after its moves.
 
 ```bash
 just setup
@@ -294,7 +294,7 @@ decorators and the docstring.
 
 ## step-02 Tests, with mocks
 
-[The code at step-02](https://github.com/rahuldave/smallwikiapp/tree/step-02)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/48a829ee985a69171af7c66846bdb8e7345a199c), the commit before step-02.1. [The code at step-02](https://github.com/rahuldave/smallwikiapp/tree/step-02) is the code after its moves.
 
 ```bash
 just setup
@@ -667,7 +667,7 @@ as a script.
 
 ## step-03 A library and an app
 
-[The code at step-03](https://github.com/rahuldave/smallwikiapp/tree/step-03)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/bed3c6029878c71bef05322712c388dfb8c058ef), the commit before step-03.1. [The code at step-03](https://github.com/rahuldave/smallwikiapp/tree/step-03) is the code after its moves.
 
 ```bash
 just setup
@@ -1042,7 +1042,7 @@ The first command prints `Error:` and the message in place of a traceback, then 
 
 ## step-04 Format, lint, a hook
 
-[The code at step-04](https://github.com/rahuldave/smallwikiapp/tree/step-04)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/b090ad74622ee6109dd72ae66feec36377eef7d7), the commit before step-04.1. [The code at step-04](https://github.com/rahuldave/smallwikiapp/tree/step-04) is the code after its moves.
 
 ```bash
 just setup
@@ -1062,6 +1062,9 @@ time.
 
 Now we add ruff, a formatter and a linter in one program, to a third dependency group, `lint`, which `dev`
 includes.
+
+A formatter changes how the code looks, and never what it does. A linter finds problems in the code, such as a
+variable that is never used. It changes nothing unless it is asked to.
 
 The move ran: `uv add --group lint ruff`
 
@@ -1364,8 +1367,12 @@ The linter finds five problems, each with its code:
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf) shows what the move changes.
 
-Now we let ruff fix the one problem of the five that it can fix itself. `just lint --fix` sorts the imports of
+Now we let ruff fix the one problem of the five that it can fix safely. `just lint --fix` sorts the imports of
 `console.py`. The command still ends with exit code 1, because four problems are left.
+
+`--fix` makes only the fixes that ruff counts as safe, and the order of imports is one of them. ruff also has a
+fix for the two unused variables. It marks that fix unsafe, because it may delete a comment on the line. It has no
+fix for the other two problems. So a person decides about the other four.
 
 The move ran: `just lint --fix`
 
@@ -1410,6 +1417,9 @@ person must fix them.
 Now we move `from wikiapp import console` up in `tests/test_console.py`, under `import requests`. A reader looks
 for imports there. wikiapp's own imports are a block of their own, after the installed packages, as `--fix` made
 them in console.py.
+
+A person makes the fixes of this move. The linter names each problem and its lines, and the person decides how
+to fix it. ruff has no fix for the import below the code, and its fix for the unused variables is unsafe.
 
 Find `from wikiapp import console` in the change of `tests/test_console.py`.
 
@@ -1477,6 +1487,9 @@ One problem is left, `S113`. The format is unchanged, and the check prints `7 fi
 Now we give the request a timeout, because without one, requests waits as long as the server keeps the
 connection open. So the command can wait for ever. The request in `src/wikiapp/wikipedia.py` now has `timeout=10`.
 
+The linter asked for it, with the rule `S113`, from the family `S` of security rules. The linter found a problem
+that no test had found. A person chose the number of seconds.
+
 Find `API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10` in the change of
 `src/wikiapp/wikipedia.py`.
 
@@ -1518,6 +1531,9 @@ just lint
 Now we add validate-pyproject to the group `lint`, and a recipe `lint-config` that checks the configuration.
 The recipe runs three commands. validate-pyproject checks `pyproject.toml` against the standard for it,
 `uv lock --check` checks the lockfile, and `just --fmt --check --unstable` checks the `justfile`.
+
+These commands check the configuration, not the code. An error in `pyproject.toml`, in the lockfile or in the
+`justfile` can pass every test and the linter.
 
 The move ran: `uv add --group lint validate-pyproject`
 
@@ -1670,6 +1686,9 @@ just check
 Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
 before every commit. If the program fails, git refuses the commit.
 
+`just check` is a gate that a person must remember to run. Once `just hook` installs the hook in a clone, the
+hook runs it by itself, before each commit in that clone.
+
 The move ran: `uv add --group lint pre-commit`
 
 Find `"pre-commit>=4.6.2",` in the change of `pyproject.toml`.
@@ -1749,7 +1768,7 @@ it.
 
 ## step-05 Types
 
-[The code at step-05](https://github.com/rahuldave/smallwikiapp/tree/step-05)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/4834655a3e50dcf56c557463c29bfce592d6d3db), the commit before step-05.1. [The code at step-05](https://github.com/rahuldave/smallwikiapp/tree/step-05) is the code after its moves.
 
 ```bash
 just setup
@@ -1865,6 +1884,8 @@ just types
 Now we turn on ruff's `ANN` rules, with one line in the list `select` in `pyproject.toml`, after `"N"`. ty, the
 type checker that `just types` runs, checks the types that the code states. The `ANN` rules make sure that the code
 states a type for every parameter and return.
+
+So the linter checks that a type is written, and the type checker checks that the type is right.
 
 Find `"ANN", # annotations: every parameter and every return value has a type` in the change of
 `pyproject.toml`.
@@ -2149,7 +2170,7 @@ Every check passes, the type check among them. The coverage is 96.88%.
 
 ## step-06 End to end, and CI
 
-[The code at step-06](https://github.com/rahuldave/smallwikiapp/tree/step-06)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/41990df7638f0964c66bf4e4433ffc4f5b6a026d), the commit before step-06.1. [The code at step-06](https://github.com/rahuldave/smallwikiapp/tree/step-06) is the code after its moves.
 
 ```bash
 just setup
@@ -2358,7 +2379,7 @@ thirteen jobs.
 
 ## step-07 A page with a shape
 
-[The code at step-07](https://github.com/rahuldave/smallwikiapp/tree/step-07)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/d3f84ea883f0e41f64fb397f436c89e372c83bff), the commit before step-07.1. [The code at step-07](https://github.com/rahuldave/smallwikiapp/tree/step-07) is the code after its moves.
 
 ```bash
 just setup
@@ -2678,7 +2699,7 @@ something to know about. The tutorial adds no test to hide it.
 
 ## step-08 Docs from the code
 
-[The code at step-08](https://github.com/rahuldave/smallwikiapp/tree/step-08)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc), the commit before step-08.1. [The code at step-08](https://github.com/rahuldave/smallwikiapp/tree/step-08) is the code after its moves.
 
 ```bash
 just setup
@@ -3304,7 +3325,7 @@ field without documentation.
 
 ## step-09 The library as a package
 
-[The code at step-09](https://github.com/rahuldave/smallwikiapp/tree/step-09)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/1ea19fb90f9341fd939f150ef44d2089986e07be), the commit before step-09.1. [The code at step-09](https://github.com/rahuldave/smallwikiapp/tree/step-09) is the code after its moves.
 
 ```bash
 just setup
@@ -3720,7 +3741,7 @@ pages, and on the front page, `random_page` is now a link to its entry. `just ch
 
 ## step-10 Build
 
-[The code at step-10](https://github.com/rahuldave/smallwikiapp/tree/step-10)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea), the commit before step-10.1. [The code at step-10](https://github.com/rahuldave/smallwikiapp/tree/step-10) is the code after its moves.
 
 ```bash
 just setup

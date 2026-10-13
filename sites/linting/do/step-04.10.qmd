@@ -1,61 +1,16 @@
 ---
-title: "step-04.9 to step-04.10"
+title: "step-04.10: A git hook"
 ---
 
 <!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
 
-Watch mode. [The same step in do mode](../do/step-04.9-to-step-04.10.qmd).
+Do mode. [The same step in watch mode](../watch/step-04.10.qmd).
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a45828b7972f3de77bd6a8d7a00a6b55833832cb), the commit before step-04.9.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/06ea9e2af2238f070b1e33f16aeb70002e25e44d), the commit before step-04.10.
 
 ```bash
 just setup
 ```
-
-## step-04.9 The recipe check {#step-04.9}
-
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d) shows what the move changes.
-
-Now we add a recipe `check`, which runs every check in order. It stops at the first check that fails. The order is
-the format, the linter, the tests with a floor on the coverage, and the configuration.
-
-Find `just test -q --cov-fail-under=90` in the change of `justfile`.
-
-The move changes one file:
-
-- `justfile`: 12 lines added; the recipe `check`.
-
-Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/06ea9e2af2238f070b1e33f16aeb70002e25e44d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its four checks.
-  - look at: `just test -q --cov-fail-under=90`
-
-The change of `justfile`:
-
-```diff
-@@ -50,3 +50,15 @@ lint-config *args:
-     uv run validate-pyproject pyproject.toml
-     uv lock --check
-     just --fmt --check --unstable
-+
-+# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
-+[group('quality')]
-+[no-exit-message]
-+check *args:
-+    #!/usr/bin/env sh
-+    set -e
-+    if [ "$*" = help ]; then just help check; exit 0; fi
-+    just fmt --check
-+    just lint
-+    just test -q --cov-fail-under=90
-+    just lint-config
-```
-
-```bash
-just --show check
-just check
-```
-
-`just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
 
 ## step-04.10 A git hook {#step-04.10}
 
@@ -64,20 +19,53 @@ just check
 Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
 before every commit. If the program fails, git refuses the commit.
 
-The move ran: `uv add --group lint pre-commit`
+`just check` is a gate that a person must remember to run. Once `just hook` installs the hook in a clone, the
+hook runs it by itself, before each commit in that clone.
 
-Find `"pre-commit>=4.6.2",` in the change of `pyproject.toml`.
+```bash
+uv add --group lint pre-commit
+```
 
 Next we make `.pre-commit-config.yaml`, a new file that names the hooks. Three come from pre-commit's collection.
 They check for valid YAML, large files and leftover merge-conflict markers. The last hook runs `just check`, so the
 hook and the terminal run the same thing.
 
-Open `.pre-commit-config.yaml`, a new file. Find `entry: just check` in it.
+Make `.pre-commit-config.yaml`.
+
+```yaml
+# What every commit must pass. `just hook` installs it as a git hook.
+#
+# The project's own checks are one hook that runs `just check`, so the hook and the terminal run the
+# same thing. The hooks before it guard against files that should never be committed.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-added-large-files
+        args: [--maxkb=1000]
+      - id: check-merge-conflict
+  - repo: local
+    hooks:
+      - id: check
+        name: just check
+        entry: just check
+        language: system
+        pass_filenames: false
+        always_run: true
+```
 
 Then we add a recipe `hook`, after `setup` in the `justfile`, which installs the hook. It is a recipe of its own,
 run once in each clone, because `just setup` runs at every step and never touches git.
 
-Find `hook *args:` in the change of `justfile`.
+In the `justfile`, after `setup` and the blank line under it, add the recipe `hook`, with a blank line after it.
+
+```just
+# Install the git hook: just check before every commit. Once per clone; just setup never touches git
+[group('setup')]
+hook *args:
+    @{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}
+```
 
 The move changes these files:
 
@@ -89,9 +77,9 @@ The move changes these files:
 Files to read:
 - [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
   - look at: `entry: just check`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/06ea9e2af2238f070b1e33f16aeb70002e25e44d...4834655a3e50dcf56c557463c29bfce592d6d3db#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
   - look at: `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/06ea9e2af2238f070b1e33f16aeb70002e25e44d...4834655a3e50dcf56c557463c29bfce592d6d3db#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
   - look at: `"pre-commit>=4.6.2",`
 
 The change of `justfile`:

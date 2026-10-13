@@ -6,7 +6,7 @@ title: "step-09: The library as a package"
 
 Do mode. [The same step in watch mode](../watch/step-09.qmd).
 
-[The code at step-09](https://github.com/rahuldave/smallwikiapp/tree/step-09)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/1ea19fb90f9341fd939f150ef44d2089986e07be), the commit before step-09.1. [The code at step-09](https://github.com/rahuldave/smallwikiapp/tree/step-09) is the code after its moves.
 
 ```bash
 just setup

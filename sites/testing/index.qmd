@@ -13,27 +13,31 @@ in 2024 with pixi. Where the notes say "the original wikiapp", they mean that pr
 
 The walk has thirteen stops. Each stop takes a whole step, one move, or a few moves in a row:
 
-1. **The project.** What `uv init` made, and the command `wikiapp`. The justfile lists the tasks of the
+1. **The project** (step-00). What `uv init` made, and the command `wikiapp`. The justfile lists the tasks of the
    project.
-2. **The command under test.** The command asks Wikipedia for a random page, and prints its title and summary.
-   It sends a User-Agent, and has an option `--version`.
-3. **pytest and a first test.** pytest comes in, with a first test, and `just test` runs the tests.
-4. **Fixtures and mocks.** A fixture gives each test a runner, and a mock takes the place of Wikipedia. Tests
-   check the title that the command prints, and the request. A failed request ends the command with exit code 1.
-5. **Coverage.** Every run of the tests measures the lines of the code that they run.
-6. **A shared mock in conftest.py.** The mock moves to `tests/conftest.py`, so that every test file can use it.
-7. **A test of the language.** `random_page` takes a language, and a test checks the address.
-8. **A test of an error message.** The command prints an error of the library, `WikipediaError`, as a message.
-   A test checks that a failed request prints `Error`.
-9. **`just check`, with a coverage floor.** A new recipe, `just check`, runs every check. One of them fails when
-   the tests run less than 90% of the code.
-10. **End-to-end tests, on request.** The test that asks the real Wikipedia runs only when you ask for it. A
-    second test of that kind checks the library.
-11. **The tests on GitHub.** The project accepts any Python from 3.11 on. GitHub runs the tests on three
-    systems and four Pythons.
-12. **Tests of a model.** `random_page` returns a pydantic model. One test changes. An answer that is not a page
-    is a `WikipediaError` too, and a new test checks it.
-13. **A drop in coverage.** New code has no test, and the coverage drops. The tutorial adds no test to hide it.
+2. **The command under test** (step-01). The command asks Wikipedia for a random page, and prints its title and
+   summary. It sends a User-Agent, and has an option `--version`.
+3. **pytest and a first test** (step-02.1 to step-02.2). pytest comes in, with a first test, and `just test` runs
+   the tests.
+4. **Fixtures and mocks** (step-02.3 to step-02.6). A fixture gives each test a runner, and a mock takes the place
+   of Wikipedia. Tests check the title that the command prints, and the request. A failed request ends the command
+   with exit code 1.
+5. **Coverage** (step-02.7). Every run of the tests measures the lines of the code that they run.
+6. **A shared mock in conftest.py** (step-03.2). The mock moves to `tests/conftest.py`, so that every test file can
+   use it.
+7. **A test of the language** (step-03.3). `random_page` takes a language, and a test checks the address.
+8. **A test of an error message** (step-03.6). The command prints an error of the library, `WikipediaError`, as a
+   message. A test checks that a failed request prints `Error`.
+9. **`just check`, with a coverage floor** (step-04.9). A new recipe, `just check`, runs every check. One of them
+   fails when the tests run less than 90% of the code.
+10. **End-to-end tests, on request** (step-06.1 to step-06.2). The test that asks the real Wikipedia runs only when
+    you ask for it. A second test of that kind checks the library.
+11. **The tests on GitHub** (step-06.3 to step-06.4). The project accepts any Python from 3.11 on. GitHub runs the
+    tests on three systems and four Pythons.
+12. **Tests of a model** (step-07.2 to step-07.3). `random_page` returns a pydantic model. One test changes. An
+    answer that is not a page is a `WikipediaError` too, and a new test checks it.
+13. **A drop in coverage** (step-07.4). New code has no test, and the coverage drops. The tutorial adds no test to
+    hide it.
 
 Each stop starts with `just setup`. From the second stop on, it starts from the code before it.
 
@@ -91,7 +95,7 @@ In watch mode, you read each move. The notes explain what it changed, and its co
 - [step-03.2: A shared mock in conftest.py](watch/step-03.2.qmd)
 - [step-03.3: A test of the language](watch/step-03.3.qmd)
 - [step-03.6: A test of an error message](watch/step-03.6.qmd)
-- [step-04.9: just check, with a coverage floor](watch/step-04.9.qmd)
+- [step-04.9: `just check`, with a coverage floor](watch/step-04.9.qmd)
 - [step-06.1 to step-06.2: End-to-end tests, on request](watch/step-06.1-to-step-06.2.qmd)
 - [step-06.3 to step-06.4: The tests on GitHub](watch/step-06.3-to-step-06.4.qmd)
 - [step-07.2 to step-07.3: Tests of a model](watch/step-07.2-to-step-07.3.qmd)
@@ -109,7 +113,7 @@ In do mode, you make each move yourself. The notes give every line to type, ever
 - [step-03.2: A shared mock in conftest.py](do/step-03.2.qmd)
 - [step-03.3: A test of the language](do/step-03.3.qmd)
 - [step-03.6: A test of an error message](do/step-03.6.qmd)
-- [step-04.9: just check, with a coverage floor](do/step-04.9.qmd)
+- [step-04.9: `just check`, with a coverage floor](do/step-04.9.qmd)
 - [step-06.1 to step-06.2: End-to-end tests, on request](do/step-06.1-to-step-06.2.qmd)
 - [step-06.3 to step-06.4: The tests on GitHub](do/step-06.3-to-step-06.4.qmd)
 - [step-07.2 to step-07.3: Tests of a model](do/step-07.2-to-step-07.3.qmd)

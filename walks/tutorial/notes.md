@@ -952,6 +952,9 @@ time.
 Now we add ruff, a formatter and a linter in one program, to a third dependency group, `lint`, which `dev`
 includes.
 
+A formatter changes how the code looks, and never what it does. A linter finds problems in the code, such as a
+variable that is never used. It changes nothing unless it is asked to.
+
 ::: do
 In `pyproject.toml`, change the line `dev = ...`, and add the group.
 
@@ -1151,8 +1154,12 @@ The linter finds five problems, each with its code:
 
 ### step-04.4 The linter sorts the imports
 
-Now we let ruff fix the one problem of the five that it can fix itself. `just lint --fix` sorts the imports of
+Now we let ruff fix the one problem of the five that it can fix safely. `just lint --fix` sorts the imports of
 `console.py`. The command still ends with exit code 1, because four problems are left.
+
+`--fix` makes only the fixes that ruff counts as safe, and the order of imports is one of them. ruff also has a
+fix for the two unused variables. It marks that fix unsafe, because it may delete a comment on the line. It has no
+fix for the other two problems. So a person decides about the other four.
 
 do$ just lint --fix
 
@@ -1179,6 +1186,9 @@ person must fix them.
 Now we move `from wikiapp import console` up in `tests/test_console.py`, under `import requests`. A reader looks
 for imports there. wikiapp's own imports are a block of their own, after the installed packages, as `--fix` made
 them in console.py.
+
+A person makes the fixes of this move. The linter names each problem and its lines, and the person decides how
+to fix it. ruff has no fix for the import below the code, and its fix for the unused variables is unsafe.
 
 ::: do
 In `tests/test_console.py`, move `from wikiapp import console` up, under `import requests`. Put a blank line
@@ -1224,6 +1234,9 @@ One problem is left, `S113`. The format is unchanged, and the check prints `7 fi
 Now we give the request a timeout, because without one, requests waits as long as the server keeps the
 connection open. So the command can wait for ever. The request in `src/wikiapp/wikipedia.py` now has `timeout=10`.
 
+The linter asked for it, with the rule `S113`, from the family `S` of security rules. The linter found a problem
+that no test had found. A person chose the number of seconds.
+
 ::: do
 In `src/wikiapp/wikipedia.py`, add `timeout=10` to the request.
 
@@ -1259,6 +1272,9 @@ $ just lint
 Now we add validate-pyproject to the group `lint`, and a recipe `lint-config` that checks the configuration.
 The recipe runs three commands. validate-pyproject checks `pyproject.toml` against the standard for it,
 `uv lock --check` checks the lockfile, and `just --fmt --check --unstable` checks the `justfile`.
+
+These commands check the configuration, not the code. An error in `pyproject.toml`, in the lockfile or in the
+`justfile` can pass every test and the linter.
 
 do$ uv add --group lint validate-pyproject
 
@@ -1387,6 +1403,9 @@ $ just check
 
 Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
 before every commit. If the program fails, git refuses the commit.
+
+`just check` is a gate that a person must remember to run. Once `just hook` installs the hook in a clone, the
+hook runs it by itself, before each commit in that clone.
 
 do$ uv add --group lint pre-commit
 
@@ -1572,6 +1591,8 @@ $ just types
 Now we turn on ruff's `ANN` rules, with one line in the list `select` in `pyproject.toml`, after `"N"`. ty, the
 type checker that `just types` runs, checks the types that the code states. The `ANN` rules make sure that the code
 states a type for every parameter and return.
+
+So the linter checks that a type is written, and the type checker checks that the type is right.
 
 ::: do
 In `pyproject.toml`, add a line to `select`, after `"N"`.

@@ -6,7 +6,7 @@ title: "step-02: Tests, with mocks"
 
 Do mode. [The same step in watch mode](../watch/step-02.qmd).
 
-[The code at step-02](https://github.com/rahuldave/smallwikiapp/tree/step-02)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/48a829ee985a69171af7c66846bdb8e7345a199c), the commit before step-02.1. [The code at step-02](https://github.com/rahuldave/smallwikiapp/tree/step-02) is the code after its moves.
 
 ```bash
 just setup

@@ -35,7 +35,7 @@ The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step an
 
 ## step-08 Docs from the code
 
-[The code at step-08](https://github.com/rahuldave/smallwikiapp/tree/step-08)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc), the commit before step-08.1. [The code at step-08](https://github.com/rahuldave/smallwikiapp/tree/step-08) is the code after its moves.
 
 ```bash
 just setup

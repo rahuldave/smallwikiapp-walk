@@ -1,5 +1,5 @@
 ---
-title: "step-04.9: just check, with a coverage floor"
+title: "step-04.9: `just check`, with a coverage floor"
 ---
 
 <!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->

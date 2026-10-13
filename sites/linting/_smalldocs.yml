@@ -14,84 +14,130 @@ website:
       - index.qmd
       - section: "Watch"
         contents:
-          - section: "step-04.1 to step-04.7"
-            href: watch/step-04.1-to-step-04.7.qmd
+          - text: "step-00: The project"
+            href: watch/step-00.qmd
+          - section: "step-01: The command"
+            href: watch/step-01.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: watch/step-01.qmd#step-01.1
+              - text: "step-01.2 Ask Wikipedia for a page"
+                href: watch/step-01.qmd#step-01.2
+              - text: "step-01.3 A User-Agent"
+                href: watch/step-01.qmd#step-01.3
+              - text: "step-01.4 --version"
+                href: watch/step-01.qmd#step-01.4
+          - section: "step-04.1 to step-04.2: A formatter"
+            href: watch/step-04.1-to-step-04.2.qmd
             contents:
               - text: "step-04.1 ruff, and the recipe fmt"
-                href: watch/step-04.1-to-step-04.7.qmd#step-04.1
+                href: watch/step-04.1-to-step-04.2.qmd#step-04.1
               - text: "step-04.2 The code, formatted"
-                href: watch/step-04.1-to-step-04.7.qmd#step-04.2
+                href: watch/step-04.1-to-step-04.2.qmd#step-04.2
+          - section: "step-04.3: The linter's rules"
+            href: watch/step-04.3.qmd
+            contents:
               - text: "step-04.3 The linter's rules, and the recipe lint"
-                href: watch/step-04.1-to-step-04.7.qmd#step-04.3
+                href: watch/step-04.3.qmd#step-04.3
+          - section: "step-04.4 to step-04.6: The linter's problems, fixed"
+            href: watch/step-04.4-to-step-04.6.qmd
+            contents:
               - text: "step-04.4 The linter sorts the imports"
-                href: watch/step-04.1-to-step-04.7.qmd#step-04.4
+                href: watch/step-04.4-to-step-04.6.qmd#step-04.4
               - text: "step-04.5 The tests' imports at the top, and no unused variables"
-                href: watch/step-04.1-to-step-04.7.qmd#step-04.5
+                href: watch/step-04.4-to-step-04.6.qmd#step-04.5
               - text: "step-04.6 A timeout"
-                href: watch/step-04.1-to-step-04.7.qmd#step-04.6
+                href: watch/step-04.4-to-step-04.6.qmd#step-04.6
+          - section: "step-04.7: A check of the configuration"
+            href: watch/step-04.7.qmd
+            contents:
               - text: "step-04.7 The recipe lint-config"
-                href: watch/step-04.1-to-step-04.7.qmd#step-04.7
-          - section: "step-04.9 to step-04.10"
-            href: watch/step-04.9-to-step-04.10.qmd
+                href: watch/step-04.7.qmd#step-04.7
+          - section: "step-04.9: `just check`, every check in one recipe"
+            href: watch/step-04.9.qmd
             contents:
               - text: "step-04.9 The recipe check"
-                href: watch/step-04.9-to-step-04.10.qmd#step-04.9
+                href: watch/step-04.9.qmd#step-04.9
+          - section: "step-04.10: A git hook"
+            href: watch/step-04.10.qmd
+            contents:
               - text: "step-04.10 A git hook"
-                href: watch/step-04.9-to-step-04.10.qmd#step-04.10
-          - section: "step-05.3 to step-05.6"
-            href: watch/step-05.3-to-step-05.6.qmd
+                href: watch/step-04.10.qmd#step-04.10
+          - section: "step-05.3 to step-05.5: The linter asks for types"
+            href: watch/step-05.3-to-step-05.5.qmd
             contents:
               - text: "step-05.3 A type on every parameter and return"
-                href: watch/step-05.3-to-step-05.6.qmd#step-05.3
+                href: watch/step-05.3-to-step-05.5.qmd#step-05.3
               - text: "step-05.4 Types in the code"
-                href: watch/step-05.3-to-step-05.6.qmd#step-05.4
+                href: watch/step-05.3-to-step-05.5.qmd#step-05.4
               - text: "step-05.5 Types in the tests"
-                href: watch/step-05.3-to-step-05.6.qmd#step-05.5
-              - text: "step-05.6 The recipe check runs the type checker"
-                href: watch/step-05.3-to-step-05.6.qmd#step-05.6
-          - section: "step-10.3: lint-config checks both pyproject.toml files"
+                href: watch/step-05.3-to-step-05.5.qmd#step-05.5
+          - section: "step-10.3: The library's pyproject.toml too"
             href: watch/step-10.3.qmd
             contents:
               - text: "step-10.3 lint-config checks both pyproject.toml files"
                 href: watch/step-10.3.qmd#step-10.3
       - section: "Do"
         contents:
-          - section: "step-04.1 to step-04.7"
-            href: do/step-04.1-to-step-04.7.qmd
+          - text: "step-00: The project"
+            href: do/step-00.qmd
+          - section: "step-01: The command"
+            href: do/step-01.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: do/step-01.qmd#step-01.1
+              - text: "step-01.2 Ask Wikipedia for a page"
+                href: do/step-01.qmd#step-01.2
+              - text: "step-01.3 A User-Agent"
+                href: do/step-01.qmd#step-01.3
+              - text: "step-01.4 --version"
+                href: do/step-01.qmd#step-01.4
+          - section: "step-04.1 to step-04.2: A formatter"
+            href: do/step-04.1-to-step-04.2.qmd
             contents:
               - text: "step-04.1 ruff, and the recipe fmt"
-                href: do/step-04.1-to-step-04.7.qmd#step-04.1
+                href: do/step-04.1-to-step-04.2.qmd#step-04.1
               - text: "step-04.2 The code, formatted"
-                href: do/step-04.1-to-step-04.7.qmd#step-04.2
+                href: do/step-04.1-to-step-04.2.qmd#step-04.2
+          - section: "step-04.3: The linter's rules"
+            href: do/step-04.3.qmd
+            contents:
               - text: "step-04.3 The linter's rules, and the recipe lint"
-                href: do/step-04.1-to-step-04.7.qmd#step-04.3
+                href: do/step-04.3.qmd#step-04.3
+          - section: "step-04.4 to step-04.6: The linter's problems, fixed"
+            href: do/step-04.4-to-step-04.6.qmd
+            contents:
               - text: "step-04.4 The linter sorts the imports"
-                href: do/step-04.1-to-step-04.7.qmd#step-04.4
+                href: do/step-04.4-to-step-04.6.qmd#step-04.4
               - text: "step-04.5 The tests' imports at the top, and no unused variables"
-                href: do/step-04.1-to-step-04.7.qmd#step-04.5
+                href: do/step-04.4-to-step-04.6.qmd#step-04.5
               - text: "step-04.6 A timeout"
-                href: do/step-04.1-to-step-04.7.qmd#step-04.6
+                href: do/step-04.4-to-step-04.6.qmd#step-04.6
+          - section: "step-04.7: A check of the configuration"
+            href: do/step-04.7.qmd
+            contents:
               - text: "step-04.7 The recipe lint-config"
-                href: do/step-04.1-to-step-04.7.qmd#step-04.7
-          - section: "step-04.9 to step-04.10"
-            href: do/step-04.9-to-step-04.10.qmd
+                href: do/step-04.7.qmd#step-04.7
+          - section: "step-04.9: `just check`, every check in one recipe"
+            href: do/step-04.9.qmd
             contents:
               - text: "step-04.9 The recipe check"
-                href: do/step-04.9-to-step-04.10.qmd#step-04.9
+                href: do/step-04.9.qmd#step-04.9
+          - section: "step-04.10: A git hook"
+            href: do/step-04.10.qmd
+            contents:
               - text: "step-04.10 A git hook"
-                href: do/step-04.9-to-step-04.10.qmd#step-04.10
-          - section: "step-05.3 to step-05.6"
-            href: do/step-05.3-to-step-05.6.qmd
+                href: do/step-04.10.qmd#step-04.10
+          - section: "step-05.3 to step-05.5: The linter asks for types"
+            href: do/step-05.3-to-step-05.5.qmd
             contents:
               - text: "step-05.3 A type on every parameter and return"
-                href: do/step-05.3-to-step-05.6.qmd#step-05.3
+                href: do/step-05.3-to-step-05.5.qmd#step-05.3
               - text: "step-05.4 Types in the code"
-                href: do/step-05.3-to-step-05.6.qmd#step-05.4
+                href: do/step-05.3-to-step-05.5.qmd#step-05.4
               - text: "step-05.5 Types in the tests"
-                href: do/step-05.3-to-step-05.6.qmd#step-05.5
-              - text: "step-05.6 The recipe check runs the type checker"
-                href: do/step-05.3-to-step-05.6.qmd#step-05.6
-          - section: "step-10.3: lint-config checks both pyproject.toml files"
+                href: do/step-05.3-to-step-05.5.qmd#step-05.5
+          - section: "step-10.3: The library's pyproject.toml too"
             href: do/step-10.3.qmd
             contents:
               - text: "step-10.3 lint-config checks both pyproject.toml files"

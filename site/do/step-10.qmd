@@ -6,7 +6,7 @@ title: "step-10: Build"
 
 Do mode. [The same step in watch mode](../watch/step-10.qmd).
 
-[The code at step-10](https://github.com/rahuldave/smallwikiapp/tree/step-10)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea), the commit before step-10.1. [The code at step-10](https://github.com/rahuldave/smallwikiapp/tree/step-10) is the code after its moves.
 
 ```bash
 just setup

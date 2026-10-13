@@ -5,38 +5,347 @@
 In watch mode, you read each move. The notes explain what it changed, and its commit holds the code. [The same tutorial in do mode](TUTORIAL-do.md).
 
 This walk takes the moves about format and lint out of the whole tutorial of smallwikiapp. `wikiapp` is a small
-command that prints the title and the summary of a random Wikipedia page. The walk starts when the command and
-its tests work, and no tool checks the code.
+command that prints the title and the summary of a random Wikipedia page. The walk starts with the project, which
+`uv init` began, for Python 3.13. The command then gets its code. The moves about format and lint come after, and
+check that code and its tests.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote
 in 2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
 
-The moves add ruff, which formats the code and then finds problems in it. The next moves fix each problem. Then
-a recipe checks the configuration, and another runs every check. A git hook runs them before each commit.
+The walk has ten stops. Each stop takes a whole step, one move, or a few moves in a row:
 
-Later, the linter asks for a type on every parameter and return. The next moves add the types to the code and to
-the tests, and `just check` runs the type checker too. The last move makes `just lint-config` check the
-`pyproject.toml` of a second package.
+1. **The project** (step-00). What `uv init` made, and the command `wikiapp`. The justfile lists the tasks of the
+   project.
+2. **The command** (step-01). The command asks Wikipedia for a random page, and prints its title and summary. It
+   sends a User-Agent, and has an option `--version`.
+3. **A formatter** (step-04.1 to step-04.2). ruff comes in, and `just fmt` formats the code and the tests.
+4. **The linter's rules** (step-04.3). The rules of the linter go in `pyproject.toml`, and `just lint` finds five
+   problems.
+5. **The linter's problems, fixed** (step-04.4 to step-04.6). ruff fixes the order of the imports. A person fixes
+   the tests, and gives the request a timeout.
+6. **A check of the configuration** (step-04.7). `just lint-config` checks `pyproject.toml`, the lockfile and the
+   justfile.
+7. **`just check`, every check in one recipe** (step-04.9). The format, the linter, the tests and the
+   configuration, in order.
+8. **A git hook** (step-04.10). pre-commit runs three small checks of the files, then `just check`, before each
+   commit.
+9. **The linter asks for types** (step-05.3 to step-05.5). A rule asks for a type on every parameter and return.
+   The code and the tests get their types.
+10. **The library's pyproject.toml too** (step-10.3). Since step 09, the library has a `pyproject.toml` of its own,
+    and `just lint-config` checks it.
 
-Each step of the walk starts from the code before its first move, so each one starts with `just setup`.
+Each stop starts with `just setup`. From the second stop on, it starts from the code before it.
+
+## Kinds of checks
+
+The walk names each kind of check where it first comes in.
+
+| Kind | What it does | Where |
+|---|---|---|
+| Formatter | Changes how the code looks, never what it does | Stop 3 |
+| Linter | Finds problems in the code, against rules | Stop 4 |
+| A fix by the tool | A fix that ruff counts as safe, such as the order of imports | Stop 5 |
+| A fix by a person | The rest. ruff has no fix for some problems, and marks others unsafe | Stop 5 |
+| A check of the configuration | Finds errors in `pyproject.toml`, the lockfile and the justfile | Stops 6 and 10 |
+| A gate | `just check` runs every check, and a commit must pass it | Stop 7 |
+| A hook | Runs the gate by itself, before each commit | Stop 8 |
+| A linter's rule about types | Checks that each type is written. The type checker checks that it is right | Stop 9 |
+
+From the move [step-06.4](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html#step-06.4), GitHub runs `just check` too, on every push to main and
+every pull request.
 
 ## What the walk leaves out
 
-Between its steps, the whole tutorial makes moves that this walk does not show:
+Between its stops, the whole tutorial makes moves that this walk does not show:
 
-- **Before step-04.9,** the move [step-04.8](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html#step-04.8). The `justfile` exports `UV_LOCKED`, so that
-  `uv run` refuses a lockfile that is out of date.
-- **Before step-05.3,** the first two moves of [step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html). ty, a type checker, comes in, and
-  `just types` runs it. The command reads its version from the installed package, by its name.
-- **Before step-10.3,** the steps [06](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html) to [09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html) and the first two moves of
-  [step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The tests that ask the real Wikipedia run only on request, so the tests no longer
-  need the network. GitHub runs the tests. `random_page` returns a pydantic model, `Page`. smalldocs
-  documents the code, and `just check` runs the check of the docs too. The library becomes a package of its own, `packages/wikirandom`, with its own
-  `pyproject.toml`, and its tests are in `tests/test_wikirandom.py`. `just build` builds both packages, and the app asks for wikirandom 0.1.
+- **Before stop 3,** the steps [02](https://rahuldave.com/smallwikiapp-walk/watch/step-02.html) and [03](https://rahuldave.com/smallwikiapp-walk/watch/step-03.html). pytest
+  comes in, in a dependency group `test`, which the group `dev` includes. Tests come in, with a mock in place of
+  Wikipedia, and coverage on every run. The code splits into a library, `src/wikiapp/wikipedia.py`, and the
+  command. The library takes a language and raises its own error,
+  `WikipediaError`, and the command prints it as a message.
+- **Before stop 7,** the move [step-04.8](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html#step-04.8). The recipes refuse a lockfile that
+  is out of date.
+- **Before stop 9,** the first two moves of [step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html). ty, a type checker, comes in, and
+  `just types` runs it. The command reads its version by the name of its package.
+- **Before stop 10,** the last move of [step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html), the steps
+  [06](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html) to [09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html), and the first two moves of
+  [step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). `just check` runs the type checker too. The tests that ask the real
+  Wikipedia run only on request, and GitHub runs the tests and `just check`. `random_page` returns a pydantic
+  model, `Page`. smalldocs documents the code, and `just check` runs the check of the docs. The library becomes
+  a package of its own, `packages/wikirandom`, with its own `pyproject.toml`. `just build` builds both
+  packages, and the app asks for wikirandom 0.1.
+- **After stop 10,** the last two moves of [step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The library gets a licence, both
+  packages get a link to the repository, and the User-Agent says the installed version.
 
 The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.
 
-## step-04.1 to step-04.7
+## step-00 The project
+
+[The code at step-00](https://github.com/rahuldave/smallwikiapp/tree/step-00)
+
+```bash
+just setup
+```
+
+The tutorial starts at step-00, so step-00 has no moves. `uv init --package --python 3.13 --name wikiapp` made
+the shape of the project:
+
+- `pyproject.toml`
+- `src/wikiapp/__init__.py`, with a function `main`
+- `.python-version`, with the Python version
+- `README.md` and `.gitignore`
+
+Then the author changed the project by hand. `main` moved to `src/wikiapp/console.py`. `pyproject.toml` got a
+description, an author and a licence, and it names `wikiapp.console:main` as the command. `uv lock` wrote the
+lockfile, `uv.lock`. The author also wrote the justfile and `LICENSE`, and wrote the README and `.gitignore` again, by hand.
+
+`just setup` runs `uv sync --locked`. The command makes `.venv` with Python 3.13, from `.python-version`. It
+installs exactly the packages that the lockfile names. Here, the only package is `wikiapp` itself.
+
+```bash
+cat pyproject.toml
+```
+
+The line under `[project.scripts]` makes `wikiapp` a command. The name is on the left. The function is on the
+right, `main` in `src/wikiapp/console.py`. For now, `main` prints one line.
+
+```bash
+uv run wikiapp
+cat src/wikiapp/console.py
+```
+
+The justfile is the interface of the project. `just` lists the tasks, and `just --show setup` shows the recipe
+behind one task. `just help setup` shows the same recipe. Most steps add recipes to the justfile.
+
+```bash
+just
+just --show setup
+just --show help
+just help setup
+```
+
+## step-01 The command
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830), the commit before step-01.1. [The code at step-01](https://github.com/rahuldave/smallwikiapp/tree/step-01) is the code after its moves.
+
+```bash
+just setup
+```
+
+The moves of step-01 add these things:
+
+- the two packages that the command needs
+- a request to Wikipedia for a page
+- a header that Wikipedia now asks for
+- the option `--version`
+
+### step-01.1 click and requests
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1efd5611b90ac42a697374b0ca0449d5a880773e) shows what the move changes.
+
+Now we add two packages, click and requests, to the dependencies of wikiapp. click makes command lines.
+requests gets pages over HTTP.
+
+The move ran: `uv add click requests`
+
+Read the change of `pyproject.toml`.
+
+The move changes these files:
+
+- `pyproject.toml`: 4 lines added, 1 removed; the two packages in `dependencies`, each with the newest version as its lower bound.
+- `uv.lock`: 176 lines added; the exact version of each, and of every package they need.
+
+Files to read:
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/1efd5611b90ac42a697374b0ca0449d5a880773e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/1efd5611b90ac42a697374b0ca0449d5a880773e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the dependencies of the package, which anyone who installs it gets.
+  - look at: `"click>=8.5.0",`
+- [`uv.lock`](https://github.com/rahuldave/smallwikiapp/blob/1efd5611b90ac42a697374b0ca0449d5a880773e/uv.lock): the exact versions, for every platform.
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -7,7 +7,10 @@ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [{ name = "Rahul Dave" }]
+ requires-python = ">=3.13"
+-dependencies = []
++dependencies = [
++    "click>=8.5.0",
++    "requests>=2.34.2",
++]
+ 
+ [project.scripts]
+ wikiapp = "wikiapp.console:main"
+```
+
+```bash
+uv tree --depth 1
+```
+
+`uv tree` shows the two packages under `wikiapp`. A newer version of a package can come out after these notes.
+
+### step-01.2 Ask Wikipedia for a page
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a46ba5420b43d7ea47508ae393977935e7bd8bd0) shows what the move changes.
+
+Now we make `main` ask Wikipedia for a random page, and print it.
+
+`src/wikiapp/console.py` now has a command, as in the first commit of the original wikiapp, from 2024. Its
+docstring is new, and says what the command does. `@click.command()` makes `main` a command. The `main` of the original wikiapp had no `-> None`. The
+`main` here keeps the annotation that `uv init` gave it at step-00.
+
+- `requests.get` asks the REST API of Wikipedia for the summary of a random page.
+- `raise_for_status` raises an exception if the answer is an error.
+- `response.json()` reads the answer as a dictionary.
+
+`main` prints the title in green, and the summary wrapped to 70 columns.
+
+Read the change of `src/wikiapp/console.py`.
+
+The move changes one file:
+
+- `src/wikiapp/console.py`: 17 lines added, 2 removed; `main` asks Wikipedia for a page and prints it.
+
+Files to read:
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/a46ba5420b43d7ea47508ae393977935e7bd8bd0/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/a46ba5420b43d7ea47508ae393977935e7bd8bd0#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): a request, and two lines printed.
+  - look at: `with requests.get(API_URL) as response:`
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -1,4 +1,19 @@
++import click
++import requests
++import textwrap
+ 
++API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
++
++@click.command()
+ def main() -> None:
+-    """Print a line, until there is a page to print."""
+-    print("Hello from wikiapp!")
++    """Print the title and summary of a random Wikipedia page."""
++    with requests.get(API_URL) as response:
++        response.raise_for_status()
++        data = response.json()
++        title = data["title"]
++        extract = data["extract"]
++        click.secho(title, fg="green")
++        click.echo(textwrap.fill(extract))
++
++if __name__=="__main__":
++    main()
+```
+
+```bash
+uv run wikiapp
+```
+
+The command fails. The last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error:
+Forbidden for url:` and the address. Wikipedia now refuses a request whose User-Agent header is the default of
+a library. requests sends `python-requests/` and its version.
+
+### step-01.3 A User-Agent
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2dd3e2132565971092bffe6a438a36506f4161cb) shows what the move changes.
+
+Now we send a User-Agent header with the request. The User-Agent header says who sends the request. The policy of
+Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. In
+`src/wikiapp/console.py`, a constant `USER_AGENT` under `API_URL` gives these three things.
+
+Find `USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"` in the change of
+`src/wikiapp/console.py`.
+
+The move changes one file:
+
+- `src/wikiapp/console.py`: 2 lines added, 1 removed; a constant `USER_AGENT`, and the request sends it.
+
+Files to read:
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/2dd3e2132565971092bffe6a438a36506f4161cb/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/2dd3e2132565971092bffe6a438a36506f4161cb#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): the header.
+  - look at: `with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:`
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -3,11 +3,12 @@ import requests
+ import textwrap
+ 
+ API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
++USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
+ @click.command()
+ def main() -> None:
+     """Print the title and summary of a random Wikipedia page."""
+-    with requests.get(API_URL) as response:
++    with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
+         response.raise_for_status()
+         data = response.json()
+         title = data["title"]
+```
+
+```bash
+uv run wikiapp
+```
+
+A title in green, and a paragraph. Each run prints another page.
+
+### step-01.4 --version
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/48a829ee985a69171af7c66846bdb8e7345a199c) shows what the move changes.
+
+Now we let the command print its version. The package can read its own version from the installed package, which
+has the version in `pyproject.toml`. `src/wikiapp/__init__.py` now sets `__version__` from the metadata of the
+installed package. `src/wikiapp/console.py` imports `__version__`. The decorator `@click.version_option`, above
+`def main`, gives the command the option `--version`.
+
+Read the change of `src/wikiapp/__init__.py`, then the change of `src/wikiapp/console.py`.
+
+The move changes these files:
+
+- `src/wikiapp/__init__.py`: 2 lines added; `__version__`, from the installed package.
+- `src/wikiapp/console.py`: 2 lines added; the option `--version`.
+
+Files to read:
+- [`src/wikiapp/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/48a829ee985a69171af7c66846bdb8e7345a199c/src/wikiapp/__init__.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/48a829ee985a69171af7c66846bdb8e7345a199c#diff-103f95a0e294ac54f1b7a73298af183996b7831d84a08729e5c6ddea7d80143a): the version, which Python reads when it imports the package.
+  - look at: `__version__ = importlib.metadata.version(__name__ or __package__)`
+- [`src/wikiapp/console.py`](https://github.com/rahuldave/smallwikiapp/blob/48a829ee985a69171af7c66846bdb8e7345a199c/src/wikiapp/console.py), [its change](https://github.com/rahuldave/smallwikiapp/commit/48a829ee985a69171af7c66846bdb8e7345a199c#diff-3695191d893fa6126fe5f92917b13d177600823c014ec46569d1d08d7ca43353): click's version option.
+  - look at: `@click.version_option(version=__version__)`
+
+The change of `src/wikiapp/__init__.py`:
+
+```diff
+@@ -0,0 +1,2 @@
++import importlib.metadata
++__version__ = importlib.metadata.version(__name__ or __package__)
+```
+
+The change of `src/wikiapp/console.py`:
+
+```diff
+@@ -1,4 +1,5 @@
+ import click
++from wikiapp import __version__
+ import requests
+ import textwrap
+ 
+@@ -6,6 +7,7 @@ API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
+ @click.command()
++@click.version_option(version=__version__)
+ def main() -> None:
+     """Print the title and summary of a random Wikipedia page."""
+     with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
+```
+
+```bash
+uv run wikiapp --version
+uv run wikiapp --help
+```
+
+`--version` prints `wikiapp, version 0.1.0`. `--help` lists both options. click writes the help from the
+decorators and the docstring.
+
+## step-04.1 to step-04.2 A formatter
 
 [The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/b090ad74622ee6109dd72ae66feec36377eef7d7), the commit before step-04.1.
 
@@ -50,6 +359,9 @@ just setup
 
 Now we add ruff, a formatter and a linter in one program, to a third dependency group, `lint`, which `dev`
 includes.
+
+A formatter changes how the code looks, and never what it does. A linter finds problems in the code, such as a
+variable that is never used. It changes nothing unless it is asked to.
 
 The move ran: `uv add --group lint ruff`
 
@@ -266,6 +578,14 @@ just test
 The check prints `7 files already formatted`, and the tests pass as before. The formatter changes how the code
 looks, and never what it does. One test asks the real Wikipedia, so the tests need the network until step 06.
 
+## step-04.3 The linter's rules
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/ca8685e532e9d372857667484e1c94c91ac9e986), the commit before step-04.3.
+
+```bash
+just setup
+```
+
 ### step-04.3 The linter's rules, and the recipe lint
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e) shows what the move changes.
@@ -286,9 +606,9 @@ The move changes these files:
 - `justfile`: 6 lines added; the recipe `lint`.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): a family of rules on each line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/ca8685e532e9d372857667484e1c94c91ac9e986...c97fdb1e8e820db24fac697b01283c581924537e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): a family of rules on each line.
   - look at: `"tests/**" = ["S101"]`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c97fdb1e8e820db24fac697b01283c581924537e/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/ca8685e532e9d372857667484e1c94c91ac9e986...c97fdb1e8e820db24fac697b01283c581924537e#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `lint *args:`
 
 The change of `pyproject.toml`:
@@ -348,12 +668,24 @@ The linter finds five problems, each with its code:
 
 `just lint` shows each problem with its lines. `uv run ruff rule S113` explains a code.
 
+## step-04.4 to step-04.6 The linter's problems, fixed
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/c97fdb1e8e820db24fac697b01283c581924537e), the commit before step-04.4.
+
+```bash
+just setup
+```
+
 ### step-04.4 The linter sorts the imports
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf) shows what the move changes.
 
-Now we let ruff fix the one problem of the five that it can fix itself. `just lint --fix` sorts the imports of
+Now we let ruff fix the one problem of the five that it can fix safely. `just lint --fix` sorts the imports of
 `console.py`. The command still ends with exit code 1, because four problems are left.
+
+`--fix` makes only the fixes that ruff counts as safe, and the order of imports is one of them. ruff also has a
+fix for the two unused variables. It marks that fix unsafe, because it may delete a comment on the line. It has no
+fix for the other two problems. So a person decides about the other four.
 
 The move ran: `just lint --fix`
 
@@ -398,6 +730,9 @@ person must fix them.
 Now we move `from wikiapp import console` up in `tests/test_console.py`, under `import requests`. A reader looks
 for imports there. wikiapp's own imports are a block of their own, after the installed packages, as `--fix` made
 them in console.py.
+
+A person makes the fixes of this move. The linter names each problem and its lines, and the person decides how
+to fix it. ruff has no fix for the import below the code, and its fix for the unused variables is unsafe.
 
 Find `from wikiapp import console` in the change of `tests/test_console.py`.
 
@@ -465,6 +800,9 @@ One problem is left, `S113`. The format is unchanged, and the check prints `7 fi
 Now we give the request a timeout, because without one, requests waits as long as the server keeps the
 connection open. So the command can wait for ever. The request in `src/wikiapp/wikipedia.py` now has `timeout=10`.
 
+The linter asked for it, with the rule `S113`, from the family `S` of security rules. The linter found a problem
+that no test had found. A person chose the number of seconds.
+
 Find `API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10` in the change of
 `src/wikiapp/wikipedia.py`.
 
@@ -499,6 +837,14 @@ just lint
 
 `All checks passed!`
 
+## step-04.7 A check of the configuration
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/80c33d4cfaf4b157cd44482712e520c77378cf9c), the commit before step-04.7.
+
+```bash
+just setup
+```
+
 ### step-04.7 The recipe lint-config
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a) shows what the move changes.
@@ -506,6 +852,9 @@ just lint
 Now we add validate-pyproject to the group `lint`, and a recipe `lint-config` that checks the configuration.
 The recipe runs three commands. validate-pyproject checks `pyproject.toml` against the standard for it,
 `uv lock --check` checks the lockfile, and `just --fmt --check --unstable` checks the `justfile`.
+
+These commands check the configuration, not the code. An error in `pyproject.toml`, in the lockfile or in the
+`justfile` can pass every test and the linter.
 
 The move ran: `uv add --group lint validate-pyproject`
 
@@ -519,9 +868,9 @@ The move changes these files:
 - `uv.lock`: 28 lines added, 1 removed; the exact version of validate-pyproject, and of what it needs.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its three checks.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/80c33d4cfaf4b157cd44482712e520c77378cf9c...4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its three checks.
   - look at: `uv run validate-pyproject pyproject.toml`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one package more in `lint`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/80c33d4cfaf4b157cd44482712e520c77378cf9c...4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one package more in `lint`.
   - look at: `"validate-pyproject>=0.26",`
 
 The change of `justfile`:
@@ -568,7 +917,7 @@ just lint-config
 The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `uv lock --check` prints
 `Resolved 19 packages` and exits with 0, because the lockfile matches `pyproject.toml`.
 
-## step-04.9 to step-04.10
+## step-04.9 `just check`, every check in one recipe
 
 [The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a45828b7972f3de77bd6a8d7a00a6b55833832cb), the commit before step-04.9.
 
@@ -590,7 +939,7 @@ The move changes one file:
 - `justfile`: 12 lines added; the recipe `check`.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/06ea9e2af2238f070b1e33f16aeb70002e25e44d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its four checks.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/06ea9e2af2238f070b1e33f16aeb70002e25e44d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/a45828b7972f3de77bd6a8d7a00a6b55833832cb...06ea9e2af2238f070b1e33f16aeb70002e25e44d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its four checks.
   - look at: `just test -q --cov-fail-under=90`
 
 The change of `justfile`:
@@ -621,12 +970,23 @@ just check
 
 `just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
 
+## step-04.10 A git hook
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/06ea9e2af2238f070b1e33f16aeb70002e25e44d), the commit before step-04.10.
+
+```bash
+just setup
+```
+
 ### step-04.10 A git hook
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db) shows what the move changes.
 
 Now we add pre-commit, which installs a git hook, to the group `lint`. A git hook is a program that git runs
 before every commit. If the program fails, git refuses the commit.
+
+`just check` is a gate that a person must remember to run. Once `just hook` installs the hook in a clone, the
+hook runs it by itself, before each commit in that clone.
 
 The move ran: `uv add --group lint pre-commit`
 
@@ -653,9 +1013,9 @@ The move changes these files:
 Files to read:
 - [`.pre-commit-config.yaml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/.pre-commit-config.yaml): three hooks from pre-commit's collection, then `just check`.
   - look at: `entry: just check`
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/06ea9e2af2238f070b1e33f16aeb70002e25e44d...4834655a3e50dcf56c557463c29bfce592d6d3db#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe `hook`.
   - look at: `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/4834655a3e50dcf56c557463c29bfce592d6d3db/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/06ea9e2af2238f070b1e33f16aeb70002e25e44d...4834655a3e50dcf56c557463c29bfce592d6d3db#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): pre-commit in the group `lint`.
   - look at: `"pre-commit>=4.6.2",`
 
 The change of `justfile`:
@@ -705,7 +1065,7 @@ prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, e
 With `--all-files`, pre-commit would check every file that git tracks. It would skip a new file until git tracks
 it.
 
-## step-05.3 to step-05.6
+## step-05.3 to step-05.5 The linter asks for types
 
 [The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/2c744eaef504d1adcc7fba0938360d140ef49978), the commit before step-05.3.
 
@@ -720,6 +1080,8 @@ just setup
 Now we turn on ruff's `ANN` rules, with one line in the list `select` in `pyproject.toml`, after `"N"`. ty, the
 type checker that `just types` runs, checks the types that the code states. The `ANN` rules make sure that the code
 states a type for every parameter and return.
+
+So the linter checks that a type is written, and the type checker checks that the type is right.
 
 Find `"ANN", # annotations: every parameter and every return value has a type` in the change of
 `pyproject.toml`.
@@ -958,51 +1320,7 @@ just types
 
 Both commands pass.
 
-### step-05.6 The recipe check runs the type checker
-
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/41990df7638f0964c66bf4e4433ffc4f5b6a026d) shows what the move changes.
-
-Now we put the type checker in the recipe `check` of the `justfile`, after `just lint`. The comment of `check`
-names the types too.
-
-Find `just types` in the change of `justfile`, and the comment of `check` above it.
-
-The move changes one file:
-
-- `justfile`: 2 lines added, 1 removed; `check` runs the type checker.
-
-Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/41990df7638f0964c66bf4e4433ffc4f5b6a026d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/commit/41990df7638f0964c66bf4e4433ffc4f5b6a026d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in check.
-  - look at: `just types`
-
-The change of `justfile`:
-
-```diff
-@@ -62,7 +62,7 @@ lint-config *args:
-     uv lock --check
-     just --fmt --check --unstable
- 
--# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
-+# Everything a commit must pass: format, lint, types, the tests over the coverage floor, the configuration
- [group('quality')]
- [no-exit-message]
- check *args:
-@@ -71,5 +71,6 @@ check *args:
-     if [ "$*" = help ]; then just help check; exit 0; fi
-     just fmt --check
-     just lint
-+    just types
-     just test -q --cov-fail-under=90
-     just lint-config
-```
-
-```bash
-just check
-```
-
-Every check passes, the type check among them. The coverage is 96.88%.
-
-## step-10.3 lint-config checks both pyproject.toml files
+## step-10.3 The library's pyproject.toml too
 
 [The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e), the commit before step-10.3.
 

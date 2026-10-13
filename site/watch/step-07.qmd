@@ -6,7 +6,7 @@ title: "step-07: A page with a shape"
 
 Watch mode. [The same step in do mode](../do/step-07.qmd).
 
-[The code at step-07](https://github.com/rahuldave/smallwikiapp/tree/step-07)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/d3f84ea883f0e41f64fb397f436c89e372c83bff), the commit before step-07.1. [The code at step-07](https://github.com/rahuldave/smallwikiapp/tree/step-07) is the code after its moves.
 
 ```bash
 just setup

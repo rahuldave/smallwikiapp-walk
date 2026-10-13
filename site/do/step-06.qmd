@@ -6,7 +6,7 @@ title: "step-06: End to end, and CI"
 
 Do mode. [The same step in watch mode](../watch/step-06.qmd).
 
-[The code at step-06](https://github.com/rahuldave/smallwikiapp/tree/step-06)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/41990df7638f0964c66bf4e4433ffc4f5b6a026d), the commit before step-06.1. [The code at step-06](https://github.com/rahuldave/smallwikiapp/tree/step-06) is the code after its moves.
 
 ```bash
 just setup

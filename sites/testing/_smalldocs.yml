@@ -65,7 +65,7 @@ website:
             contents:
               - text: "step-03.6 The command prints the error"
                 href: watch/step-03.6.qmd#step-03.6
-          - section: "step-04.9: just check, with a coverage floor"
+          - section: "step-04.9: `just check`, with a coverage floor"
             href: watch/step-04.9.qmd
             contents:
               - text: "step-04.9 The recipe check"
@@ -149,7 +149,7 @@ website:
             contents:
               - text: "step-03.6 The command prints the error"
                 href: do/step-03.6.qmd#step-03.6
-          - section: "step-04.9: just check, with a coverage floor"
+          - section: "step-04.9: `just check`, with a coverage floor"
             href: do/step-04.9.qmd
             contents:
               - text: "step-04.9 The recipe check"

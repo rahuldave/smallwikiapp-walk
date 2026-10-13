@@ -6,7 +6,7 @@ title: "step-05: Types"
 
 Watch mode. [The same step in do mode](../do/step-05.qmd).
 
-[The code at step-05](https://github.com/rahuldave/smallwikiapp/tree/step-05)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/4834655a3e50dcf56c557463c29bfce592d6d3db), the commit before step-05.1. [The code at step-05](https://github.com/rahuldave/smallwikiapp/tree/step-05) is the code after its moves.
 
 ```bash
 just setup
@@ -122,6 +122,8 @@ just types
 Now we turn on ruff's `ANN` rules, with one line in the list `select` in `pyproject.toml`, after `"N"`. ty, the
 type checker that `just types` runs, checks the types that the code states. The `ANN` rules make sure that the code
 states a type for every parameter and return.
+
+So the linter checks that a type is written, and the type checker checks that the type is right.
 
 Find `"ANN", # annotations: every parameter and every return value has a type` in the change of
 `pyproject.toml`.

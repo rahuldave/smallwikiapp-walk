@@ -30,7 +30,7 @@ small step starts from the code before its first move, and starts with `just set
 | Walk | What it takes | Website | On GitHub |
 |---|---|---|---|
 | `testing` | the project and its command, then pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub: 13 stops with titles, from step-00 to the move 07.4 | [testing](https://rahuldave.com/smallwikiapp-walk/testing/) | [watch](walks/testing/TUTORIAL-watch.md), [do](walks/testing/TUTORIAL-do.md) |
-| `linting` | ruff, its fixes, the check of the configuration, the hook, and the types the linter asks for: the moves 04.1 to 04.7, 04.9 and 04.10, 05.3 to 05.6, and 10.3 | [linting](https://rahuldave.com/smallwikiapp-walk/linting/) | [watch](walks/linting/TUTORIAL-watch.md), [do](walks/linting/TUTORIAL-do.md) |
+| `linting` | the project and its command, then a formatter, a linter and its fixes, the check of the configuration, the gate and the hook, and the types the linter asks for: 10 stops with titles, from step-00 to the move 10.3 | [linting](https://rahuldave.com/smallwikiapp-walk/linting/) | [watch](walks/linting/TUTORIAL-watch.md), [do](walks/linting/TUTORIAL-do.md) |
 | `docs` | smalldocs, docstrings and docments, a site, and the check of the docs: the step 08, and the move 09.4 | [docs](https://rahuldave.com/smallwikiapp-walk/docs/) | [watch](walks/docs/TUTORIAL-watch.md), [do](walks/docs/TUTORIAL-do.md) |
 
 `just present testing` opens a small walk in timewalk.

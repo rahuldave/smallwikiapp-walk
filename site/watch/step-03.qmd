@@ -6,7 +6,7 @@ title: "step-03: A library and an app"
 
 Watch mode. [The same step in do mode](../do/step-03.qmd).
 
-[The code at step-03](https://github.com/rahuldave/smallwikiapp/tree/step-03)
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/bed3c6029878c71bef05322712c388dfb8c058ef), the commit before step-03.1. [The code at step-03](https://github.com/rahuldave/smallwikiapp/tree/step-03) is the code after its moves.
 
 ```bash
 just setup

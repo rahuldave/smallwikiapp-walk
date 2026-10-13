@@ -1,5 +1,5 @@
 ---
-title: "step-10.3: lint-config checks both pyproject.toml files"
+title: "step-10.3: The library's pyproject.toml too"
 ---
 
 <!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
