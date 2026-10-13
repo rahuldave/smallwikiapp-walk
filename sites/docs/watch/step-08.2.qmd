@@ -1,0 +1,79 @@
+---
+title: "step-08.2: The library documented"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Watch mode. [The same step in do mode](../do/step-08.2.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/5aa8fa5b13364731bdd41caf1ecd8af505c7346c), the commit before step-08.2.
+
+```bash
+just setup
+```
+
+## step-08.2 The library documented {#step-08.2}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/052409c665daee31e9a087510c5b04c7c2d7538f) shows what the move changes.
+
+Now we document the library, `src/wikiapp/wikipedia.py`, with four additions:
+
+- a docstring at the top of the module
+- a docment beside each field of Page
+- a docment on the parameter and on the return of `random_page`
+- a longer docstring of `random_page`, which says when it raises an error
+
+Find `) -> Page:  # A page chosen at random` in the change of `src/wikiapp/wikipedia.py`.
+
+A pydantic field can also take its description as `Field(description="...")`. pydantic keeps that description
+in the schema of the model, which other programs read. smalldocs uses the description when a field has one, and
+the comment beside the field when it has none. `Page` only parses the answer of Wikipedia, so the comment is
+enough.
+
+The move changes one file:
+
+- `src/wikiapp/wikipedia.py`: 12 lines added, 4 removed; a docstring for the module, docments, and a longer docstring.
+
+Files to read:
+- [`src/wikiapp/wikipedia.py`](https://github.com/rahuldave/smallwikiapp/blob/052409c665daee31e9a087510c5b04c7c2d7538f/src/wikiapp/wikipedia.py), [its change](https://github.com/rahuldave/smallwikiapp/compare/5aa8fa5b13364731bdd41caf1ecd8af505c7346c...052409c665daee31e9a087510c5b04c7c2d7538f#diff-d76a864f1c0b09582ea64df8db4bcecf5956f42e4807d09aec98e45c893d73a2): the comments are the documentation.
+  - look at: `) -> Page:  # A page chosen at random`
+
+The change of `src/wikiapp/wikipedia.py`:
+
+```diff
+@@ -1,3 +1,5 @@
++"""Wikipedia's REST API: a random page."""
++
+ import re
+ 
+ import requests
+@@ -15,12 +17,18 @@ class WikipediaError(Exception):
+ class Page(BaseModel):
+     """A page of Wikipedia: its title and the summary of its text."""
+ 
+-    title: str
+-    extract: str
++    title: str  # The title of the page
++    extract: str  # The summary: the first paragraph of the page, as plain text
++
+ 
++def random_page(
++    language: str = "en",  # The language of the Wikipedia to ask, as its code: en, fr, es
++) -> Page:  # A page chosen at random
++    """Get a random page from Wikipedia.
+ 
+-def random_page(language: str = "en") -> Page:
+-    """Get a random page from Wikipedia."""
++    Raises WikipediaError when the language is not a language code, when the request fails, or
++    when the answer is not a page.
++    """
+     if not LANGUAGE.fullmatch(language):
+         raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
+     try:
+```
+
+```bash
+just docs module wikipedia
+```
+
+The tables now have their descriptions.

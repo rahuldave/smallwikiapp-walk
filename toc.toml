@@ -77,11 +77,22 @@ select = [
 [[walk]]
 id = "docs"
 title = "Documenting smallwikiapp, one move at a time"
-description = "The moves of smallwikiapp that document the code, check the documentation, and build a site with smalldocs."
+description = "The project and its command, then the moves of smallwikiapp that document the code, check the documentation, and build a site with smalldocs."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
 notes = "walks/tutorial/notes.md"
 slides = "walks/tutorial/slides/slides.toml"
 intro = "walks/docs/intro.md"
 moves = "watch"
-select = ["step-08", "step-09.4"]
+select = [
+  { range = "step-00", title = "The project" },
+  { range = "step-01", title = "The command" },
+  { range = "step-08.1", title = "smalldocs, and what is not documented" },
+  { range = "step-08.2", title = "The library documented" },
+  { range = "step-08.3", title = "The command documented" },
+  { range = "step-08.4", title = "The tests documented" },
+  { range = "step-08.5", title = "A site" },
+  { range = "step-08.6", title = "The README's folders" },
+  { range = "step-08.7", title = "The docs check in `just check`" },
+  { range = "step-09.4", title = "The docs check counts the library" },
+]

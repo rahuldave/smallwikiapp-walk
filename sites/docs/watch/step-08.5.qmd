@@ -1,0 +1,109 @@
+---
+title: "step-08.5: A site"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Watch mode. [The same step in do mode](../do/step-08.5.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/12f8bd1e97e91900d04e9676ee1a6ddfedf78084), the commit before step-08.5.
+
+```bash
+just setup
+```
+
+## step-08.5 A site {#step-08.5}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b2c6edfda40338f49e0d625b4eec7137d19da3c4) shows what the move changes.
+
+Now we make a docs site, because smalldocs also makes a website from Markdown. The site is in `docs/`. It has a
+front page, `index.qmd`, and a reference page for `console.py` and one for `wikipedia.py`. Each build writes the reference pages from the code,
+before it builds the site. A name in backticks, such as `random_page`, becomes a link to its entry.
+
+The front page is a written page, for a person who wants to know what the project does. The reference pages say
+what each name does. The site has both kinds.
+
+The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, which stays as it is. They are
+the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
+page. The comment at the top now says that `just docs` builds the site. The front page, `docs/index.qmd`, is
+new. A `.qmd` file is Markdown, with a header between two `---` lines that gives the title of the page.
+
+Find `contents: api/*  # the reference pages, which each build makes from the code` in the change of
+`docs/_smalldocs.yml`. Then open `docs/index.qmd`, a new file.
+
+Next we change the recipe `docs`, so that `just docs` with no words builds the site, with `smalldocs render docs`.
+With words, it runs `smalldocs api` as before. The recipe is now a script of several lines.
+
+Find `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi` in the change of `justfile`.
+
+The move changes these files:
+
+- `docs/_smalldocs.yml`: 17 lines added, 1 removed; the settings of the site above the section `api`, and a comment above `api`. The
+  comment at the top now says that `just docs` builds the site.
+- `docs/index.qmd`: 35 lines added; a new file, the front page.
+- `justfile`: 5 lines added, 2 removed; with no words, `docs` builds the site, and its comment says so. The recipe is now a script of
+  several lines.
+
+Files to read:
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/b2c6edfda40338f49e0d625b4eec7137d19da3c4/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/12f8bd1e97e91900d04e9676ee1a6ddfedf78084...b2c6edfda40338f49e0d625b4eec7137d19da3c4#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the site. The sidebar lists the front page, then the reference pages.
+  - look at: `contents: api/*  # the reference pages, which each build makes from the code`
+- [`docs/index.qmd`](https://github.com/rahuldave/smallwikiapp/blob/b2c6edfda40338f49e0d625b4eec7137d19da3c4/docs/index.qmd): the front page, written by hand.
+  - look at: `Each build of the site makes the pages under Reference from the code.`
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/b2c6edfda40338f49e0d625b4eec7137d19da3c4/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/12f8bd1e97e91900d04e9676ee1a6ddfedf78084...b2c6edfda40338f49e0d625b4eec7137d19da3c4#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): with no words, `docs` builds the site.
+  - look at: `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
+
+The change of `docs/_smalldocs.yml`:
+
+```diff
+@@ -1,4 +1,20 @@
+-# The settings of smalldocs. `api` is the reference, made from the code of the packages
++# The settings of smalldocs. `just docs` builds the site into docs/_site
++project:
++  type: website
++  output-dir: _site
++
++website:
++  title: "wikiapp"
++  sidebar:
++    contents:
++      - index.qmd
++      - section: Reference
++        contents: api/*  # the reference pages, which each build makes from the code
++
++theme: cosmo
++toc: true
++
++# `api` is the reference, made from the code of the packages. A name in backticks links to its entry
+ api:
+   packages: [wikiapp]
+   source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+```
+
+The change of `justfile`:
+
+```diff
+@@ -75,8 +75,11 @@ check *args:
+     just test -q --cov-fail-under=90
+     just lint-config
+ 
+-# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
++# The docs. Alone, the site in docs/_site; with words, smalldocs api: just docs check
+ [group('docs')]
+ [no-exit-message]
+ docs *args:
+-    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
++    #!/usr/bin/env sh
++    if [ "$*" = help ]; then just help docs; exit 0; fi
++    if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi
++    exec uv run smalldocs api "$@" --dir docs
+```
+
+```bash
+uv run smalldocs render docs
+just --show docs
+just docs
+```
+
+smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is `docs/_site/index.html`, for a
+browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
+pages, and git ignores them.

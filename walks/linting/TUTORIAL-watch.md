@@ -34,7 +34,7 @@ The walk has ten stops. Each stop takes a whole step, one move, or a few moves i
 10. **The library's pyproject.toml too** (step-10.3). Since step 09, the library has a `pyproject.toml` of its own,
     and `just lint-config` checks it.
 
-Each stop starts with `just setup`. From the second stop on, it starts from the code before it.
+Each stop starts with `just setup`. From the second stop on, it starts from the code before its first move.
 
 ## Kinds of checks
 
@@ -343,7 +343,7 @@ uv run wikiapp --help
 ```
 
 `--version` prints `wikiapp, version 0.1.0`. `--help` lists both options. click writes the help from the
-decorators and the docstring.
+decorators and the docstring. So the docstring of `main` is also help text, for a person who runs the command.
 
 ## step-04.1 to step-04.2 A formatter
 

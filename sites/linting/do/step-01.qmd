@@ -271,4 +271,4 @@ uv run wikiapp --help
 ```
 
 `--version` prints `wikiapp, version 0.1.0`. `--help` lists both options. click writes the help from the
-decorators and the docstring.
+decorators and the docstring. So the docstring of `main` is also help text, for a person who runs the command.

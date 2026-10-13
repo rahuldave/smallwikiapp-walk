@@ -39,7 +39,7 @@ The walk has thirteen stops. Each stop takes a whole step, one move, or a few mo
 13. **A drop in coverage** (step-07.4). New code has no test, and the coverage drops. The tutorial adds no test to
     hide it.
 
-Each stop starts with `just setup`. From the second stop on, it starts from the code before it.
+Each stop starts with `just setup`. From the second stop on, it starts from the code before its first move.
 
 ## Kinds of tests
 
@@ -345,7 +345,7 @@ uv run wikiapp --help
 ```
 
 `--version` prints `wikiapp, version 0.1.0`. `--help` lists both options. click writes the help from the
-decorators and the docstring.
+decorators and the docstring. So the docstring of `main` is also help text, for a person who runs the command.
 
 ## step-02.1 to step-02.2 pytest and a first test
 

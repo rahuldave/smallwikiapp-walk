@@ -34,7 +34,7 @@ The walk has ten stops. Each stop takes a whole step, one move, or a few moves i
 10. **The library's pyproject.toml too** (step-10.3). Since step 09, the library has a `pyproject.toml` of its own,
     and `just lint-config` checks it.
 
-Each stop starts with `just setup`. From the second stop on, it starts from the code before it.
+Each stop starts with `just setup`. From the second stop on, it starts from the code before its first move.
 
 ## Kinds of checks
 

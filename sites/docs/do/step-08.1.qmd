@@ -1,0 +1,142 @@
+---
+title: "step-08.1: smalldocs, and what is not documented"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Do mode. [The same step in watch mode](../watch/step-08.1.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc), the commit before step-08.1.
+
+```bash
+just setup
+```
+
+## step-08.1 smalldocs {#step-08.1}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5aa8fa5b13364731bdd41caf1ecd8af505c7346c) shows what the move changes.
+
+Now we add smalldocs, which writes the reference from the code and lists what has no documentation. The reference
+of a function gives its signature, what it does, and what each parameter is. The signature and the types are in the
+code. The docstring says what the function does. A docment says what each parameter is. A docment is the comment
+beside a parameter, with one parameter to a line.
+
+The reference is documentation for a person who calls the code. smalldocs makes it from the code, so it changes
+when the code changes.
+
+The block below shows `random_page` with its docments, as the next move writes them. This move does not change
+`random_page`.
+
+```python
+def random_page(
+    language: str = "en",  # The language of the Wikipedia to ask, as its code: en, fr, es
+) -> Page:  # A page chosen at random
+```
+
+The block above is only to read.
+
+smalldocs reads all three, and writes Markdown. It is a Python package, so uv installs it like
+any other. smalldocs goes in a fourth dependency group, `docs`, and `dev` includes that group.
+
+In `pyproject.toml`, change the line `dev = ...`, and add the group on the line after it.
+
+```toml
+dev = [{ include-group = "test" }, { include-group = "lint" }, { include-group = "docs" }]
+docs = []
+```
+
+```bash
+uv add --group docs smalldocs
+```
+
+Next we write `docs/_smalldocs.yml`, the file of settings that smalldocs reads. For now the file has one section,
+`api`, the reference. It names the package to document, the address of its source, and the files of the tests to
+check.
+
+Make `docs/_smalldocs.yml` with the lines below.
+
+```yaml
+# The settings of smalldocs. `api` is the reference, made from the code of the packages
+api:
+  packages: [wikiapp]
+  source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+  check: ["tests/**/*.py"]  # the tests are held to the same rule as the package
+```
+
+Then we add a recipe `docs`, at the end of the `justfile`. `just docs` runs `smalldocs api`, and gives it the words
+after `just docs`. `smalldocs api` has two commands that this step uses:
+
+- `module NAME` prints the reference of one module as Markdown.
+- `check` lists each function and class without a docstring, a type or a docment, and each module without a
+  docstring. It looks in the package and in the files of `check`, here the tests.
+
+Add the recipe at the end of the `justfile`.
+
+```just
+
+# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
+[group('docs')]
+[no-exit-message]
+docs *args:
+    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
+```
+
+The move changes these files:
+
+- `docs/_smalldocs.yml`: 5 lines added; a new file, with the settings of the reference.
+- `justfile`: 6 lines added; the recipe `docs`.
+- `pyproject.toml`: 4 lines added, 1 removed; the group `docs`, with smalldocs.
+- `uv.lock`: 64 lines added; the exact version of smalldocs and of the packages it needs.
+
+Files to read:
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/5aa8fa5b13364731bdd41caf1ecd8af505c7346c/docs/_smalldocs.yml): the package to document, and the tests to check.
+  - look at: `packages: [wikiapp]`
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/5aa8fa5b13364731bdd41caf1ecd8af505c7346c/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc...5aa8fa5b13364731bdd41caf1ecd8af505c7346c#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group.
+  - look at: `docs = [`
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/5aa8fa5b13364731bdd41caf1ecd8af505c7346c/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/fb06bcf74edc67eb57ef29fee4ad9cab3525f8fc...5aa8fa5b13364731bdd41caf1ecd8af505c7346c#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+  - look at: `docs *args:`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -22,7 +22,10 @@ test = [
+     "pytest-cov>=7.1.0",
+     "pytest-mock>=3.16.0",
+ ]
+-dev = [{ include-group = "test" }, { include-group = "lint" }]
++dev = [{ include-group = "test" }, { include-group = "lint" }, { include-group = "docs" }]
++docs = [
++    "smalldocs>=0.1.5",
++]
+ lint = [
+     "pre-commit>=4.6.2",
+     "ruff>=0.17.0",
+```
+
+The change of `justfile`:
+
+```diff
+@@ -74,3 +74,9 @@ check *args:
+     just types
+     just test -q --cov-fail-under=90
+     just lint-config
++
++# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
++[group('docs')]
++[no-exit-message]
++docs *args:
++    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
+```
+
+```bash
+uv run smalldocs api module wikipedia --dir docs
+uv run smalldocs api check --dir docs
+just --show docs
+just docs check
+```
+
+`module` prints the reference of `wikipedia.py`, with empty descriptions. For each module and each test file,
+`check` counts the functions and classes that are complete. Then it lists every gap, and fails with `1 of 15
+functions, methods and classes are typed and documented`. The one is `WikipediaError`, which needs only its
+docstring. Above the total, `check` names every gap, and the five modules without a docstring are among them. Like
+coverage, which counts the lines that the tests run, `check` counts what has documentation.

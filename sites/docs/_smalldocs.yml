@@ -14,23 +14,54 @@ website:
       - index.qmd
       - section: "Watch"
         contents:
-          - section: "step-08: Docs from the code"
-            href: watch/step-08.qmd
+          - text: "step-00: The project"
+            href: watch/step-00.qmd
+          - section: "step-01: The command"
+            href: watch/step-01.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: watch/step-01.qmd#step-01.1
+              - text: "step-01.2 Ask Wikipedia for a page"
+                href: watch/step-01.qmd#step-01.2
+              - text: "step-01.3 A User-Agent"
+                href: watch/step-01.qmd#step-01.3
+              - text: "step-01.4 --version"
+                href: watch/step-01.qmd#step-01.4
+          - section: "step-08.1: smalldocs, and what is not documented"
+            href: watch/step-08.1.qmd
             contents:
               - text: "step-08.1 smalldocs"
-                href: watch/step-08.qmd#step-08.1
+                href: watch/step-08.1.qmd#step-08.1
+          - section: "step-08.2: The library documented"
+            href: watch/step-08.2.qmd
+            contents:
               - text: "step-08.2 The library documented"
-                href: watch/step-08.qmd#step-08.2
+                href: watch/step-08.2.qmd#step-08.2
+          - section: "step-08.3: The command documented"
+            href: watch/step-08.3.qmd
+            contents:
               - text: "step-08.3 The command documented"
-                href: watch/step-08.qmd#step-08.3
+                href: watch/step-08.3.qmd#step-08.3
+          - section: "step-08.4: The tests documented"
+            href: watch/step-08.4.qmd
+            contents:
               - text: "step-08.4 The tests documented"
-                href: watch/step-08.qmd#step-08.4
+                href: watch/step-08.4.qmd#step-08.4
+          - section: "step-08.5: A site"
+            href: watch/step-08.5.qmd
+            contents:
               - text: "step-08.5 A site"
-                href: watch/step-08.qmd#step-08.5
+                href: watch/step-08.5.qmd#step-08.5
+          - section: "step-08.6: The README's folders"
+            href: watch/step-08.6.qmd
+            contents:
               - text: "step-08.6 The README names the tests and the docs"
-                href: watch/step-08.qmd#step-08.6
+                href: watch/step-08.6.qmd#step-08.6
+          - section: "step-08.7: The docs check in `just check`"
+            href: watch/step-08.7.qmd
+            contents:
               - text: "step-08.7 The docs check in `just check`"
-                href: watch/step-08.qmd#step-08.7
+                href: watch/step-08.7.qmd#step-08.7
           - section: "step-09.4: The docs check counts the library"
             href: watch/step-09.4.qmd
             contents:
@@ -38,23 +69,54 @@ website:
                 href: watch/step-09.4.qmd#step-09.4
       - section: "Do"
         contents:
-          - section: "step-08: Docs from the code"
-            href: do/step-08.qmd
+          - text: "step-00: The project"
+            href: do/step-00.qmd
+          - section: "step-01: The command"
+            href: do/step-01.qmd
+            contents:
+              - text: "step-01.1 click and requests"
+                href: do/step-01.qmd#step-01.1
+              - text: "step-01.2 Ask Wikipedia for a page"
+                href: do/step-01.qmd#step-01.2
+              - text: "step-01.3 A User-Agent"
+                href: do/step-01.qmd#step-01.3
+              - text: "step-01.4 --version"
+                href: do/step-01.qmd#step-01.4
+          - section: "step-08.1: smalldocs, and what is not documented"
+            href: do/step-08.1.qmd
             contents:
               - text: "step-08.1 smalldocs"
-                href: do/step-08.qmd#step-08.1
+                href: do/step-08.1.qmd#step-08.1
+          - section: "step-08.2: The library documented"
+            href: do/step-08.2.qmd
+            contents:
               - text: "step-08.2 The library documented"
-                href: do/step-08.qmd#step-08.2
+                href: do/step-08.2.qmd#step-08.2
+          - section: "step-08.3: The command documented"
+            href: do/step-08.3.qmd
+            contents:
               - text: "step-08.3 The command documented"
-                href: do/step-08.qmd#step-08.3
+                href: do/step-08.3.qmd#step-08.3
+          - section: "step-08.4: The tests documented"
+            href: do/step-08.4.qmd
+            contents:
               - text: "step-08.4 The tests documented"
-                href: do/step-08.qmd#step-08.4
+                href: do/step-08.4.qmd#step-08.4
+          - section: "step-08.5: A site"
+            href: do/step-08.5.qmd
+            contents:
               - text: "step-08.5 A site"
-                href: do/step-08.qmd#step-08.5
+                href: do/step-08.5.qmd#step-08.5
+          - section: "step-08.6: The README's folders"
+            href: do/step-08.6.qmd
+            contents:
               - text: "step-08.6 The README names the tests and the docs"
-                href: do/step-08.qmd#step-08.6
+                href: do/step-08.6.qmd#step-08.6
+          - section: "step-08.7: The docs check in `just check`"
+            href: do/step-08.7.qmd
+            contents:
               - text: "step-08.7 The docs check in `just check`"
-                href: do/step-08.qmd#step-08.7
+                href: do/step-08.7.qmd#step-08.7
           - section: "step-09.4: The docs check counts the library"
             href: do/step-09.4.qmd
             contents:

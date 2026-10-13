@@ -338,7 +338,7 @@ uv run wikiapp --help
 ```
 
 `--version` prints `wikiapp, version 0.1.0`. `--help` lists both options. click writes the help from the
-decorators and the docstring.
+decorators and the docstring. So the docstring of `main` is also help text, for a person who runs the command.
 
 ## step-02 Tests, with mocks
 
@@ -3361,6 +3361,9 @@ of a function gives its signature, what it does, and what each parameter is. The
 code. The docstring says what the function does. A docment says what each parameter is. A docment is the comment
 beside a parameter, with one parameter to a line.
 
+The reference is documentation for a person who calls the code. smalldocs makes it from the code, so it changes
+when the code changes.
+
 The block below shows `random_page` with its docments, as the next move writes them. This move does not change
 `random_page`.
 
@@ -3475,7 +3478,8 @@ just docs check
 `module` prints the reference of `wikipedia.py`, with empty descriptions. For each module and each test file,
 `check` counts the functions and classes that are complete. Then it lists every gap, and fails with `1 of 15
 functions, methods and classes are typed and documented`. The one is `WikipediaError`, which needs only its
-docstring. Above the total, `check` names every gap, and the five modules without a docstring are among them.
+docstring. Above the total, `check` names every gap, and the five modules without a docstring are among them. Like
+coverage, which counts the lines that the tests run, `check` counts what has documentation.
 
 ### step-08.2 The library documented
 
@@ -3689,6 +3693,8 @@ Each test file says what it tests, and each fixture says what it returns. Each t
 checks. The docstrings say in words what the asserts say in code. Each parameter of a test has a docment, one
 parameter to a line, and `tests/test_console.py` shows the pattern best.
 
+Tests documented this way are documentation too. A reader learns from them what the code must do.
+
 The three files are long to type, so take them from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/12f8bd1e97e91900d04e9676ee1a6ddfedf78084). The test below shows the pattern.
 
 ```python
@@ -3872,8 +3878,11 @@ and classes are typed and documented`.
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b2c6edfda40338f49e0d625b4eec7137d19da3c4) shows what the move changes.
 
 Now we make a docs site, because smalldocs also makes a website from Markdown. The site is in `docs/`. It has a
-front page, `index.qmd`, and a reference page for each module. Each build writes the reference pages from the code,
+front page, `index.qmd`, and a reference page for `console.py` and one for `wikipedia.py`. Each build writes the reference pages from the code,
 before it builds the site. A name in backticks, such as `random_page`, becomes a link to its entry.
+
+The front page is a written page, for a person who wants to know what the project does. The reference pages say
+what each name does. The site has both kinds.
 
 The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, which stays as it is. They are
 the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
@@ -4000,6 +4009,9 @@ pages, and git ignores them.
 Now we bring the table of folders in the README up to date. The README gets `tests/` and `docs/` among the
 folders. It also says that `wikipedia.py` is the library and `console.py` the command.
 
+The README is the first page that a reader sees on GitHub. Its table of folders says where each part of the
+project is.
+
 Take the README from [the move's commit](https://github.com/rahuldave/smallwikiapp/commit/200e1c28a172ef898f93486832a601a8eac48379). Or copy the rows
 below, in place of the `src/wikiapp/` row.
 
@@ -4093,7 +4105,8 @@ just check
 ```
 
 The docs check prints `15 of 15`. Now the git hook refuses a commit that leaves a function, a parameter or a
-field without documentation.
+field without documentation. GitHub's job `check`, at lines 30 to 37 of `.github/workflows/test.yaml`, runs
+`just check`, so it runs the docs check too.
 
 ## step-09 The library as a package
 
