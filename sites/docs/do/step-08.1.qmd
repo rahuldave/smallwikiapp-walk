@@ -12,6 +12,21 @@ Do mode. [The same step in watch mode](../watch/step-08.1.qmd).
 just setup
 ```
 
+Since the last stop, the walk leaves out the steps
+[02](https://rahuldave.com/smallwikiapp-walk/watch/step-02.html) to
+[07](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html). pytest came in, in a dependency group `test`,
+which the group `dev` includes. Tests came in, with a mock in place of Wikipedia, and coverage on every run. The
+code split into a library, `src/wikiapp/wikipedia.py`, and the command. The command got an option `--language`.
+
+ruff formats and lints the code, in a group `lint`, and `just check` runs every check. `just hook` installs a git
+hook, which runs `just check` before each commit. ty checks the types.
+
+The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
+`random_page` returns a `Page`, a pydantic model with a title and an extract. An answer that is not a page, or a
+language that is not a language code, raises `WikipediaError`. This stop starts with that code.
+
+smalldocs makes the reference from the code. `just docs check` counts what has documentation, and lists each gap.
+
 ## step-08.1 smalldocs {#step-08.1}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/5aa8fa5b13364731bdd41caf1ecd8af505c7346c) shows what the move changes.

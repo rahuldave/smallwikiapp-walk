@@ -12,6 +12,12 @@ Watch mode. [The same step in do mode](../do/step-05.3-to-step-05.5.qmd).
 just setup
 ```
 
+Since the last stop, the walk leaves out the first two moves of
+[step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html). ty, a type checker, came in, and
+`just types` runs it. The command reads its version by the name of its package. This stop starts with that code.
+
+A rule asks for a type on every parameter and return. The code and the tests get their types.
+
 ## step-05.3 A type on every parameter and return {#step-05.3}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/50af6273ec0db467642d539935422d0f4fc50991) shows what the move changes.

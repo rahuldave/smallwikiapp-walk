@@ -24,8 +24,9 @@ The slides are in [walks/tutorial/slides/](walks/tutorial/slides/).
 
 ## Three small walks
 
-Each small walk takes some steps and moves of the whole tutorial, with the same notes and the same commits. A
-small step starts from the code before its first move, and starts with `just setup`.
+Each small walk has notes of its own, in `walks/ID/notes.md`. Each of its stops takes some steps or moves of the
+whole tutorial, with their notes and their commits. A stop starts from the code before its first move, and
+starts with `just setup`. Where the walk leaves out moves, the next stop says what they did.
 
 | Walk | What it takes | Website | On GitHub |
 |---|---|---|---|
@@ -161,11 +162,11 @@ timewalk then puts its replay copy in `worktree/`. The replay copy is a clone of
 
 ```
 smallwikiapp-walk/
-├── toc.toml                    the walks: show and do, and the small walks, over the same notes
+├── toc.toml                    the walks: show and do, and the small walks, over the same commits
 ├── walks/tutorial/notes.md     the notes of every step and move, for timewalk
 ├── walks/tutorial/TUTORIAL-*.md  the tutorial to read on GitHub, in watch mode and in do mode
 ├── walks/tutorial/slides/      the slides, and slides.toml, which step shows which
-├── walks/testing/              a small walk's intro, and its TUTORIAL-*.md; linting and docs too
+├── walks/testing/              a small walk's own notes, and its TUTORIAL-*.md; linting and docs too
 ├── site/                       the website, made from notes.md; GitHub publishes it on every push
 ├── sites/                      the website of each small walk, published under the website's address
 ├── justfile                    present, setup, check, pdf, site

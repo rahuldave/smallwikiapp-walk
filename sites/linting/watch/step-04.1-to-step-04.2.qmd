@@ -12,6 +12,16 @@ Watch mode. [The same step in do mode](../do/step-04.1-to-step-04.2.qmd).
 just setup
 ```
 
+Since the last stop, the walk leaves out the steps [02](https://rahuldave.com/smallwikiapp-walk/watch/step-02.html)
+and [03](https://rahuldave.com/smallwikiapp-walk/watch/step-03.html). pytest came in, in a dependency group `test`,
+which the group `dev` includes. Tests came in, with a mock in place of Wikipedia, and coverage on every run.
+
+The code split into a library, `src/wikiapp/wikipedia.py`, and the command. The command got an option
+`--language`. The library takes a language and raises its own error, `WikipediaError`, and the command prints it
+as a message. This stop starts with that code.
+
+ruff comes in, and `just fmt` formats the code and the tests.
+
 ## step-04.1 ruff, and the recipe fmt {#step-04.1}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9) shows what the move changes.

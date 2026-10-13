@@ -12,6 +12,8 @@ Do mode. [The same step in watch mode](../watch/step-08.7.qmd).
 just setup
 ```
 
+From this stop on, a commit must pass the docs check.
+
 ## step-08.7 The docs check in `just check` {#step-08.7}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1ea19fb90f9341fd939f150ef44d2089986e07be) shows what the move changes.

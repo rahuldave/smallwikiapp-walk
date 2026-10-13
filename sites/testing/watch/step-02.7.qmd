@@ -12,6 +12,8 @@ Watch mode. [The same step in do mode](../do/step-02.7.qmd).
 just setup
 ```
 
+Every run of the tests now measures the lines of the code that they run.
+
 ## step-02.7 Coverage {#step-02.7}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/bed3c6029878c71bef05322712c388dfb8c058ef) shows what the move changes.

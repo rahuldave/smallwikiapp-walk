@@ -12,6 +12,12 @@ Watch mode. [The same step in do mode](../do/step-04.9.qmd).
 just setup
 ```
 
+Since the last stop, the walk leaves out the move
+[step-04.8](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html#step-04.8). The recipes now refuse a
+lockfile that is out of date. This stop starts with that code.
+
+`just check` runs the format, the linter, the tests and the configuration, in order.
+
 ## step-04.9 The recipe check {#step-04.9}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d) shows what the move changes.
@@ -56,3 +62,6 @@ just check
 ```
 
 `just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
+
+From the move [step-06.4](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html#step-06.4), which this walk
+leaves out, GitHub runs `just check` too, on every push to main and every pull request.

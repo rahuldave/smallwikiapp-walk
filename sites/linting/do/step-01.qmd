@@ -8,6 +8,9 @@ Do mode. [The same step in watch mode](../watch/step-01.qmd).
 
 [The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830), the commit before step-01.1. [The code at step-01](https://github.com/rahuldave/smallwikiapp/tree/step-01) is the code after its moves.
 
+This stop is all of step-01. The command asks Wikipedia for a random page, and prints its title and summary. It
+sends a User-Agent, and has an option `--version`.
+
 ```bash
 just setup
 ```

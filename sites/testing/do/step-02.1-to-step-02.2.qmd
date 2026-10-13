@@ -12,6 +12,8 @@ Do mode. [The same step in watch mode](../watch/step-02.1-to-step-02.2.qmd).
 just setup
 ```
 
+pytest comes in, with a first test, and `just test` runs the tests.
+
 ## step-02.1 pytest and the first test {#step-02.1}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/645fc59b58e6f49dc92635e2562f949524a4629c) shows what the move changes.

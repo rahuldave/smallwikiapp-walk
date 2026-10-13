@@ -12,6 +12,18 @@ Watch mode. [The same step in do mode](../do/step-06.1-to-step-06.2.qmd).
 just setup
 ```
 
+Since the last stop, the walk leaves out the last move of
+[step-04](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html) and the whole of
+[step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html). `just hook` installs a git hook. Before
+each commit, pre-commit runs three small checks of the files, then `just check`.
+
+ty checks the types, and the command reads its version by the name of its package. The code and the tests got their
+types. `random_page` returns `dict[str, Any]`, and `just check` runs the type checker too. This stop starts with
+that code.
+
+The test that asks the real Wikipedia runs only when you ask for it. A second test of that kind checks the
+library.
+
 ## step-06.1 The end-to-end test runs only on request {#step-06.1}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4ccfe3566846e64d7383837ef3e936e151c6c9d5) shows what the move changes.
@@ -130,3 +142,6 @@ just test -q -m e2e
 ```
 
 The output is `2 passed, 6 deselected`.
+
+The project now has all four kinds of tests in the table of the intro. They are end to end, unit, integration and
+contract.

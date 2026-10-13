@@ -12,13 +12,24 @@ Watch mode. [The same step in do mode](../do/step-09.4.qmd).
 just setup
 ```
 
+Since the last stop, the walk leaves out the first three moves of
+[step-09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html). The library became a package of its own,
+`wikirandom`, in `packages/wikirandom`, with a README of its own. Its code moved there with its docstrings and
+docments. The app uses it, and `src/wikiapp/wikipedia.py` is gone. The README and the front page of the docs name
+both packages.
+
+At that point, `just docs check` still counts only the app and the tests, 12 of 12. The tests of the library are
+now `tests/test_wikirandom.py`. This stop starts with that code.
+
+The check counts the library, now a package of its own.
+
 ## step-09.4 The docs check counts the library {#step-09.4}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea) shows what the move changes.
 
 Now we make the docs check count the library, in `docs/_smalldocs.yml`.
-Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
-`docs/_smalldocs.yml` names only `wikiapp`. The line `packages:` in the section `api` now names both.
+The app uses the library `wikirandom`, in `packages/wikirandom`, but `docs/_smalldocs.yml` names only
+`wikiapp`. The line `packages:` in the section `api` now names both.
 
 Read the change of `docs/_smalldocs.yml`.
 
@@ -51,3 +62,9 @@ just check
 
 The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
 pages, and on the front page, `random_page` is now a link to its entry. `just check` passes.
+
+The walk stops here. After it, the whole tutorial makes step
+[10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). `just build` builds both packages, and the app
+asks for wikirandom 0.1. `just lint-config` checks the library's `pyproject.toml` too. The library gets a licence
+and an author, both packages get a link to the repository, and the User-Agent says the installed version. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.

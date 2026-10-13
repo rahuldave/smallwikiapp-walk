@@ -12,6 +12,8 @@ Watch mode. [The same step in do mode](../do/step-03.3.qmd).
 just setup
 ```
 
+`random_page` takes a language, and a test checks the address.
+
 ## step-03.3 A language {#step-03.3}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3d9dfef45760f1ce2cfa78841f554e08f62d32f4) shows what the move changes.

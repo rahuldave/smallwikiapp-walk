@@ -12,6 +12,8 @@ Watch mode. [The same step in do mode](../do/step-08.4.qmd).
 just setup
 ```
 
+Each test says what it checks, and the docs check finds no gap.
+
 ## step-08.4 The tests documented {#step-08.4}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/12f8bd1e97e91900d04e9676ee1a6ddfedf78084) shows what the move changes.

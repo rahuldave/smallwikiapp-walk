@@ -8,6 +8,9 @@ Watch mode. [The same step in do mode](../do/step-00.qmd).
 
 [The code at step-00](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
+This stop is all of step-00. It shows what `uv init` made, and the command `wikiapp`. The justfile lists the
+tasks of the project.
+
 ```bash
 just setup
 ```

@@ -12,6 +12,8 @@ Do mode. [The same step in watch mode](../watch/step-08.5.qmd).
 just setup
 ```
 
+smalldocs builds a site, with a front page and a reference page for `console.py` and one for `wikipedia.py`.
+
 ## step-08.5 A site {#step-08.5}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b2c6edfda40338f49e0d625b4eec7137d19da3c4) shows what the move changes.

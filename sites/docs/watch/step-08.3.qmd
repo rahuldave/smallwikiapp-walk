@@ -12,6 +12,9 @@ Watch mode. [The same step in do mode](../do/step-08.3.qmd).
 just setup
 ```
 
+`src/wikiapp/__init__.py` and `console.py` get a docstring each. `main` gets a longer docstring and a docment,
+and the option `--language` a clearer help.
+
 ## step-08.3 The command documented {#step-08.3}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/cf9e19edc29a4a05bc48b956e79397eb19e2412e) shows what the move changes.

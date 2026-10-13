@@ -12,6 +12,13 @@ Do mode. [The same step in watch mode](../watch/step-07.2-to-step-07.3.qmd).
 just setup
 ```
 
+Since the last stop, the walk leaves out the move
+[step-07.1](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html#step-07.1). pydantic came in, and
+`wikipedia.py` got `Page`, a pydantic model with a title and an extract. This stop starts with that code.
+
+`random_page` returns a `Page`. One test changes. An answer that is not a page is a `WikipediaError` too, and a
+new test checks it.
+
 ## step-07.2 random_page returns a Page {#step-07.2}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/3b24928689614ab7cd0de47f722d95742cc7bb4a) shows what the move changes.

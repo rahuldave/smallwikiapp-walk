@@ -385,8 +385,8 @@ library to the settings.
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea) shows what the move changes.
 
 Now we make the docs check count the library, in `docs/_smalldocs.yml`.
-Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
-`docs/_smalldocs.yml` names only `wikiapp`. The line `packages:` in the section `api` now names both.
+The app uses the library `wikirandom`, in `packages/wikirandom`, but `docs/_smalldocs.yml` names only
+`wikiapp`. The line `packages:` in the section `api` now names both.
 
 Read the change of `docs/_smalldocs.yml`.
 

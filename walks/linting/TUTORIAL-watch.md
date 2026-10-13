@@ -14,29 +14,21 @@ in 2024 with pixi. Where the notes say "the original wikiapp", they mean that pr
 
 The walk has ten stops. Each stop takes a whole step, one move, or a few moves in a row:
 
-1. **The project** (step-00). What `uv init` made, and the command `wikiapp`. The justfile lists the tasks of the
-   project.
-2. **The command** (step-01). The command asks Wikipedia for a random page, and prints its title and summary. It
-   sends a User-Agent, and has an option `--version`.
-3. **A formatter** (step-04.1 to step-04.2). ruff comes in, and `just fmt` formats the code and the tests.
-4. **The linter's rules** (step-04.3). The rules of the linter go in `pyproject.toml`, and `just lint` finds five
-   problems.
-5. **The linter's problems, fixed** (step-04.4 to step-04.6). ruff fixes the order of the imports. A person fixes
-   the tests, and gives the request a timeout.
-6. **A check of the configuration** (step-04.7). `just lint-config` checks `pyproject.toml`, the lockfile and the
-   justfile.
-7. **`just check`, every check in one recipe** (step-04.9). The format, the linter, the tests and the
-   configuration, in order.
-8. **A git hook** (step-04.10). pre-commit runs three small checks of the files, then `just check`, before each
-   commit.
-9. **The linter asks for types** (step-05.3 to step-05.5). A rule asks for a type on every parameter and return.
-   The code and the tests get their types.
-10. **The library's pyproject.toml too** (step-10.3). Since step 09, the library has a `pyproject.toml` of its own,
-    and `just lint-config` checks it.
+1. **The project** (step-00)
+2. **The command** (step-01)
+3. **A formatter** (step-04.1 to step-04.2)
+4. **The linter's rules** (step-04.3)
+5. **The linter's problems, fixed** (step-04.4 to step-04.6)
+6. **A check of the configuration** (step-04.7)
+7. **`just check`, every check in one recipe** (step-04.9)
+8. **A git hook** (step-04.10)
+9. **The linter asks for types** (step-05.3 to step-05.5)
+10. **The library's pyproject.toml too** (step-10.3)
 
-Each stop starts with `just setup`. From the second stop on, it starts from the code before its first move.
+Where the whole tutorial makes moves that this walk leaves out, the next stop says what they did. The stop
+starts from their code.
 
-## Kinds of checks
+**Kinds of checks**
 
 The walk names each kind of check where it first comes in.
 
@@ -51,37 +43,12 @@ The walk names each kind of check where it first comes in.
 | A hook | Runs the gate by itself, before each commit | Stop 8 |
 | A linter's rule about types | Checks that each type is written. The type checker checks that it is right | Stop 9 |
 
-From the move [step-06.4](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html#step-06.4), GitHub runs `just check` too, on every push to main and
-every pull request.
-
-## What the walk leaves out
-
-Between its stops, the whole tutorial makes moves that this walk does not show:
-
-- **Before stop 3,** the steps [02](https://rahuldave.com/smallwikiapp-walk/watch/step-02.html) and [03](https://rahuldave.com/smallwikiapp-walk/watch/step-03.html). pytest
-  comes in, in a dependency group `test`, which the group `dev` includes. Tests come in, with a mock in place of
-  Wikipedia, and coverage on every run. The code splits into a library, `src/wikiapp/wikipedia.py`, and the
-  command. The library takes a language and raises its own error,
-  `WikipediaError`, and the command prints it as a message.
-- **Before stop 7,** the move [step-04.8](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html#step-04.8). The recipes refuse a lockfile that
-  is out of date.
-- **Before stop 9,** the first two moves of [step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html). ty, a type checker, comes in, and
-  `just types` runs it. The command reads its version by the name of its package.
-- **Before stop 10,** the last move of [step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html), the steps
-  [06](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html) to [09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html), and the first two moves of
-  [step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). `just check` runs the type checker too. The tests that ask the real
-  Wikipedia run only on request, and GitHub runs the tests and `just check`. `random_page` returns a pydantic
-  model, `Page`. smalldocs documents the code, and `just check` runs the check of the docs. The library becomes
-  a package of its own, `packages/wikirandom`, with its own `pyproject.toml`. `just build` builds both
-  packages, and the app asks for wikirandom 0.1.
-- **After stop 10,** the last two moves of [step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The library gets a licence, both
-  packages get a link to the repository, and the User-Agent says the installed version.
-
-The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.
-
 ## step-00 The project
 
 [The code at step-00](https://github.com/rahuldave/smallwikiapp/tree/step-00)
+
+This stop is all of step-00. It shows what `uv init` made, and the command `wikiapp`. The justfile lists the
+tasks of the project.
 
 ```bash
 just setup
@@ -127,6 +94,9 @@ just help setup
 ## step-01 The command
 
 [The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830), the commit before step-01.1. [The code at step-01](https://github.com/rahuldave/smallwikiapp/tree/step-01) is the code after its moves.
+
+This stop is all of step-01. The command asks Wikipedia for a random page, and prints its title and summary. It
+sends a User-Agent, and has an option `--version`.
 
 ```bash
 just setup
@@ -352,6 +322,16 @@ decorators and the docstring. So the docstring of `main` is also help text, for 
 ```bash
 just setup
 ```
+
+Since the last stop, the walk leaves out the steps [02](https://rahuldave.com/smallwikiapp-walk/watch/step-02.html)
+and [03](https://rahuldave.com/smallwikiapp-walk/watch/step-03.html). pytest came in, in a dependency group `test`,
+which the group `dev` includes. Tests came in, with a mock in place of Wikipedia, and coverage on every run.
+
+The code split into a library, `src/wikiapp/wikipedia.py`, and the command. The command got an option
+`--language`. The library takes a language and raises its own error, `WikipediaError`, and the command prints it
+as a message. This stop starts with that code.
+
+ruff comes in, and `just fmt` formats the code and the tests.
 
 ### step-04.1 ruff, and the recipe fmt
 
@@ -586,6 +566,8 @@ looks, and never what it does. One test asks the real Wikipedia, so the tests ne
 just setup
 ```
 
+The rules of the linter go in `pyproject.toml`, and `just lint` finds five problems.
+
 ### step-04.3 The linter's rules, and the recipe lint
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e) shows what the move changes.
@@ -675,6 +657,8 @@ The linter finds five problems, each with its code:
 ```bash
 just setup
 ```
+
+ruff fixes the order of the imports. A person fixes the tests, and gives the request a timeout.
 
 ### step-04.4 The linter sorts the imports
 
@@ -837,6 +821,8 @@ just lint
 
 `All checks passed!`
 
+The linter finds no problem now. Of its five problems, ruff fixed one, and a person fixed four.
+
 ## step-04.7 A check of the configuration
 
 [The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/80c33d4cfaf4b157cd44482712e520c77378cf9c), the commit before step-04.7.
@@ -844,6 +830,8 @@ just lint
 ```bash
 just setup
 ```
+
+`just lint-config` checks `pyproject.toml`, the lockfile and the justfile.
 
 ### step-04.7 The recipe lint-config
 
@@ -925,6 +913,12 @@ The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `
 just setup
 ```
 
+Since the last stop, the walk leaves out the move
+[step-04.8](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html#step-04.8). The recipes now refuse a
+lockfile that is out of date. This stop starts with that code.
+
+`just check` runs the format, the linter, the tests and the configuration, in order.
+
 ### step-04.9 The recipe check
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d) shows what the move changes.
@@ -970,6 +964,9 @@ just check
 
 `just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
 
+From the move [step-06.4](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html#step-06.4), which this walk
+leaves out, GitHub runs `just check` too, on every push to main and every pull request.
+
 ## step-04.10 A git hook
 
 [The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/06ea9e2af2238f070b1e33f16aeb70002e25e44d), the commit before step-04.10.
@@ -977,6 +974,8 @@ just check
 ```bash
 just setup
 ```
+
+pre-commit runs three small checks of the files, then `just check`, before each commit.
 
 ### step-04.10 A git hook
 
@@ -1072,6 +1071,12 @@ it.
 ```bash
 just setup
 ```
+
+Since the last stop, the walk leaves out the first two moves of
+[step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html). ty, a type checker, came in, and
+`just types` runs it. The command reads its version by the name of its package. This stop starts with that code.
+
+A rule asks for a type on every parameter and return. The code and the tests get their types.
 
 ### step-05.3 A type on every parameter and return
 
@@ -1328,12 +1333,25 @@ Both commands pass.
 just setup
 ```
 
+Since the last stop, the walk leaves out the last move of
+[step-05](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html), the steps
+[06](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html) to
+[09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html), and the first two moves of
+[step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). `just check` runs the type checker too.
+
+The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
+`random_page` returns a pydantic model, `Page`. smalldocs documents the code, and `just check` runs the check of
+the docs. The library became a package of its own, `packages/wikirandom`, with its own `pyproject.toml`.
+`just build` builds both packages, and the app asks for wikirandom 0.1. This stop starts with that code.
+
+`just lint-config` checks the library's `pyproject.toml` too.
+
 ### step-10.3 lint-config checks both pyproject.toml files
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/6bcee949820224c622cb47680d467acacef15ae9) shows what the move changes.
 
 Now we make `just lint-config` check the library's `pyproject.toml` too.
-Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
+The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
 recipe `lint-config` now gives validate-pyproject both files.
 
 Read the change of `justfile`.
@@ -1365,3 +1383,8 @@ just lint-config
 ```
 
 `just lint-config` prints `Valid file` twice, once for each file.
+
+The walk stops here. After it, the whole tutorial makes the last two moves of
+[step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The library gets a licence, both packages
+get a link to the repository, and the User-Agent says the installed version. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.

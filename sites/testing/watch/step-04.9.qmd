@@ -12,6 +12,15 @@ Watch mode. [The same step in do mode](../do/step-04.9.qmd).
 just setup
 ```
 
+Since the last stop, the walk leaves out the first eight moves of
+[step-04](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html). ruff formats the code and lints it, with
+`just fmt` and `just lint`, and `just lint-config` checks the configuration. ruff formats the tests too.
+
+In the tests, its linter finds an import below the code and unused variables, and a person fixes them. The request got
+a timeout of 10 seconds, and the recipes refuse a lockfile that is out of date. This stop starts with that code.
+
+A new recipe, `just check`, runs every check. One of them fails when the tests run less than 90% of the code.
+
 ## step-04.9 The recipe check {#step-04.9}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d) shows what the move changes.

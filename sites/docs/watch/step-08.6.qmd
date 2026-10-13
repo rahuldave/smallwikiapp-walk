@@ -12,6 +12,8 @@ Watch mode. [The same step in do mode](../do/step-08.6.qmd).
 just setup
 ```
 
+The README names the tests and the docs among the folders.
+
 ## step-08.6 The README names the tests and the docs {#step-08.6}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/200e1c28a172ef898f93486832a601a8eac48379) shows what the move changes.

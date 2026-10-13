@@ -12,6 +12,14 @@ Do mode. [The same step in watch mode](../watch/step-03.6.qmd).
 just setup
 ```
 
+Since the last stop, the walk leaves out the moves
+[step-03.4](https://rahuldave.com/smallwikiapp-walk/watch/step-03.html#step-03.4) and
+[step-03.5](https://rahuldave.com/smallwikiapp-walk/watch/step-03.html#step-03.5). The command got an option
+`--language`. When a request fails, `random_page` raises an error of its own, `WikipediaError`. This stop starts
+with that code.
+
+The command prints `WikipediaError` as a message, and a test checks that a failed request prints `Error`.
+
 ## step-03.6 The command prints the error {#step-03.6}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/b090ad74622ee6109dd72ae66feec36377eef7d7) shows what the move changes.

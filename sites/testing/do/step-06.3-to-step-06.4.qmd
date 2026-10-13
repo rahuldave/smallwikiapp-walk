@@ -12,6 +12,8 @@ Do mode. [The same step in watch mode](../watch/step-06.3-to-step-06.4.qmd).
 just setup
 ```
 
+The project accepts any Python from 3.11 on. GitHub runs the tests on three systems and four Pythons.
+
 ## step-06.3 Any Python from 3.11 on {#step-06.3}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/15ba9fa843e3f055dac9c8f1a844b7382858b761) shows what the move changes.

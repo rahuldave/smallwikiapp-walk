@@ -12,6 +12,8 @@ Do mode. [The same step in watch mode](../watch/step-04.3.qmd).
 just setup
 ```
 
+The rules of the linter go in `pyproject.toml`, and `just lint` finds five problems.
+
 ## step-04.3 The linter's rules, and the recipe lint {#step-04.3}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c97fdb1e8e820db24fac697b01283c581924537e) shows what the move changes.

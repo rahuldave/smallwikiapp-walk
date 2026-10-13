@@ -668,10 +668,9 @@ Now we share the mock with every test file. pytest reads `tests/conftest.py` bef
 can use a fixture in it. The tests of wikipedia.py, in the next move, need the mock too. So the fixture
 `mock_requests_get` moves from `tests/test_console.py` to a new file, `tests/conftest.py`.
 
-In step-03.1, the request moved from `main` into `random_page`, in wikipedia.py, and `main` now calls it. Only
-`requests.get` is a mock. So a test of the command that uses the mock runs two parts of the code together, the
-command and the library. A test of parts together is an integration test. Since step-03.1, the four tests of the
-command that use the mock are integration tests, and no longer unit tests.
+`main` calls `random_page`, and only `requests.get` is a mock. So a test of the command that uses the mock runs
+two parts of the code together, the command and the library. A test of parts together is an integration test.
+Since step-03.1, the four tests of the command that use the mock are integration tests, and no longer unit tests.
 
 ::: do
 Make `tests/conftest.py` with the mock in it.
@@ -3050,8 +3049,8 @@ library to the settings.
 ### step-09.4 The docs check counts the library
 
 Now we make the docs check count the library, in `docs/_smalldocs.yml`.
-Since step-09.3, the app uses the library `wikirandom`, a package of its own in `packages/wikirandom`. But
-`docs/_smalldocs.yml` names only `wikiapp`. The line `packages:` in the section `api` now names both.
+The app uses the library `wikirandom`, in `packages/wikirandom`, but `docs/_smalldocs.yml` names only
+`wikiapp`. The line `packages:` in the section `api` now names both.
 
 ::: do
 In `docs/_smalldocs.yml`, change the line `packages:` in the section `api`, so that it names both.
@@ -3170,7 +3169,7 @@ The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 ### step-10.3 lint-config checks both pyproject.toml files
 
 Now we make `just lint-config` check the library's `pyproject.toml` too.
-Since step 09, the repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
+The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
 recipe `lint-config` now gives validate-pyproject both files.
 
 ::: do

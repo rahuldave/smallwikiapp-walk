@@ -1,5 +1,5 @@
-# The walks of this class. Both are the same tutorial: the tagged steps of smallwikiapp, and the moves
-# between them. They differ only in the mode they start in; the Do/Watch switch changes it at any time.
+# The walks of this class. The walks show and do are the same tutorial: the tagged steps of smallwikiapp, and the
+# moves between them. They differ only in the mode they start in; the Do/Watch switch changes it at any time.
 # Every path is read from this folder.
 
 [[walk]]
@@ -22,8 +22,8 @@ folder = "walks/tutorial"
 intro = "walks/tutorial/intro.md"
 moves = "do"                      # the student makes each move from the notes, and presses Done
 
-# The small walks take parts of the same tutorial: the same notes, slides and commits. Each starts in watch mode.
-# select names whole steps, single moves, and ranges of moves inside one step, in the order of the history.
+# The small walks have notes of their own, walks/ID/notes.md. Their {{include}} lines take sections of
+# walks/tutorial/notes.md, with the same slides and commits. Each starts in watch mode.
 
 [[walk]]
 id = "testing"
@@ -31,25 +31,10 @@ title = "Testing smallwikiapp, one move at a time"
 description = "The project and its command, then the moves of smallwikiapp that add pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
-notes = "walks/tutorial/notes.md"
+notes = "walks/testing/notes.md"    # its own notes: an intro, and a ## stop for each place, with its includes
+shared = "walks/tutorial/notes.md"  # the notes that its {{include ...}} lines take move sections from
 slides = "walks/tutorial/slides/slides.toml"
-intro = "walks/testing/intro.md"  # what the copies say before the first step
 moves = "watch"
-select = [
-  { range = "step-00", title = "The project" },
-  { range = "step-01", title = "The command under test" },
-  { range = "step-02.1..step-02.2", title = "pytest and a first test" },
-  { range = "step-02.3..step-02.6", title = "Fixtures and mocks" },
-  { range = "step-02.7", title = "Coverage" },
-  { range = "step-03.2", title = "A shared mock in conftest.py" },
-  { range = "step-03.3", title = "A test of the language" },
-  { range = "step-03.6", title = "A test of an error message" },
-  { range = "step-04.9", title = "`just check`, with a coverage floor" },
-  { range = "step-06.1..step-06.2", title = "End-to-end tests, on request" },
-  { range = "step-06.3..step-06.4", title = "The tests on GitHub" },
-  { range = "step-07.2..step-07.3", title = "Tests of a model" },
-  { range = "step-07.4", title = "A drop in coverage" },
-]
 
 [[walk]]
 id = "linting"
@@ -57,22 +42,10 @@ title = "Linting smallwikiapp, one move at a time"
 description = "The project and its command, then the moves of smallwikiapp that add a formatter and a linter, fix what the linter finds, check the configuration, and run every check before a commit."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
-notes = "walks/tutorial/notes.md"
+notes = "walks/linting/notes.md"
+shared = "walks/tutorial/notes.md"
 slides = "walks/tutorial/slides/slides.toml"
-intro = "walks/linting/intro.md"
 moves = "watch"
-select = [
-  { range = "step-00", title = "The project" },
-  { range = "step-01", title = "The command" },
-  { range = "step-04.1..step-04.2", title = "A formatter" },
-  { range = "step-04.3", title = "The linter's rules" },
-  { range = "step-04.4..step-04.6", title = "The linter's problems, fixed" },
-  { range = "step-04.7", title = "A check of the configuration" },
-  { range = "step-04.9", title = "`just check`, every check in one recipe" },
-  { range = "step-04.10", title = "A git hook" },
-  { range = "step-05.3..step-05.5", title = "The linter asks for types" },
-  { range = "step-10.3", title = "The library's pyproject.toml too" },
-]
 
 [[walk]]
 id = "docs"
@@ -80,19 +53,7 @@ title = "Documenting smallwikiapp, one move at a time"
 description = "The project and its command, then the moves of smallwikiapp that document the code, check the documentation, and build a site with smalldocs."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
-notes = "walks/tutorial/notes.md"
+notes = "walks/docs/notes.md"
+shared = "walks/tutorial/notes.md"
 slides = "walks/tutorial/slides/slides.toml"
-intro = "walks/docs/intro.md"
 moves = "watch"
-select = [
-  { range = "step-00", title = "The project" },
-  { range = "step-01", title = "The command" },
-  { range = "step-08.1", title = "smalldocs, and what is not documented" },
-  { range = "step-08.2", title = "The library documented" },
-  { range = "step-08.3", title = "The command documented" },
-  { range = "step-08.4", title = "The tests documented" },
-  { range = "step-08.5", title = "A site" },
-  { range = "step-08.6", title = "The README's folders" },
-  { range = "step-08.7", title = "The docs check in `just check`" },
-  { range = "step-09.4", title = "The docs check counts the library" },
-]

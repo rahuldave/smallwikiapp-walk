@@ -1,9 +1,11 @@
 # smallwikiapp-walk
 
 This repository is a timewalk tutorial through the project smallwikiapp. `toc.toml` names five walks over the
-same notes. The walks `show` and `do` are the whole tutorial, and start in watch mode and in do mode. The small
-walks `testing`, `linting` and `docs` each take some steps and moves of the whole tutorial, with `select`. In do
-mode, the learner makes each move. In watch mode, timewalk checks out each move.
+same commits. The walks `show` and `do` are the whole tutorial, and start in watch mode and in do mode.
+
+The small walks `testing`, `linting` and `docs` each have notes of their own, in `walks/ID/notes.md`. Each `##`
+section there is a stop, and its `{{include ...}}` lines take steps and moves of the whole tutorial. In do mode,
+the learner makes each move. In watch mode, timewalk checks out each move.
 
 The notes are in `walks/tutorial/notes.md`, with a `## step-NN` section for each step and a `### step-NN.k`
 section for each move, in commit order. `walks/tutorial/TUTORIAL-watch.md` and `TUTORIAL-do.md`, `site/` and

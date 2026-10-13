@@ -12,6 +12,8 @@ Do mode. [The same step in watch mode](../watch/step-04.4-to-step-04.6.qmd).
 just setup
 ```
 
+ruff fixes the order of the imports. A person fixes the tests, and gives the request a timeout.
+
 ## step-04.4 The linter sorts the imports {#step-04.4}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/ad0f0c3c814865fe7e54f5aaff74d55a831b2daf) shows what the move changes.
@@ -183,3 +185,5 @@ just lint
 ```
 
 `All checks passed!`
+
+The linter finds no problem now. Of its five problems, ruff fixed one, and a person fixed four.

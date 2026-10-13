@@ -12,6 +12,9 @@ Watch mode. [The same step in do mode](../do/step-02.3-to-step-02.6.qmd).
 just setup
 ```
 
+A fixture gives each test a runner, and a mock takes the place of Wikipedia. Tests check the title that the
+command prints, and the request. A failed request ends the command with exit code 1.
+
 ## step-02.3 The runner as a fixture {#step-02.3}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/cd31b8a082b8c3ecf168413a21e06b9888480534) shows what the move changes.
@@ -220,3 +223,5 @@ just test
 ```
 
 The result is `5 passed`.
+
+The command now has four tests that use the mock, and one that asks the real Wikipedia.

@@ -12,6 +12,8 @@ Watch mode. [The same step in do mode](../do/step-08.2.qmd).
 just setup
 ```
 
+The library gets docstrings, and a docment beside each parameter and field.
+
 ## step-08.2 The library documented {#step-08.2}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/052409c665daee31e9a087510c5b04c7c2d7538f) shows what the move changes.

@@ -12,6 +12,8 @@ Watch mode. [The same step in do mode](../do/step-04.10.qmd).
 just setup
 ```
 
+pre-commit runs three small checks of the files, then `just check`, before each commit.
+
 ## step-04.10 A git hook {#step-04.10}
 
 [The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/4834655a3e50dcf56c557463c29bfce592d6d3db) shows what the move changes.
