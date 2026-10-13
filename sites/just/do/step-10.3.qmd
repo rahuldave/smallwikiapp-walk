@@ -1,0 +1,71 @@
+---
+title: "step-10.3: `just lint-config` checks the library too"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Do mode. [The same step in watch mode](../watch/step-10.3.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e), the commit before step-10.3.
+
+```bash
+just setup
+```
+
+Since the last stop, the walk leaves out the move
+[step-10.2](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html#step-10.2). The app asks for wikirandom
+0.1. This stop starts with that code.
+
+From step-09.1 to here, validate-pyproject, in `just lint-config`, read only the app's `pyproject.toml`. The hook
+and `just check` let every commit through with no check of the library's `pyproject.toml` against the standard.
+
+## step-10.3 lint-config checks both pyproject.toml files {#step-10.3}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/6bcee949820224c622cb47680d467acacef15ae9) shows what the move changes.
+
+Now we make `just lint-config` check the library's `pyproject.toml` too.
+The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
+recipe `lint-config` now gives validate-pyproject both files.
+
+In the `justfile`, in `lint-config`, replace the line `uv run validate-pyproject pyproject.toml` with the line
+below.
+
+```just
+    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
+```
+
+The move changes one file:
+
+- `justfile`: 1 line added, 1 removed; `lint-config` checks both files.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/6bcee949820224c622cb47680d467acacef15ae9/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e...6bcee949820224c622cb47680d467acacef15ae9#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
+  - look at: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+The change of `justfile`:
+
+```diff
+@@ -58,7 +58,7 @@ lint-config *args:
+     #!/usr/bin/env sh
+     set -e
+     if [ "$*" = help ]; then just help lint-config; exit 0; fi
+-    uv run validate-pyproject pyproject.toml
++    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
+     uv lock --check
+     just --fmt --check --unstable
+ 
+```
+
+```bash
+just lint-config
+```
+
+`just lint-config` prints `Valid file` twice, once for each file.
+
+The verb has the same name, and its callers did not change. A file that a recipe leaves out is a file that no
+caller checks. The fix goes in one place, the recipe, and all three callers have it.
+
+The walk stops here. After it, the whole tutorial makes the last two moves of
+[step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The library gets a licence and an author, both packages
+get a link to the repository, and the User-Agent says the installed version. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.

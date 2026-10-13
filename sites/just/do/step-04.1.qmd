@@ -1,0 +1,144 @@
+---
+title: "step-04.1: `just fmt`"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Do mode. [The same step in watch mode](../watch/step-04.1.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/b090ad74622ee6109dd72ae66feec36377eef7d7), the commit before step-04.1.
+
+```bash
+just setup
+```
+
+Since the last stop, the walk leaves out the rest of
+[step-02](https://rahuldave.com/smallwikiapp-walk/watch/step-02.html) and all of
+[step-03](https://rahuldave.com/smallwikiapp-walk/watch/step-03.html). The tests got a mock in place of
+Wikipedia, and every run measures the coverage. The code split into a library, `src/wikiapp/wikipedia.py`, and
+the command. The command got an option `--language`. The library raises its own error, `WikipediaError`, and
+the command turns it into a message. This stop starts with that code.
+
+ruff comes in, and `just fmt` formats the code and the tests.
+
+## step-04.1 ruff, and the recipe fmt {#step-04.1}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/693240e344546dda08ad8fee3951675a0302dbc9) shows what the move changes.
+
+Now we add ruff, a formatter and a linter in one program, to a third dependency group, `lint`, which `dev`
+includes.
+
+A formatter changes how the code looks, and never what it does. A linter finds problems in the code, such as a
+variable that is never used. It changes nothing unless it is asked to.
+
+In `pyproject.toml`, change the line `dev = ...`, and add the group.
+
+```toml
+dev = [{ include-group = "test" }, { include-group = "lint" }]
+lint = []
+```
+
+```bash
+uv add --group lint ruff
+```
+
+Next we give ruff its settings, at the end of `pyproject.toml`. They set lines of up to 100 characters, and
+write out the defaults of the formatter.
+
+Add the settings at the end of `pyproject.toml`.
+
+```toml
+
+[tool.ruff]
+# The one setting the formatter and the linter share. Ruff's own default is 88; this project reads
+# better at 100.
+line-length = 100
+
+[tool.ruff.format]
+# The formatter has no style to argue about. These are ruff's defaults, written out so they are visible.
+quote-style = "double"            # "text", not 'text'
+indent-style = "space"            # four spaces, never tabs
+skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
+```
+
+Then we add a recipe `fmt`, which runs the formatter. The words after `just fmt` go to `ruff format`.
+
+Add a recipe at the end of the `justfile`.
+
+```just
+
+# Format the code, one way. Extra arguments go to ruff: just fmt --check, just fmt --diff
+[group('quality')]
+[no-exit-message]
+fmt *args:
+    {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
+```
+
+The move changes these files:
+
+- `pyproject.toml`: 15 lines added, 1 removed; the group `lint`, and ruff's settings.
+- `justfile`: 6 lines added; the recipe `fmt`.
+- `uv.lock`: 31 lines added; ruff.
+
+Files to read:
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/693240e344546dda08ad8fee3951675a0302dbc9/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/b090ad74622ee6109dd72ae66feec36377eef7d7...693240e344546dda08ad8fee3951675a0302dbc9#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the group and the settings.
+  - look at: `line-length = 100`
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/693240e344546dda08ad8fee3951675a0302dbc9/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/b090ad74622ee6109dd72ae66feec36377eef7d7...693240e344546dda08ad8fee3951675a0302dbc9#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+  - look at: `fmt *args:`
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -21,7 +21,10 @@ test = [
+     "pytest-cov>=7.1.0",
+     "pytest-mock>=3.16.0",
+ ]
+-dev = [{ include-group = "test" }]
++dev = [{ include-group = "test" }, { include-group = "lint" }]
++lint = [
++    "ruff>=0.17.0",
++]
+ 
+ [build-system]
+ requires = ["uv_build>=0.12.13,<0.13.0"]
+@@ -31,3 +34,14 @@ build-backend = "uv_build"
+ testpaths = ["tests"]
+ # Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
+ addopts = "--cov=wikiapp --cov-report=term-missing"
++
++[tool.ruff]
++# The one setting the formatter and the linter share. Ruff's own default is 88; this project reads
++# better at 100.
++line-length = 100
++
++[tool.ruff.format]
++# The formatter has no style to argue about. These are ruff's defaults, written out so they are visible.
++quote-style = "double"            # "text", not 'text'
++indent-style = "space"            # four spaces, never tabs
++skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
+```
+
+The change of `justfile`:
+
+```diff
+@@ -25,3 +25,9 @@ setup *args:
+ [no-exit-message]
+ test *args:
+     {{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}
++
++# Format the code, one way. Extra arguments go to ruff: just fmt --check, just fmt --diff
++[group('quality')]
++[no-exit-message]
++fmt *args:
++    {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
+```
+
+```bash
+uv run ruff format --check
+just --show fmt
+just fmt --check
+```
+
+`--check` changes nothing. It lists the files that it would change, and fails. It prints `6 files would be
+reformatted, 1 file already formatted`. The seventh file is the README. The recipe runs the same command, and
+passes on the words after `just fmt`.

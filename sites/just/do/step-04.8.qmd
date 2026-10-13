@@ -1,0 +1,58 @@
+---
+title: "step-04.8: A variable for every recipe"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Do mode. [The same step in watch mode](../watch/step-04.8.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a), the commit before step-04.8.
+
+```bash
+just setup
+```
+
+This move changes no recipe. It changes how each recipe that runs `uv` runs it.
+
+## step-04.8 A locked lockfile {#step-04.8}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a45828b7972f3de77bd6a8d7a00a6b55833832cb) shows what the move changes.
+
+Now we export the variable `UV_LOCKED` from the `justfile`, under `set positional-arguments`. With it, every `uv
+run` of a recipe refuses a lockfile that is out of date. Without it, `uv run` quietly updates the lockfile.
+
+In the `justfile`, under `set positional-arguments`, add the line below.
+
+```just
+
+export UV_LOCKED := "1"
+```
+
+The move changes one file:
+
+- `justfile`: 2 lines added; the variable `UV_LOCKED`, exported to every recipe.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/a45828b7972f3de77bd6a8d7a00a6b55833832cb/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/4d3556f88a6f2241bd4b64b2e6e613d3d4d2534a...a45828b7972f3de77bd6a8d7a00a6b55833832cb#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): one line.
+  - look at: `export UV_LOCKED := "1"`
+
+The change of `justfile`:
+
+```diff
+@@ -3,6 +3,8 @@
+ # Each word after a recipe's name reaches its commands whole, as "$1", "$2" and so on; "$@" is all of them
+ set positional-arguments
+ 
++export UV_LOCKED := "1"
++
+ [private]
+ default:
+     @just --list --unsorted
+```
+
+```bash
+just --evaluate UV_LOCKED
+```
+
+It prints `1`. `just` puts the variable in the environment of every command of every recipe, so each `uv run`
+sees it.

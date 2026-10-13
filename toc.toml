@@ -57,3 +57,14 @@ notes = "walks/docs/notes.md"
 shared = "walks/tutorial/notes.md"
 slides = "walks/tutorial/slides/slides.toml"
 moves = "watch"
+
+[[walk]]
+id = "just"
+title = "just, the interface of smallwikiapp, one move at a time"
+description = "The project and its first justfile, then each verb as it comes in, and just check, which a person and a git hook run before a commit, and GitHub after a push."
+kind = "tutorial"
+loose = ["pyproject.toml", "uv.lock"]
+notes = "walks/just/notes.md"
+shared = "walks/tutorial/notes.md"
+slides = "walks/tutorial/slides/slides.toml"
+moves = "watch"

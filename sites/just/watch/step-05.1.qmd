@@ -1,0 +1,82 @@
+---
+title: "step-05.1: `just types`"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Watch mode. [The same step in do mode](../do/step-05.1.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/4834655a3e50dcf56c557463c29bfce592d6d3db), the commit before step-05.1.
+
+```bash
+just setup
+```
+
+The next verb runs a new tool, and `check` does not run it yet.
+
+## step-05.1 ty, and the recipe types {#step-05.1}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/68033d47be7dc34e8355c6812eede65f0eedcc7e) shows what the move changes.
+
+Now we add ty, a type checker, to the group `lint`. ty reads the code without running it. It finds code whose
+types cannot fit, for example a call whose arguments cannot have the types that the function asks for.
+
+The move ran: `uv add --group lint ty`
+
+Find `"ty>=0.0.86",` in the change of `pyproject.toml`.
+
+Next we add a recipe `types`, which runs ty, after the recipe `lint` in the `justfile`.
+
+Find `types *args:` in the change of `justfile`.
+
+The move changes these files:
+
+- `justfile`: 6 lines added; the recipe `types`.
+- `pyproject.toml`: 1 line added; ty in the group `lint`.
+- `uv.lock`: 29 lines added; the exact version of ty.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/68033d47be7dc34e8355c6812eede65f0eedcc7e/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/4834655a3e50dcf56c557463c29bfce592d6d3db...68033d47be7dc34e8355c6812eede65f0eedcc7e#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+  - look at: `types *args:`
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/68033d47be7dc34e8355c6812eede65f0eedcc7e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/4834655a3e50dcf56c557463c29bfce592d6d3db...68033d47be7dc34e8355c6812eede65f0eedcc7e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): ty in the group `lint`.
+  - look at: `"ty>=0.0.86",`
+
+The change of `justfile`:
+
+```diff
+@@ -45,6 +45,12 @@ fmt *args:
+ lint *args:
+     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
+ 
++# Check the types of every function call, with ty. Extra arguments go to ty: just types --help
++[group('quality')]
++[no-exit-message]
++types *args:
++    {{ if args == "help" { "just help types" } else { 'uv run ty check "$@"' } }}
++
+ # Check the configuration: pyproject.toml, the lockfile, and this justfile
+ [group('quality')]
+ [no-exit-message]
+```
+
+The change of `pyproject.toml`:
+
+```diff
+@@ -25,6 +25,7 @@ dev = [{ include-group = "test" }, { include-group = "lint" }]
+ lint = [
+     "pre-commit>=4.6.2",
+     "ruff>=0.17.0",
++    "ty>=0.0.86",
+     "validate-pyproject>=0.26",
+ ]
+ 
+```
+
+```bash
+uv run ty check
+just --show types
+just types
+```
+
+ty finds one problem, in `src/wikiapp/__init__.py`. The message is `Expected str, found str | None`. As far as
+ty can tell, `__name__ or __package__` could be None. But `importlib.metadata.version` needs a string.

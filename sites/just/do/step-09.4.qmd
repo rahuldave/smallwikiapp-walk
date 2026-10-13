@@ -1,0 +1,71 @@
+---
+title: "step-09.4: The library, behind the same verbs"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Do mode. [The same step in watch mode](../watch/step-09.4.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/024ec7d71c51f7d8d6ef351641f301df94ada4be), the commit before step-09.4.
+
+```bash
+just setup
+```
+
+Since the last stop, the walk leaves out the first three moves of
+[step-09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html). The library became a package of its own,
+`wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses it, and `src/wikiapp/wikipedia.py` is gone.
+This stop starts with that code.
+
+Those moves did not change the justfile. One justfile, one `.pre-commit-config.yaml` and one hook serve both
+packages. `just fmt`, `just lint` and `just types` read every Python file of the repository, so they checked the
+library's code from the first move. `just test` measures the coverage of both packages, since the move step-09.3
+added `--cov=wikirandom` to `pyproject.toml`. At the start of this stop, `just docs check` still counts only the
+app and the tests, 12 of 12. This stop changes `docs/_smalldocs.yml`, behind the verb.
+
+## step-09.4 The docs check counts the library {#step-09.4}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea) shows what the move changes.
+
+Now we make the docs check count the library, in `docs/_smalldocs.yml`.
+The app uses the library `wikirandom`, in `packages/wikirandom`, but `docs/_smalldocs.yml` names only
+`wikiapp`. The line `packages:` in the section `api` now names both.
+
+In `docs/_smalldocs.yml`, change the line `packages:` in the section `api`, so that it names both.
+
+```yaml
+  packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
+```
+
+The move changes one file:
+
+- `docs/_smalldocs.yml`: 1 line added, 1 removed; two packages.
+
+Files to read:
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/024ec7d71c51f7d8d6ef351641f301df94ada4be...51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+  - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+The change of `docs/_smalldocs.yml`:
+
+```diff
+@@ -16,6 +16,6 @@ toc: true
+ 
+ # `api` is the reference, made from the code of the packages. A name in backticks links to its entry
+ api:
+-  packages: [wikiapp]
++  packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
+   source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+   check: ["tests/**/*.py"]  # the tests are held to the same rule as the package
+```
+
+```bash
+just docs check
+just docs
+just check
+```
+
+The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
+pages, and on the front page, `random_page` is now a link to its entry. `just check` passes.
+
+The justfile did not change, and `just docs check` checks more. The hook and GitHub's job `check` run the new
+docs check without a change.

@@ -15,7 +15,8 @@ so do not edit it by hand.
 - **A command to run** is in a grey block marked `bash`, and the text under it says what the command prints.
 - **Under "Files to read"**, each file links to the file as the move leaves it, and to its change in the commit.
 
-Three small walks take parts of this tutorial. Each has its own site, for
+Four small walks take parts of this tutorial. Each has its own site, for
 [testing](https://rahuldave.com/smallwikiapp-walk/testing/),
-[linting](https://rahuldave.com/smallwikiapp-walk/linting/) and
-[docs](https://rahuldave.com/smallwikiapp-walk/docs/).
+[linting](https://rahuldave.com/smallwikiapp-walk/linting/),
+[docs](https://rahuldave.com/smallwikiapp-walk/docs/) and
+[just](https://rahuldave.com/smallwikiapp-walk/just/).

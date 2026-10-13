@@ -1,0 +1,78 @@
+---
+title: "step-04.9: `just check`, everything a commit must pass"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Do mode. [The same step in watch mode](../watch/step-04.9.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a45828b7972f3de77bd6a8d7a00a6b55833832cb), the commit before step-04.9.
+
+```bash
+just setup
+```
+
+`just check` runs four of the other verbs, one after the other. It names no tool of its own.
+
+## step-04.9 The recipe check {#step-04.9}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/06ea9e2af2238f070b1e33f16aeb70002e25e44d) shows what the move changes.
+
+Now we add a recipe `check`, which runs every check in order. It stops at the first check that fails. The order is
+the format, the linter, the tests with a floor on the coverage, and the configuration.
+
+Add a recipe at the end of the `justfile`.
+
+```just
+
+# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
+[group('quality')]
+[no-exit-message]
+check *args:
+    #!/usr/bin/env sh
+    set -e
+    if [ "$*" = help ]; then just help check; exit 0; fi
+    just fmt --check
+    just lint
+    just test -q --cov-fail-under=90
+    just lint-config
+```
+
+The move changes one file:
+
+- `justfile`: 12 lines added; the recipe `check`.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/06ea9e2af2238f070b1e33f16aeb70002e25e44d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/a45828b7972f3de77bd6a8d7a00a6b55833832cb...06ea9e2af2238f070b1e33f16aeb70002e25e44d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe, with its four checks.
+  - look at: `just test -q --cov-fail-under=90`
+
+The change of `justfile`:
+
+```diff
+@@ -50,3 +50,15 @@ lint-config *args:
+     uv run validate-pyproject pyproject.toml
+     uv lock --check
+     just --fmt --check --unstable
++
++# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
++[group('quality')]
++[no-exit-message]
++check *args:
++    #!/usr/bin/env sh
++    set -e
++    if [ "$*" = help ]; then just help check; exit 0; fi
++    just fmt --check
++    just lint
++    just test -q --cov-fail-under=90
++    just lint-config
+```
+
+```bash
+just --show check
+just check
+```
+
+`just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
+
+From this stop on, "a commit must pass `just check`" is the rule of the project. The next stop and stop 11 add
+two callers, which run it with no one typing it. Each later check joins `check`, so each caller runs it too.

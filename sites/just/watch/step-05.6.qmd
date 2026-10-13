@@ -1,0 +1,69 @@
+---
+title: "step-05.6: The types join `just check`"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Watch mode. [The same step in do mode](../do/step-05.6.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/8f6e8938925501f9c1bc198818fbd8fab7b647ff), the commit before step-05.6.
+
+```bash
+just setup
+```
+
+Since the last stop, the walk leaves out the moves
+[step-05.2](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html#step-05.2) to
+[step-05.5](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html#step-05.5). `__init__.py` now asks for the
+version of `"wikiapp"` by name, which fixes the one problem that ty found. A family of rules, `ANN`, asks for a type
+on every parameter and return. The code and the tests got their types. This stop starts with
+that code.
+
+One line in `check` runs the type checker.
+
+## step-05.6 The recipe check runs the type checker {#step-05.6}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/41990df7638f0964c66bf4e4433ffc4f5b6a026d) shows what the move changes.
+
+Now we put the type checker in the recipe `check` of the `justfile`, after `just lint`. The comment of `check`
+names the types too.
+
+Find `just types` in the change of `justfile`, and the comment of `check` above it.
+
+The move changes one file:
+
+- `justfile`: 2 lines added, 1 removed; `check` runs the type checker.
+
+Files to read:
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/41990df7638f0964c66bf4e4433ffc4f5b6a026d/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/8f6e8938925501f9c1bc198818fbd8fab7b647ff...41990df7638f0964c66bf4e4433ffc4f5b6a026d#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the comment, and one line in check.
+  - look at: `just types`
+
+The change of `justfile`:
+
+```diff
+@@ -62,7 +62,7 @@ lint-config *args:
+     uv lock --check
+     just --fmt --check --unstable
+ 
+-# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
++# Everything a commit must pass: format, lint, types, the tests over the coverage floor, the configuration
+ [group('quality')]
+ [no-exit-message]
+ check *args:
+@@ -71,5 +71,6 @@ check *args:
+     if [ "$*" = help ]; then just help check; exit 0; fi
+     just fmt --check
+     just lint
++    just types
+     just test -q --cov-fail-under=90
+     just lint-config
+```
+
+```bash
+just check
+```
+
+Every check passes, the type check among them. The coverage is 96.88%.
+
+`.pre-commit-config.yaml` still says `entry: just check`, and the hook now
+checks the types too.

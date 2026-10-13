@@ -22,7 +22,7 @@ tutorial has three forms, with the same text:
 
 The slides are in [walks/tutorial/slides/](walks/tutorial/slides/).
 
-## Three small walks
+## Four small walks
 
 Each small walk has notes of its own, in `walks/ID/notes.md`. Each of its stops takes some steps or moves of the
 whole tutorial, with their notes and their commits. A stop starts from the code before its first move, and
@@ -33,6 +33,7 @@ starts with `just setup`. Where the walk leaves out moves, the next stop says wh
 | `testing` | the project and its command, then pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub: 13 stops with titles, from step-00 to the move 07.4 | [testing](https://rahuldave.com/smallwikiapp-walk/testing/) | [watch](walks/testing/TUTORIAL-watch.md), [do](walks/testing/TUTORIAL-do.md) |
 | `linting` | the project and its command, then a formatter, a linter and its fixes, the check of the configuration, the gate and the hook, and the types the linter asks for: 10 stops with titles, from step-00 to the move 10.3 | [linting](https://rahuldave.com/smallwikiapp-walk/linting/) | [watch](walks/linting/TUTORIAL-watch.md), [do](walks/linting/TUTORIAL-do.md) |
 | `docs` | the project and its command, then smalldocs, docstrings and docments, a site, the README, and the check of the docs: 10 stops with titles, from step-00 to the move 09.4 | [docs](https://rahuldave.com/smallwikiapp-walk/docs/) | [watch](walks/docs/TUTORIAL-watch.md), [do](walks/docs/TUTORIAL-do.md) |
+| `just` | the project and its first justfile, then each verb as it comes in, and `just check`, which a person, the git hook and GitHub run: 17 stops with titles, from step-00 to the move 10.3 | [just](https://rahuldave.com/smallwikiapp-walk/just/) | [watch](walks/just/TUTORIAL-watch.md), [do](walks/just/TUTORIAL-do.md) |
 
 `just present testing` opens a small walk in timewalk.
 
@@ -166,7 +167,7 @@ smallwikiapp-walk/
 ├── walks/tutorial/notes.md     the notes of every step and move, for timewalk
 ├── walks/tutorial/TUTORIAL-*.md  the tutorial to read on GitHub, in watch mode and in do mode
 ├── walks/tutorial/slides/      the slides, and slides.toml, which step shows which
-├── walks/testing/              a small walk's own notes, and its TUTORIAL-*.md; linting and docs too
+├── walks/testing/              a small walk's own notes, and its TUTORIAL-*.md; linting, docs and just too
 ├── site/                       the website, made from notes.md; GitHub publishes it on every push
 ├── sites/                      the website of each small walk, published under the website's address
 ├── justfile                    present, setup, check, pdf, site
