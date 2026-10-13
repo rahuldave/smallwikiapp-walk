@@ -6,7 +6,7 @@ title: "step-10.1: `just build`"
 
 Do mode. [The same step in watch mode](../watch/step-10.1.qmd).
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea), the commit before step-10.1.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/fdf7e7cab23c0193412082cacf528109aa7473de), the commit before step-10.1.
 
 ```bash
 just setup
@@ -16,7 +16,7 @@ The last verb is about the packages, not about checks, so `check` does not run i
 
 ## step-10.1 The recipe `build` {#step-10.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fc6091aa4bb985af8c55e5ed8f55a8df94078587) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c5da27f890a12638d6c1f3d9e541140c8a431508) shows what the move changes.
 
 Now we add a recipe, `build`, at the end of the `justfile`, that builds both packages. It runs
 `uv build --all-packages`, which builds every package of the workspace into `dist/`. `.gitignore` lists `dist/`.
@@ -37,7 +37,7 @@ The move changes one file:
 - `justfile`: 6 lines added; the recipe `build`.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/fc6091aa4bb985af8c55e5ed8f55a8df94078587/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea...fc6091aa4bb985af8c55e5ed8f55a8df94078587#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c5da27f890a12638d6c1f3d9e541140c8a431508/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/fdf7e7cab23c0193412082cacf528109aa7473de...c5da27f890a12638d6c1f3d9e541140c8a431508#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `build *args:`
 
 The change of `justfile`:

@@ -28,7 +28,7 @@ moves = "do"                      # the student makes each move from the notes, 
 [[walk]]
 id = "testing"
 title = "Testing smallwikiapp, one move at a time"
-description = "The project and its command, then the moves of smallwikiapp that add pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub."
+description = "The project and its command, then the moves of smallwikiapp that add pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub, with their own group."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
 notes = "walks/testing/notes.md"    # its own notes: an intro, and a ## stop for each place, with its includes
@@ -50,7 +50,7 @@ moves = "watch"
 [[walk]]
 id = "docs"
 title = "Documenting smallwikiapp, one move at a time"
-description = "The project and its command, then the moves of smallwikiapp that document the code, check the documentation, and build a site with smalldocs."
+description = "The project and its command, then the moves of smallwikiapp that document the code, check the documentation, build a site with smalldocs, and publish it on GitHub Pages."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
 notes = "walks/docs/notes.md"
@@ -72,7 +72,7 @@ moves = "watch"
 [[walk]]
 id = "uv"
 title = "uv in smallwikiapp, one move at a time"
-description = "The project and its .venv, then the lockfile, dependency groups, when uv syncs, Python versions, environments, a workspace of two packages, and a build."
+description = "The project and its .venv, then the lockfile, dependency groups, when uv syncs, Python versions, environments, a group for each job on GitHub, a workspace of two packages, and a build."
 kind = "tutorial"
 loose = ["pyproject.toml", "packages/wikirandom/pyproject.toml", "uv.lock"]
 notes = "walks/uv/notes.md"

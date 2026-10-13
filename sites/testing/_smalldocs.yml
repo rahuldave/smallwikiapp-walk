@@ -96,6 +96,11 @@ website:
             contents:
               - text: "step-07.4 Only a language code goes into the address"
                 href: watch/step-07.4.qmd#step-07.4
+          - section: "step-08b.1: The tests with their group alone"
+            href: watch/step-08b.1.qmd
+            contents:
+              - text: "step-08b.1 The tests install the group test alone"
+                href: watch/step-08b.1.qmd#step-08b.1
       - section: "Do"
         contents:
           - text: "step-00: The project"
@@ -180,6 +185,11 @@ website:
             contents:
               - text: "step-07.4 Only a language code goes into the address"
                 href: do/step-07.4.qmd#step-07.4
+          - section: "step-08b.1: The tests with their group alone"
+            href: do/step-08b.1.qmd
+            contents:
+              - text: "step-08b.1 The tests install the group test alone"
+                href: do/step-08b.1.qmd#step-08b.1
 
 theme: cosmo
 css: styles.css

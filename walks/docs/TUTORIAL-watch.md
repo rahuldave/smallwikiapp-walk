@@ -12,7 +12,7 @@ the code has tests, lint and types.
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
 
-The walk has ten stops. Each stop takes a whole step or one move:
+The walk has eleven stops. Each stop takes a whole step or one move:
 
 1. **The project** (step-00)
 2. **The command** (step-01)
@@ -23,7 +23,8 @@ The walk has ten stops. Each stop takes a whole step or one move:
 7. **A site** (step-08.5)
 8. **The README's folders** (step-08.6)
 9. **The docs check in `just check`** (step-08.7)
-10. **The docs check counts the library** (step-09.4)
+10. **The docs on GitHub Pages** (step-08b.2)
+11. **The docs check counts the library** (step-09.4)
 
 Where the whole tutorial makes moves that this walk leaves out, the next stop says what they did. The stop
 starts from their code.
@@ -36,12 +37,13 @@ The table gives each kind of documentation, and the stops where it appears.
 |---|---|---|
 | README | A reader on GitHub. What the project is, and where each part is | Stops 1 and 8 |
 | Help text | A person who runs the command. click writes it from the docstring and the options | Stops 2 and 5 |
-| Reference | A person who calls the code. smalldocs makes it from the code | Stops 3, 7 and 10 |
+| Reference | A person who calls the code. smalldocs makes it from the code | Stops 3, 7 and 11 |
 | Docstring | What a module, a class or a function does | Stops 1 to 6 |
 | Docment | What each parameter, field and return is | Stops 3 to 6 |
 | Tests as documentation | What the code must do, in a docstring above the asserts | Stop 6 |
 | A written page | What the project does, on the front page of the site | Stop 7 |
-| Docs check | Counts what is documented, and names each gap. From stop 9, a commit must pass it | Stops 3, 9 and 10 |
+| A published site | The site, on GitHub Pages, built again on every push to main | Stop 10 |
+| Docs check | Counts what is documented, and names each gap. From stop 9, a commit must pass it | Stops 3, 9 and 11 |
 
 ## step-00 The project
 
@@ -1022,9 +1024,59 @@ The docs check prints `15 of 15`. Now the git hook refuses a commit that leaves 
 field without documentation. GitHub's job `check`, at lines 30 to 37 of `.github/workflows/test.yaml`, runs
 `just check`, so it runs the docs check too.
 
+## step-08b.2 The docs on GitHub Pages
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/18638c55e6724bdf8d84750f03a2edc7579f28d3), the commit before step-08b.2.
+
+```bash
+just setup
+```
+
+Since the last stop, the walk leaves out the move
+[step-08b.1](https://rahuldave.com/smallwikiapp-walk/watch/step-08b.html#step-08b.1), in which GitHub's tests
+install the group `test` alone. This stop starts with that code.
+
+The site that `just docs` builds on one machine goes on the web, and GitHub builds it again after each push.
+
+### step-08b.2 A workflow that publishes the docs
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a9e3b523b68b8ab5b9794562651ef38b2bcf62da) shows what the move changes.
+
+Now we add a second workflow, `.github/workflows/docs.yaml`, which builds the docs site on every push to main.
+GitHub Pages then publishes the site, at https://rahuldave.com/smallwikiapp/ for this repository.
+
+The workflow has two jobs. The job `build`, from line 20, installs the package and the group `docs`, and runs
+`smalldocs render docs`, the command behind `just docs`. It does not run `just docs`. The recipe, at line 85 of the
+`justfile`, runs `uv run` with no option, which installs the group `dev`. The job then gives the folder `docs/_site`
+to Pages. The job `deploy`, from line 31, publishes it.
+
+Lines 10 to 13, under `permissions`, let the workflow publish to Pages. Lines 15 to 17, under `concurrency`, stop
+an older publish when a newer push starts one. Pages publishes the site only if the repository's Pages source is
+**GitHub Actions**. For smallwikiapp it is.
+
+Open `.github/workflows/docs.yaml`. Find
+`- run: uv run --locked --no-default-groups --group docs smalldocs render docs` in it.
+
+The move changes one file:
+
+- `.github/workflows/docs.yaml`: 39 lines added; a new file, with the jobs `build` and `deploy`.
+
+Files to read:
+- [`.github/workflows/docs.yaml`](https://github.com/rahuldave/smallwikiapp/blob/a9e3b523b68b8ab5b9794562651ef38b2bcf62da/.github/workflows/docs.yaml): the site, built with the group `docs` alone, then published.
+  - look at: `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
+
+```bash
+uv run pre-commit run check-yaml --files .github/workflows/docs.yaml
+uv run --isolated --locked --no-default-groups --group docs smalldocs render docs
+```
+
+The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
+prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`. After a push to main, the **Actions** tab shows
+the workflow `Docs`, and the site is at https://rahuldave.com/smallwikiapp/.
+
 ## step-09.4 The docs check counts the library
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/024ec7d71c51f7d8d6ef351641f301df94ada4be), the commit before step-09.4.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/9277e2440db83837ca7136fb012788e0e1788604), the commit before step-09.4.
 
 ```bash
 just setup
@@ -1043,7 +1095,7 @@ The check counts the library, now a package of its own.
 
 ### step-09.4 The docs check counts the library
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fdf7e7cab23c0193412082cacf528109aa7473de) shows what the move changes.
 
 Now we make the docs check count the library, in `docs/_smalldocs.yml`.
 The app uses the library `wikirandom`, in `packages/wikirandom`, but `docs/_smalldocs.yml` names only
@@ -1056,7 +1108,7 @@ The move changes one file:
 - `docs/_smalldocs.yml`: 1 line added, 1 removed; two packages.
 
 Files to read:
-- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/024ec7d71c51f7d8d6ef351641f301df94ada4be...51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/fdf7e7cab23c0193412082cacf528109aa7473de/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/9277e2440db83837ca7136fb012788e0e1788604...fdf7e7cab23c0193412082cacf528109aa7473de#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
   - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
 
 The change of `docs/_smalldocs.yml`:

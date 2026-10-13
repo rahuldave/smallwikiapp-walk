@@ -1,0 +1,55 @@
+---
+title: "step-08b.2: The docs on GitHub Pages"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Watch mode. [The same step in do mode](../do/step-08b.2.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/18638c55e6724bdf8d84750f03a2edc7579f28d3), the commit before step-08b.2.
+
+```bash
+just setup
+```
+
+Since the last stop, the walk leaves out the move
+[step-08b.1](https://rahuldave.com/smallwikiapp-walk/watch/step-08b.html#step-08b.1), in which GitHub's tests
+install the group `test` alone. This stop starts with that code.
+
+The site that `just docs` builds on one machine goes on the web, and GitHub builds it again after each push.
+
+## step-08b.2 A workflow that publishes the docs {#step-08b.2}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a9e3b523b68b8ab5b9794562651ef38b2bcf62da) shows what the move changes.
+
+Now we add a second workflow, `.github/workflows/docs.yaml`, which builds the docs site on every push to main.
+GitHub Pages then publishes the site, at https://rahuldave.com/smallwikiapp/ for this repository.
+
+The workflow has two jobs. The job `build`, from line 20, installs the package and the group `docs`, and runs
+`smalldocs render docs`, the command behind `just docs`. It does not run `just docs`. The recipe, at line 85 of the
+`justfile`, runs `uv run` with no option, which installs the group `dev`. The job then gives the folder `docs/_site`
+to Pages. The job `deploy`, from line 31, publishes it.
+
+Lines 10 to 13, under `permissions`, let the workflow publish to Pages. Lines 15 to 17, under `concurrency`, stop
+an older publish when a newer push starts one. Pages publishes the site only if the repository's Pages source is
+**GitHub Actions**. For smallwikiapp it is.
+
+Open `.github/workflows/docs.yaml`. Find
+`- run: uv run --locked --no-default-groups --group docs smalldocs render docs` in it.
+
+The move changes one file:
+
+- `.github/workflows/docs.yaml`: 39 lines added; a new file, with the jobs `build` and `deploy`.
+
+Files to read:
+- [`.github/workflows/docs.yaml`](https://github.com/rahuldave/smallwikiapp/blob/a9e3b523b68b8ab5b9794562651ef38b2bcf62da/.github/workflows/docs.yaml): the site, built with the group `docs` alone, then published.
+  - look at: `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
+
+```bash
+uv run pre-commit run check-yaml --files .github/workflows/docs.yaml
+uv run --isolated --locked --no-default-groups --group docs smalldocs render docs
+```
+
+The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
+prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`. After a push to main, the **Actions** tab shows
+the workflow `Docs`, and the site is at https://rahuldave.com/smallwikiapp/.

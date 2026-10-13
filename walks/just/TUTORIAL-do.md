@@ -1495,16 +1495,20 @@ field without documentation. GitHub's job `check`, at lines 30 to 37 of `.github
 
 ## step-09.4 The library, behind the same verbs
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/024ec7d71c51f7d8d6ef351641f301df94ada4be), the commit before step-09.4.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/9277e2440db83837ca7136fb012788e0e1788604), the commit before step-09.4.
 
 ```bash
 just setup
 ```
 
-Since the last stop, the walk leaves out the first three moves of
-[step-09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html). The library became a package of its own,
-`wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses it, and `src/wikiapp/wikipedia.py` is gone.
-This stop starts with that code.
+Since the last stop, the walk leaves out [step-08b](https://rahuldave.com/smallwikiapp-walk/watch/step-08b.html)
+and the first three moves of [step-09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html). GitHub's
+tests install the group `test` alone. A second workflow builds the docs site and publishes it. It runs smalldocs
+with `uv run`, not `just docs`, because the recipe installs the group `dev`. So that workflow is a caller that
+skips the verb.
+
+The library became a package of its own, `wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses
+it, and `src/wikiapp/wikipedia.py` is gone. This stop starts with that code.
 
 Those moves did not change the justfile. One justfile, one `.pre-commit-config.yaml` and one hook serve both
 packages. `just fmt`, `just lint` and `just types` read every Python file of the repository, so they checked the
@@ -1514,7 +1518,7 @@ app and the tests, 12 of 12. This stop changes `docs/_smalldocs.yml`, behind the
 
 ### step-09.4 The docs check counts the library
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fdf7e7cab23c0193412082cacf528109aa7473de) shows what the move changes.
 
 Now we make the docs check count the library, in `docs/_smalldocs.yml`.
 The app uses the library `wikirandom`, in `packages/wikirandom`, but `docs/_smalldocs.yml` names only
@@ -1531,7 +1535,7 @@ The move changes one file:
 - `docs/_smalldocs.yml`: 1 line added, 1 removed; two packages.
 
 Files to read:
-- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/024ec7d71c51f7d8d6ef351641f301df94ada4be...51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/fdf7e7cab23c0193412082cacf528109aa7473de/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/9277e2440db83837ca7136fb012788e0e1788604...fdf7e7cab23c0193412082cacf528109aa7473de#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
   - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
 
 The change of `docs/_smalldocs.yml`:
@@ -1561,7 +1565,7 @@ docs check without a change.
 
 ## step-10.1 `just build`
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea), the commit before step-10.1.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/fdf7e7cab23c0193412082cacf528109aa7473de), the commit before step-10.1.
 
 ```bash
 just setup
@@ -1571,7 +1575,7 @@ The last verb is about the packages, not about checks, so `check` does not run i
 
 ### step-10.1 The recipe `build`
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fc6091aa4bb985af8c55e5ed8f55a8df94078587) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/c5da27f890a12638d6c1f3d9e541140c8a431508) shows what the move changes.
 
 Now we add a recipe, `build`, at the end of the `justfile`, that builds both packages. It runs
 `uv build --all-packages`, which builds every package of the workspace into `dist/`. `.gitignore` lists `dist/`.
@@ -1592,7 +1596,7 @@ The move changes one file:
 - `justfile`: 6 lines added; the recipe `build`.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/fc6091aa4bb985af8c55e5ed8f55a8df94078587/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea...fc6091aa4bb985af8c55e5ed8f55a8df94078587#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/c5da27f890a12638d6c1f3d9e541140c8a431508/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/fdf7e7cab23c0193412082cacf528109aa7473de...c5da27f890a12638d6c1f3d9e541140c8a431508#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): the recipe.
   - look at: `build *args:`
 
 The change of `justfile`:
@@ -1626,7 +1630,7 @@ first.
 
 ## step-10.3 `just lint-config` checks the library too
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e), the commit before step-10.3.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/d220d8ddd1974216aebd1eda6c4a81ca7cdc54b8), the commit before step-10.3.
 
 ```bash
 just setup
@@ -1641,7 +1645,7 @@ and `just check` let every commit through with no check of the library's `pyproj
 
 ### step-10.3 lint-config checks both pyproject.toml files
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/6bcee949820224c622cb47680d467acacef15ae9) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2968ad25e4cc9891dc68b3f2c6e5ec523c9ae0a4) shows what the move changes.
 
 Now we make `just lint-config` check the library's `pyproject.toml` too.
 The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
@@ -1659,7 +1663,7 @@ The move changes one file:
 - `justfile`: 1 line added, 1 removed; `lint-config` checks both files.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/6bcee949820224c622cb47680d467acacef15ae9/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e...6bcee949820224c622cb47680d467acacef15ae9#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/2968ad25e4cc9891dc68b3f2c6e5ec523c9ae0a4/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/d220d8ddd1974216aebd1eda6c4a81ca7cdc54b8...2968ad25e4cc9891dc68b3f2c6e5ec523c9ae0a4#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
   - look at: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 The change of `justfile`:

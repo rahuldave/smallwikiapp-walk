@@ -5,7 +5,7 @@ tools, and builds it.
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
 
-The walk has eleven stops. Each stop takes a whole step or one move:
+The walk has twelve stops. Each stop takes a whole step or one move:
 
 1. **The project, and its `.venv`** (step-00)
 2. **Two dependencies, and the lockfile** (step-01.1)
@@ -13,11 +13,12 @@ The walk has eleven stops. Each stop takes a whole step or one move:
 4. **A lockfile that must be up to date** (step-04.8)
 5. **The oldest Python, and other environments** (step-06.3)
 6. **Pythons and groups on GitHub** (step-06.4)
-7. **A workspace** (step-09.1)
-8. **A dependency of one member** (step-09.2)
-9. **The app uses the library** (step-09.3)
-10. **A build of both packages** (step-10.1)
-11. **A range of versions for the library** (step-10.2)
+7. **Each job on GitHub with its own group** (step-08b)
+8. **A workspace** (step-09.1)
+9. **A dependency of one member** (step-09.2)
+10. **The app uses the library** (step-09.3)
+11. **A build of both packages** (step-10.1)
+12. **A range of versions for the library** (step-10.2)
 
 Some stops run commands that the whole tutorial does not. They change `.venv`, and no file that git tracks. The
 `$ just setup` at the top of the next stop makes `.venv` match the lockfile again.
@@ -34,12 +35,12 @@ starts from their code.
 | `uv run` | Syncs first, then runs a command in `.venv`. The sync installs what is missing, and removes nothing. `--no-sync` skips the sync | 3 |
 | `--locked` and `UV_LOCKED` | Refuse a lockfile that is out of date with `pyproject.toml` | 1 and 4 |
 | `--frozen` | Uses the lockfile as it is, and does not check it. The project never uses it | 4 |
-| Dependency groups | `test`, `lint` and `docs`, for the people who work on the project. `dev` includes them, and uv installs `dev` by default | 3 and 6 |
+| Dependency groups | `test`, `lint` and `docs`, for the people who work on the project. `dev` includes them, and uv installs `dev` by default | 3, 6 and 7 |
 | `.python-version` and `requires-python` | The Python of `.venv`, and the oldest Python that the project accepts | 1 and 5 |
-| Environments | `.venv`, a temporary one with `--isolated`, and the one of a tool that `uvx` runs | 1 and 5 |
-| A workspace | Several packages with one lockfile and one `.venv`. `--package` names one of them | 7 to 9 |
-| `[tool.uv.sources]` | Where uv gets a package. Here the library comes from the workspace, not from PyPI | 9 and 11 |
-| `uv build --all-packages` | Builds a wheel and a source archive of each package of the workspace | 10 and 11 |
+| Environments | `.venv`, a temporary one with `--isolated`, and the one of a tool that `uvx` runs | 1, 5 and 7 |
+| A workspace | Several packages with one lockfile and one `.venv`. `--package` names one of them | 8 to 10 |
+| `[tool.uv.sources]` | Where uv gets a package. Here the library comes from the workspace, not from PyPI | 10 and 12 |
+| `uv build --all-packages` | Builds a wheel and a source archive of each package of the workspace | 11 and 12 |
 
 ## The project, and its `.venv`
 
@@ -159,18 +160,28 @@ pytest needs none of them. A dry run shows what the job would leave out with the
 
 $ uv sync --locked --no-default-groups --group test --dry-run
 
-uv would uninstall 14 packages, ruff, ty, pre-commit and validate-pyproject among them. The project does not make
-this change, and each of the twelve jobs installs the whole group `dev`.
+uv would uninstall 14 packages, ruff, ty, pre-commit and validate-pyproject among them. The project makes this
+change at the next stop.
 
-## A workspace
-
-$ just setup
+## Each job on GitHub with its own group
 
 Since the last stop, the walk leaves out [step-07](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html) and
 [step-08](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html). `uv add pydantic` added pydantic to the
 dependencies. `random_page` returns a `Page`, a pydantic model. smalldocs came in, in a new group `docs`, which
 `dev` includes. `just docs` builds a site from the code, and `just docs check` counts what has documentation. This
 stop starts with that code.
+
+This stop is all of step-08b. The jobs `tests` install the group `test` alone, and a new workflow builds the
+docs with the group `docs` alone.
+
+{{include step-08b}}
+
+`--no-default-groups --group NAME` installs the package and one group. Now a person and the job `check` install
+`dev`, since they run every tool.
+
+## A workspace
+
+$ just setup
 
 The library becomes a second package of the project. The two packages form a workspace.
 

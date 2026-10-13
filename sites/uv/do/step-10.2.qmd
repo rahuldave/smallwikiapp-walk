@@ -6,7 +6,7 @@ title: "step-10.2: A range of versions for the library"
 
 Do mode. [The same step in watch mode](../watch/step-10.2.qmd).
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/fc6091aa4bb985af8c55e5ed8f55a8df94078587), the commit before step-10.2.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/c5da27f890a12638d6c1f3d9e541140c8a431508), the commit before step-10.2.
 
 ```bash
 just setup
@@ -17,7 +17,7 @@ has nothing of `[tool.uv.sources]`.
 
 ## step-10.2 The app needs wikirandom 0.1 {#step-10.2}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/d220d8ddd1974216aebd1eda6c4a81ca7cdc54b8) shows what the move changes.
 
 Now we give the app's dependency on wikirandom a range of versions, `>=0.1.0,<0.2`. Until now, the app's wheel
 says that the app needs `wikirandom`, of any version. An install from PyPI would take any package that anyone
@@ -36,7 +36,7 @@ The move changes one file:
 - `pyproject.toml`: 1 line added, 1 removed; a version range on wikirandom.
 
 Files to read:
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/fc6091aa4bb985af8c55e5ed8f55a8df94078587...a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/d220d8ddd1974216aebd1eda6c4a81ca7cdc54b8/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/c5da27f890a12638d6c1f3d9e541140c8a431508...d220d8ddd1974216aebd1eda6c4a81ca7cdc54b8#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): one line.
   - look at: `"wikirandom>=0.1.0,<0.2",`
 
 The change of `pyproject.toml`:

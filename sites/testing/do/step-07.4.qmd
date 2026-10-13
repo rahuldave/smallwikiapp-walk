@@ -87,9 +87,3 @@ The command prints `Error: 'example.com/x?' is not a language code, such as en, 
 request. The tests print `7 passed, 2 deselected`. No test reaches the new `raise`, so the coverage table lists
 its line as missing. The coverage is 95% in all, which is still over the floor of 90%. A drop in coverage is
 something to know about. The tutorial adds no test to hide it.
-
-The walk stops here. After it, the whole tutorial makes the steps
-[08](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html) to
-[10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The tests get their docstrings. The library
-becomes a package of its own, wikirandom. Its tests move to `tests/test_wikirandom.py`, and coverage measures both
-packages. The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.

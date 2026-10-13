@@ -6,7 +6,7 @@ title: "step-09.4: The docs check counts the library"
 
 Do mode. [The same step in watch mode](../watch/step-09.4.qmd).
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/024ec7d71c51f7d8d6ef351641f301df94ada4be), the commit before step-09.4.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/9277e2440db83837ca7136fb012788e0e1788604), the commit before step-09.4.
 
 ```bash
 just setup
@@ -25,7 +25,7 @@ The check counts the library, now a package of its own.
 
 ## step-09.4 The docs check counts the library {#step-09.4}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/fdf7e7cab23c0193412082cacf528109aa7473de) shows what the move changes.
 
 Now we make the docs check count the library, in `docs/_smalldocs.yml`.
 The app uses the library `wikirandom`, in `packages/wikirandom`, but `docs/_smalldocs.yml` names only
@@ -42,7 +42,7 @@ The move changes one file:
 - `docs/_smalldocs.yml`: 1 line added, 1 removed; two packages.
 
 Files to read:
-- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/024ec7d71c51f7d8d6ef351641f301df94ada4be...51254ef0fae3c0d4b44cf00d14c0b3b9aa1041ea#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
+- [`docs/_smalldocs.yml`](https://github.com/rahuldave/smallwikiapp/blob/fdf7e7cab23c0193412082cacf528109aa7473de/docs/_smalldocs.yml), [its change](https://github.com/rahuldave/smallwikiapp/compare/9277e2440db83837ca7136fb012788e0e1788604...fdf7e7cab23c0193412082cacf528109aa7473de#diff-7e4b31fde37815c769b2e393a4a3ae0e2800b876407688e90b2582fb72f71ed4): the list.
   - look at: `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
 
 The change of `docs/_smalldocs.yml`:

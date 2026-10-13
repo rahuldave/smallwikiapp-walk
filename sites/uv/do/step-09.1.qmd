@@ -6,23 +6,17 @@ title: "step-09.1: A workspace"
 
 Do mode. [The same step in watch mode](../watch/step-09.1.qmd).
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/1ea19fb90f9341fd939f150ef44d2089986e07be), the commit before step-09.1.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a9e3b523b68b8ab5b9794562651ef38b2bcf62da), the commit before step-09.1.
 
 ```bash
 just setup
 ```
 
-Since the last stop, the walk leaves out [step-07](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html) and
-[step-08](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html). `uv add pydantic` added pydantic to the
-dependencies. `random_page` returns a `Page`, a pydantic model. smalldocs came in, in a new group `docs`, which
-`dev` includes. `just docs` builds a site from the code, and `just docs check` counts what has documentation. This
-stop starts with that code.
-
 The library becomes a second package of the project. The two packages form a workspace.
 
 ## step-09.1 An empty library, wikirandom {#step-09.1}
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/474ca60c5ff642f9e6d80d47cccc18831fb38232) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/1808dba30f594a154d3b807f9f2114378572912f) shows what the move changes.
 
 Now we make an empty library, `wikirandom`, as a second package in `packages/wikirandom`.
 uv can make a second package inside a project. The two packages then form a *workspace*, which has one lockfile
@@ -85,13 +79,13 @@ The move changes these files:
 - `uv.lock`: 11 lines added; the second package.
 
 Files to read:
-- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/474ca60c5ff642f9e6d80d47cccc18831fb38232/packages/wikirandom/pyproject.toml): a package of its own.
+- [`packages/wikirandom/pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/1808dba30f594a154d3b807f9f2114378572912f/packages/wikirandom/pyproject.toml): a package of its own.
   - look at: `name = "wikirandom"`
-- [`packages/wikirandom/README.md`](https://github.com/rahuldave/smallwikiapp/blob/474ca60c5ff642f9e6d80d47cccc18831fb38232/packages/wikirandom/README.md): a heading, and what the library is.
+- [`packages/wikirandom/README.md`](https://github.com/rahuldave/smallwikiapp/blob/1808dba30f594a154d3b807f9f2114378572912f/packages/wikirandom/README.md): a heading, and what the library is.
   - look at: ``A random page of Wikipedia, in any language. The command `wikiapp` will use this library.``
-- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/474ca60c5ff642f9e6d80d47cccc18831fb38232/packages/wikirandom/src/wikirandom/__init__.py): uv's example function.
+- [`packages/wikirandom/src/wikirandom/__init__.py`](https://github.com/rahuldave/smallwikiapp/blob/1808dba30f594a154d3b807f9f2114378572912f/packages/wikirandom/src/wikirandom/__init__.py): uv's example function.
   - look at: `def hello() -> str:`
-- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/474ca60c5ff642f9e6d80d47cccc18831fb38232/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/1ea19fb90f9341fd939f150ef44d2089986e07be...474ca60c5ff642f9e6d80d47cccc18831fb38232#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the workspace.
+- [`pyproject.toml`](https://github.com/rahuldave/smallwikiapp/blob/1808dba30f594a154d3b807f9f2114378572912f/pyproject.toml), [its change](https://github.com/rahuldave/smallwikiapp/compare/a9e3b523b68b8ab5b9794562651ef38b2bcf62da...1808dba30f594a154d3b807f9f2114378572912f#diff-50c86b7ed8ac2cf95bd48334961bf0530cdc77b5a56f852c5c61b89d735fd711): the workspace.
   - look at: `"packages/wikirandom",`
 
 The change of `pyproject.toml`:

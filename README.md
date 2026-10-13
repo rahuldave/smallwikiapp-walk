@@ -6,7 +6,7 @@ a random page of Wikipedia. It also builds the project around the command:
 - packages and dependencies with uv, and one interface for every task with `just`
 - tests and mocks, and a library with an app that uses it
 - format, lint, types, a git hook and CI
-- documentation made from the code
+- documentation made from the code, and published on GitHub Pages
 
 smallwikiapp grew in **steps**. Each step is a tag, `step-00`, `step-01` and so on. The small commits between
 two tags are the **moves**. Each move does one action, and ends with a command that shows what it did. The
@@ -30,11 +30,11 @@ starts with `just setup`. Where the walk leaves out moves, the next stop says wh
 
 | Walk | What it takes | Website | On GitHub |
 |---|---|---|---|
-| `testing` | the project and its command, then pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub: 13 stops with titles, from step-00 to the move 07.4 | [testing](https://rahuldave.com/smallwikiapp-walk/testing/) | [watch](walks/testing/TUTORIAL-watch.md), [do](walks/testing/TUTORIAL-do.md) |
+| `testing` | the project and its command, then pytest, fixtures and mocks, coverage, end-to-end tests, the tests on GitHub, and their own group there: 14 stops with titles, from step-00 to the move 08b.1 | [testing](https://rahuldave.com/smallwikiapp-walk/testing/) | [watch](walks/testing/TUTORIAL-watch.md), [do](walks/testing/TUTORIAL-do.md) |
 | `linting` | the project and its command, then a formatter, a linter and its fixes, the check of the configuration, the gate and the hook, and the types the linter asks for: 10 stops with titles, from step-00 to the move 10.3 | [linting](https://rahuldave.com/smallwikiapp-walk/linting/) | [watch](walks/linting/TUTORIAL-watch.md), [do](walks/linting/TUTORIAL-do.md) |
-| `docs` | the project and its command, then smalldocs, docstrings and docments, a site, the README, and the check of the docs: 10 stops with titles, from step-00 to the move 09.4 | [docs](https://rahuldave.com/smallwikiapp-walk/docs/) | [watch](walks/docs/TUTORIAL-watch.md), [do](walks/docs/TUTORIAL-do.md) |
+| `docs` | the project and its command, then smalldocs, docstrings and docments, a site, the README, the check of the docs, and the site on GitHub Pages: 11 stops with titles, from step-00 to the move 09.4 | [docs](https://rahuldave.com/smallwikiapp-walk/docs/) | [watch](walks/docs/TUTORIAL-watch.md), [do](walks/docs/TUTORIAL-do.md) |
 | `just` | the project and its first justfile, then each verb as it comes in, and `just check`, which a person, the git hook and GitHub run: 17 stops with titles, from step-00 to the move 10.3 | [just](https://rahuldave.com/smallwikiapp-walk/just/) | [watch](walks/just/TUTORIAL-watch.md), [do](walks/just/TUTORIAL-do.md) |
-| `uv` | the project and its `.venv`, then the lockfile, dependency groups, when uv syncs, Python versions, environments, a workspace of two packages, and a build: 11 stops with titles, from step-00 to the move 10.2 | [uv](https://rahuldave.com/smallwikiapp-walk/uv/) | [watch](walks/uv/TUTORIAL-watch.md), [do](walks/uv/TUTORIAL-do.md) |
+| `uv` | the project and its `.venv`, then the lockfile, dependency groups, when uv syncs, Python versions, environments, a group for each job on GitHub, a workspace of two packages, and a build: 12 stops with titles, from step-00 to the move 10.2 | [uv](https://rahuldave.com/smallwikiapp-walk/uv/) | [watch](walks/uv/TUTORIAL-watch.md), [do](walks/uv/TUTORIAL-do.md) |
 
 `just present testing` opens a small walk in timewalk.
 
@@ -99,6 +99,9 @@ Each link opens its section of TUTORIAL-watch.md.
   - [step-08.5](walks/tutorial/TUTORIAL-watch.md#step-085-a-site) A site
   - [step-08.6](walks/tutorial/TUTORIAL-watch.md#step-086-the-readme-names-the-tests-and-the-docs) The README names the tests and the docs
   - [step-08.7](walks/tutorial/TUTORIAL-watch.md#step-087-the-docs-check-in-just-check) The docs check in `just check`
+- [step-08b](walks/tutorial/TUTORIAL-watch.md#step-08b-the-docs-on-github-pages) **The docs on GitHub Pages**
+  - [step-08b.1](walks/tutorial/TUTORIAL-watch.md#step-08b1-the-tests-install-the-group-test-alone) The tests install the group test alone
+  - [step-08b.2](walks/tutorial/TUTORIAL-watch.md#step-08b2-a-workflow-that-publishes-the-docs) A workflow that publishes the docs
 - [step-09](walks/tutorial/TUTORIAL-watch.md#step-09-the-library-as-a-package) **The library as a package**
   - [step-09.1](walks/tutorial/TUTORIAL-watch.md#step-091-an-empty-library-wikirandom) An empty library, wikirandom
   - [step-09.2](walks/tutorial/TUTORIAL-watch.md#step-092-the-code-goes-into-wikirandom) The code goes into wikirandom

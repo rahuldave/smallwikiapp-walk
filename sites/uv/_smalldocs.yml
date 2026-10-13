@@ -41,6 +41,13 @@ website:
             contents:
               - text: "step-06.4 GitHub runs the tests"
                 href: watch/step-06.4.qmd#step-06.4
+          - section: "step-08b: Each job on GitHub with its own group"
+            href: watch/step-08b.qmd
+            contents:
+              - text: "step-08b.1 The tests install the group test alone"
+                href: watch/step-08b.qmd#step-08b.1
+              - text: "step-08b.2 A workflow that publishes the docs"
+                href: watch/step-08b.qmd#step-08b.2
           - section: "step-09.1: A workspace"
             href: watch/step-09.1.qmd
             contents:
@@ -95,6 +102,13 @@ website:
             contents:
               - text: "step-06.4 GitHub runs the tests"
                 href: do/step-06.4.qmd#step-06.4
+          - section: "step-08b: Each job on GitHub with its own group"
+            href: do/step-08b.qmd
+            contents:
+              - text: "step-08b.1 The tests install the group test alone"
+                href: do/step-08b.qmd#step-08b.1
+              - text: "step-08b.2 A workflow that publishes the docs"
+                href: do/step-08b.qmd#step-08b.2
           - section: "step-09.1: A workspace"
             href: do/step-09.1.qmd
             contents:

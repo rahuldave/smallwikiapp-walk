@@ -43,6 +43,7 @@ In watch mode, you read each move. The notes explain what it changed, and its co
 - [step-06: End to end, and CI](watch/step-06.qmd)
 - [step-07: A page with a shape](watch/step-07.qmd)
 - [step-08: Docs from the code](watch/step-08.qmd)
+- [step-08b: The docs on GitHub Pages](watch/step-08b.qmd)
 - [step-09: The library as a package](watch/step-09.qmd)
 - [step-10: Build](watch/step-10.qmd)
 
@@ -59,5 +60,6 @@ In do mode, you make each move yourself. The notes give every line to type, ever
 - [step-06: End to end, and CI](do/step-06.qmd)
 - [step-07: A page with a shape](do/step-07.qmd)
 - [step-08: Docs from the code](do/step-08.qmd)
+- [step-08b: The docs on GitHub Pages](do/step-08b.qmd)
 - [step-09: The library as a package](do/step-09.qmd)
 - [step-10: Build](do/step-10.qmd)

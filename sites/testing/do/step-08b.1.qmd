@@ -1,0 +1,88 @@
+---
+title: "step-08b.1: The tests with their group alone"
+---
+
+<!-- Made by timewalk-export from the notes of the walk. Do not edit it by hand: run timewalk-export again. -->
+
+Do mode. [The same step in watch mode](../watch/step-08b.1.qmd).
+
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/1ea19fb90f9341fd939f150ef44d2089986e07be), the commit before step-08b.1.
+
+```bash
+just setup
+```
+
+Since the last stop, the walk leaves out [step-08](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html).
+smalldocs came in, in a group `docs`. The code and the tests got docstrings, and `just check` runs a check of the
+docs. This stop starts with that code.
+
+This stop changes what GitHub installs to run the tests.
+
+## step-08b.1 The tests install the group test alone {#step-08b.1}
+
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/18638c55e6724bdf8d84750f03a2edc7579f28d3) shows what the move changes.
+
+Now we make each of the twelve jobs `tests` install the package and the group `test`, and nothing else. pytest
+needs none of the linter, the type checker, pre-commit or smalldocs. A test that passes with the group `test`
+alone needs only the package and the tools of the tests.
+
+`--no-default-groups` tells uv not to install the group `dev`. `--group test` then names the one group to install.
+The job `check`, at lines 30 to 37 of `.github/workflows/test.yaml`, still runs `just setup`, which installs
+`dev`. It needs every tool, since `just check` runs them
+all.
+
+In `.github/workflows/test.yaml`, change the comment line about the job `tests` to the line below.
+
+```yaml
+# tests: the tests, on three systems and four Pythons, twelve jobs at once, each with the group test alone.
+```
+
+Then change the last line of the job `tests` to the line below.
+
+```yaml
+      - run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more
+```
+
+The move changes one file:
+
+- `.github/workflows/test.yaml`: 2 lines added, 2 removed; the job `tests` installs the group `test` alone.
+
+Files to read:
+- [`.github/workflows/test.yaml`](https://github.com/rahuldave/smallwikiapp/blob/18638c55e6724bdf8d84750f03a2edc7579f28d3/.github/workflows/test.yaml), [its change](https://github.com/rahuldave/smallwikiapp/compare/1ea19fb90f9341fd939f150ef44d2089986e07be...18638c55e6724bdf8d84750f03a2edc7579f28d3#diff-245392b692a50c38ecab4381b118862db514035c10983f3bd4f4b7f1f4be4692): the comment, and the command of the job `tests`.
+  - look at: `- run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more`
+
+The change of `.github/workflows/test.yaml`:
+
+```diff
+@@ -1,6 +1,6 @@
+ # What GitHub runs on every push to main and every pull request.
+ #
+-# tests: the tests, on three systems and four Pythons, twelve jobs at once.
++# tests: the tests, on three systems and four Pythons, twelve jobs at once, each with the group test alone.
+ # check: everything `just check` runs, once, as the git hook does.
+ name: CI
+ 
+@@ -25,7 +25,7 @@ jobs:
+       - uses: astral-sh/setup-uv@v10.2.0
+         with:
+           python-version: ${{ matrix.python }}
+-      - run: uv run --locked pytest
++      - run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more
+ 
+   check:
+     runs-on: ubuntu-latest
+```
+
+```bash
+uv run --isolated --locked --no-default-groups --group test pytest -q
+uv run pre-commit run check-yaml --files .github/workflows/test.yaml
+```
+
+`--isolated` runs the command as the job does, in a temporary environment with the group `test` alone, and leaves
+`.venv` as it is. The tests print `7 passed, 2 deselected`. The file is valid YAML.
+
+The walk stops here. After it, the whole tutorial adds a workflow that publishes the docs, and makes the steps
+[09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html) and
+[10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The library becomes a package of its own,
+wikirandom. Its tests move to `tests/test_wikirandom.py`, and coverage measures both packages. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.

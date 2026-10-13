@@ -6,7 +6,7 @@ the code has tests, lint and types.
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
 
-The walk has ten stops. Each stop takes a whole step or one move:
+The walk has eleven stops. Each stop takes a whole step or one move:
 
 1. **The project** (step-00)
 2. **The command** (step-01)
@@ -17,7 +17,8 @@ The walk has ten stops. Each stop takes a whole step or one move:
 7. **A site** (step-08.5)
 8. **The README's folders** (step-08.6)
 9. **The docs check in `just check`** (step-08.7)
-10. **The docs check counts the library** (step-09.4)
+10. **The docs on GitHub Pages** (step-08b.2)
+11. **The docs check counts the library** (step-09.4)
 
 Where the whole tutorial makes moves that this walk leaves out, the next stop says what they did. The stop
 starts from their code.
@@ -30,12 +31,13 @@ The table gives each kind of documentation, and the stops where it appears.
 |---|---|---|
 | README | A reader on GitHub. What the project is, and where each part is | Stops 1 and 8 |
 | Help text | A person who runs the command. click writes it from the docstring and the options | Stops 2 and 5 |
-| Reference | A person who calls the code. smalldocs makes it from the code | Stops 3, 7 and 10 |
+| Reference | A person who calls the code. smalldocs makes it from the code | Stops 3, 7 and 11 |
 | Docstring | What a module, a class or a function does | Stops 1 to 6 |
 | Docment | What each parameter, field and return is | Stops 3 to 6 |
 | Tests as documentation | What the code must do, in a docstring above the asserts | Stop 6 |
 | A written page | What the project does, on the front page of the site | Stop 7 |
-| Docs check | Counts what is documented, and names each gap. From stop 9, a commit must pass it | Stops 3, 9 and 10 |
+| A published site | The site, on GitHub Pages, built again on every push to main | Stop 10 |
+| Docs check | Counts what is documented, and names each gap. From stop 9, a commit must pass it | Stops 3, 9 and 11 |
 
 ## The project
 
@@ -120,6 +122,18 @@ $ just setup
 From this stop on, a commit must pass the docs check.
 
 {{include step-08.7}}
+
+## The docs on GitHub Pages
+
+$ just setup
+
+Since the last stop, the walk leaves out the move
+[step-08b.1](https://rahuldave.com/smallwikiapp-walk/watch/step-08b.html#step-08b.1), in which GitHub's tests
+install the group `test` alone. This stop starts with that code.
+
+The site that `just docs` builds on one machine goes on the web, and GitHub builds it again after each push.
+
+{{include step-08b.2}}
 
 ## The docs check counts the library
 

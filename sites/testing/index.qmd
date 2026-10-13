@@ -11,7 +11,7 @@ began, for Python 3.13. Then the command gets its code, and the tests come after
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote
 in 2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
 
-The walk has thirteen stops. Each stop takes a whole step, one move, or a few moves in a row:
+The walk has fourteen stops. Each stop takes a whole step, one move, or a few moves in a row:
 
 1. **The project** (step-00)
 2. **The command under test** (step-01)
@@ -26,6 +26,7 @@ The walk has thirteen stops. Each stop takes a whole step, one move, or a few mo
 11. **The tests on GitHub** (step-06.3 to step-06.4)
 12. **Tests of a model** (step-07.2 to step-07.3)
 13. **A drop in coverage** (step-07.4)
+14. **The tests with their group alone** (step-08b.1)
 
 Where the whole tutorial makes moves that this walk leaves out, the next stop says what they did. The stop
 starts from their code.
@@ -60,6 +61,7 @@ In watch mode, you read each move. The notes explain what it changed, and its co
 - [step-06.3 to step-06.4: The tests on GitHub](watch/step-06.3-to-step-06.4.qmd)
 - [step-07.2 to step-07.3: Tests of a model](watch/step-07.2-to-step-07.3.qmd)
 - [step-07.4: A drop in coverage](watch/step-07.4.qmd)
+- [step-08b.1: The tests with their group alone](watch/step-08b.1.qmd)
 
 ## Do
 
@@ -78,3 +80,4 @@ In do mode, you make each move yourself. The notes give every line to type, ever
 - [step-06.3 to step-06.4: The tests on GitHub](do/step-06.3-to-step-06.4.qmd)
 - [step-07.2 to step-07.3: Tests of a model](do/step-07.2-to-step-07.3.qmd)
 - [step-07.4: A drop in coverage](do/step-07.4.qmd)
+- [step-08b.1: The tests with their group alone](do/step-08b.1.qmd)

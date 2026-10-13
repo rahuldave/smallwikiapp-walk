@@ -313,10 +313,14 @@ One line in `check` runs the docs check.
 
 $ just setup
 
-Since the last stop, the walk leaves out the first three moves of
-[step-09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html). The library became a package of its own,
-`wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses it, and `src/wikiapp/wikipedia.py` is gone.
-This stop starts with that code.
+Since the last stop, the walk leaves out [step-08b](https://rahuldave.com/smallwikiapp-walk/watch/step-08b.html)
+and the first three moves of [step-09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html). GitHub's
+tests install the group `test` alone. A second workflow builds the docs site and publishes it. It runs smalldocs
+with `uv run`, not `just docs`, because the recipe installs the group `dev`. So that workflow is a caller that
+skips the verb.
+
+The library became a package of its own, `wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses
+it, and `src/wikiapp/wikipedia.py` is gone. This stop starts with that code.
 
 Those moves did not change the justfile. One justfile, one `.pre-commit-config.yaml` and one hook serve both
 packages. `just fmt`, `just lint` and `just types` read every Python file of the repository, so they checked the

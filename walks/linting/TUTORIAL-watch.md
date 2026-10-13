@@ -1327,7 +1327,7 @@ Both commands pass.
 
 ## step-10.3 The library's pyproject.toml too
 
-[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e), the commit before step-10.3.
+[The code at its Start](https://github.com/rahuldave/smallwikiapp/tree/d220d8ddd1974216aebd1eda6c4a81ca7cdc54b8), the commit before step-10.3.
 
 ```bash
 just setup
@@ -1339,7 +1339,9 @@ Since the last stop, the walk leaves out the last move of
 [09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html), and the first two moves of
 [step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). `just check` runs the type checker too.
 
-The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
+The tests that ask the real Wikipedia run only on request. GitHub runs the tests and `just check`, and
+publishes the docs site.
+
 `random_page` returns a pydantic model, `Page`. smalldocs documents the code, and `just check` runs the check of
 the docs. The library became a package of its own, `packages/wikirandom`, with its own `pyproject.toml`.
 `just build` builds both packages, and the app asks for wikirandom 0.1. This stop starts with that code.
@@ -1348,7 +1350,7 @@ the docs. The library became a package of its own, `packages/wikirandom`, with i
 
 ### step-10.3 lint-config checks both pyproject.toml files
 
-[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/6bcee949820224c622cb47680d467acacef15ae9) shows what the move changes.
+[The commit of this move](https://github.com/rahuldave/smallwikiapp/commit/2968ad25e4cc9891dc68b3f2c6e5ec523c9ae0a4) shows what the move changes.
 
 Now we make `just lint-config` check the library's `pyproject.toml` too.
 The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. The
@@ -1361,7 +1363,7 @@ The move changes one file:
 - `justfile`: 1 line added, 1 removed; `lint-config` checks both files.
 
 Files to read:
-- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/6bcee949820224c622cb47680d467acacef15ae9/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/a1be2b1d309a8b37ef50a9b28fd0aed0cc4cd79e...6bcee949820224c622cb47680d467acacef15ae9#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
+- [`justfile`](https://github.com/rahuldave/smallwikiapp/blob/2968ad25e4cc9891dc68b3f2c6e5ec523c9ae0a4/justfile), [its change](https://github.com/rahuldave/smallwikiapp/compare/d220d8ddd1974216aebd1eda6c4a81ca7cdc54b8...2968ad25e4cc9891dc68b3f2c6e5ec523c9ae0a4#diff-deb9bb56fb122db0b605aa5b63f95a4665c905b18dd670e1fa6c877576a94ff1): two files.
   - look at: `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 The change of `justfile`:

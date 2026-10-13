@@ -2761,6 +2761,143 @@ The docs check prints `15 of 15`. Now the git hook refuses a commit that leaves 
 field without documentation. GitHub's job `check`, at lines 30 to 37 of `.github/workflows/test.yaml`, runs
 `just check`, so it runs the docs check too.
 
+## step-08b The docs on GitHub Pages
+
+$ just setup
+
+The moves of this step change what GitHub installs, and publish the docs. Until now, every job on GitHub installed
+the group `dev`, with every tool of the project. The first move makes each job `tests` install the group `test`
+alone. The second move adds a workflow that builds the docs site with the group `docs` alone, and GitHub Pages
+publishes the site.
+
+### step-08b.1 The tests install the group test alone
+
+Now we make each of the twelve jobs `tests` install the package and the group `test`, and nothing else. pytest
+needs none of the linter, the type checker, pre-commit or smalldocs. A test that passes with the group `test`
+alone needs only the package and the tools of the tests.
+
+`--no-default-groups` tells uv not to install the group `dev`. `--group test` then names the one group to install.
+The job `check`, at lines 30 to 37 of `.github/workflows/test.yaml`, still runs `just setup`, which installs
+`dev`. It needs every tool, since `just check` runs them
+all.
+
+::: do
+In `.github/workflows/test.yaml`, change the comment line about the job `tests` to the line below.
+
+```yaml
+# tests: the tests, on three systems and four Pythons, twelve jobs at once, each with the group test alone.
+```
+
+Then change the last line of the job `tests` to the line below.
+
+```yaml
+      - run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more
+```
+:::
+
+::: watch
+Find `--no-default-groups --group test` in the change of `.github/workflows/test.yaml`.
+:::
+
+The move changes one file:
+
+- `.github/workflows/test.yaml`: 2 lines added, 2 removed; the job `tests` installs the group `test` alone.
+
+files:
+- diff `.github/workflows/test.yaml`: the comment, and the command of the job `tests`.
+  show: `- run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more`
+
+$ uv run --isolated --locked --no-default-groups --group test pytest -q
+
+$ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
+
+`--isolated` runs the command as the job does, in a temporary environment with the group `test` alone, and leaves
+`.venv` as it is. The tests print `7 passed, 2 deselected`. The file is valid YAML.
+
+### step-08b.2 A workflow that publishes the docs
+
+Now we add a second workflow, `.github/workflows/docs.yaml`, which builds the docs site on every push to main.
+GitHub Pages then publishes the site, at https://rahuldave.com/smallwikiapp/ for this repository.
+
+The workflow has two jobs. The job `build`, from line 20, installs the package and the group `docs`, and runs
+`smalldocs render docs`, the command behind `just docs`. It does not run `just docs`. The recipe, at line 85 of the
+`justfile`, runs `uv run` with no option, which installs the group `dev`. The job then gives the folder `docs/_site`
+to Pages. The job `deploy`, from line 31, publishes it.
+
+Lines 10 to 13, under `permissions`, let the workflow publish to Pages. Lines 15 to 17, under `concurrency`, stop
+an older publish when a newer push starts one. Pages publishes the site only if the repository's Pages source is
+**GitHub Actions**. For smallwikiapp it is.
+
+::: do
+Make `.github/workflows/docs.yaml`.
+
+```yaml
+# The docs site. On every push to main, smalldocs builds the site from the code, and GitHub Pages
+# publishes it at https://rahuldave.com/smallwikiapp/. The job installs the group docs alone.
+name: Docs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # a person can also run it from the Actions tab
+
+permissions:
+  contents: read
+  pages: write     # to publish the site
+  id-token: write  # to prove to Pages that this workflow is the one publishing
+
+concurrency:
+  group: pages
+  cancel-in-progress: true  # a newer push replaces a publish that has not finished
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.2.0
+      - run: uv run --locked --no-default-groups --group docs smalldocs render docs
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs/_site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
+```
+
+To publish from your own copy of the repository on GitHub, open its **Settings**, then **Pages**, and choose
+**GitHub Actions** as the source.
+:::
+
+::: watch
+Open `.github/workflows/docs.yaml`. Find
+`- run: uv run --locked --no-default-groups --group docs smalldocs render docs` in it.
+:::
+
+The move changes one file:
+
+- `.github/workflows/docs.yaml`: 39 lines added; a new file, with the jobs `build` and `deploy`.
+
+files:
+- file `.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published.
+  show: `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
+
+$ uv run pre-commit run check-yaml --files .github/workflows/docs.yaml
+
+$ uv run --isolated --locked --no-default-groups --group docs smalldocs render docs
+
+The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
+prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`. After a push to main, the **Actions** tab shows
+the workflow `Docs`, and the site is at https://rahuldave.com/smallwikiapp/.
+
 ## step-09 The library as a package
 
 $ just setup

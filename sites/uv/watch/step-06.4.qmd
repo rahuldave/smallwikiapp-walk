@@ -54,5 +54,5 @@ pytest needs none of them. A dry run shows what the job would leave out with the
 uv sync --locked --no-default-groups --group test --dry-run
 ```
 
-uv would uninstall 14 packages, ruff, ty, pre-commit and validate-pyproject among them. The project does not make
-this change, and each of the twelve jobs installs the whole group `dev`.
+uv would uninstall 14 packages, ruff, ty, pre-commit and validate-pyproject among them. The project makes this
+change at the next stop.

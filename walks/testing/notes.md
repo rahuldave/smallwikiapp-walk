@@ -5,7 +5,7 @@ began, for Python 3.13. Then the command gets its code, and the tests come after
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote
 in 2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
 
-The walk has thirteen stops. Each stop takes a whole step, one move, or a few moves in a row:
+The walk has fourteen stops. Each stop takes a whole step, one move, or a few moves in a row:
 
 1. **The project** (step-00)
 2. **The command under test** (step-01)
@@ -20,6 +20,7 @@ The walk has thirteen stops. Each stop takes a whole step, one move, or a few mo
 11. **The tests on GitHub** (step-06.3 to step-06.4)
 12. **Tests of a model** (step-07.2 to step-07.3)
 13. **A drop in coverage** (step-07.4)
+14. **The tests with their group alone** (step-08b.1)
 
 Where the whole tutorial makes moves that this walk leaves out, the next stop says what they did. The stop
 starts from their code.
@@ -176,8 +177,20 @@ New code has no test, and the coverage drops.
 
 {{include step-07.4}}
 
-The walk stops here. After it, the whole tutorial makes the steps
-[08](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html) to
-[10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The tests get their docstrings. The library
-becomes a package of its own, wikirandom. Its tests move to `tests/test_wikirandom.py`, and coverage measures both
-packages. The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.
+## The tests with their group alone
+
+$ just setup
+
+Since the last stop, the walk leaves out [step-08](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html).
+smalldocs came in, in a group `docs`. The code and the tests got docstrings, and `just check` runs a check of the
+docs. This stop starts with that code.
+
+This stop changes what GitHub installs to run the tests.
+
+{{include step-08b.1}}
+
+The walk stops here. After it, the whole tutorial adds a workflow that publishes the docs, and makes the steps
+[09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html) and
+[10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The library becomes a package of its own,
+wikirandom. Its tests move to `tests/test_wikirandom.py`, and coverage measures both packages. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.

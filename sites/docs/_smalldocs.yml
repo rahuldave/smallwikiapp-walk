@@ -62,6 +62,11 @@ website:
             contents:
               - text: "step-08.7 The docs check in `just check`"
                 href: watch/step-08.7.qmd#step-08.7
+          - section: "step-08b.2: The docs on GitHub Pages"
+            href: watch/step-08b.2.qmd
+            contents:
+              - text: "step-08b.2 A workflow that publishes the docs"
+                href: watch/step-08b.2.qmd#step-08b.2
           - section: "step-09.4: The docs check counts the library"
             href: watch/step-09.4.qmd
             contents:
@@ -117,6 +122,11 @@ website:
             contents:
               - text: "step-08.7 The docs check in `just check`"
                 href: do/step-08.7.qmd#step-08.7
+          - section: "step-08b.2: The docs on GitHub Pages"
+            href: do/step-08b.2.qmd
+            contents:
+              - text: "step-08b.2 A workflow that publishes the docs"
+                href: do/step-08b.2.qmd#step-08b.2
           - section: "step-09.4: The docs check counts the library"
             href: do/step-09.4.qmd
             contents:
