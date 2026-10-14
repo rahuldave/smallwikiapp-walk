@@ -20,7 +20,8 @@ tutorial has three forms, with the same text:
 - [walks/tutorial/notes.md](walks/tutorial/notes.md), **the notes that timewalk reads**. timewalk-tutorial makes
   the website and the two Markdown files from these notes, in `just walk-update` of the class material.
 
-The slides are in [walks/tutorial/slides/](walks/tutorial/slides/).
+The slides are in [smallwikiapp.pdf](smallwikiapp.pdf), one page each, and as Markdown in
+[walks/tutorial/slides/](walks/tutorial/slides/). Every walk uses these slides.
 
 ## Five small walks
 
@@ -173,6 +174,7 @@ smallwikiapp-walk/
 ├── walks/tutorial/notes.md     the notes of every step and move, for timewalk
 ├── walks/tutorial/TUTORIAL-*.md  the tutorial to read on GitHub, in watch mode and in do mode
 ├── walks/tutorial/slides/      the slides, and slides.toml, which step shows which
+├── smallwikiapp.pdf            the slides, one page each
 ├── walks/testing/              a small walk's own notes, and its TUTORIAL-*.md; linting, docs, just and uv too
 ├── site/                       the website, made from notes.md; GitHub publishes it on every push
 ├── sites/                      the website of each small walk, published under the website's address
