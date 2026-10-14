@@ -1,0 +1,92 @@
+---
+title: "3.2 A shared mock in conftest.py"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-03.2.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The code now has a library, a new module `src/wikiapp/wikipedia.py`, with a function `random_page`. The request
+moved out of the command into `random_page`, and the command calls it.
+
+Tests of the library need the mock too, and it is in the tests of the command. The mock goes to
+`tests/conftest.py`, so that every test file can use it.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).
+
+## 3.2 The mock goes to conftest.py {#step-03.2}
+
+The tests of the library, which come next, need the mock too. Only the tests of `tests/test_console.py` can use
+a fixture in that file. pytest reads `tests/conftest.py` before the tests, and every test file can use a fixture in it. So the
+fixture `mock_requests_get` goes from `tests/test_console.py` to a new file, `tests/conftest.py`.
+
+`main` calls `random_page`, and only `requests.get` is a mock. So a test of the command that uses the mock runs two
+parts of the code together, the command and the library. A test of parts together is an integration test. Since
+the library came out of `main`, the four tests of the command that use the mock are integration tests, and no
+longer unit tests.
+
+A patch to [`tests/conftest.py`](#step-03.2-tests-conftest.py-626af3).
+
+A patch to [`tests/test_console.py`](#step-03.2-tests-test_console.py-9442ee).
+
+The new file `tests/conftest.py` has the fixture `mock_requests_get`. In `tests/test_console.py`, the fixture is
+gone, and the tests still name it as a parameter.
+
+```bash
+just test
+```
+
+The result is `5 passed`. pytest finds the fixture in `conftest.py`.
+
+### What changed {#step-03.2-what-changed-182c57}
+
+- <a id="step-03.2-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, for every test file. New, 10 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/conftest.py).
+  - look at `def mock_requests_get(mocker):`
+- <a id="step-03.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture is gone, but the tests still name it. 0 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/test_console.py).
+
+<details><summary>The diff of <code>tests/conftest.py</code></summary>
+
+```diff
+@@ -0,0 +1,10 @@
++import pytest
++
++@pytest.fixture
++def mock_requests_get(mocker):
++    mock = mocker.patch("requests.get")
++    mock.return_value.__enter__.return_value.json.return_value = {
++        "title": "Lorem Ipsum",
++        "extract": "Lorem ipsum dolor sit amet",
++    }
++    return mock
+```
+
+</details>
+
+<details><summary>The diff of <code>tests/test_console.py</code></summary>
+
+```diff
+@@ -5,15 +5,6 @@ import pytest
+ def runner():
+     return click.testing.CliRunner()
+ 
+-@pytest.fixture
+-def mock_requests_get(mocker):
+-    mock = mocker.patch("requests.get")
+-    mock.return_value.__enter__.return_value.json.return_value = {
+-        "title": "Lorem Ipsum",
+-        "extract": "Lorem ipsum dolor sit amet",
+-    }
+-    return mock
+-
+ from wikiapp import console
+ 
+ def test_main_prints_title(runner, mock_requests_get):
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a65f7f11432be0a56de38e7d4babe10bda735c2c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).

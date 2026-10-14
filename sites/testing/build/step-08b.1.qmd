@@ -1,0 +1,105 @@
+---
+title: "8b.1 The tests with their group alone"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-08b.1.qmd) is the other way to read this part.
+
+This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+
+```bash
+git restore --source be473b80441f --staged -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/
+```
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The code now also has smalldocs, in a group `docs`. The code and the tests have docstrings, and `just check` runs
+a check of the docs. `just docs` builds a site, and the README names the tests and the docs.
+
+GitHub installs every tool of the project to run the tests, and the tests need only pytest and its plugins. This
+section changes what GitHub installs to run the tests.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
+
+## 8b.1 The tests install the group test alone {#step-08b.1}
+
+The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
+tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+
+The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
+to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37
+of `.github/workflows/test.yaml`, still runs `just setup`, which installs every group. It needs every tool, since
+`just check` runs them all.
+
+Apply the patch to [`.github/workflows/test.yaml`](#step-08b.1-.github-workflows-test.yaml-a60e23), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0.diff | git apply --include=.github/workflows/test.yaml
+```
+
+The patch changes the comment line that starts with `# tests:`, and the last line of the job `tests`, which was
+`- run: uv run --locked pytest`.
+
+```bash
+uv run --isolated --locked --no-default-groups --group test pytest -q
+uv run pre-commit run check-yaml --files .github/workflows/test.yaml
+```
+
+`--isolated` runs the command as the job does, in a temporary environment with the group `test` alone, and leaves
+`.venv` as it is. The tests print `7 passed, 2 deselected`. The file is valid YAML.
+
+This tutorial ends here. After it, the whole tutorial adds a workflow that publishes the docs. The library becomes
+a package of its own, wikirandom. Its tests go to `tests/test_wikirandom.py`, and coverage measures both packages.
+The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 971e9d780fd5
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
+```
+
+### What changed {#step-08b.1-what-changed-182c57}
+
+- <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml).
+  - look at `- run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more`
+
+<details open><summary>The patch to <code>.github/workflows/test.yaml</code></summary>
+
+```diff
+@@ -1,6 +1,6 @@
+ # What GitHub runs on every push to main and every pull request.
+ #
+-# tests: the tests, on three systems and four Pythons, twelve jobs at once.
++# tests: the tests, on three systems and four Pythons, twelve jobs at once, each with the group test alone.
+ # check: everything `just check` runs, once, as the git hook does.
+ name: CI
+ 
+@@ -25,7 +25,7 @@ jobs:
+       - uses: astral-sh/setup-uv@v10.2.0
+         with:
+           python-version: ${{ matrix.python }}
+-      - run: uv run --locked pytest
++      - run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more
+ 
+   check:
+     runs-on: ubuntu-latest
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).

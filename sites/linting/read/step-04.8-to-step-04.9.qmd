@@ -1,0 +1,109 @@
+---
+title: "4.8 to 4.9 A check of the configuration"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-04.8-to-step-04.9.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The linter reads the Python code, and nothing checks the files that set up the project. `just lint-config` checks
+`pyproject.toml`, the lockfile and the justfile.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c).
+
+## 4.8 validate-pyproject, in the group lint {#step-04.8}
+
+The tests and the linter check the code, and not the configuration. So an error in `pyproject.toml`, in the
+lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
+it. It goes in the group `lint`.
+
+This change came from running `uv add --group lint validate-pyproject`.
+
+In `pyproject.toml`, the group `lint` now has `"validate-pyproject>=0.26",` on line 29, under ruff. `uv.lock` has
+its exact version, and that of `fastjsonschema`, which it needs.
+
+```bash
+uv run validate-pyproject --version
+```
+
+It prints `validate_pyproject 0.26`. Nothing runs it yet.
+
+### What changed {#step-04.8-what-changed-182c57}
+
+- <a id="step-04.8-pyproject.toml-5d07e7"></a>`pyproject.toml`: one package more in `lint`. 1 line added. It comes from `uv add --group lint validate-pyproject`. [The file](https://github.com/rahuldave/smallwikiapp/blob/4e710d50a22967ebff9502eacbdada54313ebe70/pyproject.toml).
+  - look at `"validate-pyproject>=0.26",`
+- <a id="step-04.8-uv.lock-8356d8"></a>`uv.lock`: the exact version of validate-pyproject, and of what it needs. 26 lines added, 1 removed. It comes from `uv add --group lint validate-pyproject`. [The file](https://github.com/rahuldave/smallwikiapp/blob/4e710d50a22967ebff9502eacbdada54313ebe70/uv.lock).
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -26,6 +26,7 @@ default-groups = "all"
+ [dependency-groups]
+ lint = [
+     "ruff>=0.17.0",
++    "validate-pyproject>=0.26",
+ ]
+ test = [
+     "pytest>=9.1.1",
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/4e710d50a22967ebff9502eacbdada54313ebe70). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/4e710d50a22967ebff9502eacbdada54313ebe70).
+
+## 4.9 The recipe lint-config {#step-04.9}
+
+A recipe `lint-config` checks the configuration, with three commands. validate-pyproject checks
+`pyproject.toml`. `uv lock --check` checks that the lockfile matches `pyproject.toml`. `just --fmt --check
+--unstable` checks the `justfile`. The recipe runs the three commands, one on each line, and `set -e` stops it at
+the first that fails.
+
+A patch to [`justfile`](#step-04.9-justfile-424f0b).
+
+At the end of the `justfile`, the recipe `lint-config *args:` on line 44 runs the three commands, one on each line.
+`set -e`, on line 46, stops it at the first that fails.
+
+```bash
+uv run validate-pyproject pyproject.toml
+uv lock --check
+just --fmt --check --unstable
+just --show lint-config
+just lint-config
+```
+
+The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `uv lock --check` prints
+`Resolved 19 packages` and exits with 0, because the lockfile matches `pyproject.toml`. `just --fmt` prints
+nothing, because the `justfile` is in the format of `just`.
+
+### What changed {#step-04.9-what-changed-182c57}
+
+- <a id="step-04.9-justfile-424f0b"></a>`justfile`: the recipe, with its three checks. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8a9c8f71eb58893025360c20b32c9078e5b0c3c/justfile).
+  - look at `uv run validate-pyproject pyproject.toml`
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -37,3 +37,14 @@ fmt *args:
+ [no-exit-message]
+ lint *args:
+     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
++
++# Check the configuration: pyproject.toml, the lockfile, and this justfile
++[group('quality')]
++[no-exit-message]
++lint-config *args:
++    #!/usr/bin/env sh
++    set -e
++    if [ "$*" = help ]; then just help lint-config; exit 0; fi
++    uv run validate-pyproject pyproject.toml
++    uv lock --check
++    just --fmt --check --unstable
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c).

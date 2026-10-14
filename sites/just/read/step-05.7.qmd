@@ -1,0 +1,69 @@
+---
+title: "5.7 The types join `just check`"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-05.7.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+In the code now, `__init__.py` asks for the version of `"wikiapp"` by name, which fixes the one problem that
+ty found. A family of rules, `ANN`, asks for a type on every parameter and return. The code and the tests have
+their types.
+
+`just check` does not run the type checker yet. One line in `check` runs it.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9).
+
+## 5.7 The recipe check runs the type checker {#step-05.7}
+
+`just check` is what a person and the git hook run before git records a change, and it does not run ty yet. So a
+change can break a type, and pass. The recipe `check` now runs `just types` after `just lint`, and its comment
+names the types too.
+
+A patch to [`justfile`](#step-05.7-justfile-424f0b).
+
+In the `justfile`, the recipe `check` now runs `just types` on line 74, after `just lint`. Its comment, on line 65,
+lists "types".
+
+```bash
+just check
+```
+
+Every check passes, the type check among them. The coverage is 96.88%.
+
+`.pre-commit-config.yaml` still says `entry: just check`, and the hook now
+checks the types too.
+
+### What changed {#step-05.7-what-changed-182c57}
+
+- <a id="step-05.7-justfile-424f0b"></a>`justfile`: the comment, and one line in check. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/701783af434e19b17e38a10898a39adc1dc5dae9/justfile).
+  - look at `just types`
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -62,7 +62,7 @@ lint-config *args:
+     uv lock --check
+     just --fmt --check --unstable
+ 
+-# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
++# Everything a commit must pass: format, lint, types, the tests over the coverage floor, the configuration
+ [group('quality')]
+ [no-exit-message]
+ check *args:
+@@ -71,5 +71,6 @@ check *args:
+     if [ "$*" = help ]; then just help check; exit 0; fi
+     just fmt --check
+     just lint
++    just types
+     just test -q --cov-fail-under=90
+     just lint-config
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9).

@@ -1,0 +1,219 @@
+# Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again.
+project:
+  type: website
+  output-dir: _site
+  render: ["index.qmd", "read/*.qmd", "build/*.qmd"]   # only these pages
+
+website:
+  title: "The tests of smallwikiapp"
+  page-navigation: true
+  search: true
+  sidebar:
+    style: docked
+    contents:
+      - index.qmd
+      - section: "Read the tutorial"
+        contents:
+          - text: "0 The project"
+            href: read/step-00.qmd
+          - section: "1 The command under test"
+            href: read/step-01.qmd
+            contents:
+              - text: "1.1 click and requests"
+                href: read/step-01.qmd#step-01.1
+              - text: "1.2 Ask Wikipedia for a page"
+                href: read/step-01.qmd#step-01.2
+              - text: "1.3 A User-Agent"
+                href: read/step-01.qmd#step-01.3
+              - text: "1.4 --version"
+                href: read/step-01.qmd#step-01.4
+          - section: "2.1 to 2.4 pytest and a first test"
+            href: read/step-02.1-to-step-02.4.qmd
+            contents:
+              - text: "2.1 uv installs every dependency group"
+                href: read/step-02.1-to-step-02.4.qmd#step-02.1
+              - text: "2.2 The first test"
+                href: read/step-02.1-to-step-02.4.qmd#step-02.2
+              - text: "2.3 pytest, in the group test"
+                href: read/step-02.1-to-step-02.4.qmd#step-02.3
+              - text: "2.4 The recipe `just test`"
+                href: read/step-02.1-to-step-02.4.qmd#step-02.4
+          - section: "2.5 to 2.9 Fixtures and mocks"
+            href: read/step-02.5-to-step-02.9.qmd
+            contents:
+              - text: "2.5 The runner as a fixture"
+                href: read/step-02.5-to-step-02.9.qmd#step-02.5
+              - text: "2.6 pytest-mock, in the group test"
+                href: read/step-02.5-to-step-02.9.qmd#step-02.6
+              - text: "2.7 A mock in place of Wikipedia"
+                href: read/step-02.5-to-step-02.9.qmd#step-02.7
+              - text: "2.8 Tests of the request"
+                href: read/step-02.5-to-step-02.9.qmd#step-02.8
+              - text: "2.9 A test of a failed request"
+                href: read/step-02.5-to-step-02.9.qmd#step-02.9
+          - section: "2.10 to 2.11 Coverage"
+            href: read/step-02.10-to-step-02.11.qmd
+            contents:
+              - text: "2.10 pytest-cov, in the group test"
+                href: read/step-02.10-to-step-02.11.qmd#step-02.10
+              - text: "2.11 Coverage on every run"
+                href: read/step-02.10-to-step-02.11.qmd#step-02.11
+          - section: "3.2 A shared mock in conftest.py"
+            href: read/step-03.2.qmd
+            contents:
+              - text: "3.2 The mock goes to conftest.py"
+                href: read/step-03.2.qmd#step-03.2
+          - section: "3.3 A test of the language"
+            href: read/step-03.3.qmd
+            contents:
+              - text: "3.3 A language"
+                href: read/step-03.3.qmd#step-03.3
+          - section: "3.6 A test of an error message"
+            href: read/step-03.6.qmd
+            contents:
+              - text: "3.6 The command prints the error"
+                href: read/step-03.6.qmd#step-03.6
+          - section: "4.11 `just check`, with a coverage floor"
+            href: read/step-04.11.qmd
+            contents:
+              - text: "4.11 The recipe check"
+                href: read/step-04.11.qmd#step-04.11
+          - section: "6.1 to 6.2 End-to-end tests, on request"
+            href: read/step-06.1-to-step-06.2.qmd
+            contents:
+              - text: "6.1 The end-to-end test runs only on request"
+                href: read/step-06.1-to-step-06.2.qmd#step-06.1
+              - text: "6.2 An end-to-end test of the library"
+                href: read/step-06.1-to-step-06.2.qmd#step-06.2
+          - section: "6.3 to 6.5 The tests on GitHub"
+            href: read/step-06.3-to-step-06.5.qmd
+            contents:
+              - text: "6.3 Any Python from 3.11 on"
+                href: read/step-06.3-to-step-06.5.qmd#step-06.3
+              - text: "6.4 The lockfile, for every Python from 3.11 on"
+                href: read/step-06.3-to-step-06.5.qmd#step-06.4
+              - text: "6.5 GitHub runs the tests"
+                href: read/step-06.3-to-step-06.5.qmd#step-06.5
+          - section: "7.3 to 7.4 Tests of a model"
+            href: read/step-07.3-to-step-07.4.qmd
+            contents:
+              - text: "7.3 random_page returns a Page"
+                href: read/step-07.3-to-step-07.4.qmd#step-07.3
+              - text: "7.4 An answer that is not a page"
+                href: read/step-07.3-to-step-07.4.qmd#step-07.4
+          - section: "7.5 A drop in coverage"
+            href: read/step-07.5.qmd
+            contents:
+              - text: "7.5 Only a language code goes into the address"
+                href: read/step-07.5.qmd#step-07.5
+          - section: "8b.1 The tests with their group alone"
+            href: read/step-08b.1.qmd
+            contents:
+              - text: "8b.1 The tests install the group test alone"
+                href: read/step-08b.1.qmd#step-08b.1
+      - section: "Build it yourself"
+        contents:
+          - text: "0 The project"
+            href: build/step-00.qmd
+          - section: "1 The command under test"
+            href: build/step-01.qmd
+            contents:
+              - text: "1.1 click and requests"
+                href: build/step-01.qmd#step-01.1
+              - text: "1.2 Ask Wikipedia for a page"
+                href: build/step-01.qmd#step-01.2
+              - text: "1.3 A User-Agent"
+                href: build/step-01.qmd#step-01.3
+              - text: "1.4 --version"
+                href: build/step-01.qmd#step-01.4
+          - section: "2.1 to 2.4 pytest and a first test"
+            href: build/step-02.1-to-step-02.4.qmd
+            contents:
+              - text: "2.1 uv installs every dependency group"
+                href: build/step-02.1-to-step-02.4.qmd#step-02.1
+              - text: "2.2 The first test"
+                href: build/step-02.1-to-step-02.4.qmd#step-02.2
+              - text: "2.3 pytest, in the group test"
+                href: build/step-02.1-to-step-02.4.qmd#step-02.3
+              - text: "2.4 The recipe `just test`"
+                href: build/step-02.1-to-step-02.4.qmd#step-02.4
+          - section: "2.5 to 2.9 Fixtures and mocks"
+            href: build/step-02.5-to-step-02.9.qmd
+            contents:
+              - text: "2.5 The runner as a fixture"
+                href: build/step-02.5-to-step-02.9.qmd#step-02.5
+              - text: "2.6 pytest-mock, in the group test"
+                href: build/step-02.5-to-step-02.9.qmd#step-02.6
+              - text: "2.7 A mock in place of Wikipedia"
+                href: build/step-02.5-to-step-02.9.qmd#step-02.7
+              - text: "2.8 Tests of the request"
+                href: build/step-02.5-to-step-02.9.qmd#step-02.8
+              - text: "2.9 A test of a failed request"
+                href: build/step-02.5-to-step-02.9.qmd#step-02.9
+          - section: "2.10 to 2.11 Coverage"
+            href: build/step-02.10-to-step-02.11.qmd
+            contents:
+              - text: "2.10 pytest-cov, in the group test"
+                href: build/step-02.10-to-step-02.11.qmd#step-02.10
+              - text: "2.11 Coverage on every run"
+                href: build/step-02.10-to-step-02.11.qmd#step-02.11
+          - section: "3.2 A shared mock in conftest.py"
+            href: build/step-03.2.qmd
+            contents:
+              - text: "3.2 The mock goes to conftest.py"
+                href: build/step-03.2.qmd#step-03.2
+          - section: "3.3 A test of the language"
+            href: build/step-03.3.qmd
+            contents:
+              - text: "3.3 A language"
+                href: build/step-03.3.qmd#step-03.3
+          - section: "3.6 A test of an error message"
+            href: build/step-03.6.qmd
+            contents:
+              - text: "3.6 The command prints the error"
+                href: build/step-03.6.qmd#step-03.6
+          - section: "4.11 `just check`, with a coverage floor"
+            href: build/step-04.11.qmd
+            contents:
+              - text: "4.11 The recipe check"
+                href: build/step-04.11.qmd#step-04.11
+          - section: "6.1 to 6.2 End-to-end tests, on request"
+            href: build/step-06.1-to-step-06.2.qmd
+            contents:
+              - text: "6.1 The end-to-end test runs only on request"
+                href: build/step-06.1-to-step-06.2.qmd#step-06.1
+              - text: "6.2 An end-to-end test of the library"
+                href: build/step-06.1-to-step-06.2.qmd#step-06.2
+          - section: "6.3 to 6.5 The tests on GitHub"
+            href: build/step-06.3-to-step-06.5.qmd
+            contents:
+              - text: "6.3 Any Python from 3.11 on"
+                href: build/step-06.3-to-step-06.5.qmd#step-06.3
+              - text: "6.4 The lockfile, for every Python from 3.11 on"
+                href: build/step-06.3-to-step-06.5.qmd#step-06.4
+              - text: "6.5 GitHub runs the tests"
+                href: build/step-06.3-to-step-06.5.qmd#step-06.5
+          - section: "7.3 to 7.4 Tests of a model"
+            href: build/step-07.3-to-step-07.4.qmd
+            contents:
+              - text: "7.3 random_page returns a Page"
+                href: build/step-07.3-to-step-07.4.qmd#step-07.3
+              - text: "7.4 An answer that is not a page"
+                href: build/step-07.3-to-step-07.4.qmd#step-07.4
+          - section: "7.5 A drop in coverage"
+            href: build/step-07.5.qmd
+            contents:
+              - text: "7.5 Only a language code goes into the address"
+                href: build/step-07.5.qmd#step-07.5
+          - section: "8b.1 The tests with their group alone"
+            href: build/step-08b.1.qmd
+            contents:
+              - text: "8b.1 The tests install the group test alone"
+                href: build/step-08b.1.qmd#step-08b.1
+
+theme: cosmo
+css: styles.css
+toc: true
+toc-depth: 2
+code-copy: true
+from: markdown-tex_math_dollars-smart  # a $ is a dollar, not mathematics; -- stays two hyphens

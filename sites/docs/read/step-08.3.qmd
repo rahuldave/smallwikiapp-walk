@@ -1,0 +1,84 @@
+---
+title: "8.3 The library documented"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-08.3.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The check lists gaps in the library. The library gets docstrings, and a docment beside each parameter and field.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
+
+## 8.3 The library documented {#step-08.3}
+
+The reference of `wikipedia.py` has empty descriptions, because the library has no docments and short
+docstrings. We document it in four places:
+
+- a docstring at the top of the module
+- a docment beside each field of Page
+- a docment on the parameter and on the return of `random_page`
+- a longer docstring of `random_page`, which says when it raises an error
+
+A patch to [`src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803).
+
+In `src/wikiapp/wikipedia.py`, see the docstring at the top, the comments beside the fields of `Page`, and the
+line `) -> Page:  # A page chosen at random`, the docment of the return.
+
+A pydantic field can also take its description as `Field(description="...")`. pydantic keeps that description
+in the schema of the model, which other programs read. smalldocs uses the description when a field has one, and
+the comment beside the field when it has none. `Page` only parses the answer of Wikipedia, so the comment is
+enough.
+
+```bash
+just docs module wikipedia
+```
+
+The tables now have their descriptions.
+
+### What changed {#step-08.3-what-changed-182c57}
+
+- <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py).
+  - look at `) -> Page:  # A page chosen at random`
+
+<details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""Wikipedia's REST API: a random page."""
++
+ import re
+ 
+ import requests
+@@ -15,12 +17,18 @@ class WikipediaError(Exception):
+ class Page(BaseModel):
+     """A page of Wikipedia: its title and the summary of its text."""
+ 
+-    title: str
+-    extract: str
++    title: str  # The title of the page
++    extract: str  # The summary: the first paragraph of the page, as plain text
++
+ 
++def random_page(
++    language: str = "en",  # The language of the Wikipedia to ask, as its code: en, fr, es
++) -> Page:  # A page chosen at random
++    """Get a random page from Wikipedia.
+ 
+-def random_page(language: str = "en") -> Page:
+-    """Get a random page from Wikipedia."""
++    Raises WikipediaError when the language is not a language code, when the request fails, or
++    when the answer is not a page.
++    """
+     if not LANGUAGE.fullmatch(language):
+         raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
+     try:
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).

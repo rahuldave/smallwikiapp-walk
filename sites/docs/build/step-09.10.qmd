@@ -1,0 +1,94 @@
+---
+title: "9.10 The docs check counts the library"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-09.10.qmd) is the other way to read this part.
+
+This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+
+```bash
+git restore --source 39a4b09f8563 --staged -- :/ && git restore --source 008e616610b0 --staged --worktree -- :/
+```
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 008e616610b0 --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The code now also has the library as a package of its own, `wikirandom`, in `packages/wikirandom`, with a README of
+its own. Its code went there with its docstrings and docments. The app uses it, and `src/wikiapp/wikipedia.py` is
+gone. The README and the front page of the docs name both packages. The tests of the library are now
+`tests/test_wikirandom.py`.
+
+Before this section, `just docs check` counts only the app and the tests, 12 of 12. After it, the check counts the library too.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
+
+## 9.10 The docs check counts the library {#step-09.10}
+
+The front page names `random_page`, but it is not a link, and the docs check counts only the app. The settings of
+the site, `docs/_smalldocs.yml`, name only `wikiapp`. The line `packages:` in the section `api` must name both.
+
+Apply the patch to [`docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060.diff | git apply --include=docs/_smalldocs.yml
+```
+
+The patch changes one line, `packages:` in the section `api`, in line 19.
+
+```bash
+just docs check
+just docs
+just check
+```
+
+The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
+pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
+passes.
+
+This tutorial ends here. After it, `just build` builds both packages, and the app asks for wikirandom 0.1.
+`just lint-config` checks the library's `pyproject.toml` too. The library gets a licence and an author, both
+packages get a link to the repository, and the User-Agent says the installed version. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 259e6364a52f
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e6364a52f --staged --worktree -- :/
+```
+
+### What changed {#step-09.10-what-changed-182c57}
+
+- <a id="step-09.10-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the list of packages. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/259e6364a52f83993c797f66148281b04eb92060/docs/_smalldocs.yml).
+  - look at `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+<details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
+
+```diff
+@@ -16,6 +16,6 @@ toc: true
+ 
+ # `api` is the reference, made from the code of the packages. A name in backticks links to its entry
+ api:
+-  packages: [wikiapp]
++  packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
+   source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+   check: ["tests/**/*.py"]  # the tests are held to the same rule as the package
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).

@@ -1,47 +1,52 @@
-This walk takes the moves about the justfile out of the whole tutorial of smallwikiapp. `wikiapp` is a small
-command that prints the title and the summary of a random Wikipedia page. The walk starts with the project, which
-`uv init` began, for Python 3.13. The project has a justfile from the start.
+We give `wikiapp` one interface for every task, a justfile. `wikiapp` is a small command that prints the title and
+the summary of a random Wikipedia page. Its project has many tools, each with its own options. A person, a git hook
+and GitHub must all run them the same way. This tutorial takes the parts about the justfile out of the whole
+tutorial of smallwikiapp. It starts from the project that `uv init` made, for Python 3.13, and has a justfile
+from the start.
 
 The justfile is the interface of the project. Each task is a verb, such as `just test`, and the recipe behind the
 verb names the tool that does the work. A person, a git hook and GitHub each run `just check`, and `check` runs
 other verbs. A tool can change behind a verb, and the callers of the verb stay the same.
 
-Each new verb comes in the same way. `just --show VERB` shows the recipe, then the verb runs. Most stops that bring
-in a verb also run the tool's own command first. The stops of `test` and `check` do not, and stop 1 runs
-`just setup` before it shows the recipe.
+Each new verb comes in the same way. `just --show VERB` shows the recipe, then the verb runs. Most sections that
+bring in a verb also run the tool's own command first. The sections of `test` and `check` do not, and section 1
+runs `just setup` before it shows the recipe.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
-2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
+2024 with pixi. Where the text says "the original wikiapp", it means that project.
 
-The walk has seventeen stops. Each stop takes a whole step or one move:
+We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
+file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
+against it.
 
-1. **The project, and its justfile** (step-00)
-2. **`just test`** (step-02.2)
-3. **`just fmt`** (step-04.1)
-4. **`just lint`** (step-04.3)
-5. **`just lint-config`** (step-04.7)
-6. **A variable for every recipe** (step-04.8)
-7. **`just check`, everything a commit must pass** (step-04.9)
-8. **The git hook runs `just check`** (step-04.10)
-9. **`just types`** (step-05.1)
-10. **The types join `just check`** (step-05.6)
-11. **GitHub runs `just check`** (step-06.4)
-12. **`just docs`** (step-08.1)
-13. **`just docs` alone builds a site** (step-08.5)
-14. **The docs check joins `just check`** (step-08.7)
-15. **The library, behind the same verbs** (step-09.4)
-16. **`just build`** (step-10.1)
-17. **`just lint-config` checks the library too** (step-10.3)
+This tutorial has seventeen sections:
 
-Where the whole tutorial makes moves that this walk leaves out, the next stop says what they did. The stop
-starts from their code.
+1. **The project, and its justfile**
+2. **`just test`**
+3. **`just fmt`**
+4. **`just lint`**
+5. **`just lint-config`**
+6. **A variable for every recipe**
+7. **`just check`, everything a `git commit` must pass**
+8. **The git hook runs `just check`**
+9. **`just types`**
+10. **The types join `just check`**
+11. **GitHub runs `just check`**
+12. **`just docs`**
+13. **`just docs` alone builds a site**
+14. **The docs check joins `just check`**
+15. **The library, behind the same verbs**
+16. **`just build`**
+17. **`just lint-config` checks the library too**
+
+Where the whole tutorial makes changes that this one leaves out, the next section says what they did, and begins
+from their code.
 
 **What `just check` runs**
 
-`just check` is the gate of the project. It runs every check that a commit must pass, and stops at the first
-that fails. The table gives each stop that changes what it runs.
+`just check` runs every check that a `git commit` must pass, and ends at the first check that fails. The table gives each section that changes what it runs.
 
-| Stop | What changes | Where the change is |
+| Section | What changes | Where the change is |
 |---|---|---|
 | 7 | `check` comes in, with the format, the linter, the tests over a floor on the coverage, and the configuration | The justfile |
 | 10 | The type checker | The justfile |
@@ -49,9 +54,9 @@ that fails. The table gives each stop that changes what it runs.
 | 15 | The docs check counts the library | `docs/_smalldocs.yml` |
 | 17 | The check of the configuration reads the library's `pyproject.toml` | The recipe `lint-config` |
 
-Some moves that the walk leaves out change what `just check` runs too. They change `pyproject.toml`, not the
-justfile. The move step-05.3 adds the rules `ANN` to the linter. The move step-06.1 leaves the e2e test out of each
-run that does not ask for it, `just check` included. The move step-09.3 makes the floor on the coverage count both
+Some changes that this tutorial leaves out change what `just check` runs too. They change `pyproject.toml`, not
+the justfile. Before section 10, the rules `ANN` come into the linter. Before section 11, the end-to-end tests come in. They ask the
+real Wikipedia, and pytest leaves them out of each run that does not ask for them, `just check` included. Before section 15, the floor on the coverage counts both
 packages.
 
 **Who runs `just check`**
@@ -60,15 +65,15 @@ Three callers run `just check`, and none of them changes when `check` changes.
 
 | Caller | From | When it runs |
 |---|---|---|
-| A person, in the terminal | Stop 7 | When the person remembers |
-| The git hook | Stop 8 | Before each commit, in a clone where `just hook` ran |
-| GitHub's job `check` | Stop 11 | On every push to main and every pull request |
+| A person, in the terminal | Section 7 | When the person remembers |
+| The git hook | Section 8 | Before each `git commit`, in a clone where `just hook` ran |
+| GitHub's job `check` | Section 11 | On every push to main and every pull request |
 
 **The verbs, and what is behind each**
 
 The table gives each verb of the last justfile, and the commands that its recipe runs.
 
-| Verb | What its recipe runs | Stop |
+| Verb | What its recipe runs | Section |
 |---|---|---|
 | `help` | `just --show VERB`, or `just --list --unsorted` | 1 |
 | `setup` | `uv sync --locked` | 1 |
@@ -84,15 +89,16 @@ The table gives each verb of the last justfile, and the commands that its recipe
 
 ## The project, and its justfile
 
-This stop is all of step-00. It shows what `uv init` made, the command `wikiapp`, and the first justfile. The
-justfile has three recipes. `default` lists the verbs, `help` explains one, and `setup` installs the project.
+The project has a justfile from the start, so the first task already has a verb. This section shows what
+`uv init` made, the command `wikiapp`, and the first justfile. The justfile has three recipes. `default` lists the
+verbs, `help` explains one, and `setup` installs the project.
 
 {{include step-00}}
 
 **The parts of a justfile**
 
 A justfile has settings, variables and recipes. `set positional-arguments` is a setting. It gives the words after
-a verb to the shell of the recipe, as `$1`, `$2` and `"$@"`. The first variable comes at stop 6.
+a verb to the shell of the recipe, as `$1`, `$2` and `"$@"`. The first variable comes in section 6.
 
 A recipe has up to four parts, from the top.
 
@@ -101,7 +107,7 @@ A recipe has up to four parts, from the top.
   `[private]` leaves `default` out of the list.
 - **The name and the parameters.** In `setup *args:`, the star lets `args` take any number of words, or none.
 - **The body,** indented under the name. The body of `setup` is one line. The body of `help` is a script, which
-  stop 5 explains.
+  section 5 explains.
 
 `just` with no verb runs the first recipe of the file. Here that is `default`, which lists the others.
 
@@ -109,145 +115,137 @@ A recipe has up to four parts, from the top.
 
 $ just setup
 
-Since the last stop, the walk leaves out [step-01](https://rahuldave.com/smallwikiapp-walk/watch/step-01.html) and
-the move [step-02.1](https://rahuldave.com/smallwikiapp-walk/watch/step-02.html#step-02.1). The command asks
-Wikipedia for a random page, and prints its title and summary, with click and requests. It sends a User-Agent, and
-has an option `--version`. pytest came in, in a dependency group `test`, with the first test. `uv run pytest`
-printed `1 passed`. This stop starts with that code.
+The command now asks Wikipedia for a random page, and prints its title and summary, with click and requests. It
+sends a User-Agent, and has an option `--version`. `default-groups = "all"` in `pyproject.toml` makes uv install
+every dependency group. pytest is in a dependency group `test`, with the first test.
+`uv run pytest` printed `1 passed`.
 
-`just test` is the first verb after `setup`, and the first that runs a check.
+A person who runs the tests must know the tool and its options. `just test` is the first verb after `setup`, and
+the first that runs a check.
 
-{{include step-02.2}}
+{{include step-02.4}}
 
 The body of `test` is one line, `{{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}`.
 `just` works out the part between `{{` and `}}` before a shell sees the line. If the only word after the verb is
 `help`, the line is `just help test`. Otherwise it is `uv run pytest "$@"`.
 
-Each later recipe of one line has this form. The longer recipes test the word in the shell, from stop 5. So
+Each later recipe of one line has this form. The longer recipes test the word in the shell, from section 5. So
 `just VERB help` explains each verb.
 
-`[no-exit-message]` changes what a failed test prints. Without it, `just` adds a line of its own, which starts
+`[no-exit-message]` changes what a failed test prints. Without it, `just` adds a line of its own, which begins
 "error: Recipe `test` failed". With it, the report of pytest is the last thing that the recipe prints.
 
 ## `just fmt`
 
 $ just setup
 
-Since the last stop, the walk leaves out the rest of
-[step-02](https://rahuldave.com/smallwikiapp-walk/watch/step-02.html) and all of
-[step-03](https://rahuldave.com/smallwikiapp-walk/watch/step-03.html). The tests got a mock in place of
-Wikipedia, and every run measures the coverage. The code split into a library, `src/wikiapp/wikipedia.py`, and
-the command. The command got an option `--language`. The library raises its own error, `WikipediaError`, and
-the command turns it into a message. This stop starts with that code.
+The code now also has tests with a mock in place of Wikipedia, and every run measures the coverage. The code is
+split into a library, `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`. The
+library raises its own error, `WikipediaError`, and the command turns it into a message.
 
-ruff comes in, and `just fmt` formats the code and the tests.
+The code mixes styles. ruff comes in, and `just fmt` formats the code and the tests.
 
-{{include step-04.1}}
+{{include step-04.1..step-04.2}}
 
 ## `just lint`
 
 $ just setup
 
-Since the last stop, the walk leaves out the move
-[step-04.2](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html#step-04.2), in which `just fmt` formatted
-the code. This stop starts with that code.
+The code is now formatted, by `just fmt`.
 
-The rules of the linter go in `pyproject.toml`, and `just lint` runs the linter.
+A formatter changes how the code looks, and finds no mistakes. The rules of the linter go in `pyproject.toml`, and
+`just lint` runs the linter.
 
-{{include step-04.3}}
+{{include step-04.4}}
 
 ## `just lint-config`
 
 $ just setup
 
-Since the last stop, the walk leaves out the moves
-[step-04.4](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html#step-04.4) to
-[step-04.6](https://rahuldave.com/smallwikiapp-walk/watch/step-04.html#step-04.6). `just lint --fix` sorted the
-imports, since the words after `lint` go to ruff. A person fixed the other four problems. This stop starts with
-that code.
+The code now also has the fixes of the linter's five problems. `just lint --fix` sorted the imports, since the
+words after `lint` go to ruff. A person fixed the other four problems.
 
-`just lint-config` checks the configuration. Its recipe is a small shell script, which runs three commands and
-stops at the first that fails.
+Nothing checks the files that set up the project. `just lint-config` checks the configuration. Its recipe is a
+small shell script, which runs three commands and ends at the first that fails.
 
-{{include step-04.7}}
+{{include step-04.8..step-04.9}}
 
-A recipe has one of two kinds of body. Each line of a plain body runs in a shell of its own, and the recipe stops
+A recipe has one of two kinds of body. Each line of a plain body runs in a shell of its own, and the recipe ends
 at the first line that fails. A body whose first line is `#!/usr/bin/env sh` is a script, and one shell runs all of
-it. `help`, from stop 1, is a script too. A script without `set -e` goes on after a command fails. In
+it. `help`, from section 1, is a script too. A script without `set -e` goes on after a command fails. In
 `lint-config`, `set -e` is the line after `#!/usr/bin/env sh`.
 
 In a script, the test of the word `help` is a line of shell, `[ "$*" = help ]`. It does the same as the `{{ if }}`
-of stop 2, since `"$*"` is the words after the verb, joined by spaces.
+of section 2, since `"$*"` is the words after the verb, joined by spaces.
 
 ## A variable for every recipe
 
 $ just setup
 
-This move changes no recipe. It changes how each recipe that runs `uv` runs it.
+A recipe that runs `uv` can change the lockfile, and prints no warning. This section changes no recipe. It
+changes how each recipe that runs `uv` runs it.
 
-{{include step-04.8}}
+{{include step-04.10}}
 
-## `just check`, everything a commit must pass
+## `just check`, everything a `git commit` must pass
 
 $ just setup
 
-`just check` runs four of the other verbs, one after the other. It names no tool of its own.
+A person must remember four verbs before each `git commit`. `just check` runs those four verbs, one after the
+other. It names no tool of its own.
 
-{{include step-04.9}}
+{{include step-04.11}}
 
 $ just
 
 `just` lists `help` first, then the other verbs in their groups, each with its comment. `check` is under
 `[quality]`, after the four verbs that it runs.
 
-From this stop on, "a commit must pass `just check`" is the rule of the project. The next stop and stop 11 add
-two callers, which run it by themselves. Each later check joins `check`, so each caller runs it too.
+From here on, "each `git commit` must pass `just check`" is the rule of the project. The next section and section
+11 add two callers, which run it by themselves. Each later check joins `check`, so each caller runs it too.
 
 ## The git hook runs `just check`
 
 $ just setup
 
-pre-commit installs a git hook. The hook is one more caller of `just check`, and its only check of the Python code
-is `just check`.
+A person can forget to run `just check`. `pre-commit` installs a git hook. The hook is one more caller of
+`just check`, and its only check of the Python code is `just check`.
 
-{{include step-04.10}}
+{{include step-04.12..step-04.13}}
 
-The hook makes sure that `just check` runs on this machine before each commit. It has limits.
+The hook makes sure that `just check` runs on this machine before each `git commit`. It has limits.
 
 - **It is in one clone only.** git does not copy `.git/hooks` with the repository. A clone has the hook only after
   `just hook` runs in it, and `git commit --no-verify` skips the hook.
 - **It needs the clone's `.venv`.** `pre-commit install` writes the path of `.venv/bin/python3` into the
-  hook, as an absolute path. If `.venv` is gone and no other pre-commit is on the PATH, git refuses every commit.
-  The hook prints that `pre-commit` was not found, and asks whether the virtualenv is active. `just setup` makes
-  `.venv` again.
-- **It runs tools of the machine.** The line `language: system` tells pre-commit to run `just check` as it is,
+  hook, as an absolute path. If `.venv` is gone and no other `pre-commit` is on the PATH, every `git commit`
+  fails. The hook prints that `pre-commit` was not found, and asks whether the virtualenv is active.
+  `just setup` makes `.venv` again.
+- **It runs tools of the machine.** The line `language: system` tells `pre-commit` to run `just check` as it is,
   with the `just` and the `uv` that the machine has.
 
-So the hook helps on one machine, and `just check` is the gate. At stop 11, GitHub runs the same gate, on
+So the hook runs `just check` on one machine only. In section 11, GitHub runs `just check` too, on
 its own machines, for every push to main and every pull request.
 
 ## `just types`
 
 $ just setup
 
-The next verb runs a new tool, and `check` does not run it yet.
+The linter does not check types. The next verb runs a type checker, and `check` does not run it yet.
 
-{{include step-05.1}}
+{{include step-05.1..step-05.2}}
 
 ## The types join `just check`
 
 $ just setup
 
-Since the last stop, the walk leaves out the moves
-[step-05.2](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html#step-05.2) to
-[step-05.5](https://rahuldave.com/smallwikiapp-walk/watch/step-05.html#step-05.5). `__init__.py` now asks for the
-version of `"wikiapp"` by name, which fixes the one problem that ty found. A family of rules, `ANN`, asks for a type
-on every parameter and return. The code and the tests got their types. This stop starts with
-that code.
+In the code now, `__init__.py` asks for the version of `"wikiapp"` by name, which fixes the one problem that
+ty found. A family of rules, `ANN`, asks for a type on every parameter and return. The code and the tests have
+their types.
 
-One line in `check` runs the type checker.
+`just check` does not run the type checker yet. One line in `check` runs it.
 
-{{include step-05.6}}
+{{include step-05.7}}
 
 `.pre-commit-config.yaml` still says `entry: just check`, and the hook now
 checks the types too.
@@ -256,15 +254,13 @@ checks the types too.
 
 $ just setup
 
-Since the last stop, the walk leaves out the moves
-[step-06.1](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html#step-06.1) to
-[step-06.3](https://rahuldave.com/smallwikiapp-walk/watch/step-06.html#step-06.3). The tests that ask the real
-Wikipedia run only on request, with `just test -m e2e`. The project accepts any Python from 3.11 on. This stop
-starts with that code.
+In the code now, the tests that ask the real Wikipedia run only on request, with `just test -m e2e`. The project
+accepts any Python from 3.11 on.
 
-GitHub's job `check` runs `just setup`, then `just check`, on a fresh machine.
+The hook runs only in a clone where `just hook` ran. GitHub's job `check` runs `just setup`, then `just check`, on
+a fresh machine.
 
-{{include step-06.4}}
+{{include step-06.5}}
 
 The job `check` is the third caller of `just check`, after a person and the git hook. It runs from a fresh clone.
 No person has to install it or remember it, and `--no-verify` does not skip it. The job `tests` runs
@@ -274,61 +270,54 @@ No person has to install it or remember it, and `--no-verify` does not skip it. 
 
 $ just setup
 
-Since the last stop, the walk leaves out [step-07](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html).
-`random_page` returns a `Page`, a pydantic model with a title and an extract. An answer that is not a page, or a
-language that is not a language code, raises `WikipediaError`. This stop starts with that code.
+In the code now, `random_page` returns a `Page`, a pydantic model with a title and an extract. An answer that
+is not a page, or a language that is not a language code, raises `WikipediaError`.
 
-smalldocs comes in, and `just docs check` counts what has documentation. The words after `docs` go to `smalldocs
-api`.
+Nothing says which parts of the code have documentation. smalldocs comes in, and `just docs check` counts what has
+documentation. The words after `docs` go to `smalldocs api`.
 
-{{include step-08.1}}
+{{include step-08.1..step-08.2}}
 
 ## `just docs` alone builds a site
 
 $ just setup
 
-Since the last stop, the walk leaves out the moves
-[step-08.2](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html#step-08.2) to
-[step-08.4](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html#step-08.4). The library, the command and
-the tests got their documentation, and the docs check finds no gap. This stop starts with that code.
+The code now also has the documentation of the library, the command and the tests, and the docs check finds no
+gap.
 
-The recipe `docs` changes. With no words, it builds a site. With words, it works as before, so `just docs check`
-is the same command.
+The reference is text in a terminal. The recipe `docs` changes. With no words, it builds a site. With words, it
+works as before, so `just docs check` is the same command.
 
-{{include step-08.5}}
+{{include step-08.6}}
 
 ## The docs check joins `just check`
 
 $ just setup
 
-Since the last stop, the walk leaves out the move
-[step-08.6](https://rahuldave.com/smallwikiapp-walk/watch/step-08.html#step-08.6), in which the README names the
-tests and the docs. This stop starts with that code.
+The code now also has a README that names the tests and the docs.
 
-One line in `check` runs the docs check.
+`just check` does not run the docs check yet. One line in `check` runs it.
 
-{{include step-08.7}}
+{{include step-08.8}}
 
 ## The library, behind the same verbs
 
 $ just setup
 
-Since the last stop, the walk leaves out [step-08b](https://rahuldave.com/smallwikiapp-walk/watch/step-08b.html)
-and the first three moves of [step-09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html). GitHub's
-tests install the group `test` alone. A second workflow builds the docs site and publishes it. It runs smalldocs
-with `uv run`, not `just docs`, because the recipe installs the group `dev`. So that workflow is a caller that
-skips the verb.
+The job `tests` on GitHub now installs the group `test` alone. A second workflow builds the docs site and
+publishes it. It runs smalldocs with `uv run`, not `just docs`, because the recipe installs every group. So
+that workflow is a caller that skips the verb.
 
-The library became a package of its own, `wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses
-it, and `src/wikiapp/wikipedia.py` is gone. This stop starts with that code.
+The library is a package of its own, `wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses it,
+and `src/wikiapp/wikipedia.py` is gone. The tests of the library are now in `tests/test_wikirandom.py`.
 
-Those moves did not change the justfile. One justfile, one `.pre-commit-config.yaml` and one hook serve both
+Those changes did not change the justfile. One justfile, one `.pre-commit-config.yaml` and one hook work for both
 packages. `just fmt`, `just lint` and `just types` read every Python file of the repository, so they checked the
-library's code from the first move. `just test` measures the coverage of both packages, since the move step-09.3
-added `--cov=wikirandom` to `pyproject.toml`. At the start of this stop, `just docs check` still counts only the
-app and the tests, 12 of 12. This stop changes `docs/_smalldocs.yml`, behind the verb.
+library's code from the first. `just test` measures the coverage of both packages, since `pyproject.toml` has
+`--cov=wikirandom`. Here, `just docs check` still counts only the app and the tests, 12 of 12. This section
+changes `docs/_smalldocs.yml`, behind the verb.
 
-{{include step-09.4}}
+{{include step-09.10}}
 
 The justfile did not change, and `just docs check` checks more. The hook and GitHub's job `check` run the new
 docs check without a change.
@@ -337,7 +326,8 @@ docs check without a change.
 
 $ just setup
 
-The last verb is about the packages, not about checks, so `check` does not run it.
+The packages must be built before anyone can install them. The last verb is about the packages, not about checks,
+so `check` does not run it.
 
 {{include step-10.1}}
 
@@ -345,19 +335,17 @@ The last verb is about the packages, not about checks, so `check` does not run i
 
 $ just setup
 
-Since the last stop, the walk leaves out the move
-[step-10.2](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html#step-10.2). The app asks for wikirandom
-0.1. This stop starts with that code.
+In the code now, the app asks for wikirandom 0.1.
 
-From step-09.1 to here, validate-pyproject, in `just lint-config`, read only the app's `pyproject.toml`. The hook
-and `just check` let every commit through with no check of the library's `pyproject.toml` against the standard.
+Since the library became a package, validate-pyproject, in `just lint-config`, has read only the app's
+`pyproject.toml`. The hook and `just check` let every `git commit` through with no check of the library's
+`pyproject.toml` against the standard.
 
 {{include step-10.3}}
 
 The verb has the same name, and its callers did not change. A file that a recipe leaves out is a file that no
 caller checks. The fix goes in one place, the recipe, and all three callers have it.
 
-The walk stops here. After it, the whole tutorial makes the last two moves of
-[step-10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). The library gets a licence and an author, both packages
-get a link to the repository, and the User-Agent says the installed version. The
-[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.
+This tutorial ends here. After it, the library gets a licence and an author, both packages get a link to the
+repository, and the User-Agent says the installed version. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.

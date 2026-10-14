@@ -1,0 +1,66 @@
+---
+title: "1.1 Two dependencies, and the lockfile"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-01.1.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The command needs two packages that Python does not have. `uv add` writes a package into `pyproject.toml`, and
+syncs `.venv`. It also chooses one version of each package that fits every range of versions, and writes the
+versions in `uv.lock`. uv calls this choice resolving.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).
+
+## 1.1 click and requests {#step-01.1}
+
+The command needs two packages that Python does not have. click makes command lines, with options and help.
+requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
+also chooses one version of each package that fits every range of versions, and writes the versions in the
+lockfile, `uv.lock`. uv calls this choice resolving.
+
+This change came from running `uv add click requests`.
+
+In `pyproject.toml`, the list `dependencies` was empty. Now it has `"click>=8.5.0",` and `"requests>=2.34.2",`,
+each with the newest version as its lower bound. `uv.lock` has the exact version of each, and of every package
+that they need.
+
+```bash
+uv tree --depth 1
+```
+
+`uv tree` shows the two packages under `wikiapp`. A newer version of a package can come out after these notes.
+
+`pyproject.toml` asks for a range, such as `click>=8.5.0`. `uv.lock` names the one version that uv chose, and the
+versions of every package that click and requests need. Two people with the same lockfile get the same packages.
+
+### What changed {#step-01.1-what-changed-182c57}
+
+- <a id="step-01.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the dependencies of the package, which anyone who installs it gets. 4 lines added, 1 removed. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/pyproject.toml).
+  - look at `"click>=8.5.0",`
+- <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock).
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -7,7 +7,10 @@ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [{ name = "Rahul Dave" }]
+ requires-python = ">=3.13"
+-dependencies = []
++dependencies = [
++    "click>=8.5.0",
++    "requests>=2.34.2",
++]
+ 
+ [project.scripts]
+ wikiapp = "wikiapp.console:main"
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/36d49582843a575d84ed178ad66157913be4c59c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).

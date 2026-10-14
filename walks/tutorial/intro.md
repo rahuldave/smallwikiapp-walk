@@ -1,21 +1,19 @@
-This tutorial goes through the tagged steps of smallwikiapp, and the small commits between them. Each small
-commit is a move, one action. The command at the end of a move shows what the move did. Every step starts from
-the code of the step before, so every step starts with `just setup`. To take the tutorial in timewalk, where you
-can watch each move or make it yourself, see the [README](https://github.com/rahuldave/smallwikiapp-walk#readme).
+We build `wikiapp`, a small command that prints the title and the summary of a random Wikipedia page. Around the
+command we build the project. It gets its packages with uv, tests, a library, a formatter, a linter and types. It
+also gets checks on GitHub, documentation made from the code, and a build.
+
+We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
+file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
+against it.
+
+Each move first says what problem it solves. Then it gives
+the change, piece by piece, and a command that checks the result. Every section starts with `just setup`, which
+makes the environment of the project match the code.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
-2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
+2024 with pixi. Where the text says "the original wikiapp", it means that project.
 
-`just walk-update` in the class material makes this copy from
-[the notes that timewalk reads](https://github.com/rahuldave/smallwikiapp-walk/blob/main/walks/tutorial/notes.md),
-so do not edit it by hand.
-
-- **Each step** links to the code at that step.
-- **Each move** links to its commit, which shows what the move changed.
-- **A command to run** is in a grey block marked `bash`, and the text under it says what the command prints.
-- **Under "Files to read"**, each file links to the file as the move leaves it, and to its change in the commit.
-
-Five small walks take parts of this tutorial. Each has its own site, for
+Five shorter tutorials take parts of this one. Each has its own site, for
 [testing](https://rahuldave.com/smallwikiapp-walk/testing/),
 [linting](https://rahuldave.com/smallwikiapp-walk/linting/),
 [docs](https://rahuldave.com/smallwikiapp-walk/docs/),

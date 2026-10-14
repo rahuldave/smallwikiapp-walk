@@ -4,8 +4,8 @@ Each job on GitHub installs the group it needs, and no more.
 
 | Who | Installs | Runs |
 |---|---|---|
-| A person, `just setup` | `dev`: test, lint, docs | every recipe |
-| GitHub, job `check` | `dev` | `just check` |
+| A person, `just setup` | every group: test, lint, docs | every recipe |
+| GitHub, job `check` | every group | `just check` |
 | GitHub, 12 jobs `tests` | the group `test` | `pytest` |
 | GitHub, workflow `Docs` | the group `docs` | `smalldocs render docs`, then Pages |
 

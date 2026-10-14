@@ -1,55 +1,62 @@
-This walk takes the moves about documentation out of the whole tutorial of smallwikiapp. `wikiapp` is a small
-command that prints the title and the summary of a random Wikipedia page. The walk starts with the project, which
-`uv init` began, for Python 3.13. The command then gets its code. The moves about documentation come after, when
-the code has tests, lint and types.
+We document `wikiapp`, a small command that prints the title and the summary of a random Wikipedia page. A person
+who calls the code needs to know what each part does. A person who reads the project on GitHub needs to know where
+each part is. smalldocs makes a reference from the docstrings of the code, and counts what has none.
+
+This tutorial takes the parts about documentation out of the whole tutorial of smallwikiapp. It starts from the
+project that `uv init` made, for Python 3.13. The command then gets its code. The documentation comes after,
+when the code has tests, lint and types.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
-2024 with pixi. Where the notes say "the original wikiapp", they mean that project.
+2024 with pixi. Where the text says "the original wikiapp", it means that project.
 
-The walk has eleven stops. Each stop takes a whole step or one move:
+We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
+file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
+against it.
 
-1. **The project** (step-00)
-2. **The command** (step-01)
-3. **smalldocs, and what is not documented** (step-08.1)
-4. **The library documented** (step-08.2)
-5. **The command documented** (step-08.3)
-6. **The tests documented** (step-08.4)
-7. **A site** (step-08.5)
-8. **The README's folders** (step-08.6)
-9. **The docs check in `just check`** (step-08.7)
-10. **The docs on GitHub Pages** (step-08b.2)
-11. **The docs check counts the library** (step-09.4)
+This tutorial has eleven sections:
 
-Where the whole tutorial makes moves that this walk leaves out, the next stop says what they did. The stop
-starts from their code.
+1. **The project**
+2. **The command**
+3. **smalldocs, and what is not documented**
+4. **The library documented**
+5. **The command documented**
+6. **The tests documented**
+7. **A site**
+8. **The README's folders**
+9. **The docs check in `just check`**
+10. **The docs on GitHub Pages**
+11. **The docs check counts the library**
+
+Where the whole tutorial makes changes that this one leaves out, the next section says what they did, and begins
+from their code.
 
 **Kinds of documentation**
 
-The table gives each kind of documentation, and the stops where it appears.
+The table gives each kind of documentation, and the sections where it appears.
 
 | Kind | Who reads it, and what it says | Where |
 |---|---|---|
-| README | A reader on GitHub. What the project is, and where each part is | Stops 1 and 8 |
-| Help text | A person who runs the command. click writes it from the docstring and the options | Stops 2 and 5 |
-| Reference | A person who calls the code. smalldocs makes it from the code | Stops 3, 7 and 11 |
-| Docstring | What a module, a class or a function does | Stops 1 to 6 |
-| Docment | What each parameter, field and return is | Stops 3 to 6 |
-| Tests as documentation | What the code must do, in a docstring above the asserts | Stop 6 |
-| A written page | What the project does, on the front page of the site | Stop 7 |
-| A published site | The site, on GitHub Pages, built again on every push to main | Stop 10 |
-| Docs check | Counts what is documented, and names each gap. From stop 9, a commit must pass it | Stops 3, 9 and 11 |
+| README | A reader on GitHub. What the project is, and where each part is | Sections 1 and 8 |
+| Help text | A person who runs the command. click writes it from the docstring and the options | Sections 2 and 5 |
+| Reference | A person who calls the code. smalldocs makes it from the code | Sections 3, 7 and 11 |
+| Docstring | What a module, a class or a function does | Sections 1 to 6 |
+| Docment | What each parameter, field and return is | Sections 3 to 6 |
+| Tests as documentation | What the code must do, in a docstring above the asserts | Section 6 |
+| A written page | What the project does, on the front page of the site | Section 7 |
+| A published site | The site, on GitHub Pages, built again on every push to main | Section 10 |
+| Docs check | Counts what is documented, and names each gap. From section 9, each `git commit` must pass it | Sections 3, 9 and 11 |
 
 ## The project
 
-This stop is all of step-00. It shows what `uv init` made, and the command `wikiapp`. The justfile lists the
-tasks of the project, and the README says what the project is.
+The first documentation of a project is its README. This section shows what `uv init` made, and the command
+`wikiapp`. The justfile lists the tasks of the project, and the README says what the project is.
 
 {{include step-00}}
 
 ## The command
 
-This stop is all of step-01. The command asks Wikipedia for a random page, and prints its title and summary. Its
-docstring and its options make the text of `--help`.
+The command asks Wikipedia for a random page, and prints its title and summary. Its docstring and its options make
+the text of `--help`, the first documentation that a person who runs it reads.
 
 {{include step-01}}
 
@@ -57,81 +64,82 @@ docstring and its options make the text of `--help`.
 
 $ just setup
 
-Since the last stop, the walk leaves out the steps
-[02](https://rahuldave.com/smallwikiapp-walk/watch/step-02.html) to
-[07](https://rahuldave.com/smallwikiapp-walk/watch/step-07.html). pytest came in, in a dependency group `test`,
-which the group `dev` includes. Tests came in, with a mock in place of Wikipedia, and coverage on every run. The
-code split into a library, `src/wikiapp/wikipedia.py`, and the command. The command got an option `--language`.
+The code now also has pytest, in a dependency group `test`, and uv installs every group. It has tests, with a
+mock in place of Wikipedia, and coverage on every run. The code is split into a library,
+`src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
 
 ruff formats and lints the code, in a group `lint`, and `just check` runs every check. `just hook` installs a git
-hook, which runs `just check` before each commit. ty checks the types.
+hook, which runs `just check` before each `git commit`. ty checks the types.
 
 The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
 `random_page` returns a `Page`, a pydantic model with a title and an extract. An answer that is not a page, or a
-language that is not a language code, raises `WikipediaError`. This stop starts with that code.
+language that is not a language code, raises `WikipediaError`.
 
-smalldocs makes the reference from the code. `just docs check` counts what has documentation, and lists each gap.
+Nothing yet says which parts of the code have documentation. smalldocs, in a new group `docs`, makes the reference
+from the code.
+`just docs check` counts what has documentation, and lists each gap.
 
-{{include step-08.1}}
+{{include step-08.1..step-08.2}}
 
 ## The library documented
 
 $ just setup
 
-The library gets docstrings, and a docment beside each parameter and field.
+The check lists gaps in the library. The library gets docstrings, and a docment beside each parameter and field.
 
-{{include step-08.2}}
+{{include step-08.3}}
 
 ## The command documented
 
 $ just setup
 
-`src/wikiapp/__init__.py` and `console.py` get a docstring each. `main` gets a longer docstring and a docment,
-and the option `--language` a clearer help.
+The check lists gaps in the command, `console.py`. It and `src/wikiapp/__init__.py` get a docstring each. `main` gets
+a longer docstring and a docment, and the option `--language` a clearer help.
 
-{{include step-08.3}}
+{{include step-08.4}}
 
 ## The tests documented
 
 $ just setup
 
-Each test says what it checks, and the docs check finds no gap.
+The tests say what the code must do, and the check lists them as gaps too. Each test now says what it checks, and
+the docs check finds no gap.
 
-{{include step-08.4}}
+{{include step-08.5}}
 
 ## A site
 
 $ just setup
 
-smalldocs builds a site, with a front page and a reference page for `console.py` and one for `wikipedia.py`.
+The reference is text in a terminal. smalldocs builds a site, with a front page and a reference page for
+`console.py` and one for `wikipedia.py`.
 
-{{include step-08.5}}
+{{include step-08.6}}
 
 ## The README's folders
 
 $ just setup
 
-The README names the tests and the docs among the folders.
+The README does not name the tests and the docs among the folders. Now it names them.
 
-{{include step-08.6}}
+{{include step-08.7}}
 
 ## The docs check in `just check`
 
 $ just setup
 
-From this stop on, a commit must pass the docs check.
+A person must remember to run the docs check. Now `just check` runs it, so each `git commit` must pass it.
 
-{{include step-08.7}}
+{{include step-08.8}}
 
 ## The docs on GitHub Pages
 
 $ just setup
 
-Since the last stop, the walk leaves out the move
-[step-08b.1](https://rahuldave.com/smallwikiapp-walk/watch/step-08b.html#step-08b.1), in which GitHub's tests
-install the group `test` alone. This stop starts with that code.
+The job `tests` on GitHub now installs the group `test` alone.
 
-The site that `just docs` builds on one machine goes on the web, and GitHub builds it again after each push.
+The site that `just docs` builds is on one machine only. It goes on the web, and GitHub builds it again after
+each push.
 
 {{include step-08b.2}}
 
@@ -139,21 +147,16 @@ The site that `just docs` builds on one machine goes on the web, and GitHub buil
 
 $ just setup
 
-Since the last stop, the walk leaves out the first three moves of
-[step-09](https://rahuldave.com/smallwikiapp-walk/watch/step-09.html). The library became a package of its own,
-`wikirandom`, in `packages/wikirandom`, with a README of its own. Its code moved there with its docstrings and
-docments. The app uses it, and `src/wikiapp/wikipedia.py` is gone. The README and the front page of the docs name
-both packages.
+The code now also has the library as a package of its own, `wikirandom`, in `packages/wikirandom`, with a README of
+its own. Its code went there with its docstrings and docments. The app uses it, and `src/wikiapp/wikipedia.py` is
+gone. The README and the front page of the docs name both packages. The tests of the library are now
+`tests/test_wikirandom.py`.
 
-At that point, `just docs check` still counts only the app and the tests, 12 of 12. The tests of the library are
-now `tests/test_wikirandom.py`. This stop starts with that code.
+Before this section, `just docs check` counts only the app and the tests, 12 of 12. After it, the check counts the library too.
 
-The check counts the library, now a package of its own.
+{{include step-09.10}}
 
-{{include step-09.4}}
-
-The walk stops here. After it, the whole tutorial makes step
-[10](https://rahuldave.com/smallwikiapp-walk/watch/step-10.html). `just build` builds both packages, and the app
-asks for wikirandom 0.1. `just lint-config` checks the library's `pyproject.toml` too. The library gets a licence
-and an author, both packages get a link to the repository, and the User-Agent says the installed version. The
-[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every step and every move.
+This tutorial ends here. After it, `just build` builds both packages, and the app asks for wikirandom 0.1.
+`just lint-config` checks the library's `pyproject.toml` too. The library gets a licence and an author, both
+packages get a link to the repository, and the User-Agent says the installed version. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.

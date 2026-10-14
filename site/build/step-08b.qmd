@@ -1,0 +1,217 @@
+---
+title: "8b The docs on GitHub Pages"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-08b.qmd) is the other way to read this part.
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+Every job on GitHub installs every dependency group, with every tool of the project, though most jobs need only a
+few. Also, the docs site exists only on the machine that builds it. So we make the job `tests` install the group `test`
+alone. Then a new workflow builds the docs site with the group `docs` alone, and GitHub Pages publishes it.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
+
+## 8b.1 The tests install the group test alone {#step-08b.1}
+
+The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
+tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+
+The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
+to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37
+of `.github/workflows/test.yaml`, still runs `just setup`, which installs every group. It needs every tool, since
+`just check` runs them all.
+
+Apply the patch to [`.github/workflows/test.yaml`](#step-08b.1-.github-workflows-test.yaml-a60e23), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0.diff | git apply --include=.github/workflows/test.yaml
+```
+
+The patch changes the comment line that starts with `# tests:`, and the last line of the job `tests`, which was
+`- run: uv run --locked pytest`.
+
+```bash
+uv run --isolated --locked --no-default-groups --group test pytest -q
+uv run pre-commit run check-yaml --files .github/workflows/test.yaml
+```
+
+`--isolated` runs the command as the job does, in a temporary environment with the group `test` alone, and leaves
+`.venv` as it is. The tests print `7 passed, 2 deselected`. The file is valid YAML.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 971e9d780fd5
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
+```
+
+### What changed {#step-08b.1-what-changed-182c57}
+
+- <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml).
+  - look at `- run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more`
+
+<details open><summary>The patch to <code>.github/workflows/test.yaml</code></summary>
+
+```diff
+@@ -1,6 +1,6 @@
+ # What GitHub runs on every push to main and every pull request.
+ #
+-# tests: the tests, on three systems and four Pythons, twelve jobs at once.
++# tests: the tests, on three systems and four Pythons, twelve jobs at once, each with the group test alone.
+ # check: everything `just check` runs, once, as the git hook does.
+ name: CI
+ 
+@@ -25,7 +25,7 @@ jobs:
+       - uses: astral-sh/setup-uv@v10.2.0
+         with:
+           python-version: ${{ matrix.python }}
+-      - run: uv run --locked pytest
++      - run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more
+ 
+   check:
+     runs-on: ubuntu-latest
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
+
+## 8b.2 A workflow that publishes the docs {#step-08b.2}
+
+`just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
+`.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
+
+The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
+`smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at
+line 85, runs `uv run` with no option, which installs every group. The job then gives the folder
+`docs/_site` to Pages. The job `deploy`, from line 32, publishes it.
+
+Lines 11 to 14, under `permissions`, let the workflow publish to Pages. Lines 16 to 18, under `concurrency`, stop
+an older publish when a newer push starts one.
+
+The file is new, and comes whole, as a patch.
+
+Apply the patch to [`.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740.diff | git apply --include=.github/workflows/docs.yaml
+```
+
+Read the comment at the top, then the lines under `permissions`, `concurrency` and `jobs`.
+
+The workflow runs only where two settings on GitHub allow it. The settings are not in any file of the project. Both
+are on GitHub's website, and need no tool on your machine.
+
+- **Actions.** GitHub turns off the workflows of a fork, until its owner turns them on, on the tab **Actions**.
+- **Pages.** Under **Settings**, then **Pages**, the source of the site must be **GitHub Actions**.
+
+GitHub then publishes the site at `https://OWNER.github.io/smallwikiapp/`, where OWNER is the name of the account
+that owns the fork. The account rahuldave has a domain of its own. So the site of rahuldave/smallwikiapp is at
+[rahuldave.com/smallwikiapp](https://rahuldave.com/smallwikiapp/).
+
+In every fork, the links from the reference to the code go to rahuldave/smallwikiapp. Line 20 of
+`docs/_smalldocs.yml` names that repository.
+
+To publish the docs from your own fork of smallwikiapp, do these things on GitHub's website.
+
+1. Fork https://github.com/rahuldave/smallwikiapp, if you have no fork of it yet.
+2. In your fork, open the tab **Actions**, and turn the workflows on.
+3. Open **Settings**, then **Pages**. Under **Source**, choose **GitHub Actions**.
+4. Open **Actions**, and choose the workflow **Docs**. Press **Run workflow**, keep the branch `main`, and press the
+   green **Run workflow** under it.
+5. When the run ends, open `https://YOU.github.io/smallwikiapp/`, with the name of your account in place of YOU.
+
+Your fork has the finished project, so the site shows its docs. The changes that you make in this tutorial stay
+on your machine, and do not reach the fork. From then on, each push to the main branch of your fork builds the site
+again.
+
+```bash
+uv run pre-commit run check-yaml --files .github/workflows/docs.yaml
+uv run --isolated --locked --no-default-groups --group docs smalldocs render docs
+```
+
+The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
+prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 39a4b09f8563
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09f8563 --staged --worktree -- :/
+```
+
+### What changed {#step-08b.2-what-changed-182c57}
+
+- <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml).
+  - look at `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
+
+<details open><summary>The patch to <code>.github/workflows/docs.yaml</code></summary>
+
+```diff
+@@ -0,0 +1,40 @@
++# The docs site. On every push to main, smalldocs builds the site from the code, and GitHub Pages
++# publishes it at https://OWNER.github.io/smallwikiapp/, with the name of the repository's owner. For
++# rahuldave/smallwikiapp, that is https://rahuldave.com/smallwikiapp/. The job installs the group docs alone.
++name: Docs
++
++on:
++  push:
++    branches: [main]
++  workflow_dispatch:  # a person can also run it from the Actions tab
++
++permissions:
++  contents: read
++  pages: write     # to publish the site
++  id-token: write  # to prove to Pages that this workflow is the one publishing
++
++concurrency:
++  group: pages
++  cancel-in-progress: true  # a newer push replaces a publish that has not finished
++
++jobs:
++  build:
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v7
++      - uses: astral-sh/setup-uv@v10.2.0
++      - run: uv run --locked --no-default-groups --group docs smalldocs render docs
++      - uses: actions/configure-pages@v6
++      - uses: actions/upload-pages-artifact@v5
++        with:
++          path: docs/_site
++
++  deploy:
++    needs: build
++    runs-on: ubuntu-latest
++    environment:
++      name: github-pages
++      url: ${{ steps.deployment.outputs.page_url }}
++    steps:
++      - id: deployment
++        uses: actions/deploy-pages@v5
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).

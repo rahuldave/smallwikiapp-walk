@@ -1,0 +1,148 @@
+---
+title: "4.12 to 4.13 A git hook"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-04.12-to-step-04.13.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+A person can forget to run `just check`. `pre-commit` runs three small checks of the files, then `just check`,
+before each `git commit`.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
+
+## 4.12 `pre-commit`, in the group lint {#step-04.12}
+
+`just check` runs every check, but a person must remember to run it. A `pre-commit` hook is a program that git runs
+before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
+runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
+
+This change came from running `uv add --group lint pre-commit`.
+
+In `pyproject.toml`, the group `lint` now starts with `"pre-commit>=4.7.0",`, on line 28. `uv.lock` has its exact
+version, and those of the nine packages that it needs, such as `pyyaml` and `virtualenv`.
+
+```bash
+uv run pre-commit --version
+```
+
+It prints `pre-commit 4.7.0`. No hook is installed yet.
+
+### What changed {#step-04.12-what-changed-182c57}
+
+- <a id="step-04.12-pyproject.toml-5d07e7"></a>`pyproject.toml`: `pre-commit` in the group `lint`. 1 line added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/pyproject.toml).
+  - look at `"pre-commit>=4.7.0",`
+- <a id="step-04.12-uv.lock-8356d8"></a>`uv.lock`: the exact version of `pre-commit`, and of what it needs. 136 lines added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/uv.lock).
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -25,6 +25,7 @@ default-groups = "all"
+ 
+ [dependency-groups]
+ lint = [
++    "pre-commit>=4.7.0",
+     "ruff>=0.17.0",
+     "validate-pyproject>=0.26",
+ ]
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/29291b3575f2efd8f6062e3d04bbea648ae1fc11). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/29291b3575f2efd8f6062e3d04bbea648ae1fc11).
+
+## 4.13 A git hook {#step-04.13}
+
+`pre-commit` reads the hooks from a file, `.pre-commit-config.yaml`. Three come from `pre-commit`'s collection.
+They check for valid YAML, large files and leftover merge-conflict markers. The last hook runs `just check`, so the
+hook and the terminal run the same thing.
+
+A recipe `hook` installs the hook, once in each clone. `hook` is a recipe of its own, because `just setup` runs
+often and must not change files under `.git`. Once `just hook` installs the hook in a clone, it runs
+`just check` before each `git commit` in that clone.
+
+A patch to [`.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d).
+
+A patch to [`justfile`](#step-04.13-justfile-424f0b).
+
+In `.pre-commit-config.yaml`, the three hooks under `repo: https://github.com/pre-commit/pre-commit-hooks`, on
+line 6, come from `pre-commit`'s collection. The hook under `repo: local` has the line `entry: just check`, on
+line 17. In the `justfile`, the recipe `hook *args:` on line 27 comes after `setup`, in the group `setup`. It runs
+`uv run pre-commit install`.
+
+```bash
+uv run pre-commit install
+just --show hook
+just hook
+uv run pre-commit run --files .pre-commit-config.yaml
+```
+
+`uv run pre-commit install` prints `pre-commit installed at .git/hooks/pre-commit`, and `just hook` prints the
+same line. The hook is in `.git/hooks`, a folder that git does not track, so it stays installed for the rest of
+the tutorial.
+
+`pre-commit run` now runs every hook on the file named, as git does before it records a change. The first time on
+a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
+
+With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
+it.
+
+### What changed {#step-04.13-what-changed-182c57}
+
+- <a id="step-04.13-.pre-commit-config.yaml-e7d14d"></a>`.pre-commit-config.yaml`: three hooks from `pre-commit`'s collection, then `just check`. New, 20 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/.pre-commit-config.yaml).
+  - look at `entry: just check`
+- <a id="step-04.13-justfile-424f0b"></a>`justfile`: the recipe `hook`. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/justfile).
+  - look at `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
+
+<details><summary>The diff of <code>.pre-commit-config.yaml</code></summary>
+
+```diff
+@@ -0,0 +1,20 @@
++# What every commit must pass. `just hook` installs it as a git hook.
++#
++# The project's own checks are one hook that runs `just check`, so the hook and the terminal run the
++# same thing. The hooks before it guard against files that should never be committed.
++repos:
++  - repo: https://github.com/pre-commit/pre-commit-hooks
++    rev: v6.0.0
++    hooks:
++      - id: check-yaml
++      - id: check-added-large-files
++        args: [--maxkb=1000]
++      - id: check-merge-conflict
++  - repo: local
++    hooks:
++      - id: check
++        name: just check
++        entry: just check
++        language: system
++        pass_filenames: false
++        always_run: true
+```
+
+</details>
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -22,6 +22,11 @@ help *verb:
+ setup *args:
+     @{{ if args == "help" { "just help setup" } else { "uv sync --locked" } }}
+ 
++# Install the git hook: just check before every commit. Once per clone; just setup never touches git
++[group('setup')]
++hook *args:
++    @{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}
++
+ # Run the tests. Extra arguments go to pytest: just test -k title
+ [group('quality')]
+ [no-exit-message]
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).

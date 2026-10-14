@@ -1,0 +1,95 @@
+---
+title: "4.11 `just check`, every check in one recipe"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-04.11.qmd) is the other way to read this part.
+
+This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+
+```bash
+git restore --source d8a9c8f71eb5 --staged -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
+```
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The code now also has recipes that refuse a lockfile that is out of date.
+
+Each check is a recipe of its own, and a person must remember to run them all. `just check` runs the format, the
+linter, the tests and the configuration, in order.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
+
+## 4.11 The recipe check {#step-04.11}
+
+There are now four checks, and a person must remember to run each. A recipe `check` runs them all in order, and
+stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
+the configuration.
+
+Apply the patch to [`justfile`](#step-04.11-justfile-424f0b), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543.diff | git apply --include=justfile
+```
+
+The patch adds the recipe `check` at the end of the `justfile`.
+
+```bash
+just --show check
+just check
+```
+
+`just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
+
+Later in the whole tutorial, GitHub runs `just check` too, on every push to main and every pull request.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 1f73d6af30cc
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6af30cc --staged --worktree -- :/
+```
+
+### What changed {#step-04.11-what-changed-182c57}
+
+- <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile).
+  - look at `just test -q --cov-fail-under=90`
+
+<details open><summary>The patch to <code>justfile</code></summary>
+
+```diff
+@@ -50,3 +50,15 @@ lint-config *args:
+     uv run validate-pyproject pyproject.toml
+     uv lock --check
+     just --fmt --check --unstable
++
++# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
++[group('quality')]
++[no-exit-message]
++check *args:
++    #!/usr/bin/env sh
++    set -e
++    if [ "$*" = help ]; then just help check; exit 0; fi
++    just fmt --check
++    just lint
++    just test -q --cov-fail-under=90
++    just lint-config
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).

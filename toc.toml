@@ -4,8 +4,8 @@
 
 [[walk]]
 id = "show"
-title = "smallwikiapp, shown one move at a time"
-description = "Watch a small command and its project grow, one commit at a time: tests, a library, lint, types, CI, docs and a build."
+title = "smallwikiapp, one change at a time"
+description = "Watch a small command and its project grow, one change at a time, with tests, a library, lint, types, CI, docs and a build."
 kind = "tutorial"
 loose = ["pyproject.toml", "packages/wikirandom/pyproject.toml", "uv.lock"]   # compared without the versions: a later uv add writes newer ones
 folder = "walks/tutorial"
@@ -14,8 +14,8 @@ moves = "watch"                   # Show checks out each move's commit: for the 
 
 [[walk]]
 id = "do"
-title = "smallwikiapp, one move at a time, by hand"
-description = "Build the project yourself, one move at a time, from the notes. Each move ends with a command that shows what it did."
+title = "smallwikiapp, built by hand"
+description = "Build the project yourself, one change at a time, from the text. Each change ends with a command that shows what it did."
 kind = "tutorial"
 loose = ["pyproject.toml", "packages/wikirandom/pyproject.toml", "uv.lock"]
 folder = "walks/tutorial"
@@ -27,8 +27,8 @@ moves = "do"                      # the student makes each move from the notes, 
 
 [[walk]]
 id = "testing"
-title = "Testing smallwikiapp, one move at a time"
-description = "The project and its command, then the moves of smallwikiapp that add pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub, with their own group."
+title = "The tests of smallwikiapp"
+description = "The project and its command, then pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub, with their own group."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
 notes = "walks/testing/notes.md"    # its own notes: an intro, and a ## stop for each place, with its includes
@@ -38,8 +38,8 @@ moves = "watch"
 
 [[walk]]
 id = "linting"
-title = "Linting smallwikiapp, one move at a time"
-description = "The project and its command, then the moves of smallwikiapp that add a formatter and a linter, fix what the linter finds, check the configuration, and run every check before a commit."
+title = "The formatter and the linter of smallwikiapp"
+description = "The project and its command, then a formatter and a linter, their fixes, a check of the configuration, and every check before each `git commit`."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
 notes = "walks/linting/notes.md"
@@ -49,8 +49,8 @@ moves = "watch"
 
 [[walk]]
 id = "docs"
-title = "Documenting smallwikiapp, one move at a time"
-description = "The project and its command, then the moves of smallwikiapp that document the code, check the documentation, build a site with smalldocs, and publish it on GitHub Pages."
+title = "The documentation of smallwikiapp"
+description = "The project and its command, then documentation of the code, a check of it, a site built with smalldocs, and the site on GitHub Pages."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
 notes = "walks/docs/notes.md"
@@ -60,8 +60,8 @@ moves = "watch"
 
 [[walk]]
 id = "just"
-title = "just, the interface of smallwikiapp, one move at a time"
-description = "The project and its first justfile, then each verb as it comes in, and just check, which a person and a git hook run before a commit, and GitHub after a push."
+title = "just, the interface of smallwikiapp"
+description = "The project and its first justfile, then each verb as it comes in, and `just check`. A person and a git hook run it before each `git commit`, and GitHub after a push."
 kind = "tutorial"
 loose = ["pyproject.toml", "uv.lock"]
 notes = "walks/just/notes.md"
@@ -71,8 +71,8 @@ moves = "watch"
 
 [[walk]]
 id = "uv"
-title = "uv in smallwikiapp, one move at a time"
-description = "The project and its .venv, then the lockfile, dependency groups, when uv syncs, Python versions, environments, a group for each job on GitHub, a workspace of two packages, and a build."
+title = "uv in smallwikiapp"
+description = "The project and its `.venv`, then the lockfile, dependency groups, and when uv syncs. Then Python versions, environments, a group for each job on GitHub, a workspace of two packages, and a build."
 kind = "tutorial"
 loose = ["pyproject.toml", "packages/wikirandom/pyproject.toml", "uv.lock"]
 notes = "walks/uv/notes.md"

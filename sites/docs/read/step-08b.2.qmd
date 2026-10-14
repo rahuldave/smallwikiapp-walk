@@ -1,0 +1,114 @@
+---
+title: "8b.2 The docs on GitHub Pages"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-08b.2.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The job `tests` on GitHub now installs the group `test` alone.
+
+The site that `just docs` builds is on one machine only. It goes on the web, and GitHub builds it again after
+each push.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
+
+## 8b.2 A workflow that publishes the docs {#step-08b.2}
+
+`just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
+`.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
+
+The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
+`smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at
+line 85, runs `uv run` with no option, which installs every group. The job then gives the folder
+`docs/_site` to Pages. The job `deploy`, from line 32, publishes it.
+
+Lines 11 to 14, under `permissions`, let the workflow publish to Pages. Lines 16 to 18, under `concurrency`, stop
+an older publish when a newer push starts one.
+
+The file is new, and comes whole, as a patch.
+
+A patch to [`.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835).
+
+In the new file `.github/workflows/docs.yaml`, the line
+`- run: uv run --locked --no-default-groups --group docs smalldocs render docs` is the build of the site.
+
+The workflow runs only where two settings on GitHub allow it. The settings are not in any file of the project. Both
+are on GitHub's website, and need no tool on your machine.
+
+- **Actions.** GitHub turns off the workflows of a fork, until its owner turns them on, on the tab **Actions**.
+- **Pages.** Under **Settings**, then **Pages**, the source of the site must be **GitHub Actions**.
+
+GitHub then publishes the site at `https://OWNER.github.io/smallwikiapp/`, where OWNER is the name of the account
+that owns the fork. The account rahuldave has a domain of its own. So the site of rahuldave/smallwikiapp is at
+[rahuldave.com/smallwikiapp](https://rahuldave.com/smallwikiapp/).
+
+In every fork, the links from the reference to the code go to rahuldave/smallwikiapp. Line 20 of
+`docs/_smalldocs.yml` names that repository.
+
+```bash
+uv run pre-commit run check-yaml --files .github/workflows/docs.yaml
+uv run --isolated --locked --no-default-groups --group docs smalldocs render docs
+```
+
+The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
+prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
+
+### What changed {#step-08b.2-what-changed-182c57}
+
+- <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml).
+  - look at `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
+
+<details><summary>The diff of <code>.github/workflows/docs.yaml</code></summary>
+
+```diff
+@@ -0,0 +1,40 @@
++# The docs site. On every push to main, smalldocs builds the site from the code, and GitHub Pages
++# publishes it at https://OWNER.github.io/smallwikiapp/, with the name of the repository's owner. For
++# rahuldave/smallwikiapp, that is https://rahuldave.com/smallwikiapp/. The job installs the group docs alone.
++name: Docs
++
++on:
++  push:
++    branches: [main]
++  workflow_dispatch:  # a person can also run it from the Actions tab
++
++permissions:
++  contents: read
++  pages: write     # to publish the site
++  id-token: write  # to prove to Pages that this workflow is the one publishing
++
++concurrency:
++  group: pages
++  cancel-in-progress: true  # a newer push replaces a publish that has not finished
++
++jobs:
++  build:
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v7
++      - uses: astral-sh/setup-uv@v10.2.0
++      - run: uv run --locked --no-default-groups --group docs smalldocs render docs
++      - uses: actions/configure-pages@v6
++      - uses: actions/upload-pages-artifact@v5
++        with:
++          path: docs/_site
++
++  deploy:
++    needs: build
++    runs-on: ubuntu-latest
++    environment:
++      name: github-pages
++      url: ${{ steps.deployment.outputs.page_url }}
++    steps:
++      - id: deployment
++        uses: actions/deploy-pages@v5
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).

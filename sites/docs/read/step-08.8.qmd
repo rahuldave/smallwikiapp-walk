@@ -1,0 +1,64 @@
+---
+title: "8.8 The docs check in `just check`"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-08.8.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+A person must remember to run the docs check. Now `just check` runs it, so each `git commit` must pass it.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
+
+## 8.8 The docs check in `just check` {#step-08.8}
+
+Every function, parameter and field has documentation now, but no check fails when a new function has none. `just check` runs before
+each `git commit`, through the git hook, so `just docs check` goes in it, after the tests. The comment above
+`check` names the docs too.
+
+A patch to [`justfile`](#step-08.8-justfile-424f0b).
+
+In the `justfile`, `just docs check` is the line under `just test -q --cov-fail-under=90`, in `check`.
+
+```bash
+just check
+```
+
+The docs check prints `15 of 15`. Now, when a function, a parameter or a field has no documentation, the git hook
+fails, and git records no change. GitHub's job `check`, at lines 30 to 37 of `.github/workflows/test.yaml`, runs `just check`, so
+it runs the docs check too.
+
+### What changed {#step-08.8-what-changed-182c57}
+
+- <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile).
+  - look at `just docs check`
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -62,7 +62,7 @@ lint-config *args:
+     uv lock --check
+     just --fmt --check --unstable
+ 
+-# Everything a commit must pass: format, lint, types, the tests over the coverage floor, the configuration
++# Everything a commit must pass: format, lint, types, tests over the coverage floor, docs, configuration
+ [group('quality')]
+ [no-exit-message]
+ check *args:
+@@ -73,6 +73,7 @@ check *args:
+     just lint
+     just types
+     just test -q --cov-fail-under=90
++    just docs check
+     just lint-config
+ 
+ # The docs. Alone, the site in docs/_site; with words, smalldocs api: just docs check
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).

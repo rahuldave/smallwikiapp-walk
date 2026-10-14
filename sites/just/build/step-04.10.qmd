@@ -1,0 +1,79 @@
+---
+title: "4.10 A variable for every recipe"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-04.10.qmd) is the other way to read this part.
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source d8a9c8f71eb5 --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+A recipe that runs `uv` can change the lockfile, and prints no warning. This section changes no recipe. It
+changes how each recipe that runs `uv` runs it.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
+
+## 4.10 Recipes refuse an old lockfile {#step-04.10}
+
+When `pyproject.toml` changes and the lockfile does not, `uv run` writes a new lockfile and prints no warning. So
+any recipe can change the lockfile, and the person who runs it does not see the change. The variable `UV_LOCKED`
+makes every `uv run` refuse a lockfile that is out of date. The `justfile` exports it to every recipe.
+
+Apply the patch to [`justfile`](#step-04.10-justfile-424f0b), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/b7469ee81a824a46e6799d60957ea09d7cf2eade.diff | git apply --include=justfile
+```
+
+In the `justfile`, the patch adds `export UV_LOCKED := "1"` under the line `set positional-arguments`, after a
+blank line.
+
+```bash
+just --evaluate UV_LOCKED
+```
+
+It prints `1`. `just` puts the variable in the environment of every command of every recipe, so each `uv run`
+sees it.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat b7469ee81a82
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source d8a9c8f71eb5 --staged -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
+```
+
+### What changed {#step-04.10-what-changed-182c57}
+
+- <a id="step-04.10-justfile-424f0b"></a>`justfile`: one line, which exports `UV_LOCKED` to every recipe. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b7469ee81a824a46e6799d60957ea09d7cf2eade/justfile).
+  - look at `export UV_LOCKED := "1"`
+
+<details open><summary>The patch to <code>justfile</code></summary>
+
+```diff
+@@ -3,6 +3,8 @@
+ # Each word after a recipe's name reaches its commands whole, as "$1", "$2" and so on; "$@" is all of them
+ set positional-arguments
+ 
++export UV_LOCKED := "1"
++
+ [private]
+ default:
+     @just --list --unsorted
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).

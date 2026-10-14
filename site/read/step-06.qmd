@@ -1,0 +1,307 @@
+---
+title: "6 End to end, and CI"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-06.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+One test asks the real Wikipedia, so the tests fail without a network, and can fail when Wikipedia changes. We
+run such tests only on request. Then the project accepts every version of Python from 3.11 on. GitHub
+then runs the tests on three systems and four versions of Python after each push.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
+
+## 6.1 The end-to-end test runs only on request {#step-06.1}
+
+`test_main_succeeds` is the one test that goes over the network. It fails without a network, and its result
+depends on Wikipedia. The other tests use the mock in place of Wikipedia, so they run without the network, and give
+the same result on every run. A marker, `e2e`, which means end to end, sets the one test apart. Its new name says
+so, `test_main_succeeds_in_production`.
+
+A patch to [`tests/test_console.py`](#step-06.1-tests-test_console.py-9442ee).
+
+In `tests/test_console.py`, the last test has the marker `@pytest.mark.e2e`, and its new name.
+
+pytest must know the marker, and leave the e2e tests out of every run that does not ask for them.
+`pyproject.toml` declares the marker in `markers`. The option `-m 'not e2e'` in `addopts` leaves the e2e tests out.
+
+A patch to [`pyproject.toml`](#step-06.1-pyproject.toml-5d07e7).
+
+In `pyproject.toml`, `addopts` now ends with `-m 'not e2e'`, and the new line `markers` declares `e2e`.
+
+```bash
+just test -q
+just test -q -m e2e
+```
+
+The first command prints `6 passed, 1 deselected`. The second command runs the e2e test alone.
+
+### What changed {#step-06.1-what-changed-182c57}
+
+- <a id="step-06.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the option `-m 'not e2e'`, and the marker `e2e` in `markers`, with a comment. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/pyproject.toml).
+  - look at `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
+- <a id="step-06.1-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test, marked. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/tests/test_console.py).
+  - look at `@pytest.mark.e2e`
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -38,8 +38,11 @@ test = [
+ 
+ [tool.pytest.ini_options]
+ testpaths = ["tests"]
+-# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
+-addopts = "--cov=wikiapp --cov-report=term-missing"
++# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not. A test
++# marked e2e asks the real Wikipedia, so it needs the network, and runs only when asked for:
++# just test -m e2e
++addopts = "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"
++markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]
+ 
+ [tool.ruff]
+ # The one setting the formatter and the linter share. Ruff's own default is 88; this project reads
+```
+
+</details>
+
+<details><summary>The diff of <code>tests/test_console.py</code></summary>
+
+```diff
+@@ -41,6 +41,7 @@ def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_g
+     assert "Error" in result.output
+ 
+ 
+-def test_main_succeeds(runner: CliRunner) -> None:
++@pytest.mark.e2e
++def test_main_succeeds_in_production(runner: CliRunner) -> None:
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735).
+
+## 6.2 An end-to-end test of the library {#step-06.2}
+
+The mocks return a dictionary with a title and an extract. If the real Wikipedia stops sending those two keys,
+every test with a mock still passes, and the command fails. A second e2e test, from the original wikiapp, asks the
+real Wikipedia for a page and checks the two keys. It is also a contract test. It checks that the real Wikipedia
+still returns what the mocks return.
+
+A patch to [`tests/test_wikipedia.py`](#step-06.2-tests-test_wikipedia.py-2f4413).
+
+At the end of `tests/test_wikipedia.py`, `test_random_page_returns_dictionary_in_production` has the marker
+`e2e`. It checks that the page has `"title"` and `"extract"`. `import pytest` is in a block of its own.
+
+```bash
+just test -q -m e2e
+```
+
+The output is `2 passed, 6 deselected`.
+
+### What changed {#step-06.2-what-changed-182c57}
+
+- <a id="step-06.2-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 9 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/307d4d7b36bb9dc7bc8ad601c8275d5241283e35/tests/test_wikipedia.py).
+  - look at `assert "extract" in page`
+
+<details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
+
+```diff
+@@ -1,5 +1,7 @@
+ from unittest.mock import Mock
+ 
++import pytest
++
+ from wikiapp import wikipedia
+ 
+ 
+@@ -7,3 +9,10 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
++
++
++@pytest.mark.e2e
++def test_random_page_returns_dictionary_in_production() -> None:
++    page = wikipedia.random_page()
++    assert "title" in page
++    assert "extract" in page
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35).
+
+## 6.3 Any Python from 3.11 on {#step-06.3}
+
+The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv init` wrote
+`requires-python = ">=3.13"`, because the command that made the project asked for Python 3.13. Python 3.10 reached
+its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
+`pyproject.toml` now says 3.11.
+
+A patch to [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7).
+
+In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
+
+The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
+move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
+lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
+lockfile again.
+
+```bash
+uv lock --check
+just test -q
+```
+
+`uv lock --check` prints `Resolved 31 packages`, and then an error. The lockfile `uv.lock` "needs to be
+updated". Its hint is to run `uv lock`, and it exits with 1. `just test -q` stops with the same error, and runs
+no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
+
+### What changed {#step-06.3-what-changed-182c57}
+
+- <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml).
+  - look at `requires-python = ">=3.11"`
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -6,7 +6,7 @@ readme = "README.md"
+ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [{ name = "Rahul Dave" }]
+-requires-python = ">=3.13"
++requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
+     "requests>=2.34.2",
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b97ee4cfc59182c79e4a09ca19a7790b25f25264).
+
+## 6.4 The lockfile, for every Python from 3.11 on {#step-06.4}
+
+The lockfile must match `pyproject.toml` again. `uv lock` resolves it for every version of Python from 3.11 on. It writes only
+`uv.lock`.
+
+This change came from running `uv lock`.
+
+In `uv.lock`, line 3 now says `requires-python = ">=3.11"`. A wheel is a built package, the file that pip and uv
+install. charset-normalizer, coverage and pyyaml contain compiled code, so they have one wheel for each version of
+Python on each system. Each now lists its wheels for Python 3.11 and 3.12 too. Most of the new lines of `uv.lock`
+are these wheels, and the entry of tomli.
+
+An extra is a named set of optional dependencies of a package. pytest-cov now asks for coverage with its extra
+`toml`, at line 443. That extra needs tomli, a new package from line 572.
+
+A marker is a condition on where a package is installed, for example on the version of Python or on the system.
+At line 427, colorama has the marker `sys_platform == 'win32'`, so uv installs it only on Windows. At line 304,
+tomli has the marker `python_full_version <= '3.11'`, where `'3.11'` means 3.11.0. So uv writes tomli into the
+lockfile, but installs it on none of the versions of Python that the project tests.
+
+The project still runs on 3.13, from `.python-version`. uv can also run the tests on 3.11.
+
+```bash
+uv lock --check
+just test -q
+uv run --isolated --python 3.11 python --version
+uv run --isolated --python 3.11 pytest -q
+```
+
+`uv lock --check` prints only `Resolved 31 packages`, and `just test -q` prints `6 passed, 2 deselected` again.
+`--python 3.11` chooses the version of Python. `--isolated` makes the environment temporary, so `.venv` does not
+change. The third command prints
+`Python 3.11.12`, and the tests print `6 passed, 2 deselected` on 3.11 too.
+
+### What changed {#step-06.4-what-changed-182c57}
+
+- <a id="step-06.4-uv.lock-8356d8"></a>`uv.lock`: resolved for every version of Python from 3.11 on. 160 lines added, 2 removed. It comes from `uv lock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84/uv.lock).
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84).
+
+## 6.5 GitHub runs the tests {#step-06.5}
+
+The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
+on its own machines after each push.
+
+A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
+names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
+jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.
+
+Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub never runs the
+e2e tests. A person runs them, with `just test -m e2e`.
+
+A patch to [`.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23).
+
+The new file `.github/workflows/test.yaml` has the jobs `tests` and `check`. In `tests`, the matrix of three
+values of `os` and four of `python` makes twelve jobs.
+
+The original wikiapp used pixi for the same work, with one environment for each version of Python. Here, `setup-uv` tells
+uv which Python to use. If that Python is missing, `uv run` installs it.
+
+```bash
+uv run pre-commit run check-yaml --files .github/workflows/test.yaml
+```
+
+The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
+section on the docs on GitHub Pages names the settings.
+
+### What changed {#step-06.5-what-changed-182c57}
+
+- <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml).
+  - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
+
+<details><summary>The diff of <code>.github/workflows/test.yaml</code></summary>
+
+```diff
+@@ -0,0 +1,37 @@
++# What GitHub runs on every push to main and every pull request.
++#
++# tests: the tests, on three systems and four Pythons, twelve jobs at once.
++# check: everything `just check` runs, once, as the git hook does.
++name: CI
++
++on:
++  pull_request:
++  push:
++    branches: [main]
++
++permissions:
++  contents: read  # the jobs read the code, and change nothing on GitHub
++
++jobs:
++  tests:
++    strategy:
++      fail-fast: false  # one failing job does not stop the others
++      matrix:
++        os: [ubuntu-latest, macos-latest, windows-latest]
++        python: ["3.11", "3.12", "3.13", "3.14"]
++    runs-on: ${{ matrix.os }}
++    steps:
++      - uses: actions/checkout@v7
++      - uses: astral-sh/setup-uv@v10.2.0
++        with:
++          python-version: ${{ matrix.python }}
++      - run: uv run --locked pytest
++
++  check:
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v7
++      - uses: astral-sh/setup-uv@v10.2.0
++      - uses: extractions/setup-just@v4
++      - run: just setup
++      - run: just check
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).

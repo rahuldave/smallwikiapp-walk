@@ -1,0 +1,131 @@
+---
+title: "8.4 The command documented"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-08.4.qmd) is the other way to read this part.
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 66a702fe4a01 --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The check lists gaps in the command, `console.py`. It and `src/wikiapp/__init__.py` get a docstring each. `main` gets
+a longer docstring and a docment, and the option `--language` a clearer help.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).
+
+## 8.4 The command documented {#step-08.4}
+
+The two other modules, `src/wikiapp/__init__.py` and `src/wikiapp/console.py`, have no docstring, and `main` has
+no docment. `wikiapp --help` prints the docstring of `main` and the help of each option, so those are
+documentation too.
+
+Each of the two modules gets a docstring at the top, which says what the module is.
+
+Apply the patch to [`src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/bb648b91f4aba037eac04caa5cd7b41095e7c388.diff | git apply --include=src/wikiapp/__init__.py
+```
+
+The patch adds the docstring at the top of `src/wikiapp/__init__.py`, with a blank line under it.
+
+`check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class.
+Python still shows it, in `help(wikiapp)`.
+
+The help of `--language` now says what a language is. It replaces the help of the original wikiapp, "Gets random
+page from Wikipedia in given language". `main` has one parameter to a line, with its docment, and a docstring that
+says what `main` prints. A function that returns None needs no docment for its return.
+
+Apply the patch to [`src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/bb648b91f4aba037eac04caa5cd7b41095e7c388.diff | git apply --include=src/wikiapp/console.py
+```
+
+The patch adds the docstring of the module at the top of `src/wikiapp/console.py`. It changes the line `help=...` of
+the option `--language`. It writes the line `def main(...)` again, and the docstring under it.
+
+```bash
+just docs module console
+uv run wikiapp --help
+```
+
+`main` is a click command, and smalldocs documents it like a function, with one more table. The table of
+options shows the new help of `--language`, the same help that `--help` prints.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat bb648b91f4ab
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 66a702fe4a01 --staged -- :/ && git restore --source bb648b91f4ab --staged --worktree -- :/
+```
+
+### What changed {#step-08.4-what-changed-182c57}
+
+- <a id="step-08.4-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: a docstring, which `help(wikiapp)` shows. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/__init__.py).
+  - look at `"""wikiapp: the title and summary of a random Wikipedia page."""`
+- <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py).
+  - look at `language: str,  # The language of the Wikipedia to ask, from --language`
+
+<details open><summary>The patch to <code>src/wikiapp/__init__.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""wikiapp: the title and summary of a random Wikipedia page."""
++
+ import importlib.metadata
+ 
+ __version__ = importlib.metadata.version("wikiapp")
+```
+
+</details>
+
+<details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""The wikiapp command."""
++
+ import textwrap
+ 
+ import click
+@@ -11,13 +13,18 @@ from wikiapp.wikipedia import WikipediaError, random_page
+     "--language",
+     "-l",
+     default="en",
+-    help="Gets random page from Wikipedia in given language",
++    help="The language of the Wikipedia to ask, as its code: en, fr, es",
+     metavar="LANG",
+     show_default=True,
+ )
+ @click.version_option(version=__version__)
+-def main(language: str) -> None:
+-    """Print the title and summary of a random Wikipedia page."""
++def main(
++    language: str,  # The language of the Wikipedia to ask, from --language
++) -> None:
++    """Print the title and summary of a random Wikipedia page, in the language asked for.
++
++    The title is in green, and the summary is wrapped to 70 columns.
++    """
+     try:
+         page = random_page(language=language)
+     except WikipediaError as error:
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).

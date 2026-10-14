@@ -1,0 +1,237 @@
+---
+title: "1 The command"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-01.qmd) is the other way to read this part.
+
+The checks need code to check. The command asks Wikipedia for a random page, and prints its title and summary. It
+sends a User-Agent, and has an option `--version`.
+
+```bash
+just setup
+```
+
+The command prints a fixed line. It should ask Wikipedia for a random page and print it. We need two packages for
+that, then the request, then a header that Wikipedia asks for, and last an option that prints the version.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
+
+## 1.1 click and requests {#step-01.1}
+
+The command needs two packages that Python does not have. click makes command lines, with options and help.
+requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
+also chooses one version of each package that fits every range of versions, and writes the versions in the
+lockfile, `uv.lock`. uv calls this choice resolving.
+
+This change came from running `uv add click requests`.
+
+In `pyproject.toml`, the list `dependencies` was empty. Now it has `"click>=8.5.0",` and `"requests>=2.34.2",`,
+each with the newest version as its lower bound. `uv.lock` has the exact version of each, and of every package
+that they need.
+
+```bash
+uv tree --depth 1
+```
+
+`uv tree` shows the two packages under `wikiapp`. A newer version of a package can come out after these notes.
+
+### What changed {#step-01.1-what-changed-182c57}
+
+- <a id="step-01.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the dependencies of the package, which anyone who installs it gets. 4 lines added, 1 removed. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/pyproject.toml).
+  - look at `"click>=8.5.0",`
+- <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock).
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -7,7 +7,10 @@ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [{ name = "Rahul Dave" }]
+ requires-python = ">=3.13"
+-dependencies = []
++dependencies = [
++    "click>=8.5.0",
++    "requests>=2.34.2",
++]
+ 
+ [project.scripts]
+ wikiapp = "wikiapp.console:main"
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/36d49582843a575d84ed178ad66157913be4c59c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).
+
+## 1.2 Ask Wikipedia for a page {#step-01.2}
+
+`main` prints a fixed line. It must ask Wikipedia for a random page instead, and print the title and the summary.
+The new `main` is the command of the first version of the original wikiapp, from 2024. Its docstring is new, and
+says what the command does. The `main` of the original wikiapp had no `-> None`. This `main` keeps the
+annotation that `uv init` gave it.
+
+- `@click.command()` makes `main` a command.
+- `requests.get` asks the REST API of Wikipedia for the summary of a random page.
+- `raise_for_status` raises an exception if the answer is an error.
+- `response.json()` reads the answer as a dictionary.
+- `click.secho` prints the title in green, and `textwrap.fill` wraps the summary to 70 columns.
+- The last two lines call `main` when Python runs the file as a script. `uv run wikiapp` does not need them.
+
+The patch writes `src/wikiapp/console.py` again.
+
+A patch to [`src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67).
+
+In `src/wikiapp/console.py`, the `print` is gone. The block `with requests.get(API_URL) as response:` asks
+Wikipedia for the page, and the last two lines of the block print it.
+
+```bash
+uv run wikiapp
+```
+
+The command fails. The last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error:
+Forbidden for url:` and the address. Wikipedia refuses a request whose User-Agent header is the default of a
+library. requests sends `python-requests/` and its version.
+
+### What changed {#step-01.2-what-changed-182c57}
+
+- <a id="step-01.2-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: a request, and two lines printed. 17 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c/src/wikiapp/console.py).
+  - look at `with requests.get(API_URL) as response:`
+
+<details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
+
+```diff
+@@ -1,4 +1,19 @@
++import click
++import requests
++import textwrap
+ 
++API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
++
++@click.command()
+ def main() -> None:
+-    """Print a line, until there is a page to print."""
+-    print("Hello from wikiapp!")
++    """Print the title and summary of a random Wikipedia page."""
++    with requests.get(API_URL) as response:
++        response.raise_for_status()
++        data = response.json()
++        title = data["title"]
++        extract = data["extract"]
++        click.secho(title, fg="green")
++        click.echo(textwrap.fill(extract))
++
++if __name__=="__main__":
++    main()
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c).
+
+## 1.3 A User-Agent {#step-01.3}
+
+Wikipedia refused the request, because it did not say who sent it. The User-Agent header says that. The policy of
+Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
+`USER_AGENT` gives these three things, and the request sends it as a header.
+
+A patch to [`src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67).
+
+In `src/wikiapp/console.py`, `USER_AGENT` is under `API_URL`. The request now passes it in
+`headers={"User-Agent": USER_AGENT}`.
+
+```bash
+uv run wikiapp
+```
+
+It prints a title in green, and a paragraph. Each run prints another page.
+
+### What changed {#step-01.3-what-changed-182c57}
+
+- <a id="step-01.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the header. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0ffd5df563acb876953855d86be30b6952ecfd44/src/wikiapp/console.py).
+  - look at `with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:`
+
+<details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
+
+```diff
+@@ -3,11 +3,12 @@ import requests
+ import textwrap
+ 
+ API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
++USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
+ @click.command()
+ def main() -> None:
+     """Print the title and summary of a random Wikipedia page."""
+-    with requests.get(API_URL) as response:
++    with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
+         response.raise_for_status()
+         data = response.json()
+         title = data["title"]
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/0ffd5df563acb876953855d86be30b6952ecfd44). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/0ffd5df563acb876953855d86be30b6952ecfd44).
+
+## 1.4 --version {#step-01.4}
+
+A person who reports a bug must say which version they run, and the command cannot tell them. The package can read
+its own version from the installed package, which has the version from `pyproject.toml`. So
+`src/wikiapp/__init__.py` sets `__version__` from the metadata of the installed package. The decorator
+`@click.version_option` gives the command the option `--version`, which prints it.
+
+A patch to [`src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01).
+
+A patch to [`src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67).
+
+In `src/wikiapp/__init__.py`, `__version__` comes from `importlib.metadata`. In `src/wikiapp/console.py`,
+`@click.version_option(version=__version__)` is under `@click.command()`.
+
+```bash
+uv run wikiapp --version
+uv run wikiapp --help
+```
+
+`--version` prints `wikiapp, version 0.1.0`. `--help` lists both options. click writes the help from the
+decorators and the docstring. So the docstring of `main` is also help text, for a person who runs the command.
+
+### What changed {#step-01.4-what-changed-182c57}
+
+- <a id="step-01.4-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: the version, which Python reads when it imports the package. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/__init__.py).
+  - look at `__version__ = importlib.metadata.version(__name__ or __package__)`
+- <a id="step-01.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: click's version option. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/console.py).
+  - look at `@click.version_option(version=__version__)`
+
+<details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
+
+```diff
+@@ -0,0 +1,2 @@
++import importlib.metadata
++__version__ = importlib.metadata.version(__name__ or __package__)
+```
+
+</details>
+
+<details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
+
+```diff
+@@ -1,4 +1,5 @@
+ import click
++from wikiapp import __version__
+ import requests
+ import textwrap
+ 
+@@ -6,6 +7,7 @@ API_URL = "https://en.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
+ @click.command()
++@click.version_option(version=__version__)
+ def main() -> None:
+     """Print the title and summary of a random Wikipedia page."""
+     with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).

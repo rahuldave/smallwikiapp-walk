@@ -1,0 +1,362 @@
+---
+title: "4.1 to 4.3 A formatter"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-04.1-to-step-04.3.qmd) is the other way to read this part.
+
+This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+
+```bash
+git restore --source f05d3c31be2c --staged -- :/ && git restore --source b6942869d5fc --staged --worktree -- :/
+```
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source b6942869d5fc --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The code now also has pytest, in a dependency group `test`, and uv installs every group. It has tests, with a
+mock in place of Wikipedia, and coverage on every run. The code is split into a library,
+`src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`. The library takes a language
+and raises its own error, `WikipediaError`, and the command prints it as a message.
+
+The code mixes styles, and nothing keeps one style. ruff comes in, in a new group `lint`, and `just fmt` formats
+the code and the tests.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85).
+
+## 4.1 ruff, in the group lint {#step-04.1}
+
+The code has no one style, so a later change can mix a fix with a change of blank lines and quotes. A formatter
+changes how the code looks, and never what it does. A linter finds problems in the code, such as a variable that
+is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
+of dependencies, `lint`, next to the group `test`.
+
+```bash
+uv add --group lint ruff
+```
+
+```bash
+uv run ruff --version
+```
+
+It prints `ruff 0.17.0`. uv installs every group, so ruff is in the environment of the project, and nothing has
+used it yet.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 8f7b800001ee
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source b6942869d5fc --staged -- :/ && git restore --source 8f7b800001ee --staged --worktree -- :/
+```
+
+### What changed {#step-04.1-what-changed-182c57}
+
+- <a id="step-04.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group `lint`, with ruff in it. 3 lines added. It comes from `uv add --group lint ruff`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8f7b800001ee35d8db80c47521b02777047c019d/pyproject.toml).
+  - look at `"ruff>=0.17.0",`
+- <a id="step-04.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ruff. 29 lines added. It comes from `uv add --group lint ruff`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8f7b800001ee35d8db80c47521b02777047c019d/uv.lock).
+
+<details><summary>The diff that <code>uv add --group lint ruff</code> makes in <code>pyproject.toml</code></summary>
+
+```diff
+@@ -24,6 +24,9 @@ build-backend = "uv_build"
+ default-groups = "all"
+ 
+ [dependency-groups]
++lint = [
++    "ruff>=0.17.0",
++]
+ test = [
+     "pytest>=9.1.1",
+     "pytest-cov>=7.1.0",
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8f7b800001ee35d8db80c47521b02777047c019d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8f7b800001ee35d8db80c47521b02777047c019d).
+
+## 4.2 The settings of ruff, and the recipe fmt {#step-04.2}
+
+ruff needs its settings, at the end of `pyproject.toml`. They allow lines of up to 100 characters, and write out
+the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
+`just fmt` go to `ruff format`.
+
+Apply the patch to [`pyproject.toml`](#step-04.2-pyproject.toml-5d07e7), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/31445743379186b800fd4c035c8f04eed7ad7f3d.diff | git apply --include=pyproject.toml
+```
+
+Apply the patch to [`justfile`](#step-04.2-justfile-424f0b), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/31445743379186b800fd4c035c8f04eed7ad7f3d.diff | git apply --include=justfile
+```
+
+In `pyproject.toml`, the patch adds the tables `[tool.ruff]` and `[tool.ruff.format]` at the end. In the
+`justfile`, it adds the recipe `fmt` at the end.
+
+```bash
+uv run ruff format --check
+just --show fmt
+just fmt --check
+```
+
+`--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
+reformatted, 1 file already formatted`. The seventh file is the README, whose code ruff formats too. The recipe
+runs the same command, and passes on the words after `just fmt`.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 314457433791
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 8f7b800001ee --staged -- :/ && git restore --source 314457433791 --staged --worktree -- :/
+```
+
+### What changed {#step-04.2-what-changed-182c57}
+
+- <a id="step-04.2-justfile-424f0b"></a>`justfile`: the recipe `fmt`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/31445743379186b800fd4c035c8f04eed7ad7f3d/justfile).
+  - look at `fmt *args:`
+- <a id="step-04.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of ruff. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/31445743379186b800fd4c035c8f04eed7ad7f3d/pyproject.toml).
+  - look at `line-length = 100`
+
+<details open><summary>The patch to <code>justfile</code></summary>
+
+```diff
+@@ -25,3 +25,9 @@ setup *args:
+ [no-exit-message]
+ test *args:
+     {{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}
++
++# Format the code, one way. Extra arguments go to ruff: just fmt --check, just fmt --diff
++[group('quality')]
++[no-exit-message]
++fmt *args:
++    {{ if args == "help" { "just help fmt" } else { 'uv run ruff format "$@"' } }}
+```
+
+</details>
+
+<details open><summary>The patch to <code>pyproject.toml</code></summary>
+
+```diff
+@@ -37,3 +37,14 @@ test = [
+ testpaths = ["tests"]
+ # Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
+ addopts = "--cov=wikiapp --cov-report=term-missing"
++
++[tool.ruff]
++# The one setting the formatter and the linter share. Ruff's own default is 88; this project reads
++# better at 100.
++line-length = 100
++
++[tool.ruff.format]
++# The formatter has no style to argue about. These are ruff's defaults, written out so they are visible.
++quote-style = "double"            # "text", not 'text'
++indent-style = "space"            # four spaces, never tabs
++skip-magic-trailing-comma = false # a trailing comma means "keep this one item per line"
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/31445743379186b800fd4c035c8f04eed7ad7f3d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/31445743379186b800fd4c035c8f04eed7ad7f3d).
+
+## 4.3 The code, formatted {#step-04.3}
+
+`just fmt --check` found six files that do not follow the style. The formatter rewrites them. It adds blank lines,
+puts spaces around `==`, and splits the lines longer than 100 characters.
+
+```bash
+just fmt
+```
+
+```bash
+just fmt --check
+just test
+```
+
+The check prints `7 files already formatted`, and the tests pass as before, `7 passed`. One test asks the real Wikipedia, so the tests still need the network.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 6690eee9f7e1
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee9f7e1 --staged --worktree -- :/
+```
+
+### What changed {#step-04.3-what-changed-182c57}
+
+- <a id="step-04.3-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: a blank line after the import. 1 line added. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/src/wikiapp/__init__.py).
+- <a id="step-04.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: blank lines, and spaces around `==`. 3 lines added, 1 removed. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/src/wikiapp/console.py).
+  - look at `if __name__ == "__main__":`
+- <a id="step-04.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: blank lines, and the long request split into three lines. 5 lines added, 1 removed. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/src/wikiapp/wikipedia.py).
+  - look at `API_URL.format(language=language), headers={"User-Agent": USER_AGENT}`
+- <a id="step-04.3-tests-conftest.py-626af3"></a>`tests/conftest.py`: two blank lines before the fixture. 1 line added. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/tests/conftest.py).
+- <a id="step-04.3-tests-test_console.py-9442ee"></a>`tests/test_console.py`: blank lines, and the long address split. 11 lines added, 1 removed. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/tests/test_console.py).
+  - look at `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
+- <a id="step-04.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: two blank lines before the test. 1 line added. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/tests/test_wikipedia.py).
+
+<details><summary>The diff that <code>just fmt</code> makes in <code>src/wikiapp/__init__.py</code></summary>
+
+```diff
+@@ -1,2 +1,3 @@
+ import importlib.metadata
++
+ __version__ = importlib.metadata.version(__name__ or __package__)
+```
+
+</details>
+
+<details><summary>The diff that <code>just fmt</code> makes in <code>src/wikiapp/console.py</code></summary>
+
+```diff
+@@ -4,6 +4,7 @@ import textwrap
+ 
+ from wikiapp.wikipedia import WikipediaError, random_page
+ 
++
+ @click.command()
+ @click.option(
+     "--language",
+@@ -25,5 +26,6 @@ def main(language) -> None:
+     click.secho(title, fg="green")
+     click.echo(textwrap.fill(extract))
+ 
+-if __name__=="__main__":
++
++if __name__ == "__main__":
+     main()
+```
+
+</details>
+
+<details><summary>The diff that <code>just fmt</code> makes in <code>src/wikiapp/wikipedia.py</code></summary>
+
+```diff
+@@ -3,13 +3,17 @@ import requests
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
++
+ class WikipediaError(Exception):
+     """Wikipedia could not give a page."""
+ 
++
+ def random_page(language="en"):
+     """Get a random page from Wikipedia."""
+     try:
+-        with requests.get(API_URL.format(language=language), headers={"User-Agent": USER_AGENT}) as response:
++        with requests.get(
++            API_URL.format(language=language), headers={"User-Agent": USER_AGENT}
++        ) as response:
+             response.raise_for_status()
+             return response.json()
+     except requests.RequestException as error:
+```
+
+</details>
+
+<details><summary>The diff that <code>just fmt</code> makes in <code>tests/conftest.py</code></summary>
+
+```diff
+@@ -1,5 +1,6 @@
+ import pytest
+ 
++
+ @pytest.fixture
+ def mock_requests_get(mocker):
+     mock = mocker.patch("requests.get")
+```
+
+</details>
+
+<details><summary>The diff that <code>just fmt</code> makes in <code>tests/test_console.py</code></summary>
+
+```diff
+@@ -2,34 +2,44 @@ import click.testing
+ import pytest
+ import requests
+ 
++
+ @pytest.fixture
+ def runner():
+     return click.testing.CliRunner()
+ 
++
+ from wikiapp import console
+ 
++
+ def test_main_prints_title(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
++
+ def test_main_invokes_requests_get(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
++
+ def test_main_uses_correct_url(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+-    assert mock_requests_get.call_args[0] == ("https://en.wikipedia.org/api/rest_v1/page/random/summary",)
++    assert mock_requests_get.call_args[0] == (
++        "https://en.wikipedia.org/api/rest_v1/page/random/summary",
++    )
++
+ 
+ def test_main_fails_on_request_error(runner, mock_requests_get):
+     mock_requests_get.side_effect = Exception("Boom")
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
++
+ def test_main_prints_message_on_request_error(runner, mock_requests_get):
+     mock_requests_get.side_effect = requests.RequestException
+     result = runner.invoke(console.main)
+     assert "Error" in result.output
+ 
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+</details>
+
+<details><summary>The diff that <code>just fmt</code> makes in <code>tests/test_wikipedia.py</code></summary>
+
+```diff
+@@ -1,5 +1,6 @@
+ from wikiapp import wikipedia
+ 
++
+ def test_random_page_uses_given_language(mock_requests_get):
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6690eee9f7e177a6df2ea5e1821b8f581948bc85). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85).

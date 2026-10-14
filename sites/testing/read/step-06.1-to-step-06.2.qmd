@@ -1,0 +1,146 @@
+---
+title: "6.1 to 6.2 End-to-end tests, on request"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-06.1-to-step-06.2.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The code now also has a git hook, which `just hook` installs. Before each `git commit`, `pre-commit` runs three
+small checks of the files, then `just check`. ty checks the types, and the command reads its version by the name
+of its package. The code and the tests have their types. `random_page` returns `dict[str, Any]`, and `just check`
+runs the type checker too.
+
+The test that asks the real Wikipedia fails without the network, and so every check fails with it. It now runs
+only when you ask for it. A second test of that kind checks the library.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35).
+
+## 6.1 The end-to-end test runs only on request {#step-06.1}
+
+`test_main_succeeds` is the one test that goes over the network. It fails without a network, and its result
+depends on Wikipedia. The other tests use the mock in place of Wikipedia, so they run without the network, and give
+the same result on every run. A marker, `e2e`, which means end to end, sets the one test apart. Its new name says
+so, `test_main_succeeds_in_production`.
+
+A patch to [`tests/test_console.py`](#step-06.1-tests-test_console.py-9442ee).
+
+In `tests/test_console.py`, the last test has the marker `@pytest.mark.e2e`, and its new name.
+
+pytest must know the marker, and leave the e2e tests out of every run that does not ask for them.
+`pyproject.toml` declares the marker in `markers`. The option `-m 'not e2e'` in `addopts` leaves the e2e tests out.
+
+A patch to [`pyproject.toml`](#step-06.1-pyproject.toml-5d07e7).
+
+In `pyproject.toml`, `addopts` now ends with `-m 'not e2e'`, and the new line `markers` declares `e2e`.
+
+```bash
+just test -q
+just test -q -m e2e
+```
+
+The first command prints `6 passed, 1 deselected`. The second command runs the e2e test alone.
+
+### What changed {#step-06.1-what-changed-182c57}
+
+- <a id="step-06.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the option `-m 'not e2e'`, and the marker `e2e` in `markers`, with a comment. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/pyproject.toml).
+  - look at `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
+- <a id="step-06.1-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test, marked. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/tests/test_console.py).
+  - look at `@pytest.mark.e2e`
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -38,8 +38,11 @@ test = [
+ 
+ [tool.pytest.ini_options]
+ testpaths = ["tests"]
+-# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
+-addopts = "--cov=wikiapp --cov-report=term-missing"
++# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not. A test
++# marked e2e asks the real Wikipedia, so it needs the network, and runs only when asked for:
++# just test -m e2e
++addopts = "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"
++markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]
+ 
+ [tool.ruff]
+ # The one setting the formatter and the linter share. Ruff's own default is 88; this project reads
+```
+
+</details>
+
+<details><summary>The diff of <code>tests/test_console.py</code></summary>
+
+```diff
+@@ -41,6 +41,7 @@ def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_g
+     assert "Error" in result.output
+ 
+ 
+-def test_main_succeeds(runner: CliRunner) -> None:
++@pytest.mark.e2e
++def test_main_succeeds_in_production(runner: CliRunner) -> None:
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735).
+
+## 6.2 An end-to-end test of the library {#step-06.2}
+
+The mocks return a dictionary with a title and an extract. If the real Wikipedia stops sending those two keys,
+every test with a mock still passes, and the command fails. A second e2e test, from the original wikiapp, asks the
+real Wikipedia for a page and checks the two keys. It is also a contract test. It checks that the real Wikipedia
+still returns what the mocks return.
+
+A patch to [`tests/test_wikipedia.py`](#step-06.2-tests-test_wikipedia.py-2f4413).
+
+At the end of `tests/test_wikipedia.py`, `test_random_page_returns_dictionary_in_production` has the marker
+`e2e`. It checks that the page has `"title"` and `"extract"`. `import pytest` is in a block of its own.
+
+```bash
+just test -q -m e2e
+```
+
+The output is `2 passed, 6 deselected`.
+
+The project now has all four kinds of tests in the table of the intro. They are end-to-end, unit, integration and
+contract.
+
+### What changed {#step-06.2-what-changed-182c57}
+
+- <a id="step-06.2-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 9 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/307d4d7b36bb9dc7bc8ad601c8275d5241283e35/tests/test_wikipedia.py).
+  - look at `assert "extract" in page`
+
+<details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
+
+```diff
+@@ -1,5 +1,7 @@
+ from unittest.mock import Mock
+ 
++import pytest
++
+ from wikiapp import wikipedia
+ 
+ 
+@@ -7,3 +9,10 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
++
++
++@pytest.mark.e2e
++def test_random_page_returns_dictionary_in_production() -> None:
++    page = wikipedia.random_page()
++    assert "title" in page
++    assert "extract" in page
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35).

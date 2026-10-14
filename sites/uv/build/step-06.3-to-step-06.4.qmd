@@ -1,0 +1,154 @@
+---
+title: "6.3 to 6.4 The oldest Python, and other environments"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-06.3-to-step-06.4.qmd) is the other way to read this part.
+
+This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+
+```bash
+git restore --source b7469ee81a82 --staged -- :/ && git restore --source 307d4d7b36bb --staged --worktree -- :/
+```
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 307d4d7b36bb --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The code now also has `just check`, which runs every check, and a git hook runs it before each `git commit`.
+`pre-commit` and ty, a type checker, are in the group `lint`, and `just check` runs ty. The tests that ask the real
+Wikipedia run only on request.
+
+The project runs on one Python, and its users may have an older one. `.python-version` says which Python `.venv`
+has. `requires-python` says which versions of Python the project accepts.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84).
+
+## 6.3 Any Python from 3.11 on {#step-06.3}
+
+The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv init` wrote
+`requires-python = ">=3.13"`, because the command that made the project asked for Python 3.13. Python 3.10 reached
+its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
+`pyproject.toml` now says 3.11.
+
+Apply the patch to [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264.diff | git apply --include=pyproject.toml
+```
+
+The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
+
+The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
+move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
+lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
+lockfile again.
+
+```bash
+uv lock --check
+just test -q
+```
+
+`uv lock --check` prints `Resolved 31 packages`, and then an error. The lockfile `uv.lock` "needs to be
+updated". Its hint is to run `uv lock`, and it exits with 1. `just test -q` stops with the same error, and runs
+no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat b97ee4cfc591
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 307d4d7b36bb --staged -- :/ && git restore --source b97ee4cfc591 --staged --worktree -- :/
+```
+
+### What changed {#step-06.3-what-changed-182c57}
+
+- <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml).
+  - look at `requires-python = ">=3.11"`
+
+<details open><summary>The patch to <code>pyproject.toml</code></summary>
+
+```diff
+@@ -6,7 +6,7 @@ readme = "README.md"
+ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [{ name = "Rahul Dave" }]
+-requires-python = ">=3.13"
++requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
+     "requests>=2.34.2",
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b97ee4cfc59182c79e4a09ca19a7790b25f25264).
+
+## 6.4 The lockfile, for every Python from 3.11 on {#step-06.4}
+
+The lockfile must match `pyproject.toml` again. `uv lock` resolves it for every version of Python from 3.11 on. It writes only
+`uv.lock`.
+
+```bash
+uv lock
+```
+
+`uv lock` prints `Resolved 31 packages` and `Added tomli v2.5.0`.
+
+The project still runs on 3.13, from `.python-version`. uv can also run the tests on 3.11.
+
+```bash
+uv lock --check
+just test -q
+uv run --isolated --python 3.11 python --version
+uv run --isolated --python 3.11 pytest -q
+```
+
+`uv lock --check` prints only `Resolved 31 packages`, and `just test -q` prints `6 passed, 2 deselected` again.
+`--python 3.11` chooses the version of Python. `--isolated` makes the environment temporary, so `.venv` does not
+change. The third command prints
+`Python 3.11.12`, and the tests print `6 passed, 2 deselected` on 3.11 too.
+
+The first of these moves changes `requires-python` by hand, and the second runs `uv lock`. Between the two, the
+lockfile is out of date with `pyproject.toml`, and every recipe that runs `uv run` refuses it.
+
+`--isolated` made a second environment, which uv deletes after the command. `uvx` makes a third kind, an
+environment of its own for one tool.
+
+```bash
+uv run python -c "import sys; print(sys.prefix)"
+uvx --from ruff python -c "import sys; print(sys.prefix)"
+```
+
+The first path ends in `.venv`. The second is a folder in the cache of uv, with ruff installed. `uvx ruff` picks a
+ruff of its own, which need not be the version that the lockfile names. So the recipes run ruff with `uv run`, and
+get the version of the lockfile.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat d8af75e8fd57
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source b97ee4cfc591 --staged -- :/ && git restore --source d8af75e8fd57 --staged --worktree -- :/
+```
+
+### What changed {#step-06.4-what-changed-182c57}
+
+- <a id="step-06.4-uv.lock-8356d8"></a>`uv.lock`: resolved for every version of Python from 3.11 on. 160 lines added, 2 removed. It comes from `uv lock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84/uv.lock).
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84).

@@ -1,0 +1,184 @@
+---
+title: "6.3 to 6.5 The tests on GitHub"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-06.3-to-step-06.5.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The tests run on one machine, with one version of Python. The project accepts any version of Python from 3.11 on,
+and GitHub runs the tests on three systems and four versions of Python.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
+
+## 6.3 Any Python from 3.11 on {#step-06.3}
+
+The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv init` wrote
+`requires-python = ">=3.13"`, because the command that made the project asked for Python 3.13. Python 3.10 reached
+its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
+`pyproject.toml` now says 3.11.
+
+A patch to [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7).
+
+In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
+
+The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
+move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
+lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
+lockfile again.
+
+```bash
+uv lock --check
+just test -q
+```
+
+`uv lock --check` prints `Resolved 31 packages`, and then an error. The lockfile `uv.lock` "needs to be
+updated". Its hint is to run `uv lock`, and it exits with 1. `just test -q` stops with the same error, and runs
+no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
+
+### What changed {#step-06.3-what-changed-182c57}
+
+- <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml).
+  - look at `requires-python = ">=3.11"`
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -6,7 +6,7 @@ readme = "README.md"
+ license = "Apache-2.0"
+ license-files = ["LICENSE"]
+ authors = [{ name = "Rahul Dave" }]
+-requires-python = ">=3.13"
++requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
+     "requests>=2.34.2",
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b97ee4cfc59182c79e4a09ca19a7790b25f25264).
+
+## 6.4 The lockfile, for every Python from 3.11 on {#step-06.4}
+
+The lockfile must match `pyproject.toml` again. `uv lock` resolves it for every version of Python from 3.11 on. It writes only
+`uv.lock`.
+
+This change came from running `uv lock`.
+
+In `uv.lock`, line 3 now says `requires-python = ">=3.11"`. A wheel is a built package, the file that pip and uv
+install. charset-normalizer, coverage and pyyaml contain compiled code, so they have one wheel for each version of
+Python on each system. Each now lists its wheels for Python 3.11 and 3.12 too. Most of the new lines of `uv.lock`
+are these wheels, and the entry of tomli.
+
+An extra is a named set of optional dependencies of a package. pytest-cov now asks for coverage with its extra
+`toml`, at line 443. That extra needs tomli, a new package from line 572.
+
+A marker is a condition on where a package is installed, for example on the version of Python or on the system.
+At line 427, colorama has the marker `sys_platform == 'win32'`, so uv installs it only on Windows. At line 304,
+tomli has the marker `python_full_version <= '3.11'`, where `'3.11'` means 3.11.0. So uv writes tomli into the
+lockfile, but installs it on none of the versions of Python that the project tests.
+
+The project still runs on 3.13, from `.python-version`. uv can also run the tests on 3.11.
+
+```bash
+uv lock --check
+just test -q
+uv run --isolated --python 3.11 python --version
+uv run --isolated --python 3.11 pytest -q
+```
+
+`uv lock --check` prints only `Resolved 31 packages`, and `just test -q` prints `6 passed, 2 deselected` again.
+`--python 3.11` chooses the version of Python. `--isolated` makes the environment temporary, so `.venv` does not
+change. The third command prints
+`Python 3.11.12`, and the tests print `6 passed, 2 deselected` on 3.11 too.
+
+### What changed {#step-06.4-what-changed-182c57}
+
+- <a id="step-06.4-uv.lock-8356d8"></a>`uv.lock`: resolved for every version of Python from 3.11 on. 160 lines added, 2 removed. It comes from `uv lock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84/uv.lock).
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84).
+
+## 6.5 GitHub runs the tests {#step-06.5}
+
+The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
+on its own machines after each push.
+
+A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
+names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
+jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.
+
+Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub never runs the
+e2e tests. A person runs them, with `just test -m e2e`.
+
+A patch to [`.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23).
+
+The new file `.github/workflows/test.yaml` has the jobs `tests` and `check`. In `tests`, the matrix of three
+values of `os` and four of `python` makes twelve jobs.
+
+The original wikiapp used pixi for the same work, with one environment for each version of Python. Here, `setup-uv` tells
+uv which Python to use. If that Python is missing, `uv run` installs it.
+
+```bash
+uv run pre-commit run check-yaml --files .github/workflows/test.yaml
+```
+
+The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
+section on the docs on GitHub Pages names the settings.
+
+### What changed {#step-06.5-what-changed-182c57}
+
+- <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml).
+  - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
+
+<details><summary>The diff of <code>.github/workflows/test.yaml</code></summary>
+
+```diff
+@@ -0,0 +1,37 @@
++# What GitHub runs on every push to main and every pull request.
++#
++# tests: the tests, on three systems and four Pythons, twelve jobs at once.
++# check: everything `just check` runs, once, as the git hook does.
++name: CI
++
++on:
++  pull_request:
++  push:
++    branches: [main]
++
++permissions:
++  contents: read  # the jobs read the code, and change nothing on GitHub
++
++jobs:
++  tests:
++    strategy:
++      fail-fast: false  # one failing job does not stop the others
++      matrix:
++        os: [ubuntu-latest, macos-latest, windows-latest]
++        python: ["3.11", "3.12", "3.13", "3.14"]
++    runs-on: ${{ matrix.os }}
++    steps:
++      - uses: actions/checkout@v7
++      - uses: astral-sh/setup-uv@v10.2.0
++        with:
++          python-version: ${{ matrix.python }}
++      - run: uv run --locked pytest
++
++  check:
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v7
++      - uses: astral-sh/setup-uv@v10.2.0
++      - uses: extractions/setup-just@v4
++      - run: just setup
++      - run: just check
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).

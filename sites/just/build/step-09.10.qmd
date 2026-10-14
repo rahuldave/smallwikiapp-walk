@@ -1,0 +1,98 @@
+---
+title: "9.10 The library, behind the same verbs"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-09.10.qmd) is the other way to read this part.
+
+This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+
+```bash
+git restore --source ce0734f1272c --staged -- :/ && git restore --source 008e616610b0 --staged --worktree -- :/
+```
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 008e616610b0 --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The job `tests` on GitHub now installs the group `test` alone. A second workflow builds the docs site and
+publishes it. It runs smalldocs with `uv run`, not `just docs`, because the recipe installs every group. So
+that workflow is a caller that skips the verb.
+
+The library is a package of its own, `wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses it,
+and `src/wikiapp/wikipedia.py` is gone. The tests of the library are now in `tests/test_wikirandom.py`.
+
+Those changes did not change the justfile. One justfile, one `.pre-commit-config.yaml` and one hook work for both
+packages. `just fmt`, `just lint` and `just types` read every Python file of the repository, so they checked the
+library's code from the first. `just test` measures the coverage of both packages, since `pyproject.toml` has
+`--cov=wikirandom`. Here, `just docs check` still counts only the app and the tests, 12 of 12. This section
+changes `docs/_smalldocs.yml`, behind the verb.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
+
+## 9.10 The docs check counts the library {#step-09.10}
+
+The front page names `random_page`, but it is not a link, and the docs check counts only the app. The settings of
+the site, `docs/_smalldocs.yml`, name only `wikiapp`. The line `packages:` in the section `api` must name both.
+
+Apply the patch to [`docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060.diff | git apply --include=docs/_smalldocs.yml
+```
+
+The patch changes one line, `packages:` in the section `api`, in line 19.
+
+```bash
+just docs check
+just docs
+just check
+```
+
+The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
+pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
+passes.
+
+The justfile did not change, and `just docs check` checks more. The hook and GitHub's job `check` run the new
+docs check without a change.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 259e6364a52f
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e6364a52f --staged --worktree -- :/
+```
+
+### What changed {#step-09.10-what-changed-182c57}
+
+- <a id="step-09.10-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the list of packages. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/259e6364a52f83993c797f66148281b04eb92060/docs/_smalldocs.yml).
+  - look at `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+<details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
+
+```diff
+@@ -16,6 +16,6 @@ toc: true
+ 
+ # `api` is the reference, made from the code of the packages. A name in backticks links to its entry
+ api:
+-  packages: [wikiapp]
++  packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom
+   source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+   check: ["tests/**/*.py"]  # the tests are held to the same rule as the package
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).

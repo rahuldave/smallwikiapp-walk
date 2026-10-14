@@ -1,0 +1,260 @@
+---
+title: "2.1 to 2.4 pytest and a first test"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-02.1-to-step-02.4.qmd) is the other way to read this part.
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source f05d3c31be2c --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+We can check the command only by running it and reading what it prints. pytest runs tests for us, and `just test`
+runs them all.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837).
+
+## 2.1 uv installs every dependency group {#step-02.1}
+
+The tests need pytest, but the package does not. A person who installs wikiapp should not get pytest. So the tools
+of the project go in dependency groups. A dependency group is a list of packages in `pyproject.toml` that the
+project needs while we work on it. A user of the package never gets them. The test tools go in a group `test`, and
+later the linters and the docs tools get groups of their own.
+
+uv installs only the group `dev` by default. The setting `default-groups = "all"` makes `uv sync` and `uv run`
+install every group. So each later `uv add --group` needs no other change to `pyproject.toml`. A patch adds the
+table `[tool.uv]` with this setting.
+
+Apply the patch to [`pyproject.toml`](#step-02.1-pyproject.toml-5d07e7), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/46dc20fb9092170695699eaa052f4830563cb930.diff | git apply --include=pyproject.toml
+```
+
+The patch adds the table `[tool.uv]` at the end of `pyproject.toml`, after the table `[build-system]`. It has a
+comment and one setting.
+
+The setting changes which groups uv installs, not which versions. So `uv.lock` still matches `pyproject.toml`.
+
+```bash
+uv lock --check
+```
+
+uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 46dc20fb9092
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source f05d3c31be2c --staged -- :/ && git restore --source 46dc20fb9092 --staged --worktree -- :/
+```
+
+### What changed {#step-02.1-what-changed-182c57}
+
+- <a id="step-02.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the table `[tool.uv]`, so uv installs every dependency group. 4 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/46dc20fb9092170695699eaa052f4830563cb930/pyproject.toml).
+  - look at `default-groups = "all"`
+
+<details open><summary>The patch to <code>pyproject.toml</code></summary>
+
+```diff
+@@ -18,3 +18,7 @@ wikiapp = "wikiapp.console:main"
+ [build-system]
+ requires = ["uv_build>=0.12.13,<0.13.0"]
+ build-backend = "uv_build"
++
++[tool.uv]
++# uv sync and uv run install every dependency group, not only dev
++default-groups = "all"
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/46dc20fb9092170695699eaa052f4830563cb930). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/46dc20fb9092170695699eaa052f4830563cb930).
+
+## 2.2 The first test {#step-02.2}
+
+Nothing checks yet that the command works. The first test runs the command and checks that it ends with exit code
+0. click's `CliRunner` runs a command in the same process as the test. It keeps the output and the exit code of
+the command.
+
+This test is an end-to-end test. It runs the whole command, and the command asks the real Wikipedia. So a failure
+can come from the code, from the network or from Wikipedia.
+
+The test comes in a new file, `tests/test_console.py`, as a patch. The patch also makes the folder `tests`.
+
+Apply the patch to [`tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/6d7a6cfdae6008a9687f3525348ab24ea05930cc.diff | git apply --include=tests/test_console.py
+```
+
+Read the one test, `test_main_succeeds`, before you run it.
+
+pytest is not installed yet, so the test cannot run. `python -m pytest` uses the pytest of the project's `.venv`,
+and never one from elsewhere.
+
+```bash
+uv run python -m pytest
+```
+
+The command fails on purpose. Python prints `No module named pytest`, and the exit code is 1. The next move installs pytest.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 6d7a6cfdae60
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cfdae60 --staged --worktree -- :/
+```
+
+### What changed {#step-02.2-what-changed-182c57}
+
+- <a id="step-02.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: a test that runs the command and checks its exit code. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6d7a6cfdae6008a9687f3525348ab24ea05930cc/tests/test_console.py).
+  - look at `assert result.exit_code == 0`
+
+<details open><summary>The patch to <code>tests/test_console.py</code></summary>
+
+```diff
+@@ -0,0 +1,8 @@
++import click.testing
++
++from wikiapp import console
++
++def test_main_succeeds():
++    runner = click.testing.CliRunner()
++    result = runner.invoke(console.main)
++    assert result.exit_code == 0
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6d7a6cfdae6008a9687f3525348ab24ea05930cc). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6d7a6cfdae6008a9687f3525348ab24ea05930cc).
+
+## 2.3 pytest, in the group test {#step-02.3}
+
+The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
+exact version to `uv.lock`, and installs it.
+
+```bash
+uv add --group test pytest
+```
+
+```bash
+uv run pytest
+```
+
+pytest finds `tests/test_console.py`, and prints `collected 1 item` and `1 passed`. The test asks the real
+Wikipedia, so it needs the network.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat d92e2dec921d
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 6d7a6cfdae60 --staged -- :/ && git restore --source d92e2dec921d --staged --worktree -- :/
+```
+
+### What changed {#step-02.3-what-changed-182c57}
+
+- <a id="step-02.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group `test`, with pytest. 5 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/pyproject.toml).
+  - look at `"pytest>=9.1.1",`
+- <a id="step-02.3-uv.lock-8356d8"></a>`uv.lock`: pytest, and the packages that it needs. 69 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/uv.lock).
+
+<details><summary>The diff that <code>uv add --group test pytest</code> makes in <code>pyproject.toml</code></summary>
+
+```diff
+@@ -22,3 +22,8 @@ build-backend = "uv_build"
+ [tool.uv]
+ # uv sync and uv run install every dependency group, not only dev
+ default-groups = "all"
++
++[dependency-groups]
++test = [
++    "pytest>=9.1.1",
++]
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d92e2dec921d6322e2a356af20dafef3837c1849). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849).
+
+## 2.4 The recipe `just test` {#step-02.4}
+
+The command that runs the tests is `uv run pytest`, with any options for pytest after it. A recipe `test` in the
+justfile gives it a short name, `just test`. The words after `just test` go to pytest. `"$@"` stands for those
+words, and the recipe gives each word to pytest whole. `just test help` shows the recipe.
+
+Apply the patch to [`justfile`](#step-02.4-justfile-424f0b), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/45807a0ddd9f97798c3f86a82b19782d4df45837.diff | git apply --include=justfile
+```
+
+The patch adds the recipe `test` at the end of the `justfile`, under the recipe `setup`, with a comment above it.
+
+`just` prints each line of a recipe before it runs the line, if the line does not start with `@`. So `just test`
+prints `uv run pytest "$@"`, the command that it ran.
+
+```bash
+just --show test
+just test
+```
+
+`just --show test` prints the comment and the recipe. `just test` prints `uv run pytest "$@"`, and then the same
+result as before, `1 passed`.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 45807a0ddd9f
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source d92e2dec921d --staged -- :/ && git restore --source 45807a0ddd9f --staged --worktree -- :/
+```
+
+### What changed {#step-02.4-what-changed-182c57}
+
+- <a id="step-02.4-justfile-424f0b"></a>`justfile`: the recipe `test`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/45807a0ddd9f97798c3f86a82b19782d4df45837/justfile).
+  - look at `test *args:`
+
+<details open><summary>The patch to <code>justfile</code></summary>
+
+```diff
+@@ -19,3 +19,9 @@ help *verb:
+ [group('setup')]
+ setup *args:
+     @{{ if args == "help" { "just help setup" } else { "uv sync --locked" } }}
++
++# Run the tests. Extra arguments go to pytest: just test -k title
++[group('quality')]
++[no-exit-message]
++test *args:
++    {{ if args == "help" { "just help test" } else { 'uv run pytest "$@"' } }}
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837).

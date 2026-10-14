@@ -1,0 +1,145 @@
+# Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again.
+project:
+  type: website
+  output-dir: _site
+  render: ["index.qmd", "read/*.qmd", "build/*.qmd"]   # only these pages
+
+website:
+  title: "The documentation of smallwikiapp"
+  page-navigation: true
+  search: true
+  sidebar:
+    style: docked
+    contents:
+      - index.qmd
+      - section: "Read the tutorial"
+        contents:
+          - text: "0 The project"
+            href: read/step-00.qmd
+          - section: "1 The command"
+            href: read/step-01.qmd
+            contents:
+              - text: "1.1 click and requests"
+                href: read/step-01.qmd#step-01.1
+              - text: "1.2 Ask Wikipedia for a page"
+                href: read/step-01.qmd#step-01.2
+              - text: "1.3 A User-Agent"
+                href: read/step-01.qmd#step-01.3
+              - text: "1.4 --version"
+                href: read/step-01.qmd#step-01.4
+          - section: "8.1 to 8.2 smalldocs, and what is not documented"
+            href: read/step-08.1-to-step-08.2.qmd
+            contents:
+              - text: "8.1 smalldocs"
+                href: read/step-08.1-to-step-08.2.qmd#step-08.1
+              - text: "8.2 What is not documented"
+                href: read/step-08.1-to-step-08.2.qmd#step-08.2
+          - section: "8.3 The library documented"
+            href: read/step-08.3.qmd
+            contents:
+              - text: "8.3 The library documented"
+                href: read/step-08.3.qmd#step-08.3
+          - section: "8.4 The command documented"
+            href: read/step-08.4.qmd
+            contents:
+              - text: "8.4 The command documented"
+                href: read/step-08.4.qmd#step-08.4
+          - section: "8.5 The tests documented"
+            href: read/step-08.5.qmd
+            contents:
+              - text: "8.5 The tests documented"
+                href: read/step-08.5.qmd#step-08.5
+          - section: "8.6 A site"
+            href: read/step-08.6.qmd
+            contents:
+              - text: "8.6 A site"
+                href: read/step-08.6.qmd#step-08.6
+          - section: "8.7 The README's folders"
+            href: read/step-08.7.qmd
+            contents:
+              - text: "8.7 The README names the tests and the docs"
+                href: read/step-08.7.qmd#step-08.7
+          - section: "8.8 The docs check in `just check`"
+            href: read/step-08.8.qmd
+            contents:
+              - text: "8.8 The docs check in `just check`"
+                href: read/step-08.8.qmd#step-08.8
+          - section: "8b.2 The docs on GitHub Pages"
+            href: read/step-08b.2.qmd
+            contents:
+              - text: "8b.2 A workflow that publishes the docs"
+                href: read/step-08b.2.qmd#step-08b.2
+          - section: "9.10 The docs check counts the library"
+            href: read/step-09.10.qmd
+            contents:
+              - text: "9.10 The docs check counts the library"
+                href: read/step-09.10.qmd#step-09.10
+      - section: "Build it yourself"
+        contents:
+          - text: "0 The project"
+            href: build/step-00.qmd
+          - section: "1 The command"
+            href: build/step-01.qmd
+            contents:
+              - text: "1.1 click and requests"
+                href: build/step-01.qmd#step-01.1
+              - text: "1.2 Ask Wikipedia for a page"
+                href: build/step-01.qmd#step-01.2
+              - text: "1.3 A User-Agent"
+                href: build/step-01.qmd#step-01.3
+              - text: "1.4 --version"
+                href: build/step-01.qmd#step-01.4
+          - section: "8.1 to 8.2 smalldocs, and what is not documented"
+            href: build/step-08.1-to-step-08.2.qmd
+            contents:
+              - text: "8.1 smalldocs"
+                href: build/step-08.1-to-step-08.2.qmd#step-08.1
+              - text: "8.2 What is not documented"
+                href: build/step-08.1-to-step-08.2.qmd#step-08.2
+          - section: "8.3 The library documented"
+            href: build/step-08.3.qmd
+            contents:
+              - text: "8.3 The library documented"
+                href: build/step-08.3.qmd#step-08.3
+          - section: "8.4 The command documented"
+            href: build/step-08.4.qmd
+            contents:
+              - text: "8.4 The command documented"
+                href: build/step-08.4.qmd#step-08.4
+          - section: "8.5 The tests documented"
+            href: build/step-08.5.qmd
+            contents:
+              - text: "8.5 The tests documented"
+                href: build/step-08.5.qmd#step-08.5
+          - section: "8.6 A site"
+            href: build/step-08.6.qmd
+            contents:
+              - text: "8.6 A site"
+                href: build/step-08.6.qmd#step-08.6
+          - section: "8.7 The README's folders"
+            href: build/step-08.7.qmd
+            contents:
+              - text: "8.7 The README names the tests and the docs"
+                href: build/step-08.7.qmd#step-08.7
+          - section: "8.8 The docs check in `just check`"
+            href: build/step-08.8.qmd
+            contents:
+              - text: "8.8 The docs check in `just check`"
+                href: build/step-08.8.qmd#step-08.8
+          - section: "8b.2 The docs on GitHub Pages"
+            href: build/step-08b.2.qmd
+            contents:
+              - text: "8b.2 A workflow that publishes the docs"
+                href: build/step-08b.2.qmd#step-08b.2
+          - section: "9.10 The docs check counts the library"
+            href: build/step-09.10.qmd
+            contents:
+              - text: "9.10 The docs check counts the library"
+                href: build/step-09.10.qmd#step-09.10
+
+theme: cosmo
+css: styles.css
+toc: true
+toc-depth: 2
+code-copy: true
+from: markdown-tex_math_dollars-smart  # a $ is a dollar, not mathematics; -- stays two hyphens

@@ -1,0 +1,358 @@
+---
+title: "7 A page with a shape"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-07.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+`random_page` returns the dictionary that Wikipedia sends, and the code uses its title and its extract.
+Nothing checks that the dictionary has them. We give a page a shape, with a pydantic model. `random_page` returns a page of that shape, and an
+answer that is not a page becomes an error like any other. Last, the code checks that the language is a language
+code before it puts it into the address.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
+
+## 7.1 pydantic {#step-07.1}
+
+The command uses two of the many keys that Wikipedia sends. The code expects them to be there, with strings as
+values, but nothing checks it. pydantic is a library that checks data against a model, and a model states the two
+keys and their types in code. pydantic is a dependency of the package, as click and requests are, so `uv add` puts
+it in `dependencies`.
+
+This change came from running `uv add pydantic`.
+
+In `pyproject.toml`, the list `dependencies` now has `"pydantic>=2.14.1",` at line 12, between click and
+requests. `uv.lock` has the exact version of pydantic, and of the four packages that it needs.
+
+```bash
+uv run python -c "import pydantic; print(pydantic.VERSION)"
+just test -q
+```
+
+The first command prints `2.14.1`. The tests print `6 passed, 2 deselected`, as before, because no code uses
+pydantic yet.
+
+### What changed {#step-07.1-what-changed-182c57}
+
+- <a id="step-07.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: pydantic, a dependency of the package. 1 line added. It comes from `uv add pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10/pyproject.toml).
+  - look at `"pydantic>=2.14.1",`
+- <a id="step-07.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of pydantic, and of what it needs. 180 lines added. It comes from `uv add pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10/uv.lock).
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -9,6 +9,7 @@ authors = [{ name = "Rahul Dave" }]
+ requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
++    "pydantic>=2.14.1",
+     "requests>=2.34.2",
+ ]
+ 
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10).
+
+## 7.2 The model Page {#step-07.2}
+
+The model `Page` is a class that inherits from pydantic's `BaseModel`. It has a title and an extract, both strings,
+the two keys that the command uses. A `Page` made from a dictionary checks the two keys, and keeps only them.
+Nothing uses `Page` yet.
+
+A patch to [`src/wikiapp/wikipedia.py`](#step-07.2-src-wikiapp-wikipedia.py-258803).
+
+In `src/wikiapp/wikipedia.py`, the import of `BaseModel` is line 4, under `import requests`. The class `Page` is
+lines 14 to 18, after `WikipediaError`, with its docstring and the two fields `title` and `extract`.
+
+```bash
+uv run python -c "from wikiapp.wikipedia import Page; print(Page.model_validate({'title': 'A', 'extract': 'B', 'lang': 'en'}))"
+uv run python -c "from wikiapp.wikipedia import Page; Page.model_validate({'title': 'A'})"
+```
+
+The first command prints `title='A' extract='B'`. The model drops the other key. The second command fails with
+`1 validation error for Page`, and names the field `extract` with `Field required`.
+
+### What changed {#step-07.2-what-changed-182c57}
+
+- <a id="step-07.2-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the model. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1baf0602c1d1cec79277c2faec438b76a9a8c768/src/wikiapp/wikipedia.py).
+  - look at `class Page(BaseModel):`
+
+<details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
+
+```diff
+@@ -1,6 +1,7 @@
+ from typing import Any
+ 
+ import requests
++from pydantic import BaseModel
+ 
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+@@ -10,6 +11,13 @@ class WikipediaError(Exception):
+     """Wikipedia could not give a page."""
+ 
+ 
++class Page(BaseModel):
++    """A page of Wikipedia: its title and the summary of its text."""
++
++    title: str
++    extract: str
++
++
+ def random_page(language: str = "en") -> dict[str, Any]:
+     """Get a random page from Wikipedia."""
+     try:
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1baf0602c1d1cec79277c2faec438b76a9a8c768). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1baf0602c1d1cec79277c2faec438b76a9a8c768).
+
+## 7.3 random_page returns a Page {#step-07.3}
+
+The model exists, but `random_page` still returns the dictionary, and `main` still reads its keys. A misspelled key
+of a dictionary shows up only when the program runs. The attributes of a `Page` have names that ty and an editor
+know. So `random_page` returns a `Page` made from the answer, and `main` prints its attributes.
+
+`random_page` passes the answer to `Page.model_validate`, which checks it against the model and makes the page.
+The code no longer uses `Any`, so its import goes.
+
+A patch to [`src/wikiapp/wikipedia.py`](#step-07.3-src-wikiapp-wikipedia.py-258803).
+
+In `src/wikiapp/wikipedia.py`, see the `def` line `def random_page(language: str = "en") -> Page:` and the line
+`return Page.model_validate(response.json())`.
+
+`main`, in `src/wikiapp/console.py`, prints `page.title` and `page.extract` in place of the two keys.
+
+A patch to [`src/wikiapp/console.py`](#step-07.3-src-wikiapp-console.py-d9ae67).
+
+The test that asks the real Wikipedia, in `tests/test_wikipedia.py`, checked two keys of the dictionary. It now
+checks that the answer is a `Page`, and its new name, `test_random_page_returns_page_in_production`, says so. It
+keeps its marker `e2e`.
+
+A patch to [`tests/test_wikipedia.py`](#step-07.3-tests-test_wikipedia.py-2f4413).
+
+In `tests/test_wikipedia.py`, the two asserts on the keys are now one, on the type of the answer.
+
+```bash
+just check
+uv run wikiapp
+```
+
+`just check` passes, and the command prints a page as before.
+
+### What changed {#step-07.3-what-changed-182c57}
+
+- <a id="step-07.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: attributes, not keys. 3 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/console.py).
+  - look at `click.secho(page.title, fg="green")`
+- <a id="step-07.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the return. 2 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/wikipedia.py).
+  - look at `return Page.model_validate(response.json())`
+- <a id="step-07.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the e2e test checks for a Page. 2 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/tests/test_wikipedia.py).
+  - look at `assert isinstance(page, wikipedia.Page)`
+
+<details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
+
+```diff
+@@ -19,13 +19,11 @@ from wikiapp.wikipedia import WikipediaError, random_page
+ def main(language: str) -> None:
+     """Print the title and summary of a random Wikipedia page."""
+     try:
+-        data = random_page(language=language)
++        page = random_page(language=language)
+     except WikipediaError as error:
+         raise click.ClickException(str(error)) from error
+-    title = data["title"]
+-    extract = data["extract"]
+-    click.secho(title, fg="green")
+-    click.echo(textwrap.fill(extract))
++    click.secho(page.title, fg="green")
++    click.echo(textwrap.fill(page.extract))
+ 
+ 
+ if __name__ == "__main__":
+```
+
+</details>
+
+<details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
+
+```diff
+@@ -1,5 +1,3 @@
+-from typing import Any
+-
+ import requests
+ from pydantic import BaseModel
+ 
+@@ -18,13 +16,13 @@ class Page(BaseModel):
+     extract: str
+ 
+ 
+-def random_page(language: str = "en") -> dict[str, Any]:
++def random_page(language: str = "en") -> Page:
+     """Get a random page from Wikipedia."""
+     try:
+         with requests.get(
+             API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10
+         ) as response:
+             response.raise_for_status()
+-            return response.json()
++            return Page.model_validate(response.json())
+     except requests.RequestException as error:
+         raise WikipediaError(str(error)) from error
+```
+
+</details>
+
+<details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
+
+```diff
+@@ -12,7 +12,6 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ 
+ 
+ @pytest.mark.e2e
+-def test_random_page_returns_dictionary_in_production() -> None:
++def test_random_page_returns_page_in_production() -> None:
+     page = wikipedia.random_page()
+-    assert "title" in page
+-    assert "extract" in page
++    assert isinstance(page, wikipedia.Page)
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d).
+
+## 7.4 An answer that is not a page {#step-07.4}
+
+An answer with no title is not a page. `model_validate` then raises the ValidationError of pydantic, and the command
+would end with a traceback. `random_page` turns a failed request into a WikipediaError, and it should do the same
+with an answer that is not a page. So its `except` catches ValidationError together with the exception of requests.
+
+A patch to [`src/wikiapp/wikipedia.py`](#step-07.4-src-wikiapp-wikipedia.py-258803).
+
+In `src/wikiapp/wikipedia.py`, see the line `except (requests.RequestException, ValidationError) as error:`, and
+`ValidationError` in the import from pydantic.
+
+A test from the original wikiapp, `test_random_page_handles_validation_error`, checks it, at the end of
+`tests/test_wikipedia.py`. The mock answers with an empty dictionary, `{}`, and `pytest.raises` expects a
+WikipediaError.
+
+A patch to [`tests/test_wikipedia.py`](#step-07.4-tests-test_wikipedia.py-2f4413).
+
+```bash
+just test -k validation
+```
+
+The output is `1 passed, 8 deselected`.
+
+### What changed {#step-07.4-what-changed-182c57}
+
+- <a id="step-07.4-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: two exceptions caught. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/src/wikiapp/wikipedia.py).
+  - look at `except (requests.RequestException, ValidationError) as error:`
+- <a id="step-07.4-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/tests/test_wikipedia.py).
+  - look at `with pytest.raises(wikipedia.WikipediaError):`
+
+<details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
+
+```diff
+@@ -1,5 +1,5 @@
+ import requests
+-from pydantic import BaseModel
++from pydantic import BaseModel, ValidationError
+ 
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+@@ -24,5 +24,5 @@ def random_page(language: str = "en") -> Page:
+         ) as response:
+             response.raise_for_status()
+             return Page.model_validate(response.json())
+-    except requests.RequestException as error:
++    except (requests.RequestException, ValidationError) as error:
+         raise WikipediaError(str(error)) from error
+```
+
+</details>
+
+<details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
+
+```diff
+@@ -15,3 +15,9 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ def test_random_page_returns_page_in_production() -> None:
+     page = wikipedia.random_page()
+     assert isinstance(page, wikipedia.Page)
++
++
++def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
++    mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
++    with pytest.raises(wikipedia.WikipediaError):
++        wikipedia.random_page()
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d).
+
+## 7.5 Only a language code goes into the address {#step-07.5}
+
+The code puts the language into the host name, `{language}.wikipedia.org`. A language such as `example.com/x?`
+sends the request to example.com, with the User-Agent. The code of every Wikipedia has only letters and hyphens,
+for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
+code first, before the `try`, and any other language raises a WikipediaError.
+
+The pattern is a constant, `LANGUAGE`, made with the module `re`. No request goes out for a language that does
+not match it.
+
+A patch to [`src/wikiapp/wikipedia.py`](#step-07.5-src-wikiapp-wikipedia.py-258803).
+
+In `src/wikiapp/wikipedia.py`, `LANGUAGE` is under `API_URL`, and `import re` is at the top. The check is the
+first lines of `random_page`, from `if not LANGUAGE.fullmatch(language):`.
+
+```bash
+uv run wikiapp --language 'example.com/x?'
+just test -q
+```
+
+The command prints `Error: 'example.com/x?' is not a language code, such as en, fr or zh-yue`, and sends no
+request. The tests print `7 passed, 2 deselected`. No test reaches the new `raise`, so the coverage table lists
+its line as missing. The coverage is 95% in all, which is still over the floor of 90%.
+
+### What changed {#step-07.5-what-changed-182c57}
+
+- <a id="step-07.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the code checks a language before it uses it. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/be473b80441f82ce87bf800deeb432fd4212dea4/src/wikiapp/wikipedia.py).
+  - look at `if not LANGUAGE.fullmatch(language):`
+
+<details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
+
+```diff
+@@ -1,7 +1,10 @@
++import re
++
+ import requests
+ from pydantic import BaseModel, ValidationError
+ 
+ API_URL = "https://{language}.wikipedia.org/api/rest_v1/page/random/summary"
++LANGUAGE = re.compile(r"[a-z]+(-[a-z]+)*")  # en, fr, simple, zh-yue: letters and hyphens
+ USER_AGENT = "wikiapp/0.1.0 (https://github.com/rahuldave/smallwikiapp)"
+ 
+ 
+@@ -18,6 +21,8 @@ class Page(BaseModel):
+ 
+ def random_page(language: str = "en") -> Page:
+     """Get a random page from Wikipedia."""
++    if not LANGUAGE.fullmatch(language):
++        raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
+     try:
+         with requests.get(
+             API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).

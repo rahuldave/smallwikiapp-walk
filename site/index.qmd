@@ -1,0 +1,79 @@
+---
+title: "smallwikiapp, one change at a time"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+We build `wikiapp`, a small command that prints the title and the summary of a random Wikipedia page. Around the
+command we build the project. It gets its packages with uv, tests, a library, a formatter, a linter and types. It
+also gets checks on GitHub, documentation made from the code, and a build.
+
+We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
+file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
+against it.
+
+Each move first says what problem it solves. Then it gives
+the change, piece by piece, and a command that checks the result. Every section starts with `just setup`, which
+makes the environment of the project match the code.
+
+The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
+2024 with pixi. Where the text says "the original wikiapp", it means that project.
+
+Five shorter tutorials take parts of this one. Each has its own site, for
+[testing](https://rahuldave.com/smallwikiapp-walk/testing/),
+[linting](https://rahuldave.com/smallwikiapp-walk/linting/),
+[docs](https://rahuldave.com/smallwikiapp-walk/docs/),
+[just](https://rahuldave.com/smallwikiapp-walk/just/) and
+[uv](https://rahuldave.com/smallwikiapp-walk/uv/).
+
+There are two ways to read this tutorial. Both have the same parts, in the same order.
+
+Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change. What changed is what you check your files against.
+
+In Build it yourself, a file that a command makes says which command. A diff that is open is a patch. Apply it with the command in the text, or make the same change in your editor.
+
+## Read the tutorial
+
+Each change explained, with the code to look at.
+
+- [0 The project](read/step-00.qmd)
+- [1 A random page](read/step-01.qmd)
+- [2 Tests, with mocks](read/step-02.qmd)
+- [3 A library and an app](read/step-03.qmd)
+- [4 Format, lint, a hook](read/step-04.qmd)
+- [5 Types](read/step-05.qmd)
+- [6 End to end, and CI](read/step-06.qmd)
+- [7 A page with a shape](read/step-07.qmd)
+- [8 Docs from the code](read/step-08.qmd)
+- [8b The docs on GitHub Pages](read/step-08b.qmd)
+- [9 The library as a package](read/step-09.qmd)
+- [10 Build](read/step-10.qmd)
+
+## Build it yourself
+
+Every command to run and every change to make by hand, to make the project yourself.
+
+### Get the project
+
+You build the project in a clone of your own. The commands of each part run at the top of it. Clone the project, and start where the walk starts, on a branch of your own, `mine`:
+
+```bash
+git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git switch -c mine ae86cb7d116c
+```
+
+### The parts
+
+- [0 The project](build/step-00.qmd)
+- [1 A random page](build/step-01.qmd)
+- [2 Tests, with mocks](build/step-02.qmd)
+- [3 A library and an app](build/step-03.qmd)
+- [4 Format, lint, a hook](build/step-04.qmd)
+- [5 Types](build/step-05.qmd)
+- [6 End to end, and CI](build/step-06.qmd)
+- [7 A page with a shape](build/step-07.qmd)
+- [8 Docs from the code](build/step-08.qmd)
+- [8b The docs on GitHub Pages](build/step-08b.qmd)
+- [9 The library as a package](build/step-09.qmd)
+- [10 Build](build/step-10.qmd)

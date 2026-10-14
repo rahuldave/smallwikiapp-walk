@@ -1,0 +1,99 @@
+---
+title: "2.10 to 2.11 Coverage"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-02.10-to-step-02.11.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The tests pass, but nothing says which lines of the code they run. From now on, each run of the tests measures
+the coverage, the share of the lines that the tests run.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
+
+## 2.10 pytest-cov, in the group test {#step-02.10}
+
+The tests pass, but we do not know which lines of the code they run. pytest-cov measures that, when pytest gets the
+option `--cov`. It goes in the group `test`.
+
+This change came from running `uv add --group test pytest-cov`.
+
+In `pyproject.toml`, the group `test` has `"pytest-cov>=7.1.0",` between pytest and pytest-mock. `uv.lock` has
+pytest-cov 7.1.0, and coverage 7.16.2, which it needs.
+
+```bash
+just test --cov=wikiapp
+```
+
+Under the tests, a table lists each file of `src/wikiapp`, with its statements and the share of them that ran.
+`console.py` has 18 statements. One of them did not run, so its line reads `94%`. The total is `95%`.
+
+### What changed {#step-02.10-what-changed-182c57}
+
+- <a id="step-02.10-pyproject.toml-5d07e7"></a>`pyproject.toml`: pytest-cov in the group `test`. 1 line added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/pyproject.toml).
+  - look at `"pytest-cov>=7.1.0",`
+- <a id="step-02.10-uv.lock-8356d8"></a>`uv.lock`: pytest-cov, and coverage, the package that it needs. 100 lines added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/uv.lock).
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -26,5 +26,6 @@ default-groups = "all"
+ [dependency-groups]
+ test = [
+     "pytest>=9.1.1",
++    "pytest-cov>=7.1.0",
+     "pytest-mock>=3.16.0",
+ ]
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8409e0f2e7f68a697de1e8bf32a745658364f17f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8409e0f2e7f68a697de1e8bf32a745658364f17f).
+
+## 2.11 Coverage on every run {#step-02.11}
+
+A person can forget to type `--cov=wikiapp`. The settings of pytest in `pyproject.toml` give it options for
+every run. They tell pytest to look for tests in `tests`, to measure coverage, and to list the lines that no test
+ran.
+
+A patch to [`pyproject.toml`](#step-02.11-pyproject.toml-5d07e7).
+
+At the end of `pyproject.toml`, the new table `[tool.pytest.ini_options]` has `testpaths = ["tests"]`. Its line
+`addopts` gives pytest the options `--cov=wikiapp --cov-report=term-missing` for every run.
+
+The tests of the original wikiapp had one more fixture, `mock_wikipedia_random_page`, and a test that was commented
+out. No test used them, so the project does not keep them.
+
+```bash
+just test
+```
+
+The table under the tests now has a column `Missing`. `console.py` reads `94%`, and its missing line is 22. Line 22
+is the call to `main` at the end, which runs only when you run the file as a script.
+
+### What changed {#step-02.11-what-changed-182c57}
+
+- <a id="step-02.11-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of pytest. They name the folder of the tests, and turn coverage on for every run. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7508f1d424d5f906ee4630be09b2fddf3483e9c4/pyproject.toml).
+  - look at `addopts = "--cov=wikiapp --cov-report=term-missing"`
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -29,3 +29,8 @@ test = [
+     "pytest-cov>=7.1.0",
+     "pytest-mock>=3.16.0",
+ ]
++
++[tool.pytest.ini_options]
++testpaths = ["tests"]
++# Every run measures how much of src/wikiapp the tests run, and lists the lines they do not
++addopts = "--cov=wikiapp --cov-report=term-missing"
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).

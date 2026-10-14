@@ -1,0 +1,163 @@
+# Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again.
+project:
+  type: website
+  output-dir: _site
+  render: ["index.qmd", "read/*.qmd", "build/*.qmd"]   # only these pages
+
+website:
+  title: "The formatter and the linter of smallwikiapp"
+  page-navigation: true
+  search: true
+  sidebar:
+    style: docked
+    contents:
+      - index.qmd
+      - section: "Read the tutorial"
+        contents:
+          - text: "0 The project"
+            href: read/step-00.qmd
+          - section: "1 The command"
+            href: read/step-01.qmd
+            contents:
+              - text: "1.1 click and requests"
+                href: read/step-01.qmd#step-01.1
+              - text: "1.2 Ask Wikipedia for a page"
+                href: read/step-01.qmd#step-01.2
+              - text: "1.3 A User-Agent"
+                href: read/step-01.qmd#step-01.3
+              - text: "1.4 --version"
+                href: read/step-01.qmd#step-01.4
+          - section: "4.1 to 4.3 A formatter"
+            href: read/step-04.1-to-step-04.3.qmd
+            contents:
+              - text: "4.1 ruff, in the group lint"
+                href: read/step-04.1-to-step-04.3.qmd#step-04.1
+              - text: "4.2 The settings of ruff, and the recipe fmt"
+                href: read/step-04.1-to-step-04.3.qmd#step-04.2
+              - text: "4.3 The code, formatted"
+                href: read/step-04.1-to-step-04.3.qmd#step-04.3
+          - section: "4.4 The linter's rules"
+            href: read/step-04.4.qmd
+            contents:
+              - text: "4.4 The linter's rules, and the recipe lint"
+                href: read/step-04.4.qmd#step-04.4
+          - section: "4.5 to 4.7 The linter's problems, fixed"
+            href: read/step-04.5-to-step-04.7.qmd
+            contents:
+              - text: "4.5 The tests' imports at the top, and no unused variables"
+                href: read/step-04.5-to-step-04.7.qmd#step-04.5
+              - text: "4.6 A timeout"
+                href: read/step-04.5-to-step-04.7.qmd#step-04.6
+              - text: "4.7 The linter sorts the imports"
+                href: read/step-04.5-to-step-04.7.qmd#step-04.7
+          - section: "4.8 to 4.9 A check of the configuration"
+            href: read/step-04.8-to-step-04.9.qmd
+            contents:
+              - text: "4.8 validate-pyproject, in the group lint"
+                href: read/step-04.8-to-step-04.9.qmd#step-04.8
+              - text: "4.9 The recipe lint-config"
+                href: read/step-04.8-to-step-04.9.qmd#step-04.9
+          - section: "4.11 `just check`, every check in one recipe"
+            href: read/step-04.11.qmd
+            contents:
+              - text: "4.11 The recipe check"
+                href: read/step-04.11.qmd#step-04.11
+          - section: "4.12 to 4.13 A git hook"
+            href: read/step-04.12-to-step-04.13.qmd
+            contents:
+              - text: "4.12 `pre-commit`, in the group lint"
+                href: read/step-04.12-to-step-04.13.qmd#step-04.12
+              - text: "4.13 A git hook"
+                href: read/step-04.12-to-step-04.13.qmd#step-04.13
+          - section: "5.4 to 5.6 The linter asks for types"
+            href: read/step-05.4-to-step-05.6.qmd
+            contents:
+              - text: "5.4 A type on every parameter and return"
+                href: read/step-05.4-to-step-05.6.qmd#step-05.4
+              - text: "5.5 Types in the code"
+                href: read/step-05.4-to-step-05.6.qmd#step-05.5
+              - text: "5.6 Types in the tests"
+                href: read/step-05.4-to-step-05.6.qmd#step-05.6
+          - section: "10.3 The library's pyproject.toml too"
+            href: read/step-10.3.qmd
+            contents:
+              - text: "10.3 lint-config checks both pyproject.toml files"
+                href: read/step-10.3.qmd#step-10.3
+      - section: "Build it yourself"
+        contents:
+          - text: "0 The project"
+            href: build/step-00.qmd
+          - section: "1 The command"
+            href: build/step-01.qmd
+            contents:
+              - text: "1.1 click and requests"
+                href: build/step-01.qmd#step-01.1
+              - text: "1.2 Ask Wikipedia for a page"
+                href: build/step-01.qmd#step-01.2
+              - text: "1.3 A User-Agent"
+                href: build/step-01.qmd#step-01.3
+              - text: "1.4 --version"
+                href: build/step-01.qmd#step-01.4
+          - section: "4.1 to 4.3 A formatter"
+            href: build/step-04.1-to-step-04.3.qmd
+            contents:
+              - text: "4.1 ruff, in the group lint"
+                href: build/step-04.1-to-step-04.3.qmd#step-04.1
+              - text: "4.2 The settings of ruff, and the recipe fmt"
+                href: build/step-04.1-to-step-04.3.qmd#step-04.2
+              - text: "4.3 The code, formatted"
+                href: build/step-04.1-to-step-04.3.qmd#step-04.3
+          - section: "4.4 The linter's rules"
+            href: build/step-04.4.qmd
+            contents:
+              - text: "4.4 The linter's rules, and the recipe lint"
+                href: build/step-04.4.qmd#step-04.4
+          - section: "4.5 to 4.7 The linter's problems, fixed"
+            href: build/step-04.5-to-step-04.7.qmd
+            contents:
+              - text: "4.5 The tests' imports at the top, and no unused variables"
+                href: build/step-04.5-to-step-04.7.qmd#step-04.5
+              - text: "4.6 A timeout"
+                href: build/step-04.5-to-step-04.7.qmd#step-04.6
+              - text: "4.7 The linter sorts the imports"
+                href: build/step-04.5-to-step-04.7.qmd#step-04.7
+          - section: "4.8 to 4.9 A check of the configuration"
+            href: build/step-04.8-to-step-04.9.qmd
+            contents:
+              - text: "4.8 validate-pyproject, in the group lint"
+                href: build/step-04.8-to-step-04.9.qmd#step-04.8
+              - text: "4.9 The recipe lint-config"
+                href: build/step-04.8-to-step-04.9.qmd#step-04.9
+          - section: "4.11 `just check`, every check in one recipe"
+            href: build/step-04.11.qmd
+            contents:
+              - text: "4.11 The recipe check"
+                href: build/step-04.11.qmd#step-04.11
+          - section: "4.12 to 4.13 A git hook"
+            href: build/step-04.12-to-step-04.13.qmd
+            contents:
+              - text: "4.12 `pre-commit`, in the group lint"
+                href: build/step-04.12-to-step-04.13.qmd#step-04.12
+              - text: "4.13 A git hook"
+                href: build/step-04.12-to-step-04.13.qmd#step-04.13
+          - section: "5.4 to 5.6 The linter asks for types"
+            href: build/step-05.4-to-step-05.6.qmd
+            contents:
+              - text: "5.4 A type on every parameter and return"
+                href: build/step-05.4-to-step-05.6.qmd#step-05.4
+              - text: "5.5 Types in the code"
+                href: build/step-05.4-to-step-05.6.qmd#step-05.5
+              - text: "5.6 Types in the tests"
+                href: build/step-05.4-to-step-05.6.qmd#step-05.6
+          - section: "10.3 The library's pyproject.toml too"
+            href: build/step-10.3.qmd
+            contents:
+              - text: "10.3 lint-config checks both pyproject.toml files"
+                href: build/step-10.3.qmd#step-10.3
+
+theme: cosmo
+css: styles.css
+toc: true
+toc-depth: 2
+code-copy: true
+from: markdown-tex_math_dollars-smart  # a $ is a dollar, not mathematics; -- stays two hyphens

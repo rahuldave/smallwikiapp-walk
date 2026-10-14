@@ -1,0 +1,156 @@
+---
+title: "just, the interface of smallwikiapp"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+We give `wikiapp` one interface for every task, a justfile. `wikiapp` is a small command that prints the title and
+the summary of a random Wikipedia page. Its project has many tools, each with its own options. A person, a git hook
+and GitHub must all run them the same way. This tutorial takes the parts about the justfile out of the whole
+tutorial of smallwikiapp. It starts from the project that `uv init` made, for Python 3.13, and has a justfile
+from the start.
+
+The justfile is the interface of the project. Each task is a verb, such as `just test`, and the recipe behind the
+verb names the tool that does the work. A person, a git hook and GitHub each run `just check`, and `check` runs
+other verbs. A tool can change behind a verb, and the callers of the verb stay the same.
+
+Each new verb comes in the same way. `just --show VERB` shows the recipe, then the verb runs. Most sections that
+bring in a verb also run the tool's own command first. The sections of `test` and `check` do not, and section 1
+runs `just setup` before it shows the recipe.
+
+The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
+2024 with pixi. Where the text says "the original wikiapp", it means that project.
+
+We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
+file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
+against it.
+
+This tutorial has seventeen sections:
+
+1. **The project, and its justfile**
+2. **`just test`**
+3. **`just fmt`**
+4. **`just lint`**
+5. **`just lint-config`**
+6. **A variable for every recipe**
+7. **`just check`, everything a `git commit` must pass**
+8. **The git hook runs `just check`**
+9. **`just types`**
+10. **The types join `just check`**
+11. **GitHub runs `just check`**
+12. **`just docs`**
+13. **`just docs` alone builds a site**
+14. **The docs check joins `just check`**
+15. **The library, behind the same verbs**
+16. **`just build`**
+17. **`just lint-config` checks the library too**
+
+Where the whole tutorial makes changes that this one leaves out, the next section says what they did, and begins
+from their code.
+
+**What `just check` runs**
+
+`just check` runs every check that a `git commit` must pass, and ends at the first check that fails. The table gives each section that changes what it runs.
+
+| Section | What changes | Where the change is |
+|---|---|---|
+| 7 | `check` comes in, with the format, the linter, the tests over a floor on the coverage, and the configuration | The justfile |
+| 10 | The type checker | The justfile |
+| 14 | The docs check | The justfile |
+| 15 | The docs check counts the library | `docs/_smalldocs.yml` |
+| 17 | The check of the configuration reads the library's `pyproject.toml` | The recipe `lint-config` |
+
+Some changes that this tutorial leaves out change what `just check` runs too. They change `pyproject.toml`, not
+the justfile. Before section 10, the rules `ANN` come into the linter. Before section 11, the end-to-end tests come in. They ask the
+real Wikipedia, and pytest leaves them out of each run that does not ask for them, `just check` included. Before section 15, the floor on the coverage counts both
+packages.
+
+**Who runs `just check`**
+
+Three callers run `just check`, and none of them changes when `check` changes.
+
+| Caller | From | When it runs |
+|---|---|---|
+| A person, in the terminal | Section 7 | When the person remembers |
+| The git hook | Section 8 | Before each `git commit`, in a clone where `just hook` ran |
+| GitHub's job `check` | Section 11 | On every push to main and every pull request |
+
+**The verbs, and what is behind each**
+
+The table gives each verb of the last justfile, and the commands that its recipe runs.
+
+| Verb | What its recipe runs | Section |
+|---|---|---|
+| `help` | `just --show VERB`, or `just --list --unsorted` | 1 |
+| `setup` | `uv sync --locked` | 1 |
+| `test` | `uv run pytest` | 2 |
+| `fmt` | `uv run ruff format` | 3 |
+| `lint` | `uv run ruff check` | 4 |
+| `lint-config` | `uv run validate-pyproject`, `uv lock --check` and `just --fmt --check --unstable` | 5 and 17 |
+| `check` | `just fmt --check`, `just lint`, `just types`, `just test -q --cov-fail-under=90`, `just docs check` and `just lint-config` | 7, 10 and 14 |
+| `hook` | `uv run pre-commit install` | 8 |
+| `types` | `uv run ty check` | 9 |
+| `docs` | `uv run smalldocs render docs` alone, and `uv run smalldocs api` with words | 12 and 13 |
+| `build` | `uv build --all-packages` | 16 |
+
+There are two ways to read this tutorial. Both have the same parts, in the same order.
+
+Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change. What changed is what you check your files against.
+
+In Build it yourself, a file that a command makes says which command. A diff that is open is a patch. Apply it with the command in the text, or make the same change in your editor.
+
+## Read the tutorial
+
+Each change explained, with the code to look at.
+
+- [0 The project, and its justfile](read/step-00.qmd)
+- [2.4 `just test`](read/step-02.4.qmd)
+- [4.1 to 4.2 `just fmt`](read/step-04.1-to-step-04.2.qmd)
+- [4.4 `just lint`](read/step-04.4.qmd)
+- [4.8 to 4.9 `just lint-config`](read/step-04.8-to-step-04.9.qmd)
+- [4.10 A variable for every recipe](read/step-04.10.qmd)
+- [4.11 `just check`, everything a `git commit` must pass](read/step-04.11.qmd)
+- [4.12 to 4.13 The git hook runs `just check`](read/step-04.12-to-step-04.13.qmd)
+- [5.1 to 5.2 `just types`](read/step-05.1-to-step-05.2.qmd)
+- [5.7 The types join `just check`](read/step-05.7.qmd)
+- [6.5 GitHub runs `just check`](read/step-06.5.qmd)
+- [8.1 to 8.2 `just docs`](read/step-08.1-to-step-08.2.qmd)
+- [8.6 `just docs` alone builds a site](read/step-08.6.qmd)
+- [8.8 The docs check joins `just check`](read/step-08.8.qmd)
+- [9.10 The library, behind the same verbs](read/step-09.10.qmd)
+- [10.1 `just build`](read/step-10.1.qmd)
+- [10.3 `just lint-config` checks the library too](read/step-10.3.qmd)
+
+## Build it yourself
+
+Every command to run and every change to make by hand, to make the project yourself.
+
+### Get the project
+
+You build the project in a clone of your own. The commands of each part run at the top of it. Clone the project, and start where the walk starts, on a branch of your own, `mine`:
+
+```bash
+git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git switch -c mine ae86cb7d116c
+```
+
+### The parts
+
+- [0 The project, and its justfile](build/step-00.qmd)
+- [2.4 `just test`](build/step-02.4.qmd)
+- [4.1 to 4.2 `just fmt`](build/step-04.1-to-step-04.2.qmd)
+- [4.4 `just lint`](build/step-04.4.qmd)
+- [4.8 to 4.9 `just lint-config`](build/step-04.8-to-step-04.9.qmd)
+- [4.10 A variable for every recipe](build/step-04.10.qmd)
+- [4.11 `just check`, everything a `git commit` must pass](build/step-04.11.qmd)
+- [4.12 to 4.13 The git hook runs `just check`](build/step-04.12-to-step-04.13.qmd)
+- [5.1 to 5.2 `just types`](build/step-05.1-to-step-05.2.qmd)
+- [5.7 The types join `just check`](build/step-05.7.qmd)
+- [6.5 GitHub runs `just check`](build/step-06.5.qmd)
+- [8.1 to 8.2 `just docs`](build/step-08.1-to-step-08.2.qmd)
+- [8.6 `just docs` alone builds a site](build/step-08.6.qmd)
+- [8.8 The docs check joins `just check`](build/step-08.8.qmd)
+- [9.10 The library, behind the same verbs](build/step-09.10.qmd)
+- [10.1 `just build`](build/step-10.1.qmd)
+- [10.3 `just lint-config` checks the library too](build/step-10.3.qmd)

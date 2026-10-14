@@ -1,0 +1,102 @@
+---
+title: "5.1 to 5.2 `just types`"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-05.1-to-step-05.2.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The linter does not check types. The next verb runs a type checker, and `check` does not run it yet.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368).
+
+## 5.1 ty, in the group lint {#step-05.1}
+
+Nothing checks the types of the code yet. ty is a type checker. It reads the code without running it, and finds
+calls whose arguments cannot have the types that the function asks for.
+`uv add` puts ty in the group `lint`, with the other tools that check the code.
+
+This change came from running `uv add --group lint ty`.
+
+In `pyproject.toml`, the group `lint` now has the line `"ty>=0.0.87",`, on line 30. `uv.lock` has the exact
+version of ty.
+
+```bash
+uv run ty --version
+```
+
+It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`. Nothing runs it yet.
+
+### What changed {#step-05.1-what-changed-182c57}
+
+- <a id="step-05.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: ty in the group `lint`. 1 line added. It comes from `uv add --group lint ty`. [The file](https://github.com/rahuldave/smallwikiapp/blob/56a11f0bb31a607e6c5ff37454c7915f2eddd86d/pyproject.toml).
+  - look at `"ty>=0.0.87",`
+- <a id="step-05.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ty. 27 lines added. It comes from `uv add --group lint ty`. [The file](https://github.com/rahuldave/smallwikiapp/blob/56a11f0bb31a607e6c5ff37454c7915f2eddd86d/uv.lock).
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -27,6 +27,7 @@ default-groups = "all"
+ lint = [
+     "pre-commit>=4.7.0",
+     "ruff>=0.17.0",
++    "ty>=0.0.87",
+     "validate-pyproject>=0.26",
+ ]
+ test = [
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/56a11f0bb31a607e6c5ff37454c7915f2eddd86d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/56a11f0bb31a607e6c5ff37454c7915f2eddd86d).
+
+## 5.2 The recipe types {#step-05.2}
+
+A recipe `types` runs ty, as every other tool of the project runs through `just`. It goes after the recipe `lint`
+in the `justfile`.
+
+A patch to [`justfile`](#step-05.2-justfile-424f0b).
+
+In the `justfile`, the recipe `types *args:` on line 51 comes after `lint`. It runs `uv run ty check`, and passes
+on any arguments.
+
+```bash
+uv run ty check
+just --show types
+just types
+```
+
+ty finds one problem, in `src/wikiapp/__init__.py`, and ends with `Found 1 diagnostic`. The message is
+``Expected `str`, found `str | None` ``. As far as ty can tell, `__name__ or __package__` could be None. But
+`importlib.metadata.version` needs a string.
+
+### What changed {#step-05.2-what-changed-182c57}
+
+- <a id="step-05.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2a5904d01d950678e8364d7f6958dccaf5b69368/justfile).
+  - look at `types *args:`
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -45,6 +45,12 @@ fmt *args:
+ lint *args:
+     {{ if args == "help" { "just help lint" } else { 'uv run ruff check "$@"' } }}
+ 
++# Check the types of every function call, with ty. Extra arguments go to ty: just types --help
++[group('quality')]
++[no-exit-message]
++types *args:
++    {{ if args == "help" { "just help types" } else { 'uv run ty check "$@"' } }}
++
+ # Check the configuration: pyproject.toml, the lockfile, and this justfile
+ [group('quality')]
+ [no-exit-message]
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2a5904d01d950678e8364d7f6958dccaf5b69368). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368).

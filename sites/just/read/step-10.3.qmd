@@ -1,0 +1,62 @@
+---
+title: "10.3 `just lint-config` checks the library too"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-10.3.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+In the code now, the app asks for wikirandom 0.1.
+
+Since the library became a package, validate-pyproject, in `just lint-config`, has read only the app's
+`pyproject.toml`. The hook and `just check` let every `git commit` through with no check of the library's
+`pyproject.toml` against the standard.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+
+## 10.3 lint-config checks both pyproject.toml files {#step-10.3}
+
+The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. A mistake in the
+library's file would reach a build unseen. The recipe `lint-config` now gives validate-pyproject both files.
+
+A patch to [`justfile`](#step-10.3-justfile-424f0b).
+
+```bash
+just lint-config
+```
+
+`just lint-config` prints `Valid file` twice, once for each file.
+
+The verb has the same name, and its callers did not change. A file that a recipe leaves out is a file that no
+caller checks. The fix goes in one place, the recipe, and all three callers have it.
+
+This tutorial ends here. After it, the library gets a licence and an author, both packages get a link to the
+repository, and the User-Agent says the installed version. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
+
+### What changed {#step-10.3-what-changed-182c57}
+
+- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/432c24094f21040ffd3c4df2bc37524763653f9f/justfile).
+  - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -58,7 +58,7 @@ lint-config *args:
+     #!/usr/bin/env sh
+     set -e
+     if [ "$*" = help ]; then just help lint-config; exit 0; fi
+-    uv run validate-pyproject pyproject.toml
++    uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml
+     uv lock --check
+     just --fmt --check --unstable
+ 
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/432c24094f21040ffd3c4df2bc37524763653f9f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).

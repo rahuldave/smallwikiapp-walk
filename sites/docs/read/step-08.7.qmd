@@ -1,0 +1,54 @@
+---
+title: "8.7 The README's folders"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-08.7.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The README does not name the tests and the docs among the folders. Now it names them.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).
+
+## 8.7 The README names the tests and the docs {#step-08.7}
+
+The README is the first page that a reader sees on GitHub. Its table of folders says where each part of the
+project is, and it lists neither the tests nor the docs. The table gets rows for `tests/` and `docs/`. The row of
+`src/wikiapp/` also says that `wikipedia.py` is the library and `console.py` the command.
+
+A patch to [`README.md`](#step-08.7-README.md-8ec9a0).
+
+```bash
+grep -n -E 'tests/|docs/' README.md
+```
+
+`grep` prints the two new rows of the table.
+
+### What changed {#step-08.7-what-changed-182c57}
+
+- <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md).
+  - look at `| The docs site. smalldocs makes its reference from the code |`
+
+<details><summary>The diff of <code>README.md</code></summary>
+
+```diff
+@@ -30,7 +30,9 @@ Then `just setup`, and `uv run wikiapp`.
+ | Path | What it is |
+ |---|---|
+ | `pyproject.toml`, `uv.lock` | The project: its name, its Python, its dependencies, and the exact versions installed |
+-| `src/wikiapp/` | The code. `console.py` is the `wikiapp` command |
++| `src/wikiapp/` | The code. `wikipedia.py` is the library, `console.py` the `wikiapp` command |
++| `tests/` | The tests. `just test` runs them |
++| `docs/` | The docs site. smalldocs makes its reference from the code |
+ | `justfile` | Every task of the project, one recipe each. `just help VERB` explains one |
+ | `.python-version` | The Python version the project uses |
+ | `.gitignore` | Everything a run makes, ignored from the first commit on |
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).

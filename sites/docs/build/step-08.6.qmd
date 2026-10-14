@@ -1,0 +1,196 @@
+---
+title: "8.6 A site"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-08.6.qmd) is the other way to read this part.
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 7a0e50948873 --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The reference is text in a terminal. smalldocs builds a site, with a front page and a reference page for
+`console.py` and one for `wikipedia.py`.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
+
+## 8.6 A site {#step-08.6}
+
+The reference exists only as Markdown that `just docs module` prints. A reader wants a site, with a front page
+that says what the project does, and a page of reference for each module. smalldocs also builds a site from
+Markdown.
+
+The site is in `docs/`. It has a front page, `index.qmd`, and a reference page for `console.py` and one
+for `wikipedia.py`. Each build writes the reference pages from the code, before it builds the site. A name in
+backticks, such as `random_page`, becomes a link to its entry.
+
+The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, which stays as it is. They are
+the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
+page. The comment at the top now says that `just docs` builds the site.
+
+Apply the patch to [`docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0.diff | git apply --include=docs/_smalldocs.yml
+```
+
+The patch writes the first line, a comment, again, to say what `just docs` builds. Under it come the sections
+`project` and `website`, and the keys `theme` and `toc`. A new comment above `api:` says what the reference is, and
+the section `api` stays as it is.
+
+The front page, `docs/index.qmd`, is new. A `.qmd` file is Markdown, with a header between two `---` lines that
+gives the title of the page.
+
+The page says what the command prints, what each module does, and what the reference pages contain. The file is
+new, and comes whole, as a patch.
+
+Apply the patch to [`docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0.diff | git apply --include=docs/index.qmd
+```
+
+`just docs` with no words now builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api`
+as before. So the recipe is now a script of several lines.
+
+Apply the patch to [`justfile`](#step-08.6-justfile-424f0b), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0.diff | git apply --include=justfile
+```
+
+The patch writes the recipe `docs` again, from its comment to its last line. Its body is now a script of `sh`, with
+one line for `help`, one for no words, and one for words.
+
+```bash
+uv run smalldocs render docs
+just --show docs
+just docs
+```
+
+smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is `docs/_site/index.html`, for a
+browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
+pages, and git ignores them.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat e99ed4f3ab32
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f3ab32 --staged --worktree -- :/
+```
+
+### What changed {#step-08.6-what-changed-182c57}
+
+- <a id="step-08.6-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the site. The sidebar lists the front page, then the reference pages. 17 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/_smalldocs.yml).
+  - look at `contents: api/*  # the reference pages, which each build makes from the code`
+- <a id="step-08.6-docs-index.qmd-d6d880"></a>`docs/index.qmd`: the front page, written by hand. New, 35 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/index.qmd).
+  - look at `Each build of the site makes the pages under Reference from the code.`
+- <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile).
+  - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
+
+<details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
+
+```diff
+@@ -1,4 +1,20 @@
+-# The settings of smalldocs. `api` is the reference, made from the code of the packages
++# The settings of smalldocs. `just docs` builds the site into docs/_site
++project:
++  type: website
++  output-dir: _site
++
++website:
++  title: "wikiapp"
++  sidebar:
++    contents:
++      - index.qmd
++      - section: Reference
++        contents: api/*  # the reference pages, which each build makes from the code
++
++theme: cosmo
++toc: true
++
++# `api` is the reference, made from the code of the packages. A name in backticks links to its entry
+ api:
+   packages: [wikiapp]
+   source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+```
+
+</details>
+
+<details open><summary>The patch to <code>docs/index.qmd</code></summary>
+
+````diff
+@@ -0,0 +1,35 @@
++---
++title: wikiapp
++---
++
++wikiapp prints the title and the summary of a random Wikipedia page, in any language Wikipedia has.
++
++```
++$ uv run wikiapp
++Waimārama
++Waimārama is a seaside village in Hastings District, Hawke's Bay, New
++Zealand.
++
++$ uv run wikiapp --language fr
++Changement démocratique (Salvador)
++Le Changement démocratique est un parti politique salvadorien fondé en
++2005.
++```
++
++The code has two modules:
++
++- `wikiapp.wikipedia`, the library. `random_page` asks Wikipedia for a random page and returns a
++  `Page`, with a title and an extract. It raises `WikipediaError` if the language is not a language
++  code, if the request fails, or if the answer is not a page. The library knows nothing of the command line.
++- `wikiapp.console`, the app. `main` is the command. It reads `--language`, calls `random_page`, and
++  prints the page, or the error.
++
++Each build of the site makes the pages under Reference from the code. A page takes these parts from
++each function:
++
++- the signature and the types
++- the description, from the docstring
++- the description of each parameter and each field, from its docment, the comment beside it
++- the options of a command, with their help
++
++A name in backticks, such as `random_page`, links to its entry.
+````
+
+</details>
+
+<details open><summary>The patch to <code>justfile</code></summary>
+
+```diff
+@@ -75,8 +75,11 @@ check *args:
+     just test -q --cov-fail-under=90
+     just lint-config
+ 
+-# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
++# The docs. Alone, the site in docs/_site; with words, smalldocs api: just docs check
+ [group('docs')]
+ [no-exit-message]
+ docs *args:
+-    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
++    #!/usr/bin/env sh
++    if [ "$*" = help ]; then just help docs; exit 0; fi
++    if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi
++    exec uv run smalldocs api "$@" --dir docs
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).

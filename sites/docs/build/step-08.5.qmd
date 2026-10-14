@@ -1,0 +1,247 @@
+---
+title: "8.5 The tests documented"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-08.5.qmd) is the other way to read this part.
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source bb648b91f4ab --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The tests say what the code must do, and the check lists them as gaps too. Each test now says what it checks, and
+the docs check finds no gap.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
+
+## 8.5 The tests documented {#step-08.5}
+
+`just docs check` still finds gaps in the tests. Each test file must say what it tests, and each fixture what it
+returns. Each test says in one line what it checks. The docstring says in words what the asserts say in code. Each
+parameter of a test has a docment, one parameter to a line.
+
+Tests documented this way are documentation too. A reader learns from them what the code must do.
+
+The fixture in `tests/conftest.py` gets a docstring for the file, a docment for its parameter and its return, and a
+docstring of its own.
+
+Apply the patch to [`tests/conftest.py`](#step-08.5-tests-conftest.py-626af3), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97.diff | git apply --include=tests/conftest.py
+```
+
+The patch adds the docstring of the file at the top. It writes the line `def mock_requests_get(...)` again, with one
+parameter to a line, and adds the docstring of the fixture.
+
+`tests/test_console.py` has a fixture and six tests, and each gets the same pattern.
+
+Apply the patch to [`tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97.diff | git apply --include=tests/test_console.py
+```
+
+The patch adds a docstring at the top of the file. Each test gets a docment on each parameter, one to a line, and a
+docstring of one line. Read `test_main_prints_title` first. Its docstring is "The command prints the title of the
+page."
+
+The three tests of `tests/test_wikipedia.py` get the same pattern.
+
+Apply the patch to [`tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97.diff | git apply --include=tests/test_wikipedia.py
+```
+
+The patch adds the docstring of the file at the top. The two tests that take the mock get one parameter to a line,
+with its docment. Each of the three tests gets a docstring of one line, under its `def`.
+
+```bash
+just docs check
+```
+
+`check` prints a line for each module and each test file, all complete, and then `15 of 15 functions, methods
+and classes are typed and documented`.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 7a0e50948873
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e50948873 --staged --worktree -- :/
+```
+
+### What changed {#step-08.5-what-changed-182c57}
+
+- <a id="step-08.5-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, documented. 6 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/conftest.py).
+  - look at `mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test`
+- <a id="step-08.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: seven functions. 33 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_console.py).
+  - look at `"""The command prints the title of the page."""`
+- <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py).
+  - look at `"""The language chooses the Wikipedia that is asked."""`
+
+<details open><summary>The patch to <code>tests/conftest.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""What every test file can use: a mock in place of `requests.get`."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ from pytest_mock import MockerFixture
+ 
+ 
+ @pytest.fixture
+-def mock_requests_get(mocker: MockerFixture) -> Mock:
++def mock_requests_get(
++    mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test
++) -> Mock:  # The mock that replaces `requests.get` for the length of one test
++    """Replace `requests.get` with a mock that answers with one page, Lorem Ipsum."""
+     mock = mocker.patch("requests.get")
+     mock.return_value.__enter__.return_value.json.return_value = {
+         "title": "Lorem Ipsum",
+```
+
+</details>
+
+<details open><summary>The patch to <code>tests/test_console.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the command, `main`, run in the same process by click's CliRunner."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -8,40 +10,64 @@ from wikiapp import console
+ 
+ 
+ @pytest.fixture
+-def runner() -> CliRunner:
++def runner() -> CliRunner:  # A runner that calls a command and keeps what it prints
++    """Give each test a runner for the command."""
+     return CliRunner()
+ 
+ 
+-def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_title(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command prints the title of the page."""
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
+ 
+-def test_main_invokes_requests_get(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_invokes_requests_get(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command makes a request."""
+     runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
+ 
+-def test_main_uses_correct_url(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_uses_correct_url(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The request goes to the random page of the English Wikipedia."""
+     runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == (
+         "https://en.wikipedia.org/api/rest_v1/page/random/summary",
+     )
+ 
+ 
+-def test_main_fails_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_fails_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An exception in the request ends the command with exit code 1."""
+     mock_requests_get.side_effect = Exception("Boom")
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
+ 
+-def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_message_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """A failed request is printed as an error message, not a traceback."""
+     mock_requests_get.side_effect = requests.RequestException
+     result = runner.invoke(console.main)
+     assert "Error" in result.output
+ 
+ 
+ @pytest.mark.e2e
+-def test_main_succeeds_in_production(runner: CliRunner) -> None:
++def test_main_succeeds_in_production(
++    runner: CliRunner,  # The runner from the fixture
++) -> None:
++    """The command works against the real Wikipedia."""
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+</details>
+
+<details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the library, wikipedia.py."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ import pytest
+ from wikiapp import wikipedia
+ 
+ 
+-def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
++def test_random_page_uses_given_language(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The language chooses the Wikipedia that is asked."""
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
+@@ -13,11 +18,15 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ 
+ @pytest.mark.e2e
+ def test_random_page_returns_page_in_production() -> None:
++    """The real Wikipedia's answer makes a Page."""
+     page = wikipedia.random_page()
+     assert isinstance(page, wikipedia.Page)
+ 
+ 
+-def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
++def test_random_page_handles_validation_error(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An answer that is not a page raises WikipediaError."""
+     mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
+     with pytest.raises(wikipedia.WikipediaError):
+         wikipedia.random_page()
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).

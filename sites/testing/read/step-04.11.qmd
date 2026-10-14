@@ -1,0 +1,69 @@
+---
+title: "4.11 `just check`, with a coverage floor"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-04.11.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+The code now also has ruff, which formats the code and the tests with `just fmt`, and lints them with
+`just lint`. `just lint-config` checks the configuration. In the tests, the linter found an import below the code,
+and unused variables, and a person fixed them. `just lint --fix` sorted the imports of the command. The request
+has a timeout of 10 seconds, and the recipes refuse a lockfile that is out of date.
+
+Each check is a recipe of its own, and a person must remember to run them all. A new recipe, `just check`, runs
+every check. One of them fails when the tests run less than 90% of the code.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
+
+## 4.11 The recipe check {#step-04.11}
+
+There are now four checks, and a person must remember to run each. A recipe `check` runs them all in order, and
+stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
+the configuration.
+
+A patch to [`justfile`](#step-04.11-justfile-424f0b).
+
+At the end of the `justfile`, the recipe `check *args:` on line 57 runs four recipes. The tests run with
+`--cov-fail-under=90`, on line 63, so they fail if they run less than 90% of the statements.
+
+```bash
+just --show check
+just check
+```
+
+`just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
+
+### What changed {#step-04.11-what-changed-182c57}
+
+- <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile).
+  - look at `just test -q --cov-fail-under=90`
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -50,3 +50,15 @@ lint-config *args:
+     uv run validate-pyproject pyproject.toml
+     uv lock --check
+     just --fmt --check --unstable
++
++# Everything a commit must pass: format, lint, the tests over the coverage floor, the configuration
++[group('quality')]
++[no-exit-message]
++check *args:
++    #!/usr/bin/env sh
++    set -e
++    if [ "$*" = help ]; then just help check; exit 0; fi
++    just fmt --check
++    just lint
++    just test -q --cov-fail-under=90
++    just lint-config
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).

@@ -1,0 +1,220 @@
+---
+title: "4.5 to 4.7 The linter's problems, fixed"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-04.5-to-step-04.7.qmd) is the other way to read this part.
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 589f2f691557 --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The linter found five problems. A person fixes the tests, and gives the request a timeout. Then
+`just lint --fix` fixes the last problem, the order of the imports.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9).
+
+## 4.5 The tests' imports at the top, and no unused variables {#step-04.5}
+
+Three of the five problems are in `tests/test_console.py`. The import of `console` comes below the fixture, where a
+reader does not look for it. Two tests assign `result` and never read it. ruff has no fix for the import below the
+code, and its fix for the unused variables is unsafe. So a person makes these fixes.
+
+The import goes up, under `import requests`. wikiapp's own imports are a block of their own, after the installed
+packages, which is the order that the rule `I001` asks for. The tests `test_main_invokes_requests_get` and
+`test_main_uses_correct_url` check the mock, and not the result, so they need no `result =`.
+
+Apply the patch to [`tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/2ec7932b37e21c1533f319c03e0533bc755f6da7.diff | git apply --include=tests/test_console.py
+```
+
+In `tests/test_console.py`, the patch moves `from wikiapp import console` up, under `import requests`, after a
+blank line. In the two tests, it takes `result =` off the line `result = runner.invoke(console.main)`.
+
+```bash
+just lint --statistics
+just fmt --check
+```
+
+Two problems are left, `S113` and `I001`, and the linter still fails. The format is unchanged, and the check prints
+`7 files already formatted`.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 2ec7932b37e2
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 589f2f691557 --staged -- :/ && git restore --source 2ec7932b37e2 --staged --worktree -- :/
+```
+
+### What changed {#step-04.5-what-changed-182c57}
+
+- <a id="step-04.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the import goes up, and two lines lose `result =`. 4 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/2ec7932b37e21c1533f319c03e0533bc755f6da7/tests/test_console.py).
+  - look at `from wikiapp import console`
+
+<details open><summary>The patch to <code>tests/test_console.py</code></summary>
+
+```diff
+@@ -2,27 +2,26 @@ import click.testing
+ import pytest
+ import requests
+ 
++from wikiapp import console
++
+ 
+ @pytest.fixture
+ def runner():
+     return click.testing.CliRunner()
+ 
+ 
+-from wikiapp import console
+-
+-
+ def test_main_prints_title(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
+ 
+ def test_main_invokes_requests_get(runner, mock_requests_get):
+-    result = runner.invoke(console.main)
++    runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
+ 
+ def test_main_uses_correct_url(runner, mock_requests_get):
+-    result = runner.invoke(console.main)
++    runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == (
+         "https://en.wikipedia.org/api/rest_v1/page/random/summary",
+     )
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2ec7932b37e21c1533f319c03e0533bc755f6da7). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2ec7932b37e21c1533f319c03e0533bc755f6da7).
+
+## 4.6 A timeout {#step-04.6}
+
+Of the two problems left, `S113` comes from the family `S` of security rules. The request has no timeout, so
+requests waits as long as the server keeps the connection open, and the command can wait for ever. No test had
+found it. The request in `src/wikiapp/wikipedia.py` gets `timeout=10`, a number of seconds that the author of the project chose.
+
+Apply the patch to [`src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/0fb4985582732edf7372a4b90659d703db138446.diff | git apply --include=src/wikiapp/wikipedia.py
+```
+
+In `src/wikiapp/wikipedia.py`, the patch adds `timeout=10` at the end of the arguments of `requests.get(...)`.
+
+If the server does not answer within 10 seconds, the request now raises an exception. `random_page` turns it
+into a WikipediaError, as it does with every other error of requests.
+
+```bash
+just lint --statistics
+```
+
+One problem is left, `I001`, so the linter still fails. Its `[*]` says that ruff can fix it.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 0fb498558273
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 2ec7932b37e2 --staged -- :/ && git restore --source 0fb498558273 --staged --worktree -- :/
+```
+
+### What changed {#step-04.6-what-changed-182c57}
+
+- <a id="step-04.6-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: one more argument. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0fb4985582732edf7372a4b90659d703db138446/src/wikiapp/wikipedia.py).
+  - look at `timeout=10`
+
+<details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
+
+```diff
+@@ -12,7 +12,7 @@ def random_page(language="en"):
+     """Get a random page from Wikipedia."""
+     try:
+         with requests.get(
+-            API_URL.format(language=language), headers={"User-Agent": USER_AGENT}
++            API_URL.format(language=language), headers={"User-Agent": USER_AGENT}, timeout=10
+         ) as response:
+             response.raise_for_status()
+             return response.json()
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/0fb4985582732edf7372a4b90659d703db138446). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/0fb4985582732edf7372a4b90659d703db138446).
+
+## 4.7 The linter sorts the imports {#step-04.7}
+
+The last problem is the order of the imports of `src/wikiapp/console.py`. ruff can fix it safely, and `--fix`
+makes only the fixes that ruff counts as safe. It puts the imports in three blocks. The standard library comes
+first, then the packages installed, and then wikiapp's own.
+
+```bash
+just lint --fix
+```
+
+```bash
+just lint
+```
+
+`just lint --fix` reported `Found 1 error (1 fixed, 0 remaining).`, and exited with 0. Now `just lint` prints `All checks passed!`.
+
+The linter finds no problem now. Of its five problems, ruff fixed one, and a person fixed four.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat a57134d1cef6
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 0fb498558273 --staged -- :/ && git restore --source a57134d1cef6 --staged --worktree -- :/
+```
+
+### What changed {#step-04.7-what-changed-182c57}
+
+- <a id="step-04.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the imports, sorted. 3 lines added, 2 removed. It comes from `just lint --fix`. [The file](https://github.com/rahuldave/smallwikiapp/blob/a57134d1cef6ff24803235ace966e5870046fbd9/src/wikiapp/console.py).
+  - look at `from wikiapp import __version__`
+
+<details><summary>The diff that <code>just lint --fix</code> makes in <code>src/wikiapp/console.py</code></summary>
+
+```diff
+@@ -1,7 +1,8 @@
+-import click
+-from wikiapp import __version__
+ import textwrap
+ 
++import click
++
++from wikiapp import __version__
+ from wikiapp.wikipedia import WikipediaError, random_page
+ 
+ 
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a57134d1cef6ff24803235ace966e5870046fbd9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9).

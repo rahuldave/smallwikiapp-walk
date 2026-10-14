@@ -1,0 +1,131 @@
+---
+title: "6.5 GitHub runs `just check`"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-06.5.qmd) is the other way to read this part.
+
+This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+
+```bash
+git restore --source 701783af434e --staged -- :/ && git restore --source d8af75e8fd57 --staged --worktree -- :/
+```
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source d8af75e8fd57 --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+In the code now, the tests that ask the real Wikipedia run only on request, with `just test -m e2e`. The project
+accepts any Python from 3.11 on.
+
+The hook runs only in a clone where `just hook` ran. GitHub's job `check` runs `just setup`, then `just check`, on
+a fresh machine.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
+
+## 6.5 GitHub runs the tests {#step-06.5}
+
+The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
+on its own machines after each push.
+
+A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
+names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
+jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.
+
+Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub never runs the
+e2e tests. A person runs them, with `just test -m e2e`.
+
+Apply the patch to [`.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657.diff | git apply --include=.github/workflows/test.yaml
+```
+
+The patch makes the folder `.github/workflows`, and the whole file in it. Read the comment at its top, and the
+matrix of the job `tests`.
+
+The original wikiapp used pixi for the same work, with one environment for each version of Python. Here, `setup-uv` tells
+uv which Python to use. If that Python is missing, `uv run` installs it.
+
+```bash
+uv run pre-commit run check-yaml --files .github/workflows/test.yaml
+```
+
+The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
+section on the docs on GitHub Pages names the settings.
+
+The job `check` is the third caller of `just check`, after a person and the git hook. It runs from a fresh clone.
+No person has to install it or remember it, and `--no-verify` does not skip it. The job `tests` runs
+`uv run --locked pytest`, not a verb, so a change behind `just test` would not reach it.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 20cf458261ed
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458261ed --staged --worktree -- :/
+```
+
+### What changed {#step-06.5-what-changed-182c57}
+
+- <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml).
+  - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
+
+<details open><summary>The patch to <code>.github/workflows/test.yaml</code></summary>
+
+```diff
+@@ -0,0 +1,37 @@
++# What GitHub runs on every push to main and every pull request.
++#
++# tests: the tests, on three systems and four Pythons, twelve jobs at once.
++# check: everything `just check` runs, once, as the git hook does.
++name: CI
++
++on:
++  pull_request:
++  push:
++    branches: [main]
++
++permissions:
++  contents: read  # the jobs read the code, and change nothing on GitHub
++
++jobs:
++  tests:
++    strategy:
++      fail-fast: false  # one failing job does not stop the others
++      matrix:
++        os: [ubuntu-latest, macos-latest, windows-latest]
++        python: ["3.11", "3.12", "3.13", "3.14"]
++    runs-on: ${{ matrix.os }}
++    steps:
++      - uses: actions/checkout@v7
++      - uses: astral-sh/setup-uv@v10.2.0
++        with:
++          python-version: ${{ matrix.python }}
++      - run: uv run --locked pytest
++
++  check:
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v7
++      - uses: astral-sh/setup-uv@v10.2.0
++      - uses: extractions/setup-just@v4
++      - run: just setup
++      - run: just check
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).

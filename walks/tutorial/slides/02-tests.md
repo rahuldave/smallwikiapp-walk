@@ -2,8 +2,8 @@
 
 A test that asks the real Wikipedia:
 
-- fails on a train
-- sees a different page each time
+- fails without a network
+- gets a different page each time
 
 A **mock** replaces `requests.get` for the length of one test. It answers with a page that the test chooses,
 **Lorem Ipsum**.
@@ -18,9 +18,16 @@ A **mock** replaces `requests.get` for the length of one test. It answers with a
 ## Dependency groups
 
 ```toml
+[tool.uv]
+default-groups = "all"
+
 [dependency-groups]
-test = ["pytest>=9.1.1", "pytest-cov>=7.1.0", "pytest-mock>=3.16.0"]
-dev = [{ include-group = "test" }]
+test = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "pytest-mock>=3.16.0",
+]
 ```
 
-Someone who installs wikiapp gets click and requests, not pytest. `uv sync` installs `dev` by default.
+Someone who installs wikiapp gets click and requests, not pytest. `uv sync` installs every group, because of
+`default-groups = "all"`.

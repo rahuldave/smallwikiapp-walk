@@ -1,0 +1,203 @@
+---
+title: "8.1 to 8.2 smalldocs, and what is not documented"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-08.1-to-step-08.2.qmd) is the other way to read this part.
+
+This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+
+```bash
+git restore --source f05d3c31be2c --staged -- :/ && git restore --source be473b80441f --staged --worktree -- :/
+```
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source be473b80441f --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The code now also has pytest, in a dependency group `test`, and uv installs every group. It has tests, with a
+mock in place of Wikipedia, and coverage on every run. The code is split into a library,
+`src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
+
+ruff formats and lints the code, in a group `lint`, and `just check` runs every check. `just hook` installs a git
+hook, which runs `just check` before each `git commit`. ty checks the types.
+
+The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
+`random_page` returns a `Page`, a pydantic model with a title and an extract. An answer that is not a page, or a
+language that is not a language code, raises `WikipediaError`.
+
+Nothing yet says which parts of the code have documentation. smalldocs, in a new group `docs`, makes the reference
+from the code.
+`just docs check` counts what has documentation, and lists each gap.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).
+
+## 8.1 smalldocs {#step-08.1}
+
+The reference of a function gives its signature, what it does, and what each parameter is. The signature and the
+types are in the code. The docstring says what the function does. A docment is the comment beside a parameter, a field
+or a return type, and says what that thing is. To make room for a docment, later moves put each parameter on a line of its own.
+
+A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
+what has no documentation.
+
+smalldocs reads the signature, the docstring and the docments, and writes Markdown. It is a Python package, so uv
+installs it like any other. It goes in a third dependency group, `docs`. uv sorts the groups by name, so `docs` comes before
+`lint` and `test` in the file.
+
+```bash
+uv add --group docs smalldocs
+```
+
+`uv add` installs smalldocs and the packages that it needs, among them fastcore, markdown-it-py and mdurl.
+
+`default-groups = "all"`, at line 25 of `pyproject.toml`, makes uv install every dependency group. So
+`just setup` installs smalldocs, with no other change.
+
+```bash
+uv run smalldocs --version
+uv tree --only-group docs
+```
+
+The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
+markdown-it-py, mdit-py-plugins, pygments and pyyaml.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 71726f393670
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source be473b80441f --staged -- :/ && git restore --source 71726f393670 --staged --worktree -- :/
+```
+
+### What changed {#step-08.1-what-changed-182c57}
+
+- <a id="step-08.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group. 3 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/pyproject.toml).
+  - look at `docs = [`
+- <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock).
+
+<details><summary>The diff that <code>uv add --group docs smalldocs</code> makes in <code>pyproject.toml</code></summary>
+
+```diff
+@@ -25,6 +25,9 @@ build-backend = "uv_build"
+ default-groups = "all"
+ 
+ [dependency-groups]
++docs = [
++    "smalldocs>=0.1.5",
++]
+ lint = [
+     "pre-commit>=4.7.0",
+     "ruff>=0.17.0",
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/71726f393670206ea480aaa2edc03ddeeeebc1fe). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/71726f393670206ea480aaa2edc03ddeeeebc1fe).
+
+## 8.2 What is not documented {#step-08.2}
+
+smalldocs is installed, but nothing tells it which package to document, and no recipe runs it. It needs a file of settings,
+and the `justfile` a recipe `docs`. Then `just docs check` lists what has no documentation.
+
+smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has one section, `api`, the reference.
+It names the package to document, the address of its source, and the files of the tests to check. The file is new,
+and comes whole, as a patch.
+
+Apply the patch to [`docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f.diff | git apply --include=docs/_smalldocs.yml
+```
+
+Read the three keys under `api`, which are `packages`, `source` and `check`.
+
+A recipe `docs` runs `smalldocs api`, and gives it the words after `just docs`. `smalldocs api` has two commands
+that we use here:
+
+- `module NAME` prints the reference of one module as Markdown.
+- `check` lists each function and class without a docstring, a type or a docment, and each module without a
+  docstring. It looks in the package and in the files of `check`, here the tests.
+
+Apply the patch to [`justfile`](#step-08.2-justfile-424f0b), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f.diff | git apply --include=justfile
+```
+
+The patch adds the recipe `docs` at the end of the `justfile`, with its comment and its two attributes.
+
+```bash
+uv run smalldocs api module wikipedia --dir docs
+uv run smalldocs api check --dir docs
+just --show docs
+just docs check
+```
+
+`module` prints the reference of `wikipedia.py`, with empty descriptions. For each module and each test file,
+`check` counts the functions and classes that are complete. It names every gap, and the five modules without a
+docstring are among them. Then it fails with `1 of 15 functions, methods and classes are typed and documented`.
+The one is `WikipediaError`, which needs only its docstring. Like
+coverage, which counts the lines that the tests run, `check` counts what has documentation.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 40d4293f5902
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293f5902 --staged --worktree -- :/
+```
+
+### What changed {#step-08.2-what-changed-182c57}
+
+- <a id="step-08.2-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the package to document, and the tests to check. New, 5 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/docs/_smalldocs.yml).
+  - look at `packages: [wikiapp]`
+- <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile).
+  - look at `docs *args:`
+
+<details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
+
+```diff
+@@ -0,0 +1,5 @@
++# The settings of smalldocs. `api` is the reference, made from the code of the packages
++api:
++  packages: [wikiapp]
++  source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
++  check: ["tests/**/*.py"]  # the tests are held to the same rule as the package
+```
+
+</details>
+
+<details open><summary>The patch to <code>justfile</code></summary>
+
+```diff
+@@ -74,3 +74,9 @@ check *args:
+     just types
+     just test -q --cov-fail-under=90
+     just lint-config
++
++# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
++[group('docs')]
++[no-exit-message]
++docs *args:
++    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).

@@ -1,0 +1,739 @@
+---
+title: "8 Docs from the code"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-08.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+A person who calls `random_page` must read its code to learn what it takes, what it returns and when it fails. We
+document the code, and let a tool, smalldocs, write the reference from it. smalldocs also lists what has no
+documentation, so `just check` can fail when a function has none. We document the library, the command and the tests. Then we
+build a site with a front page, and name the tests and the docs in the README.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
+
+## 8.1 smalldocs {#step-08.1}
+
+The reference of a function gives its signature, what it does, and what each parameter is. The signature and the
+types are in the code. The docstring says what the function does. A docment is the comment beside a parameter, a field
+or a return type, and says what that thing is. To make room for a docment, later moves put each parameter on a line of its own.
+
+A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
+what has no documentation.
+
+smalldocs reads the signature, the docstring and the docments, and writes Markdown. It is a Python package, so uv
+installs it like any other. It goes in a third dependency group, `docs`. uv sorts the groups by name, so `docs` comes before
+`lint` and `test` in the file.
+
+This change came from running `uv add --group docs smalldocs`.
+
+In `pyproject.toml`, the new group `docs` is lines 28 to 30, with the line `"smalldocs>=0.1.5",`. `uv.lock` has
+the exact version of smalldocs, and of the packages that it needs.
+
+`default-groups = "all"`, at line 25 of `pyproject.toml`, makes uv install every dependency group. So
+`just setup` installs smalldocs, with no other change.
+
+```bash
+uv run smalldocs --version
+uv tree --only-group docs
+```
+
+The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
+markdown-it-py, mdit-py-plugins, pygments and pyyaml.
+
+### What changed {#step-08.1-what-changed-182c57}
+
+- <a id="step-08.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group. 3 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/pyproject.toml).
+  - look at `docs = [`
+- <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock).
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -25,6 +25,9 @@ build-backend = "uv_build"
+ default-groups = "all"
+ 
+ [dependency-groups]
++docs = [
++    "smalldocs>=0.1.5",
++]
+ lint = [
+     "pre-commit>=4.7.0",
+     "ruff>=0.17.0",
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/71726f393670206ea480aaa2edc03ddeeeebc1fe). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/71726f393670206ea480aaa2edc03ddeeeebc1fe).
+
+## 8.2 What is not documented {#step-08.2}
+
+smalldocs is installed, but nothing tells it which package to document, and no recipe runs it. It needs a file of settings,
+and the `justfile` a recipe `docs`. Then `just docs check` lists what has no documentation.
+
+smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has one section, `api`, the reference.
+It names the package to document, the address of its source, and the files of the tests to check. The file is new,
+and comes whole, as a patch.
+
+A patch to [`docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48).
+
+The new file `docs/_smalldocs.yml` has five lines. Line 3 names the package, `wikiapp`. Line 5 names the tests,
+`tests/**/*.py`, which `check` also checks.
+
+A recipe `docs` runs `smalldocs api`, and gives it the words after `just docs`. `smalldocs api` has two commands
+that we use here:
+
+- `module NAME` prints the reference of one module as Markdown.
+- `check` lists each function and class without a docstring, a type or a docment, and each module without a
+  docstring. It looks in the package and in the files of `check`, here the tests.
+
+A patch to [`justfile`](#step-08.2-justfile-424f0b).
+
+The recipe `docs *args:` is at line 81, the end of the `justfile`. It also passes `--dir docs`, the folder of the
+settings.
+
+```bash
+uv run smalldocs api module wikipedia --dir docs
+uv run smalldocs api check --dir docs
+just --show docs
+just docs check
+```
+
+`module` prints the reference of `wikipedia.py`, with empty descriptions. For each module and each test file,
+`check` counts the functions and classes that are complete. It names every gap, and the five modules without a
+docstring are among them. Then it fails with `1 of 15 functions, methods and classes are typed and documented`.
+The one is `WikipediaError`, which needs only its docstring. Like
+coverage, which counts the lines that the tests run, `check` counts what has documentation.
+
+### What changed {#step-08.2-what-changed-182c57}
+
+- <a id="step-08.2-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the package to document, and the tests to check. New, 5 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/docs/_smalldocs.yml).
+  - look at `packages: [wikiapp]`
+- <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile).
+  - look at `docs *args:`
+
+<details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
+
+```diff
+@@ -0,0 +1,5 @@
++# The settings of smalldocs. `api` is the reference, made from the code of the packages
++api:
++  packages: [wikiapp]
++  source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
++  check: ["tests/**/*.py"]  # the tests are held to the same rule as the package
+```
+
+</details>
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -74,3 +74,9 @@ check *args:
+     just types
+     just test -q --cov-fail-under=90
+     just lint-config
++
++# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
++[group('docs')]
++[no-exit-message]
++docs *args:
++    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).
+
+## 8.3 The library documented {#step-08.3}
+
+The reference of `wikipedia.py` has empty descriptions, because the library has no docments and short
+docstrings. We document it in four places:
+
+- a docstring at the top of the module
+- a docment beside each field of Page
+- a docment on the parameter and on the return of `random_page`
+- a longer docstring of `random_page`, which says when it raises an error
+
+A patch to [`src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803).
+
+In `src/wikiapp/wikipedia.py`, see the docstring at the top, the comments beside the fields of `Page`, and the
+line `) -> Page:  # A page chosen at random`, the docment of the return.
+
+A pydantic field can also take its description as `Field(description="...")`. pydantic keeps that description
+in the schema of the model, which other programs read. smalldocs uses the description when a field has one, and
+the comment beside the field when it has none. `Page` only parses the answer of Wikipedia, so the comment is
+enough.
+
+```bash
+just docs module wikipedia
+```
+
+The tables now have their descriptions.
+
+### What changed {#step-08.3-what-changed-182c57}
+
+- <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py).
+  - look at `) -> Page:  # A page chosen at random`
+
+<details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""Wikipedia's REST API: a random page."""
++
+ import re
+ 
+ import requests
+@@ -15,12 +17,18 @@ class WikipediaError(Exception):
+ class Page(BaseModel):
+     """A page of Wikipedia: its title and the summary of its text."""
+ 
+-    title: str
+-    extract: str
++    title: str  # The title of the page
++    extract: str  # The summary: the first paragraph of the page, as plain text
++
+ 
++def random_page(
++    language: str = "en",  # The language of the Wikipedia to ask, as its code: en, fr, es
++) -> Page:  # A page chosen at random
++    """Get a random page from Wikipedia.
+ 
+-def random_page(language: str = "en") -> Page:
+-    """Get a random page from Wikipedia."""
++    Raises WikipediaError when the language is not a language code, when the request fails, or
++    when the answer is not a page.
++    """
+     if not LANGUAGE.fullmatch(language):
+         raise WikipediaError(f"{language!r} is not a language code, such as en, fr or zh-yue")
+     try:
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
+
+## 8.4 The command documented {#step-08.4}
+
+The two other modules, `src/wikiapp/__init__.py` and `src/wikiapp/console.py`, have no docstring, and `main` has
+no docment. `wikiapp --help` prints the docstring of `main` and the help of each option, so those are
+documentation too.
+
+Each of the two modules gets a docstring at the top, which says what the module is.
+
+A patch to [`src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01).
+
+`check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class.
+Python still shows it, in `help(wikiapp)`.
+
+The help of `--language` now says what a language is. It replaces the help of the original wikiapp, "Gets random
+page from Wikipedia in given language". `main` has one parameter to a line, with its docment, and a docstring that
+says what `main` prints. A function that returns None needs no docment for its return.
+
+A patch to [`src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67).
+
+In `src/wikiapp/console.py`, the docment of `language` is
+`# The language of the Wikipedia to ask, from --language`. The second paragraph of the docstring of `main` gives the colour of the title and the width of the
+summary.
+
+```bash
+just docs module console
+uv run wikiapp --help
+```
+
+`main` is a click command, and smalldocs documents it like a function, with one more table. The table of
+options shows the new help of `--language`, the same help that `--help` prints.
+
+### What changed {#step-08.4-what-changed-182c57}
+
+- <a id="step-08.4-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: a docstring, which `help(wikiapp)` shows. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/__init__.py).
+  - look at `"""wikiapp: the title and summary of a random Wikipedia page."""`
+- <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py).
+  - look at `language: str,  # The language of the Wikipedia to ask, from --language`
+
+<details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""wikiapp: the title and summary of a random Wikipedia page."""
++
+ import importlib.metadata
+ 
+ __version__ = importlib.metadata.version("wikiapp")
+```
+
+</details>
+
+<details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""The wikiapp command."""
++
+ import textwrap
+ 
+ import click
+@@ -11,13 +13,18 @@ from wikiapp.wikipedia import WikipediaError, random_page
+     "--language",
+     "-l",
+     default="en",
+-    help="Gets random page from Wikipedia in given language",
++    help="The language of the Wikipedia to ask, as its code: en, fr, es",
+     metavar="LANG",
+     show_default=True,
+ )
+ @click.version_option(version=__version__)
+-def main(language: str) -> None:
+-    """Print the title and summary of a random Wikipedia page."""
++def main(
++    language: str,  # The language of the Wikipedia to ask, from --language
++) -> None:
++    """Print the title and summary of a random Wikipedia page, in the language asked for.
++
++    The title is in green, and the summary is wrapped to 70 columns.
++    """
+     try:
+         page = random_page(language=language)
+     except WikipediaError as error:
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).
+
+## 8.5 The tests documented {#step-08.5}
+
+`just docs check` still finds gaps in the tests. Each test file must say what it tests, and each fixture what it
+returns. Each test says in one line what it checks. The docstring says in words what the asserts say in code. Each
+parameter of a test has a docment, one parameter to a line.
+
+Tests documented this way are documentation too. A reader learns from them what the code must do.
+
+The fixture in `tests/conftest.py` gets a docstring for the file, a docment for its parameter and its return, and a
+docstring of its own.
+
+A patch to [`tests/conftest.py`](#step-08.5-tests-conftest.py-626af3).
+
+In `tests/conftest.py`, see the docment of `mocker`, and the docment of the return after `-> Mock:`.
+
+`tests/test_console.py` has a fixture and six tests, and each gets the same pattern.
+
+A patch to [`tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee).
+
+In `tests/test_console.py`, the fixture `runner` also documents its return.
+
+The three tests of `tests/test_wikipedia.py` get the same pattern.
+
+A patch to [`tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413).
+
+```bash
+just docs check
+```
+
+`check` prints a line for each module and each test file, all complete, and then `15 of 15 functions, methods
+and classes are typed and documented`.
+
+### What changed {#step-08.5-what-changed-182c57}
+
+- <a id="step-08.5-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, documented. 6 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/conftest.py).
+  - look at `mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test`
+- <a id="step-08.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: seven functions. 33 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_console.py).
+  - look at `"""The command prints the title of the page."""`
+- <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py).
+  - look at `"""The language chooses the Wikipedia that is asked."""`
+
+<details><summary>The diff of <code>tests/conftest.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""What every test file can use: a mock in place of `requests.get`."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ from pytest_mock import MockerFixture
+ 
+ 
+ @pytest.fixture
+-def mock_requests_get(mocker: MockerFixture) -> Mock:
++def mock_requests_get(
++    mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test
++) -> Mock:  # The mock that replaces `requests.get` for the length of one test
++    """Replace `requests.get` with a mock that answers with one page, Lorem Ipsum."""
+     mock = mocker.patch("requests.get")
+     mock.return_value.__enter__.return_value.json.return_value = {
+         "title": "Lorem Ipsum",
+```
+
+</details>
+
+<details><summary>The diff of <code>tests/test_console.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the command, `main`, run in the same process by click's CliRunner."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -8,40 +10,64 @@ from wikiapp import console
+ 
+ 
+ @pytest.fixture
+-def runner() -> CliRunner:
++def runner() -> CliRunner:  # A runner that calls a command and keeps what it prints
++    """Give each test a runner for the command."""
+     return CliRunner()
+ 
+ 
+-def test_main_prints_title(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_title(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command prints the title of the page."""
+     result = runner.invoke(console.main)
+     assert "Lorem Ipsum" in result.output
+ 
+ 
+-def test_main_invokes_requests_get(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_invokes_requests_get(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The command makes a request."""
+     runner.invoke(console.main)
+     assert mock_requests_get.called
+ 
+ 
+-def test_main_uses_correct_url(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_uses_correct_url(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The request goes to the random page of the English Wikipedia."""
+     runner.invoke(console.main)
+     assert mock_requests_get.call_args[0] == (
+         "https://en.wikipedia.org/api/rest_v1/page/random/summary",
+     )
+ 
+ 
+-def test_main_fails_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_fails_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An exception in the request ends the command with exit code 1."""
+     mock_requests_get.side_effect = Exception("Boom")
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
+ 
+-def test_main_prints_message_on_request_error(runner: CliRunner, mock_requests_get: Mock) -> None:
++def test_main_prints_message_on_request_error(
++    runner: CliRunner,  # The runner from the fixture
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """A failed request is printed as an error message, not a traceback."""
+     mock_requests_get.side_effect = requests.RequestException
+     result = runner.invoke(console.main)
+     assert "Error" in result.output
+ 
+ 
+ @pytest.mark.e2e
+-def test_main_succeeds_in_production(runner: CliRunner) -> None:
++def test_main_succeeds_in_production(
++    runner: CliRunner,  # The runner from the fixture
++) -> None:
++    """The command works against the real Wikipedia."""
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+</details>
+
+<details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
+
+```diff
+@@ -1,3 +1,5 @@
++"""Tests of the library, wikipedia.py."""
++
+ from unittest.mock import Mock
+ 
+ import pytest
+@@ -5,7 +7,10 @@ import pytest
+ from wikiapp import wikipedia
+ 
+ 
+-def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
++def test_random_page_uses_given_language(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """The language chooses the Wikipedia that is asked."""
+     wikipedia.random_page(language="es")
+     args, _ = mock_requests_get.call_args
+     assert "es.wikipedia.org" in args[0]
+@@ -13,11 +18,15 @@ def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:
+ 
+ @pytest.mark.e2e
+ def test_random_page_returns_page_in_production() -> None:
++    """The real Wikipedia's answer makes a Page."""
+     page = wikipedia.random_page()
+     assert isinstance(page, wikipedia.Page)
+ 
+ 
+-def test_random_page_handles_validation_error(mock_requests_get: Mock) -> None:
++def test_random_page_handles_validation_error(
++    mock_requests_get: Mock,  # The mock of `requests.get`, from conftest.py
++) -> None:
++    """An answer that is not a page raises WikipediaError."""
+     mock_requests_get.return_value.__enter__.return_value.json.return_value = {}
+     with pytest.raises(wikipedia.WikipediaError):
+         wikipedia.random_page()
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
+
+## 8.6 A site {#step-08.6}
+
+The reference exists only as Markdown that `just docs module` prints. A reader wants a site, with a front page
+that says what the project does, and a page of reference for each module. smalldocs also builds a site from
+Markdown.
+
+The site is in `docs/`. It has a front page, `index.qmd`, and a reference page for `console.py` and one
+for `wikipedia.py`. Each build writes the reference pages from the code, before it builds the site. A name in
+backticks, such as `random_page`, becomes a link to its entry.
+
+The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, which stays as it is. They are
+the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
+page. The comment at the top now says that `just docs` builds the site.
+
+A patch to [`docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48).
+
+In `docs/_smalldocs.yml`, the sidebar lists the front page, then the reference pages, in the line
+`contents: api/*  # the reference pages, which each build makes from the code`.
+
+The front page, `docs/index.qmd`, is new. A `.qmd` file is Markdown, with a header between two `---` lines that
+gives the title of the page.
+
+The page says what the command prints, what each module does, and what the reference pages contain. The file is
+new, and comes whole, as a patch.
+
+A patch to [`docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880).
+
+`just docs` with no words now builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api`
+as before. So the recipe is now a script of several lines.
+
+A patch to [`justfile`](#step-08.6-justfile-424f0b).
+
+In the `justfile`, the recipe `docs` starts with `#!/usr/bin/env sh`. The line
+`if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi` is the case with no words.
+
+```bash
+uv run smalldocs render docs
+just --show docs
+just docs
+```
+
+smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is `docs/_site/index.html`, for a
+browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
+pages, and git ignores them.
+
+### What changed {#step-08.6-what-changed-182c57}
+
+- <a id="step-08.6-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the site. The sidebar lists the front page, then the reference pages. 17 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/_smalldocs.yml).
+  - look at `contents: api/*  # the reference pages, which each build makes from the code`
+- <a id="step-08.6-docs-index.qmd-d6d880"></a>`docs/index.qmd`: the front page, written by hand. New, 35 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/index.qmd).
+  - look at `Each build of the site makes the pages under Reference from the code.`
+- <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile).
+  - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
+
+<details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
+
+```diff
+@@ -1,4 +1,20 @@
+-# The settings of smalldocs. `api` is the reference, made from the code of the packages
++# The settings of smalldocs. `just docs` builds the site into docs/_site
++project:
++  type: website
++  output-dir: _site
++
++website:
++  title: "wikiapp"
++  sidebar:
++    contents:
++      - index.qmd
++      - section: Reference
++        contents: api/*  # the reference pages, which each build makes from the code
++
++theme: cosmo
++toc: true
++
++# `api` is the reference, made from the code of the packages. A name in backticks links to its entry
+ api:
+   packages: [wikiapp]
+   source: https://github.com/rahuldave/smallwikiapp/blob/main  # each entry links to its line here
+```
+
+</details>
+
+<details><summary>The diff of <code>docs/index.qmd</code></summary>
+
+````diff
+@@ -0,0 +1,35 @@
++---
++title: wikiapp
++---
++
++wikiapp prints the title and the summary of a random Wikipedia page, in any language Wikipedia has.
++
++```
++$ uv run wikiapp
++Waimārama
++Waimārama is a seaside village in Hastings District, Hawke's Bay, New
++Zealand.
++
++$ uv run wikiapp --language fr
++Changement démocratique (Salvador)
++Le Changement démocratique est un parti politique salvadorien fondé en
++2005.
++```
++
++The code has two modules:
++
++- `wikiapp.wikipedia`, the library. `random_page` asks Wikipedia for a random page and returns a
++  `Page`, with a title and an extract. It raises `WikipediaError` if the language is not a language
++  code, if the request fails, or if the answer is not a page. The library knows nothing of the command line.
++- `wikiapp.console`, the app. `main` is the command. It reads `--language`, calls `random_page`, and
++  prints the page, or the error.
++
++Each build of the site makes the pages under Reference from the code. A page takes these parts from
++each function:
++
++- the signature and the types
++- the description, from the docstring
++- the description of each parameter and each field, from its docment, the comment beside it
++- the options of a command, with their help
++
++A name in backticks, such as `random_page`, links to its entry.
+````
+
+</details>
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -75,8 +75,11 @@ check *args:
+     just test -q --cov-fail-under=90
+     just lint-config
+ 
+-# The reference, from the code: just docs check, just docs module wikipedia. Words go to smalldocs api
++# The docs. Alone, the site in docs/_site; with words, smalldocs api: just docs check
+ [group('docs')]
+ [no-exit-message]
+ docs *args:
+-    {{ if args == "help" { "just help docs" } else { 'uv run smalldocs api "$@" --dir docs' } }}
++    #!/usr/bin/env sh
++    if [ "$*" = help ]; then just help docs; exit 0; fi
++    if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi
++    exec uv run smalldocs api "$@" --dir docs
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
+
+## 8.7 The README names the tests and the docs {#step-08.7}
+
+The README is the first page that a reader sees on GitHub. Its table of folders says where each part of the
+project is, and it lists neither the tests nor the docs. The table gets rows for `tests/` and `docs/`. The row of
+`src/wikiapp/` also says that `wikipedia.py` is the library and `console.py` the command.
+
+A patch to [`README.md`](#step-08.7-README.md-8ec9a0).
+
+```bash
+grep -n -E 'tests/|docs/' README.md
+```
+
+`grep` prints the two new rows of the table.
+
+### What changed {#step-08.7-what-changed-182c57}
+
+- <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md).
+  - look at `| The docs site. smalldocs makes its reference from the code |`
+
+<details><summary>The diff of <code>README.md</code></summary>
+
+```diff
+@@ -30,7 +30,9 @@ Then `just setup`, and `uv run wikiapp`.
+ | Path | What it is |
+ |---|---|
+ | `pyproject.toml`, `uv.lock` | The project: its name, its Python, its dependencies, and the exact versions installed |
+-| `src/wikiapp/` | The code. `console.py` is the `wikiapp` command |
++| `src/wikiapp/` | The code. `wikipedia.py` is the library, `console.py` the `wikiapp` command |
++| `tests/` | The tests. `just test` runs them |
++| `docs/` | The docs site. smalldocs makes its reference from the code |
+ | `justfile` | Every task of the project, one recipe each. `just help VERB` explains one |
+ | `.python-version` | The Python version the project uses |
+ | `.gitignore` | Everything a run makes, ignored from the first commit on |
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).
+
+## 8.8 The docs check in `just check` {#step-08.8}
+
+Every function, parameter and field has documentation now, but no check fails when a new function has none. `just check` runs before
+each `git commit`, through the git hook, so `just docs check` goes in it, after the tests. The comment above
+`check` names the docs too.
+
+A patch to [`justfile`](#step-08.8-justfile-424f0b).
+
+In the `justfile`, `just docs check` is the line under `just test -q --cov-fail-under=90`, in `check`.
+
+```bash
+just check
+```
+
+The docs check prints `15 of 15`. Now, when a function, a parameter or a field has no documentation, the git hook
+fails, and git records no change. GitHub's job `check`, at lines 30 to 37 of `.github/workflows/test.yaml`, runs `just check`, so
+it runs the docs check too.
+
+### What changed {#step-08.8-what-changed-182c57}
+
+- <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile).
+  - look at `just docs check`
+
+<details><summary>The diff of <code>justfile</code></summary>
+
+```diff
+@@ -62,7 +62,7 @@ lint-config *args:
+     uv lock --check
+     just --fmt --check --unstable
+ 
+-# Everything a commit must pass: format, lint, types, the tests over the coverage floor, the configuration
++# Everything a commit must pass: format, lint, types, tests over the coverage floor, docs, configuration
+ [group('quality')]
+ [no-exit-message]
+ check *args:
+@@ -73,6 +73,7 @@ check *args:
+     just lint
+     just types
+     just test -q --cov-fail-under=90
++    just docs check
+     just lint-config
+ 
+ # The docs. Alone, the site in docs/_site; with words, smalldocs api: just docs check
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).

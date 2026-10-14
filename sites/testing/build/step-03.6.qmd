@@ -1,0 +1,146 @@
+---
+title: "3.6 A test of an error message"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-03.6.qmd) is the other way to read this part.
+
+This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+
+```bash
+git restore --source d9d02ca26fd3 --staged -- :/ && git restore --source a6f5ae9a475d --staged --worktree -- :/
+```
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source a6f5ae9a475d --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The code now also has an option `--language` on the command. When a request fails, `random_page` raises an error
+of its own, `WikipediaError`.
+
+The command should print that error as a message, not as a traceback. A test checks that a failed request prints
+`Error`.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a6f5ae9a475d916d4053315c9e6699f16951193f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
+
+## 3.6 The command prints the error {#step-03.6}
+
+A bad language ends the command in a traceback, which a person who runs it cannot use. `main` must print the error
+as a message instead. `src/wikiapp/console.py` imports `WikipediaError` with `random_page`. `main` catches it, and
+raises the exception of click, `click.ClickException`, in its place. click prints that exception as a message, and
+ends with exit code 1.
+
+In the original wikiapp, the library raised the exception of click itself, with a note to put it in the console
+one day. Here the exception of click is in `console.py`. `wikipedia.py` imports requests, and only
+`console.py` imports click.
+
+Apply the patch to [`src/wikiapp/console.py`](#step-03.6-src-wikiapp-console.py-d9ae67), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372.diff | git apply --include=src/wikiapp/console.py
+```
+
+In `src/wikiapp/console.py`, the patch adds `WikipediaError` to the line `from wikiapp.wikipedia import
+random_page`. In `main`, it puts the line `data = random_page(language=language)` inside a `try` block.
+
+A test makes the mock raise a `RequestException`, and checks that the output contains `Error`. The test needs the
+module `requests`, to name the exception.
+
+Apply the patch to [`tests/test_console.py`](#step-03.6-tests-test_console.py-9442ee), from the top of the project:
+
+```bash
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372.diff | git apply --include=tests/test_console.py
+```
+
+In `tests/test_console.py`, the patch adds `import requests` under the line `import pytest`. It adds the new test
+before `test_main_succeeds`.
+
+```bash
+uv run wikiapp --language xx; echo "exit code $?"
+just test
+```
+
+The first command prints `Error:` and the message in place of a traceback, then `exit code 1`. The tests give
+`7 passed`.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat b6942869d5fc
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source a6f5ae9a475d --staged -- :/ && git restore --source b6942869d5fc --staged --worktree -- :/
+```
+
+### What changed {#step-03.6-what-changed-182c57}
+
+- <a id="step-03.6-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the error becomes a message. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b6942869d5fcfffff81beb598630288fe3a67372/src/wikiapp/console.py).
+  - look at `raise click.ClickException(str(error)) from error`
+- <a id="step-03.6-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test of the message. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b6942869d5fcfffff81beb598630288fe3a67372/tests/test_console.py).
+  - look at `assert "Error" in result.output`
+
+<details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
+
+```diff
+@@ -2,7 +2,7 @@ import click
+ from wikiapp import __version__
+ import textwrap
+ 
+-from wikiapp.wikipedia import random_page
++from wikiapp.wikipedia import WikipediaError, random_page
+ 
+ @click.command()
+ @click.option(
+@@ -16,7 +16,10 @@ from wikiapp.wikipedia import random_page
+ @click.version_option(version=__version__)
+ def main(language) -> None:
+     """Print the title and summary of a random Wikipedia page."""
+-    data = random_page(language=language)
++    try:
++        data = random_page(language=language)
++    except WikipediaError as error:
++        raise click.ClickException(str(error)) from error
+     title = data["title"]
+     extract = data["extract"]
+     click.secho(title, fg="green")
+```
+
+</details>
+
+<details open><summary>The patch to <code>tests/test_console.py</code></summary>
+
+```diff
+@@ -1,5 +1,6 @@
+ import click.testing
+ import pytest
++import requests
+ 
+ @pytest.fixture
+ def runner():
+@@ -24,6 +25,11 @@ def test_main_fails_on_request_error(runner, mock_requests_get):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 1
+ 
++def test_main_prints_message_on_request_error(runner, mock_requests_get):
++    mock_requests_get.side_effect = requests.RequestException
++    result = runner.invoke(console.main)
++    assert "Error" in result.output
++
+ def test_main_succeeds(runner):
+     result = runner.invoke(console.main)
+     assert result.exit_code == 0
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).

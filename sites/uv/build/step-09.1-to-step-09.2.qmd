@@ -1,0 +1,214 @@
+---
+title: "9.1 to 9.2 A workspace"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Build it yourself.** [Read the tutorial](../read/step-09.1-to-step-09.2.qmd) is the other way to read this part.
+
+To start here, and not from the part before, take the code before this part with the command below.
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 39a4b09f8563 --staged --worktree -- :/
+```
+
+```bash
+just setup
+```
+
+The library and the app are in one package, and other programs could use the library. The library becomes a
+second package of the project. The two packages form a workspace. The library also needs packages of its own.
+`--package wikirandom` makes `uv add` change the library's `pyproject.toml`, and not the app's.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/c153cdfc43300110bd63502b3d53a85ab3aa79f1).
+
+## 9.1 An empty library, wikirandom {#step-09.1}
+
+A second package needs its own folder, its own `pyproject.toml` and its own code. uv can make it inside the
+project. The two packages then form a *workspace*, which has one lockfile and one `.venv` for both. `uv init`
+makes the library, and each option writes one thing:
+
+- `--lib` makes a library, with its code under `src/`, and no script to run.
+- `--author-from none` writes no `authors`, so no name or email from git goes into the library.
+- `--no-pin-python` asks for no `.python-version` file of the library's own. The project's file stays the only
+  one.
+- `--python ">=3.11"` writes `requires-python = ">=3.11"`, the same range as the app. Without it, uv writes
+  `">=3.13"`, from the project's `.python-version`.
+- `--description` writes the library's `description`, in place of uv's "Add your description here".
+
+```bash
+uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom
+```
+
+uv makes the folder `packages/wikirandom/`, with what a library needs. It has its own `pyproject.toml`, an empty
+README, and code with an example function, `hello`. An empty file, `py.typed`, tells a type checker that the
+package has types.
+
+In the project's `pyproject.toml`, uv adds the table `[tool.uv.workspace]`, at lines 27 to 30, with the library in
+its list `members`.
+
+Another version of uv writes another range for `uv_build` in line 10 of the library's `pyproject.toml`, so that
+line can differ from the one here. If the line differs, the check of your files still passes, because it ignores
+version numbers.
+
+`uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
+sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
+`just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
+`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+
+```bash
+uv lock --check
+```
+
+The command prints `Resolved 42 packages`, then an error that names `uv.lock`, and a hint to run `uv lock`. Its
+exit code is 1. Before this move, the lockfile had 41 packages. The 42nd is `wikirandom`.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat 01364831243e
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 39a4b09f8563 --staged -- :/ && git restore --source 01364831243e --staged --worktree -- :/
+```
+
+### What changed {#step-09.1-what-changed-182c57}
+
+- <a id="step-09.1-packages-wikirandom-README.md-105646"></a>`packages/wikirandom/README.md`: empty. New, 0 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/README.md).
+- <a id="step-09.1-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: a package of its own, with its name, version, description, the versions of Python it accepts, and its build backend. New, 11 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/pyproject.toml).
+  - look at `name = "wikirandom"`
+- <a id="step-09.1-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: uv's example function. New, 2 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/src/wikirandom/__init__.py).
+  - look at `def hello() -> str:`
+- <a id="step-09.1-packages-wikirandom-src-wikirandom-py.typed-072343"></a>`packages/wikirandom/src/wikirandom/py.typed`: an empty file, which tells a type checker that the package has types. New, 0 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/src/wikirandom/py.typed).
+- <a id="step-09.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the workspace, with one member. 5 lines added. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/pyproject.toml).
+  - look at `"packages/wikirandom",`
+
+<details><summary>The diff that <code>uv init --lib --author-from none --no-pin-python --python "&gt;=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom</code> makes in <code>packages/wikirandom/pyproject.toml</code></summary>
+
+```diff
+@@ -0,0 +1,11 @@
++[project]
++name = "wikirandom"
++version = "0.1.0"
++description = "A random page of Wikipedia, in any language"
++readme = "README.md"
++requires-python = ">=3.11"
++dependencies = []
++
++[build-system]
++requires = ["uv_build>=0.12.13,<0.13.0"]
++build-backend = "uv_build"
+```
+
+</details>
+
+<details><summary>The diff that <code>uv init --lib --author-from none --no-pin-python --python "&gt;=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom</code> makes in <code>packages/wikirandom/src/wikirandom/__init__.py</code></summary>
+
+```diff
+@@ -0,0 +1,2 @@
++def hello() -> str:
++    return "Hello from wikirandom!"
+```
+
+</details>
+
+<details><summary>The diff that <code>uv init --lib --author-from none --no-pin-python --python "&gt;=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom</code> makes in <code>pyproject.toml</code></summary>
+
+```diff
+@@ -24,6 +24,11 @@ build-backend = "uv_build"
+ # uv sync and uv run install every dependency group, not only dev
+ default-groups = "all"
+ 
++[tool.uv.workspace]
++members = [
++    "packages/wikirandom",
++]
++
+ [dependency-groups]
+ docs = [
+     "smalldocs>=0.1.5",
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/01364831243e6c4c4f2fab3756eb1c633f6903c8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/01364831243e6c4c4f2fab3756eb1c633f6903c8).
+
+## 9.2 requests and pydantic, for the library {#step-09.2}
+
+The library's code will be the code of `src/wikiapp/wikipedia.py`, which imports requests and pydantic. So they
+become the library's dependencies. `--package wikirandom` makes `uv add` change the library's `pyproject.toml`,
+and not the app's. uv also resolves the lockfile again, for the whole workspace, so the lockfile now lists the
+library.
+
+```bash
+uv add --package wikirandom requests pydantic
+```
+
+```bash
+uv lock --check
+uv tree --package wikirandom
+```
+
+`uv lock --check` prints `Resolved 42 packages`, with no error, so `just setup`, `just test` and `just check`
+pass again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
+
+A workspace member is a package that the root `pyproject.toml` names under `[tool.uv.workspace]`. With no
+workspace, the app could name the library by its folder. In section 9, it would write the line below under
+`[tool.uv.sources]`.
+
+```toml
+wikirandom = { path = "packages/wikirandom" }
+```
+
+Without a workspace:
+
+- uv would copy the library into `.venv`. A plain sync does not see an edit to the library, so the edit would
+  reach the app only after `uv sync --reinstall-package wikirandom`.
+- The library would be a project of its own. `uv lock` in its folder would write a second lockfile.
+- `uv run --package wikirandom` would fail, and `uv build --all-packages` would build only the app.
+
+In the next section, the app comes to depend on the library. Because the library is a member of the workspace, uv
+then installs it editable. An editable install points `.venv` at the library's code, in `packages/wikirandom/src`, so an edit to the library
+reaches the app at once.
+
+Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+
+```bash
+git add -A && git diff --cached --stat c153cdfc4330
+```
+
+To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+
+```bash
+git restore --source 01364831243e --staged -- :/ && git restore --source c153cdfc4330 --staged --worktree -- :/
+```
+
+### What changed {#step-09.2-what-changed-182c57}
+
+- <a id="step-09.2-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: its dependencies. 4 lines added, 1 removed. It comes from `uv add --package wikirandom requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/c153cdfc43300110bd63502b3d53a85ab3aa79f1/packages/wikirandom/pyproject.toml).
+  - look at `"pydantic>=2.14.1",`
+- <a id="step-09.2-uv.lock-8356d8"></a>`uv.lock`: the two members of the workspace, and the library with its dependencies. 21 lines added. It comes from `uv add --package wikirandom requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/c153cdfc43300110bd63502b3d53a85ab3aa79f1/uv.lock).
+
+<details><summary>The diff that <code>uv add --package wikirandom requests pydantic</code> makes in <code>packages/wikirandom/pyproject.toml</code></summary>
+
+```diff
+@@ -4,7 +4,10 @@ version = "0.1.0"
+ description = "A random page of Wikipedia, in any language"
+ readme = "README.md"
+ requires-python = ">=3.11"
+-dependencies = []
++dependencies = [
++    "pydantic>=2.14.1",
++    "requests>=2.34.2",
++]
+ 
+ [build-system]
+ requires = ["uv_build>=0.12.13,<0.13.0"]
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/c153cdfc43300110bd63502b3d53a85ab3aa79f1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/c153cdfc43300110bd63502b3d53a85ab3aa79f1).

@@ -1,0 +1,61 @@
+---
+title: "10.2 A range of versions for the library"
+---
+
+<!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
+
+**Read the tutorial.** [Build it yourself](../build/step-10.2.qmd) is the other way to read this part.
+
+```bash
+just setup
+```
+
+`uv build` copies each entry of `dependencies` into a line `Requires-Dist` in the wheel's metadata. `[tool.uv.sources]` does not
+go into the wheel. So a user who installs the app from PyPI gets any version of wikirandom.
+
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
+
+## 10.2 The app needs wikirandom 0.1 {#step-10.2}
+
+The app's wheel says that the app needs `wikirandom`, of any version. A later release that changes the library
+could break the app. The app works with wikirandom 0.1.0, so its dependency gets the range
+`>=0.1.0,<0.2`. `<0.2` keeps out 0.2 and later.
+
+This change came from running `uv add "wikirandom>=0.1.0,<0.2"`.
+
+Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
+`[tool.uv.sources]` says.
+
+```bash
+just build
+unzip -p dist/wikiapp-0.1.0-py3-none-any.whl wikiapp-0.1.0.dist-info/METADATA
+```
+
+The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
+
+This tutorial ends here. After it, the whole tutorial changes the justfile, and gives the library a licence and an
+author. Both packages get a link to the repository. The User-Agent says the installed version. The
+[whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
+
+### What changed {#step-10.2-what-changed-182c57}
+
+- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6337f3cbe0844c520a51dc4debecffa0445ad539/pyproject.toml).
+  - look at `"wikirandom>=0.1.0,<0.2",`
+
+<details><summary>The diff of <code>pyproject.toml</code></summary>
+
+```diff
+@@ -9,7 +9,7 @@ authors = [{ name = "Rahul Dave" }]
+ requires-python = ">=3.11"
+ dependencies = [
+     "click>=8.5.0",
+-    "wikirandom",
++    "wikirandom>=0.1.0,<0.2",
+ ]
+ 
+ [project.scripts]
+```
+
+</details>
+
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
