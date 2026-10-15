@@ -6,7 +6,7 @@ title: "8.8 The docs check in `just check`"
 
 **Build it yourself.** [Read the tutorial](../read/step-08.8.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 79c80120fc8f --staged --worktree -- :/
@@ -43,13 +43,13 @@ The docs check prints `15 of 15`. Now, when a function, a parameter or a field h
 fails, and git records no change. GitHub's job `check`, at lines 30 to 37 of `.github/workflows/test.yaml`, runs `just check`, so
 it runs the docs check too.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat ce0734f1272c
+git check ce0734f1272c
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 79c80120fc8f --staged -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/

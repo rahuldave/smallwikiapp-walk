@@ -29,7 +29,7 @@ version of ty.
 uv run ty --version
 ```
 
-It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`. Nothing runs it yet.
+It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs it yet.
 
 ### What changed {#step-05.1-what-changed-182c57}
 

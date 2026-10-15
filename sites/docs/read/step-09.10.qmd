@@ -15,7 +15,9 @@ its own. Its code went there with its docstrings and docments. The app uses it, 
 gone. The README and the front page of the docs name both packages. The tests of the library are now
 `tests/test_wikirandom.py`.
 
-Before this section, `just docs check` counts only the app and the tests, 12 of 12. After it, the check counts the library too.
+When the library's code left the app, it also left the count of `just docs check`. Before this section, the check
+counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
+too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
 
@@ -38,9 +40,10 @@ The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in a
 pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
 passes.
 
-This tutorial ends here. After it, `just build` builds both packages, and the app asks for wikirandom 0.1.
-`just lint-config` checks the library's `pyproject.toml` too. The library gets a licence and an author, both
-packages get a link to the repository, and the User-Agent says the installed version. The
+This tutorial ends here. Later, `just build` builds both packages, and the app needs a 0.1 version of
+wikirandom. `just lint-config` checks the library's `pyproject.toml` too, and the library gets a licence and an
+author. Both packages get a link to the repository. Each request to Wikipedia carries a name for the program, called
+its User-Agent, and that name also gets the installed version. The
 [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
 
 ### What changed {#step-09.10-what-changed-182c57}

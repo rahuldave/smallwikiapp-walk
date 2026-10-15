@@ -6,7 +6,7 @@ title: "1 The command"
 
 **Build it yourself.** [Read the tutorial](../read/step-01.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c --staged --worktree -- :/
@@ -44,13 +44,13 @@ uv tree --depth 1
 If your versions are newer, `uv add` writes them into `pyproject.toml` and `uv.lock`. Only those versions differ
 from the ones here.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 36d49582843a
+git check 36d49582843a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d49582843a --staged --worktree -- :/
@@ -113,16 +113,17 @@ uv run wikiapp
 ```
 
 The command fails. The last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error:
-Forbidden for url:` and the address. Wikipedia refuses a request whose User-Agent header is the default of a
-library. requests sends `python-requests/` and its version.
+Forbidden for url:` and the address. A request carries headers, which are named lines of text sent with the
+address. The header User-Agent names the program that sends the request. Wikipedia refuses a request whose
+User-Agent is the default of a library. requests sends `python-requests/` and its version.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 571c82ebd31f
+git check 571c82ebd31f
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 36d49582843a --staged -- :/ && git restore --source 571c82ebd31f --staged --worktree -- :/
@@ -185,13 +186,13 @@ uv run wikiapp
 
 It prints a title in green, and a paragraph. Each run prints another page.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 0ffd5df563ac
+git check 0ffd5df563ac
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 571c82ebd31f --staged -- :/ && git restore --source 0ffd5df563ac --staged --worktree -- :/
@@ -256,13 +257,13 @@ uv run wikiapp --help
 `--version` prints `wikiapp, version 0.1.0`. `--help` lists both options. click writes the help from the
 decorators and the docstring. So the docstring of `main` is also help text, for a person who runs the command.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat f05d3c31be2c
+git check f05d3c31be2c
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c31be2c --staged --worktree -- :/

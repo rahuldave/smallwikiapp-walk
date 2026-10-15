@@ -6,7 +6,7 @@ title: "10.2 A range of versions for the library"
 
 **Build it yourself.** [Read the tutorial](../read/step-10.2.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 7744a84a4715 --staged --worktree -- :/
@@ -17,9 +17,10 @@ just setup
 ```
 
 `uv build` copies each entry of `dependencies` into a line `Requires-Dist` in the wheel's metadata. `[tool.uv.sources]` does not
-go into the wheel. So a user who installs the app from PyPI gets any version of wikirandom.
+go into the wheel. The app names wikirandom with no range of versions, so a user who installs the app from PyPI
+can get any version of wikirandom.
 
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
 
 ## 10.2 The app needs wikirandom 0.1 {#step-10.2}
 
@@ -31,8 +32,9 @@ could break the app. The app works with wikirandom 0.1.0, so its dependency gets
 uv add "wikirandom>=0.1.0,<0.2"
 ```
 
-Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
-`[tool.uv.sources]` says.
+The range changes only the metadata of the app's wheel, and uv installs the same code as before. In `pyproject.toml`,
+the table `[tool.uv.sources]` tells uv to take wikirandom from the workspace. `[tool.uv.workspace]` names the folder `packages/wikirandom` as a member of the
+workspace, so uv installs the library from that folder.
 
 ```bash
 just build
@@ -45,21 +47,21 @@ This tutorial ends here. After it, the whole tutorial changes the justfile, and 
 author. Both packages get a link to the repository. The User-Agent says the installed version. The
 [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 6337f3cbe084
+git check 6e6d2844bc7a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6337f3cbe084 --staged --worktree -- :/
+git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d2844bc7a --staged --worktree -- :/
 ```
 
 ### What changed {#step-10.2-what-changed-182c57}
 
-- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6337f3cbe0844c520a51dc4debecffa0445ad539/pyproject.toml).
+- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml).
   - look at `"wikirandom>=0.1.0,<0.2",`
 
 <details><summary>The diff that <code>uv add "wikirandom&gt;=0.1.0,&lt;0.2"</code> makes in <code>pyproject.toml</code></summary>
@@ -78,4 +80,4 @@ git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6337f3c
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).

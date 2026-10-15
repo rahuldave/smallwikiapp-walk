@@ -6,7 +6,7 @@ title: "9 The library as a package"
 
 **Build it yourself.** [Read the tutorial](../read/step-09.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 39a4b09f8563 --staged --worktree -- :/
@@ -55,7 +55,10 @@ version numbers.
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`.
+
+The check of your files after this move prints the same error. Your files are right, and only the
+lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -64,13 +67,13 @@ uv lock --check
 The command prints `Resolved 42 packages`, then an error that names `uv.lock`, and a hint to run `uv lock`. Its
 exit code is 1. Before this move, the lockfile had 41 packages. The 42nd is `wikirandom`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 01364831243e
+git check 01364831243e
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 39a4b09f8563 --staged -- :/ && git restore --source 01364831243e --staged --worktree -- :/
@@ -156,13 +159,13 @@ uv tree --package wikirandom
 `uv lock --check` prints `Resolved 42 packages`, with no error, so `just setup`, `just test` and `just check`
 pass again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat c153cdfc4330
+git check c153cdfc4330
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 01364831243e --staged -- :/ && git restore --source c153cdfc4330 --staged --worktree -- :/
@@ -215,13 +218,13 @@ cat packages/wikirandom/README.md
 The command prints the heading, and
 ``A random page of Wikipedia, in any language. The command `wikiapp` will use this library.``
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat dab89136e205
+git check dab89136e205
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source c153cdfc4330 --staged -- :/ && git restore --source dab89136e205 --staged --worktree -- :/
@@ -264,13 +267,13 @@ uv run --package wikirandom python -c "import wikirandom; print(wikirandom.USER_
 makes. `--package wikirandom` installs the library into the shared `.venv`, and runs the command there. The app
 does not depend on the library yet, so a plain `uv run` would not install it.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 8e526cfa908b
+git check 8e526cfa908b
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source dab89136e205 --staged -- :/ && git restore --source 8e526cfa908b --staged --worktree -- :/
@@ -357,13 +360,13 @@ uv run --package wikirandom python -c "import wikirandom; print(wikirandom.rando
 The first command prints `wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)`. The second asks the
 real Wikipedia, and prints the title of a French page, another one on each run.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 34f1041135a7
+git check 34f1041135a7
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 8e526cfa908b --staged -- :/ && git restore --source 34f1041135a7 --staged --worktree -- :/
@@ -400,7 +403,7 @@ git restore --source 8e526cfa908b --staged -- :/ && git restore --source 34f1041
 
 ## 9.6 The app depends on wikirandom {#step-09.6}
 
-The app and the library now have the same code twice. Before the app can import the library, the library must be
+The app and the library now each have a copy of the code that asks Wikipedia for a page. Before the app can import the library, the library must be
 a dependency of the app.
 
 ```bash
@@ -419,13 +422,13 @@ uv run python -c "import wikirandom; print(wikirandom.__file__)"
 A plain `uv run` now installs the library too. The command prints a path that ends with
 `packages/wikirandom/src/wikirandom/__init__.py`, the file in the repository, not a copy.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 854534692873
+git check 854534692873
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 34f1041135a7 --staged -- :/ && git restore --source 854534692873 --staged --worktree -- :/
@@ -467,11 +470,11 @@ git restore --source 34f1041135a7 --staged -- :/ && git restore --source 8545346
 ## 9.7 The app uses wikirandom {#step-09.7}
 
 The app must use the library, and drop its own `src/wikiapp/wikipedia.py`. Its tests then test the library,
-coverage measures both packages, and the README and the docs say that there are two packages. `git rm` deletes the
+coverage measures both packages, and the README and the docs say that there are two packages. `rm` deletes the
 app's file, and there is one patch for each of the six other files.
 
 ```bash
-git rm src/wikiapp/wikipedia.py
+rm src/wikiapp/wikipedia.py
 ```
 
 `src/wikiapp/console.py` imports from the library. The import goes with the installed packages, under
@@ -541,13 +544,13 @@ app no longer imports them, so the next move removes them. `just docs check` sti
 alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app. The front page
 names both packages, but `random_page` is not yet a link, because the settings of the site name only the app.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 78ab09579fdf
+git check 78ab09579fdf
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 854534692873 --staged -- :/ && git restore --source 78ab09579fdf --staged --worktree -- :/
@@ -565,7 +568,7 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
   - look at `addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"`
 - <a id="step-09.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: one import. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/src/wikiapp/console.py).
   - look at `from wikirandom import WikipediaError, random_page`
-- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `git rm src/wikiapp/wikipedia.py`.
+- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `rm src/wikiapp/wikipedia.py`.
 - <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py).
   - look at `wikirandom.random_page(language="es")`
 
@@ -665,7 +668,7 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 
 </details>
 
-<details><summary>The diff that <code>git rm src/wikiapp/wikipedia.py</code> makes in <code>src/wikiapp/wikipedia.py</code></summary>
+<details><summary>The diff that <code>rm src/wikiapp/wikipedia.py</code> makes in <code>src/wikiapp/wikipedia.py</code></summary>
 
 ```diff
 @@ -1,41 +0,0 @@
@@ -782,13 +785,13 @@ just test -q
 under it, and `wikiapp v0.1.0` under that. The app gets requests only through the library. The tests still print
 `7 passed, 2 deselected`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat f2dd413c02c7
+git check f2dd413c02c7
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 78ab09579fdf --staged -- :/ && git restore --source f2dd413c02c7 --staged --worktree -- :/
@@ -832,13 +835,13 @@ just docs check
 
 The docs check lists the file under its new name, `tests/test_wikirandom.py   3 of   3`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 008e616610b0
+git check 008e616610b0
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source f2dd413c02c7 --staged -- :/ && git restore --source 008e616610b0 --staged --worktree -- :/
@@ -873,13 +876,13 @@ The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in a
 pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
 passes.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 259e6364a52f
+git check 259e6364a52f
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e6364a52f --staged --worktree -- :/

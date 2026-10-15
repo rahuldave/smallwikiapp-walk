@@ -6,16 +6,16 @@ title: "10.3 `just lint-config` checks the library too"
 
 **Build it yourself.** [Read the tutorial](../read/step-10.3.qmd) is the other way to read this part.
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
-git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6337f3cbe084 --staged --worktree -- :/
+git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d2844bc7a --staged --worktree -- :/
 ```
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
-git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 6337f3cbe084 --staged --worktree -- :/
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 6e6d2844bc7a --staged --worktree -- :/
 ```
 
 ```bash
@@ -28,7 +28,7 @@ Since the library became a package, validate-pyproject, in `just lint-config`, h
 `pyproject.toml`. The hook and `just check` let every `git commit` through with no check of the library's
 `pyproject.toml` against the standard.
 
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
 
 ## 10.3 lint-config checks both pyproject.toml files {#step-10.3}
 
@@ -38,7 +38,7 @@ library's file would reach a build unseen. The recipe `lint-config` now gives va
 Apply the patch to [`justfile`](#step-10.3-justfile-424f0b), from the top of the project:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/432c24094f21040ffd3c4df2bc37524763653f9f.diff | git apply --include=justfile
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055.diff | git apply --include=justfile
 ```
 
 The patch changes one line of the recipe `lint-config`, the line that runs `validate-pyproject`.
@@ -56,21 +56,21 @@ This tutorial ends here. After it, the library gets a licence and an author, bot
 repository, and the User-Agent says the installed version. The
 [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 432c24094f21
+git check 522bcb941336
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 6337f3cbe084 --staged -- :/ && git restore --source 432c24094f21 --staged --worktree -- :/
+git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb941336 --staged --worktree -- :/
 ```
 
 ### What changed {#step-10.3-what-changed-182c57}
 
-- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/432c24094f21040ffd3c4df2bc37524763653f9f/justfile).
+- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -89,4 +89,4 @@ git restore --source 6337f3cbe084 --staged -- :/ && git restore --source 432c240
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/432c24094f21040ffd3c4df2bc37524763653f9f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).

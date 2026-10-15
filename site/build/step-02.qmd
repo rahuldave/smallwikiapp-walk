@@ -6,7 +6,7 @@ title: "2 Tests, with mocks"
 
 **Build it yourself.** [Read the tutorial](../read/step-02.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source f05d3c31be2c --staged --worktree -- :/
@@ -53,13 +53,13 @@ uv lock --check
 
 uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 46dc20fb9092
+git check 46dc20fb9092
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source f05d3c31be2c --staged -- :/ && git restore --source 46dc20fb9092 --staged --worktree -- :/
@@ -115,13 +115,13 @@ uv run python -m pytest
 
 The command fails on purpose. Python prints `No module named pytest`, and the exit code is 1. The next move installs pytest.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 6d7a6cfdae60
+git check 6d7a6cfdae60
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cfdae60 --staged --worktree -- :/
@@ -166,13 +166,13 @@ uv run pytest
 pytest finds `tests/test_console.py`, and prints `collected 1 item` and `1 passed`. The test asks the real
 Wikipedia, so it needs the network.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat d92e2dec921d
+git check d92e2dec921d
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 6d7a6cfdae60 --staged -- :/ && git restore --source d92e2dec921d --staged --worktree -- :/
@@ -227,13 +227,13 @@ just test
 `just --show test` prints the comment and the recipe. `just test` prints `uv run pytest "$@"`, and then the same
 result as before, `1 passed`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 45807a0ddd9f
+git check 45807a0ddd9f
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source d92e2dec921d --staged -- :/ && git restore --source 45807a0ddd9f --staged --worktree -- :/
@@ -284,13 +284,13 @@ just test
 
 The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 8435ae56cf56
+git check 8435ae56cf56
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 45807a0ddd9f --staged -- :/ && git restore --source 8435ae56cf56 --staged --worktree -- :/
@@ -341,13 +341,13 @@ just test
 
 No test uses the mock yet, so the result is the same, `1 passed`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 55b7b55dffa3
+git check 55b7b55dffa3
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 8435ae56cf56 --staged -- :/ && git restore --source 55b7b55dffa3 --staged --worktree -- :/
@@ -402,13 +402,13 @@ just test -k title -v
 pytest runs only the test whose name contains `title`. The output shows `test_main_prints_title PASSED` and
 `1 passed, 1 deselected`, without the network.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 7c1911b9f015
+git check 7c1911b9f015
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 55b7b55dffa3 --staged -- :/ && git restore --source 7c1911b9f015 --staged --worktree -- :/
@@ -474,13 +474,13 @@ just test
 
 The result is `4 passed`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 9be013d11b88
+git check 9be013d11b88
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 7c1911b9f015 --staged -- :/ && git restore --source 9be013d11b88 --staged --worktree -- :/
@@ -535,13 +535,13 @@ just test
 
 The result is `5 passed`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat bfc38e738984
+git check bfc38e738984
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 9be013d11b88 --staged -- :/ && git restore --source bfc38e738984 --staged --worktree -- :/
@@ -589,13 +589,13 @@ just test --cov=wikiapp
 Under the tests, a table lists each file of `src/wikiapp`, with its statements and the share of them that ran.
 `console.py` has 18 statements. One of them did not run, so its line reads `94%`. The total is `95%`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 8409e0f2e7f6
+git check 8409e0f2e7f6
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source bfc38e738984 --staged -- :/ && git restore --source 8409e0f2e7f6 --staged --worktree -- :/
@@ -648,13 +648,13 @@ just test
 The table under the tests now has a column `Missing`. `console.py` reads `94%`, and its missing line is 22. Line 22
 is the call to `main` at the end, which runs only when you run the file as a script.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 7508f1d424d5
+git check 7508f1d424d5
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d424d5 --staged --worktree -- :/

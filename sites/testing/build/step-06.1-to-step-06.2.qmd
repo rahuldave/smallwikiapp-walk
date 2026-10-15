@@ -6,13 +6,13 @@ title: "6.1 to 6.2 End-to-end tests, on request"
 
 **Build it yourself.** [Read the tutorial](../read/step-06.1-to-step-06.2.qmd) is the other way to read this part.
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source 1f73d6af30cc --staged -- :/ && git restore --source 701783af434e --staged --worktree -- :/
 ```
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 701783af434e --staged --worktree -- :/
@@ -23,9 +23,12 @@ just setup
 ```
 
 The code now also has a git hook, which `just hook` installs. Before each `git commit`, `pre-commit` runs three
-small checks of the files, then `just check`. ty checks the types, and the command reads its version by the name
-of its package. The code and the tests have their types. `random_page` returns `dict[str, Any]`, and `just check`
-runs the type checker too.
+small checks of the files, then `just check`.
+
+The code also has ty, a type checker. A type says what kind of value a name has, for example a string or a
+number. Each function of the code and the tests now names the types of its arguments and of the value it returns.
+`random_page` returns `dict[str, Any]`, a dictionary whose keys are strings, and `just check` runs ty too. The
+command also looks up its version by the fixed name of its package, `wikiapp`.
 
 The test that asks the real Wikipedia fails without the network, and so every check fails with it. It now runs
 only when you ask for it. A second test of that kind checks the library.
@@ -67,13 +70,13 @@ just test -q -m e2e
 
 The first command prints `6 passed, 1 deselected`. The second command runs the e2e test alone.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 35f4ffc8c67a
+git check 35f4ffc8c67a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 701783af434e --staged -- :/ && git restore --source 35f4ffc8c67a --staged --worktree -- :/
@@ -150,13 +153,13 @@ The output is `2 passed, 6 deselected`.
 The project now has all four kinds of tests in the table of the intro. They are end-to-end, unit, integration and
 contract.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 307d4d7b36bb
+git check 307d4d7b36bb
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 35f4ffc8c67a --staged -- :/ && git restore --source 307d4d7b36bb --staged --worktree -- :/

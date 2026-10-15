@@ -6,7 +6,7 @@ title: "5 Types"
 
 **Build it yourself.** [Read the tutorial](../read/step-05.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 6860da13f0fd --staged --worktree -- :/
@@ -37,15 +37,15 @@ uv add --group lint ty
 uv run ty --version
 ```
 
-It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`. Nothing runs it yet.
+It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs it yet.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 56a11f0bb31a
+git check 56a11f0bb31a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 6860da13f0fd --staged -- :/ && git restore --source 56a11f0bb31a --staged --worktree -- :/
@@ -98,13 +98,13 @@ ty finds one problem, in `src/wikiapp/__init__.py`, and ends with `Found 1 diagn
 ``Expected `str`, found `str | None` ``. As far as ty can tell, `__name__ or __package__` could be None. But
 `importlib.metadata.version` needs a string.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 2a5904d01d95
+git check 2a5904d01d95
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 56a11f0bb31a --staged -- :/ && git restore --source 2a5904d01d95 --staged --worktree -- :/
@@ -157,13 +157,13 @@ just types
 
 ty prints `All checks passed!`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat b7a3e6d212b4
+git check b7a3e6d212b4
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 2a5904d01d95 --staged -- :/ && git restore --source b7a3e6d212b4 --staged --worktree -- :/
@@ -210,13 +210,13 @@ The linter finds 25 missing types, in the code and in the tests. They are 15 par
 returns (`ANN201`). `just check` fails now, and passes again two moves on, once the tests have their types too.
 Until then, the git hook fails, so git records no change.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 06613b9b25a8
+git check 06613b9b25a8
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source b7a3e6d212b4 --staged -- :/ && git restore --source 06613b9b25a8 --staged --worktree -- :/
@@ -277,13 +277,13 @@ just lint --statistics
 The 22 problems that are left are all in the tests. They are 13 parameters and 9 returns. `just check` still
 fails.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 643f65323fd1
+git check 643f65323fd1
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 06613b9b25a8 --staged -- :/ && git restore --source 643f65323fd1 --staged --worktree -- :/
@@ -386,13 +386,13 @@ just types
 
 Both commands print `All checks passed!`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 5873353449ad
+git check 5873353449ad
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353449ad --staged --worktree -- :/
@@ -530,13 +530,13 @@ just check
 
 Every check passes, the type check among them. The coverage is 96.88%.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 701783af434e
+git check 701783af434e
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 5873353449ad --staged -- :/ && git restore --source 701783af434e --staged --worktree -- :/

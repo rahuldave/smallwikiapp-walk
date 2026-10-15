@@ -10,8 +10,9 @@ title: "2.5 to 2.9 Fixtures and mocks"
 just setup
 ```
 
-The first test asks the real Wikipedia, so it is slow and needs the network. A fixture gives each test a runner,
-and a mock takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
+The first test asks the real Wikipedia, so it is slow and needs the network. A fixture is a function that pytest
+calls for each test that names it as a parameter. One fixture gives each test a runner, which runs the command and keeps what
+it prints. A mock is a stand-in that takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
 request ends the command with exit code 1.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).

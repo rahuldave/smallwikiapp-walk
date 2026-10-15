@@ -10,18 +10,17 @@ title: "10.3 The library's pyproject.toml too"
 just setup
 ```
 
-The code now also has the type checker in `just check`. The tests that ask the real Wikipedia run
-only on request. The project accepts any Python from 3.11 on. GitHub runs the tests and `just check`. The job `tests` on GitHub installs the group `test` alone, and a
-workflow publishes the docs site.
+The code now also has the type checker in `just check`. The project accepts any Python from 3.11 on. On every push
+to main, GitHub runs the tests and `just check`, and it publishes a site with the docs.
 
 `random_page` returns a pydantic model, `Page`. smalldocs documents the code, and `just check` runs the check of
 the docs. The library is a package of its own, `packages/wikirandom`, with its own `pyproject.toml`. `just build`
-builds both packages, and the app asks for wikirandom 0.1.
+builds both packages. The app is the package `wikiapp`, and it needs a 0.1 version of wikirandom.
 
 Until this section, `just lint-config` checks only the app's `pyproject.toml`. After it, `just lint-config` also
 checks the library's `pyproject.toml`.
 
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
 
 ## 10.3 lint-config checks both pyproject.toml files {#step-10.3}
 
@@ -42,7 +41,7 @@ repository, and the User-Agent says the installed version. The
 
 ### What changed {#step-10.3-what-changed-182c57}
 
-- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/432c24094f21040ffd3c4df2bc37524763653f9f/justfile).
+- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 <details><summary>The diff of <code>justfile</code></summary>
@@ -61,4 +60,4 @@ repository, and the User-Agent says the installed version. The
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/432c24094f21040ffd3c4df2bc37524763653f9f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).

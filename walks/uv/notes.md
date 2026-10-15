@@ -111,14 +111,15 @@ name.
 
 $ just setup
 
-The code now also has pytest-mock and pytest-cov, in the group `test`. The project has tests with a mock, a
-library, `src/wikiapp/wikipedia.py`, and recipes in the justfile that run each tool with `uv run`. ruff and
+The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
+mock, and recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
+of its own, `src/wikiapp/wikipedia.py`. ruff and
 validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.
 
-A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. Instead, `uv run` resolves the lockfile again and
-prints no warning.
-The justfile exports `UV_LOCKED`.
+A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. But with no option, `uv run` resolves
+the lockfile again and prints no warning. The justfile now exports `UV_LOCKED`, which makes every `uv run` refuse a
+lockfile that is out of date.
 
 {{include step-04.10}}
 
@@ -146,7 +147,8 @@ has. `requires-python` says which versions of Python the project accepts.
 The first of these moves changes `requires-python` by hand, and the second runs `uv lock`. Between the two, the
 lockfile is out of date with `pyproject.toml`, and every recipe that runs `uv run` refuses it.
 
-`--isolated` made a second environment, which uv deletes after the command. `uvx` makes a third kind, an
+The second of these moves runs the tests with `uv run --isolated --python 3.11`. `--isolated` makes a second
+environment, and uv deletes it after the command. `uvx` makes a third kind, an
 environment of its own for one tool.
 
 $ uv run python -c "import sys; print(sys.prefix)"
@@ -176,8 +178,9 @@ change in the next section.
 
 ## Each job on GitHub with its own group
 
-The code now also has pydantic in the dependencies, from `uv add pydantic`. `random_page` returns a `Page`, a
-pydantic model. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
+The code now also has pydantic in the dependencies, from `uv add pydantic`. The function `random_page`, which asks
+Wikipedia for a page, now returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of
+its fields. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
 and `just docs check` counts what has documentation.
 
 {{include step-08b}}
@@ -248,7 +251,8 @@ its `pyproject.toml` names, here `uv_build`.
 $ just setup
 
 `uv build` copies each entry of `dependencies` into a line `Requires-Dist` in the wheel's metadata. `[tool.uv.sources]` does not
-go into the wheel. So a user who installs the app from PyPI gets any version of wikirandom.
+go into the wheel. The app names wikirandom with no range of versions, so a user who installs the app from PyPI
+can get any version of wikirandom.
 
 {{include step-10.2}}
 

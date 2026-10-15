@@ -6,7 +6,7 @@ title: "4.11 `just check`, everything a `git commit` must pass"
 
 **Build it yourself.** [Read the tutorial](../read/step-04.11.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
@@ -52,13 +52,13 @@ just
 From here on, "each `git commit` must pass `just check`" is the rule of the project. The next section and section
 11 add two callers, which run it by themselves. Each later check joins `check`, so each caller runs it too.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 1f73d6af30cc
+git check 1f73d6af30cc
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6af30cc --staged --worktree -- :/

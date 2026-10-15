@@ -6,13 +6,13 @@ title: "2.4 `just test`"
 
 **Build it yourself.** [Read the tutorial](../read/step-02.4.qmd) is the other way to read this part.
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source ae86cb7d116c --staged -- :/ && git restore --source d92e2dec921d --staged --worktree -- :/
 ```
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source d92e2dec921d --staged --worktree -- :/
@@ -67,13 +67,13 @@ Each later recipe of one line has this form. The longer recipes test the word in
 `[no-exit-message]` changes what a failed test prints. Without it, `just` adds a line of its own, which begins
 "error: Recipe `test` failed". With it, the report of pytest is the last thing that the recipe prints.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 45807a0ddd9f
+git check 45807a0ddd9f
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source d92e2dec921d --staged -- :/ && git restore --source 45807a0ddd9f --staged --worktree -- :/

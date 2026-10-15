@@ -302,8 +302,8 @@ The output is `1 passed, 8 deselected`.
 ## 7.5 Only a language code goes into the address {#step-07.5}
 
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as `example.com/x?`
-sends the request to example.com, with the User-Agent. The code of every Wikipedia has only letters and hyphens,
-for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
+sends the request to example.com, with the User-Agent. The language code of every Wikipedia has only lower-case
+letters and hyphens, for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
 code first, before the `try`, and any other language raises a WikipediaError.
 
 The pattern is a constant, `LANGUAGE`, made with the module `re`. No request goes out for a language that does

@@ -16,7 +16,7 @@ Since the library became a package, validate-pyproject, in `just lint-config`, h
 `pyproject.toml`. The hook and `just check` let every `git commit` through with no check of the library's
 `pyproject.toml` against the standard.
 
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
 
 ## 10.3 lint-config checks both pyproject.toml files {#step-10.3}
 
@@ -40,7 +40,7 @@ repository, and the User-Agent says the installed version. The
 
 ### What changed {#step-10.3-what-changed-182c57}
 
-- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/432c24094f21040ffd3c4df2bc37524763653f9f/justfile).
+- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 <details><summary>The diff of <code>justfile</code></summary>
@@ -59,4 +59,4 @@ repository, and the User-Agent says the installed version. The
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/432c24094f21040ffd3c4df2bc37524763653f9f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).

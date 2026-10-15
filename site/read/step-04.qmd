@@ -85,7 +85,8 @@ just fmt --check
 ```
 
 `--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
-reformatted, 1 file already formatted`. The seventh file is the README, whose code ruff formats too. The recipe
+reformatted, 1 file already formatted`. The six files that it names are the Python files. The seventh is
+`pyproject.toml`, which ruff also reads. The recipe
 runs the same command, and passes on the words after `just fmt`.
 
 ### What changed {#step-04.2-what-changed-182c57}
@@ -339,7 +340,7 @@ The linter finds five problems, and fails. Each problem has its code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
-`just lint` shows each problem with its lines. `uv run ruff rule S113` explains a code.
+Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
 
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four

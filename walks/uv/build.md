@@ -58,12 +58,21 @@ from their code.
 
 ## Get the project
 
-You build the project in a clone of your own. The commands of each part run at the top of it. Clone the project, and start where the walk starts, on a branch of your own, `mine`:
+You build the project in a clone of your own, on a branch `mine` that starts where this walk starts. Run the commands of these pages in its top folder.
 
 ```bash
 git clone https://github.com/rahuldave/smallwikiapp
 cd smallwikiapp
 git switch -c mine ae86cb7d116c
+```
+
+Then add the command `git check`, which compares your files with the project's after each move. It compares `pyproject.toml` by the names of its packages, so another version of a package does not count as a difference. It does not compare the lines of `uv.lock`. It checks that you and the project both have a `uv.lock`, or both have none. It also checks that your `uv.lock` is up to date with your `pyproject.toml`.
+
+```bash
+echo '/pyproject.toml diff=names' >> .git/info/attributes
+echo 'packages/wikirandom/pyproject.toml diff=names' >> .git/info/attributes
+git config diff.names.textconv "sed -E 's/^([[:space:]]*\"[A-Za-z0-9_.-]+(\\[[^]]*\\])?)[^\";]*/\\1/'"
+git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/" ":(top,exclude,glob)uv.lock" && git diff --cached --name-status --diff-filter=AD "$1" -- ":(top,glob)uv.lock" && { [ "$2" = --stale-lock ] || [ ! -f uv.lock ] || uv lock --check -q; }; }; f'
 ```
 
 <a id="step-00"></a>
@@ -557,13 +566,13 @@ from the ones here.
 `pyproject.toml` asks for a range, such as `click>=8.5.0`. `uv.lock` names the one version that uv chose, and the
 versions of every package that click and requests need. Two people with the same lockfile get the same packages.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 36d49582843a
+git check 36d49582843a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d49582843a --staged --worktree -- :/
@@ -600,7 +609,7 @@ git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d4958
 
 ## 2.1 to 2.3 A group for the tests, and when uv syncs
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source 36d49582843a --staged -- :/ && git restore --source f05d3c31be2c --staged --worktree -- :/
@@ -650,13 +659,13 @@ uv lock --check
 
 uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 46dc20fb9092
+git check 46dc20fb9092
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source f05d3c31be2c --staged -- :/ && git restore --source 46dc20fb9092 --staged --worktree -- :/
@@ -714,13 +723,13 @@ uv run python -m pytest
 
 The command fails on purpose. Python prints `No module named pytest`, and the exit code is 1. The next move installs pytest.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 6d7a6cfdae60
+git check 6d7a6cfdae60
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cfdae60 --staged --worktree -- :/
@@ -791,13 +800,13 @@ uv sync
 its version. `uv sync` uninstalls it, because a sync removes every package that the lockfile and the groups do not
 name.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat d92e2dec921d
+git check d92e2dec921d
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 6d7a6cfdae60 --staged -- :/ && git restore --source d92e2dec921d --staged --worktree -- :/
@@ -831,7 +840,7 @@ git restore --source 6d7a6cfdae60 --staged -- :/ && git restore --source d92e2de
 
 ## 4.10 A lockfile that must be up to date
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source d92e2dec921d --staged -- :/ && git restore --source d8a9c8f71eb5 --staged --worktree -- :/
@@ -841,14 +850,15 @@ git restore --source d92e2dec921d --staged -- :/ && git restore --source d8a9c8f
 just setup
 ```
 
-The code now also has pytest-mock and pytest-cov, in the group `test`. The project has tests with a mock, a
-library, `src/wikiapp/wikipedia.py`, and recipes in the justfile that run each tool with `uv run`. ruff and
+The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
+mock, and recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
+of its own, `src/wikiapp/wikipedia.py`. ruff and
 validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.
 
-A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. Instead, `uv run` resolves the lockfile again and
-prints no warning.
-The justfile exports `UV_LOCKED`.
+A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. But with no option, `uv run` resolves
+the lockfile again and prints no warning. The justfile now exports `UV_LOCKED`, which makes every `uv run` refuse a
+lockfile that is out of date.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
 
@@ -884,13 +894,13 @@ The project uses `--locked`. So a change to the dependencies, the version or `re
 fails in every recipe that runs `uv run` or `uv sync`. `uv build` does not read the lockfile, so `just build`, from
 section 10, still works.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat b7469ee81a82
+git check b7469ee81a82
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source d8a9c8f71eb5 --staged -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
@@ -923,7 +933,7 @@ git restore --source d8a9c8f71eb5 --staged -- :/ && git restore --source b7469ee
 
 ## 6.3 to 6.4 The oldest Python, and other environments
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source b7469ee81a82 --staged -- :/ && git restore --source 307d4d7b36bb --staged --worktree -- :/
@@ -962,7 +972,8 @@ The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
+be updated. Your files are right, and only the lockfile is out of date.
 
 ```bash
 uv lock --check
@@ -973,13 +984,13 @@ just test -q
 updated". Its hint is to run `uv lock`, and it exits with 1. `just test -q` stops with the same error, and runs
 no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat b97ee4cfc591
+git check b97ee4cfc591
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 307d4d7b36bb --staged -- :/ && git restore --source b97ee4cfc591 --staged --worktree -- :/
@@ -1038,7 +1049,8 @@ change. The third command prints
 The first of these moves changes `requires-python` by hand, and the second runs `uv lock`. Between the two, the
 lockfile is out of date with `pyproject.toml`, and every recipe that runs `uv run` refuses it.
 
-`--isolated` made a second environment, which uv deletes after the command. `uvx` makes a third kind, an
+The second of these moves runs the tests with `uv run --isolated --python 3.11`. `--isolated` makes a second
+environment, and uv deletes it after the command. `uvx` makes a third kind, an
 environment of its own for one tool.
 
 ```bash
@@ -1050,13 +1062,13 @@ The first path ends in `.venv`. The second is a folder in the cache of uv, with 
 ruff of its own, which need not be the version that the lockfile names. So the recipes run ruff with `uv run`, and
 get the version of the lockfile.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat d8af75e8fd57
+git check d8af75e8fd57
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source b97ee4cfc591 --staged -- :/ && git restore --source d8af75e8fd57 --staged --worktree -- :/
@@ -1112,8 +1124,8 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 ```
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
-thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
-section on the docs on GitHub Pages names the settings.
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
+part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
 
 The job `tests` runs `uv run --locked pytest`, and so it installs every group, with ruff, ty and `pre-commit`.
 pytest needs none of them. A dry run shows what the job would leave out with the group `test` alone.
@@ -1125,13 +1137,13 @@ uv sync --locked --no-default-groups --group test --dry-run
 uv would uninstall 14 packages, ruff, ty, `pre-commit` and validate-pyproject among them. The project makes this
 change in the next section.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 20cf458261ed
+git check 20cf458261ed
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458261ed --staged --worktree -- :/
@@ -1193,14 +1205,15 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 ## 8b Each job on GitHub with its own group
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source 20cf458261ed --staged -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/
 ```
 
-The code now also has pydantic in the dependencies, from `uv add pydantic`. `random_page` returns a `Page`, a
-pydantic model. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
+The code now also has pydantic in the dependencies, from `uv add pydantic`. The function `random_page`, which asks
+Wikipedia for a page, now returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of
+its fields. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
 and `just docs check` counts what has documentation.
 
 ```bash
@@ -1217,8 +1230,9 @@ alone. Then a new workflow builds the docs site with the group `docs` alone, and
 
 ### 8b.1 The tests install the group test alone
 
-The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
-tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+The job `tests` runs twelve times on GitHub, and each run installs every group. So each run installs the linter, the type
+checker, the git hook tools and smalldocs. pytest needs only the package and the group `test`, so this move makes
+each run install only those.
 
 The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
 to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37
@@ -1242,13 +1256,13 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 `--isolated` runs the command as the job does, in a temporary environment with the group `test` alone, and leaves
 `.venv` as it is. The tests print `7 passed, 2 deselected`. The file is valid YAML.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 971e9d780fd5
+git check 971e9d780fd5
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
@@ -1347,13 +1361,13 @@ prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 `--no-default-groups --group NAME` installs the package and one group. A person and the job `check` still install
 every group, since they run every tool.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 39a4b09f8563
+git check 39a4b09f8563
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09f8563 --staged --worktree -- :/
@@ -1462,7 +1476,10 @@ version numbers.
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`.
+
+The check of your files after this move prints the same error. Your files are right, and only the
+lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -1471,13 +1488,13 @@ uv lock --check
 The command prints `Resolved 42 packages`, then an error that names `uv.lock`, and a hint to run `uv lock`. Its
 exit code is 1. Before this move, the lockfile had 41 packages. The 42nd is `wikirandom`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 01364831243e
+git check 01364831243e
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 39a4b09f8563 --staged -- :/ && git restore --source 01364831243e --staged --worktree -- :/
@@ -1584,13 +1601,13 @@ In the next section, the app comes to depend on the library. Because the library
 then installs it editable. An editable install points `.venv` at the library's code, in `packages/wikirandom/src`, so an edit to the library
 reaches the app at once.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat c153cdfc4330
+git check c153cdfc4330
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 01364831243e --staged -- :/ && git restore --source c153cdfc4330 --staged --worktree -- :/
@@ -1627,7 +1644,7 @@ git restore --source 01364831243e --staged -- :/ && git restore --source c153cdf
 
 ## 9.6 to 9.8 The app uses the library
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source c153cdfc4330 --staged -- :/ && git restore --source 34f1041135a7 --staged --worktree -- :/
@@ -1649,7 +1666,7 @@ dependency, and `[tool.uv.sources]` says where uv gets it.
 
 ### 9.6 The app depends on wikirandom
 
-The app and the library now have the same code twice. Before the app can import the library, the library must be
+The app and the library now each have a copy of the code that asks Wikipedia for a page. Before the app can import the library, the library must be
 a dependency of the app.
 
 ```bash
@@ -1668,13 +1685,13 @@ uv run python -c "import wikirandom; print(wikirandom.__file__)"
 A plain `uv run` now installs the library too. The command prints a path that ends with
 `packages/wikirandom/src/wikirandom/__init__.py`, the file in the repository, not a copy.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 854534692873
+git check 854534692873
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 34f1041135a7 --staged -- :/ && git restore --source 854534692873 --staged --worktree -- :/
@@ -1718,11 +1735,11 @@ git restore --source 34f1041135a7 --staged -- :/ && git restore --source 8545346
 ### 9.7 The app uses wikirandom
 
 The app must use the library, and drop its own `src/wikiapp/wikipedia.py`. Its tests then test the library,
-coverage measures both packages, and the README and the docs say that there are two packages. `git rm` deletes the
+coverage measures both packages, and the README and the docs say that there are two packages. `rm` deletes the
 app's file, and there is one patch for each of the six other files.
 
 ```bash
-git rm src/wikiapp/wikipedia.py
+rm src/wikiapp/wikipedia.py
 ```
 
 `src/wikiapp/console.py` imports from the library. The import goes with the installed packages, under
@@ -1792,13 +1809,13 @@ app no longer imports them, so the next move removes them. `just docs check` sti
 alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app. The front page
 names both packages, but `random_page` is not yet a link, because the settings of the site name only the app.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 78ab09579fdf
+git check 78ab09579fdf
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 854534692873 --staged -- :/ && git restore --source 78ab09579fdf --staged --worktree -- :/
@@ -1816,7 +1833,7 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
   - look at `addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"`
 - <a id="step-09.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: one import. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/src/wikiapp/console.py).
   - look at `from wikirandom import WikipediaError, random_page`
-- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `git rm src/wikiapp/wikipedia.py`.
+- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `rm src/wikiapp/wikipedia.py`.
 - <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py).
   - look at `wikirandom.random_page(language="es")`
 
@@ -1916,7 +1933,7 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 
 </details>
 
-<details><summary>The diff that <code>git rm src/wikiapp/wikipedia.py</code> makes in <code>src/wikiapp/wikipedia.py</code></summary>
+<details><summary>The diff that <code>rm src/wikiapp/wikipedia.py</code> makes in <code>src/wikiapp/wikipedia.py</code></summary>
 
 ```diff
 @@ -1,41 +0,0 @@
@@ -2042,13 +2059,13 @@ ls -a packages/wikirandom
 The library's folder has its `pyproject.toml`, and no `uv.lock` or `.venv`. The workspace has one lockfile and one
 `.venv`, at its root.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat f2dd413c02c7
+git check f2dd413c02c7
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 78ab09579fdf --staged -- :/ && git restore --source f2dd413c02c7 --staged --worktree -- :/
@@ -2081,7 +2098,7 @@ git restore --source 78ab09579fdf --staged -- :/ && git restore --source f2dd413
 
 ## 10.1 A build of both packages
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source f2dd413c02c7 --staged -- :/ && git restore --source 259e6364a52f --staged --worktree -- :/
@@ -2129,13 +2146,13 @@ version of wikirandom, because `uv add wikirandom` in a workspace writes no vers
 get any package that PyPI has under that name. Today PyPI has none, so wikirandom would have to be published
 first.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 7744a84a4715
+git check 7744a84a4715
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 259e6364a52f --staged -- :/ && git restore --source 7744a84a4715 --staged --worktree -- :/
@@ -2174,9 +2191,10 @@ just setup
 ```
 
 `uv build` copies each entry of `dependencies` into a line `Requires-Dist` in the wheel's metadata. `[tool.uv.sources]` does not
-go into the wheel. So a user who installs the app from PyPI gets any version of wikirandom.
+go into the wheel. The app names wikirandom with no range of versions, so a user who installs the app from PyPI
+can get any version of wikirandom.
 
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
 
 <a id="step-10.2"></a>
 
@@ -2190,8 +2208,9 @@ could break the app. The app works with wikirandom 0.1.0, so its dependency gets
 uv add "wikirandom>=0.1.0,<0.2"
 ```
 
-Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
-`[tool.uv.sources]` says.
+The range changes only the metadata of the app's wheel, and uv installs the same code as before. In `pyproject.toml`,
+the table `[tool.uv.sources]` tells uv to take wikirandom from the workspace. `[tool.uv.workspace]` names the folder `packages/wikirandom` as a member of the
+workspace, so uv installs the library from that folder.
 
 ```bash
 just build
@@ -2204,21 +2223,21 @@ This tutorial ends here. After it, the whole tutorial changes the justfile, and 
 author. Both packages get a link to the repository. The User-Agent says the installed version. The
 [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 6337f3cbe084
+git check 6e6d2844bc7a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6337f3cbe084 --staged --worktree -- :/
+git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d2844bc7a --staged --worktree -- :/
 ```
 
 #### What changed
 
-- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6337f3cbe0844c520a51dc4debecffa0445ad539/pyproject.toml).
+- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml).
   - look at `"wikirandom>=0.1.0,<0.2",`
 
 <details><summary>The diff that <code>uv add "wikirandom&gt;=0.1.0,&lt;0.2"</code> makes in <code>pyproject.toml</code></summary>
@@ -2237,4 +2256,4 @@ git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6337f3c
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).

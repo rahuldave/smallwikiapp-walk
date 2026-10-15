@@ -6,7 +6,7 @@ title: "9.1 to 9.2 A workspace"
 
 **Build it yourself.** [Read the tutorial](../read/step-09.1-to-step-09.2.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 39a4b09f8563 --staged --worktree -- :/
@@ -54,7 +54,10 @@ version numbers.
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`.
+
+The check of your files after this move prints the same error. Your files are right, and only the
+lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -63,13 +66,13 @@ uv lock --check
 The command prints `Resolved 42 packages`, then an error that names `uv.lock`, and a hint to run `uv lock`. Its
 exit code is 1. Before this move, the lockfile had 41 packages. The 42nd is `wikirandom`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 01364831243e
+git check 01364831243e
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 39a4b09f8563 --staged -- :/ && git restore --source 01364831243e --staged --worktree -- :/
@@ -174,13 +177,13 @@ In the next section, the app comes to depend on the library. Because the library
 then installs it editable. An editable install points `.venv` at the library's code, in `packages/wikirandom/src`, so an edit to the library
 reaches the app at once.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat c153cdfc4330
+git check c153cdfc4330
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 01364831243e --staged -- :/ && git restore --source c153cdfc4330 --staged --worktree -- :/

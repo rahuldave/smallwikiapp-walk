@@ -33,7 +33,7 @@ This tutorial has fourteen sections:
 11. **The tests on GitHub**
 12. **Tests of a model**
 13. **A drop in coverage**
-14. **The tests with their group alone**
+14. **GitHub installs only the test tools**
 
 Where the whole tutorial makes changes that this one leaves out, the next section says what they did, and begins
 from their code.
@@ -45,7 +45,7 @@ Each kind of test comes in at the section in the table. The tutorial adds no tes
 | Kind | What it checks | Where |
 |---|---|---|
 | End-to-end | The code against the real Wikipedia, with no mock | Section 3. From section 10, it runs only when you ask for it |
-| Unit | One part of the code alone, with a mock in place of the network | Section 4 for the command, until the code splits in two. Section 7 for the library |
+| Unit | One part of the code alone, with a mock in place of the network | Section 4 for the command, until section 6 moves the request into a library. Section 7 for the library |
 | Integration | The command and the library together, with only the network a mock | Section 6. The unit tests of the command become integration tests |
 | Contract | That the real Wikipedia still answers as the mocks do | Section 10 |
 
@@ -590,8 +590,9 @@ uv run wikiapp
 ```
 
 The command fails. The last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error:
-Forbidden for url:` and the address. Wikipedia refuses a request whose User-Agent header is the default of a
-library. requests sends `python-requests/` and its version.
+Forbidden for url:` and the address. A request carries headers, which are named lines of text sent with the
+address. The header User-Agent names the program that sends the request. Wikipedia refuses a request whose
+User-Agent is the default of a library. requests sends `python-requests/` and its version.
 
 #### What changed
 
@@ -951,8 +952,9 @@ result as before, `1 passed`.
 just setup
 ```
 
-The first test asks the real Wikipedia, so it is slow and needs the network. A fixture gives each test a runner,
-and a mock takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
+The first test asks the real Wikipedia, so it is slow and needs the network. A fixture is a function that pytest
+calls for each test that names it as a parameter. One fixture gives each test a runner, which runs the command and keeps what
+it prints. A mock is a stand-in that takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
 request ends the command with exit code 1.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
@@ -1671,9 +1673,12 @@ just setup
 ```
 
 The code now also has a git hook, which `just hook` installs. Before each `git commit`, `pre-commit` runs three
-small checks of the files, then `just check`. ty checks the types, and the command reads its version by the name
-of its package. The code and the tests have their types. `random_page` returns `dict[str, Any]`, and `just check`
-runs the type checker too.
+small checks of the files, then `just check`.
+
+The code also has ty, a type checker. A type says what kind of value a name has, for example a string or a
+number. Each function of the code and the tests now names the types of its arguments and of the value it returns.
+`random_page` returns `dict[str, Any]`, a dictionary whose keys are strings, and `just check` runs ty too. The
+command also looks up its version by the fixed name of its package, `wikiapp`.
 
 The test that asks the real Wikipedia fails without the network, and so every check fails with it. It now runs
 only when you ask for it. A second test of that kind checks the library.
@@ -1817,8 +1822,9 @@ contract.
 just setup
 ```
 
-The tests run on one machine, with one version of Python. The project accepts any version of Python from 3.11 on,
-and GitHub runs the tests on three systems and four versions of Python.
+The tests run on one machine, with one version of Python. The project asks for Python 3.13 or newer. In this
+section it starts to accept any version of Python from 3.11 on. Then GitHub runs the tests on three
+systems and four versions of Python.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
 
@@ -1838,7 +1844,8 @@ In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
+be updated. Your files are right, and only the lockfile is out of date.
 
 ```bash
 uv lock --check
@@ -1941,8 +1948,8 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 ```
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
-thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
-section on the docs on GitHub Pages names the settings.
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
+part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
 
 #### What changed
 
@@ -2217,8 +2224,8 @@ no test reaches it, so the coverage drops.
 ### 7.5 Only a language code goes into the address
 
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as `example.com/x?`
-sends the request to example.com, with the User-Agent. The code of every Wikipedia has only letters and hyphens,
-for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
+sends the request to example.com, with the User-Agent. The language code of every Wikipedia has only lower-case
+letters and hyphens, for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
 code first, before the `try`, and any other language raises a WikipediaError.
 
 The pattern is a constant, `LANGUAGE`, made with the module `re`. No request goes out for a language that does
@@ -2274,7 +2281,7 @@ its line as missing. The coverage is 95% in all, which is still over the floor o
 
 <a id="step-08b.1"></a>
 
-## 8b.1 The tests with their group alone
+## 8b.1 GitHub installs only the test tools
 
 ```bash
 just setup
@@ -2292,8 +2299,9 @@ section changes what GitHub installs to run the tests.
 
 ### 8b.1 The tests install the group test alone
 
-The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
-tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+The job `tests` runs twelve times on GitHub, and each run installs every group. So each run installs the linter, the type
+checker, the git hook tools and smalldocs. pytest needs only the package and the group `test`, so this move makes
+each run install only those.
 
 The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
 to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37

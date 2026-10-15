@@ -58,12 +58,20 @@ The table gives each kind of documentation, and the sections where it appears.
 
 ## Get the project
 
-You build the project in a clone of your own. The commands of each part run at the top of it. Clone the project, and start where the walk starts, on a branch of your own, `mine`:
+You build the project in a clone of your own, on a branch `mine` that starts where this walk starts. Run the commands of these pages in its top folder.
 
 ```bash
 git clone https://github.com/rahuldave/smallwikiapp
 cd smallwikiapp
 git switch -c mine ae86cb7d116c
+```
+
+Then add the command `git check`, which compares your files with the project's after each move. It compares `pyproject.toml` by the names of its packages, so another version of a package does not count as a difference. It does not compare the lines of `uv.lock`. It checks that you and the project both have a `uv.lock`, or both have none. It also checks that your `uv.lock` is up to date with your `pyproject.toml`.
+
+```bash
+echo '/pyproject.toml diff=names' >> .git/info/attributes
+git config diff.names.textconv "sed -E 's/^([[:space:]]*\"[A-Za-z0-9_.-]+(\\[[^]]*\\])?)[^\";]*/\\1/'"
+git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/" ":(top,exclude,glob)uv.lock" && git diff --cached --name-status --diff-filter=AD "$1" -- ":(top,glob)uv.lock" && { [ "$2" = --stale-lock ] || [ ! -f uv.lock ] || uv lock --check -q; }; }; f'
 ```
 
 <a id="step-00"></a>
@@ -553,13 +561,13 @@ uv tree --depth 1
 If your versions are newer, `uv add` writes them into `pyproject.toml` and `uv.lock`. Only those versions differ
 from the ones here.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 36d49582843a
+git check 36d49582843a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d49582843a --staged --worktree -- :/
@@ -624,16 +632,17 @@ uv run wikiapp
 ```
 
 The command fails. The last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error:
-Forbidden for url:` and the address. Wikipedia refuses a request whose User-Agent header is the default of a
-library. requests sends `python-requests/` and its version.
+Forbidden for url:` and the address. A request carries headers, which are named lines of text sent with the
+address. The header User-Agent names the program that sends the request. Wikipedia refuses a request whose
+User-Agent is the default of a library. requests sends `python-requests/` and its version.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 571c82ebd31f
+git check 571c82ebd31f
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 36d49582843a --staged -- :/ && git restore --source 571c82ebd31f --staged --worktree -- :/
@@ -698,13 +707,13 @@ uv run wikiapp
 
 It prints a title in green, and a paragraph. Each run prints another page.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 0ffd5df563ac
+git check 0ffd5df563ac
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 571c82ebd31f --staged -- :/ && git restore --source 0ffd5df563ac --staged --worktree -- :/
@@ -771,13 +780,13 @@ uv run wikiapp --help
 `--version` prints `wikiapp, version 0.1.0`. `--help` lists both options. click writes the help from the
 decorators and the docstring. So the docstring of `main` is also help text, for a person who runs the command.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat f05d3c31be2c
+git check f05d3c31be2c
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c31be2c --staged --worktree -- :/
@@ -827,7 +836,7 @@ git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c3
 
 ## 8.1 to 8.2 smalldocs, and what is not documented
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source f05d3c31be2c --staged -- :/ && git restore --source be473b80441f --staged --worktree -- :/
@@ -837,15 +846,20 @@ git restore --source f05d3c31be2c --staged -- :/ && git restore --source be473b8
 just setup
 ```
 
-The code now also has pytest, in a dependency group `test`, and uv installs every group. It has tests, with a
-mock in place of Wikipedia, and coverage on every run. The code is split into a library,
+A dependency group is a named list of packages in `pyproject.toml`. The project uses them to test, check or
+document the code, but the code does not need them to run. The code now also has pytest, in a group `test`, and
+uv installs every group.
+
+The code has tests. In the tests, a stand-in called a mock answers in place of Wikipedia, so the tests need no
+network. Each run also measures coverage, which is the share of the lines of the code that the tests run. The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
 
 ruff formats and lints the code, in a group `lint`, and `just check` runs every check. `just hook` installs a git
 hook, which runs `just check` before each `git commit`. ty checks the types.
 
 The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
-`random_page` returns a `Page`, a pydantic model with a title and an extract. An answer that is not a page, or a
+`random_page` returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of its fields.
+Its fields are a title and an extract. An answer that is not a page, or a
 language that is not a language code, raises `WikipediaError`.
 
 Nothing yet says which parts of the code have documentation. smalldocs, in a new group `docs`, makes the reference
@@ -860,7 +874,8 @@ from the code.
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and the
 types are in the code. The docstring says what the function does. A docment is the comment beside a parameter, a field
-or a return type, and says what that thing is. To make room for a docment, later moves put each parameter on a line of its own.
+or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
+docment can follow it on that line.
 
 A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
 what has no documentation.
@@ -886,13 +901,13 @@ uv tree --only-group docs
 The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
 markdown-it-py, mdit-py-plugins, pygments and pyyaml.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 71726f393670
+git check 71726f393670
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source be473b80441f --staged -- :/ && git restore --source 71726f393670 --staged --worktree -- :/
@@ -970,13 +985,13 @@ docstring are among them. Then it fails with `1 of 15 functions, methods and cla
 The one is `WikipediaError`, which needs only its docstring. Like
 coverage, which counts the lines that the tests run, `check` counts what has documentation.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 40d4293f5902
+git check 40d4293f5902
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293f5902 --staged --worktree -- :/
@@ -1065,13 +1080,13 @@ just docs module wikipedia
 
 The tables now have their descriptions.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 66a702fe4a01
+git check 66a702fe4a01
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 40d4293f5902 --staged -- :/ && git restore --source 66a702fe4a01 --staged --worktree -- :/
@@ -1175,13 +1190,13 @@ uv run wikiapp --help
 `main` is a click command, and smalldocs documents it like a function, with one more table. The table of
 options shows the new help of `--language`, the same help that `--help` prints.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat bb648b91f4ab
+git check bb648b91f4ab
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 66a702fe4a01 --staged -- :/ && git restore --source bb648b91f4ab --staged --worktree -- :/
@@ -1289,7 +1304,8 @@ curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655
 
 The patch adds a docstring at the top of the file. Each test gets a docment on each parameter, one to a line, and a
 docstring of one line. Read `test_main_prints_title` first. Its docstring is "The command prints the title of the
-page."
+page." The fixture `runner` gets a docstring, and a docment beside its return type on its `def`
+line.
 
 The three tests of `tests/test_wikipedia.py` get the same pattern.
 
@@ -1309,13 +1325,13 @@ just docs check
 `check` prints a line for each module and each test file, all complete, and then `15 of 15 functions, methods
 and classes are typed and documented`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 7a0e50948873
+git check 7a0e50948873
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e50948873 --staged --worktree -- :/
@@ -1557,13 +1573,13 @@ smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is 
 browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
 pages, and git ignores them.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat e99ed4f3ab32
+git check e99ed4f3ab32
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f3ab32 --staged --worktree -- :/
@@ -1707,13 +1723,13 @@ grep -n -E 'tests/|docs/' README.md
 
 `grep` prints the two new rows of the table.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 79c80120fc8f
+git check 79c80120fc8f
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source e99ed4f3ab32 --staged -- :/ && git restore --source 79c80120fc8f --staged --worktree -- :/
@@ -1781,13 +1797,13 @@ The docs check prints `15 of 15`. Now, when a function, a parameter or a field h
 fails, and git records no change. GitHub's job `check`, at lines 30 to 37 of `.github/workflows/test.yaml`, runs `just check`, so
 it runs the docs check too.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat ce0734f1272c
+git check ce0734f1272c
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 79c80120fc8f --staged -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/
@@ -1828,7 +1844,7 @@ git restore --source 79c80120fc8f --staged -- :/ && git restore --source ce0734f
 
 ## 8b.2 The docs on GitHub Pages
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
@@ -1838,10 +1854,33 @@ git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d7
 just setup
 ```
 
-The job `tests` on GitHub now installs the group `test` alone.
+The site that `just docs` builds is only on your own machine. In this section it goes on the web, and GitHub
+builds it again after each push. But first, this section starts from a change that the whole tutorial makes and
+this tutorial leaves out.
 
-The site that `just docs` builds is on one machine only. It goes on the web, and GitHub builds it again after
-each push.
+A job is a list of commands that GitHub runs on one of its own machines. GitHub runs the tests in twelve jobs, and
+each job is called `tests`. There is one job for each pair of an operating system and a version of Python. The
+systems are Linux, macOS and Windows, and the versions are Python 3.11 to 3.14. GitHub runs the jobs each time
+someone pushes to the branch `main`. GitHub also runs them for each pull request, which is a request to add
+changes to a branch.
+
+At first, each job ran `uv run --locked pytest`. `uv.lock` lists the exact version of each package that uv installs. With
+`--locked`, uv stops with an error if `uv.lock` does not match `pyproject.toml`.
+
+`pyproject.toml` has three groups, `docs`, `lint`
+and `test`. It sets `default-groups = "all"`, so `uv run` installs all three. But the tests need only the group
+`test`. So each job also installed smalldocs, ruff, ty and other tools, and never used them.
+
+A move of the [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) stops the extra installs. This tutorial
+leaves that move out. Your code for this section already contains the
+change from that move, so you do not make it yourself.
+
+That move changed the command of each job to `uv run --locked --no-default-groups --group test pytest`. With
+`--no-default-groups`, uv installs none of the groups that `default-groups` names. With `--group test`, uv adds the
+group `test` back. So uv installs the package `wikiapp`, the packages that `wikiapp` needs to run, and the group `test`. It installs
+no other group.
+
+But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your machine still installs every group.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
 
@@ -1904,13 +1943,13 @@ uv run --isolated --locked --no-default-groups --group docs smalldocs render doc
 The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
 prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 39a4b09f8563
+git check 39a4b09f8563
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09f8563 --staged --worktree -- :/
@@ -1975,7 +2014,7 @@ git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09
 
 ## 9.10 The docs check counts the library
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source 39a4b09f8563 --staged -- :/ && git restore --source 008e616610b0 --staged --worktree -- :/
@@ -1990,7 +2029,9 @@ its own. Its code went there with its docstrings and docments. The app uses it, 
 gone. The README and the front page of the docs name both packages. The tests of the library are now
 `tests/test_wikirandom.py`.
 
-Before this section, `just docs check` counts only the app and the tests, 12 of 12. After it, the check counts the library too.
+When the library's code left the app, it also left the count of `just docs check`. Before this section, the check
+counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
+too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
 
@@ -2019,18 +2060,19 @@ The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in a
 pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
 passes.
 
-This tutorial ends here. After it, `just build` builds both packages, and the app asks for wikirandom 0.1.
-`just lint-config` checks the library's `pyproject.toml` too. The library gets a licence and an author, both
-packages get a link to the repository, and the User-Agent says the installed version. The
+This tutorial ends here. Later, `just build` builds both packages, and the app needs a 0.1 version of
+wikirandom. `just lint-config` checks the library's `pyproject.toml` too, and the library gets a licence and an
+author. Both packages get a link to the repository. Each request to Wikipedia carries a name for the program, called
+its User-Agent, and that name also gets the installed version. The
 [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 259e6364a52f
+git check 259e6364a52f
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e6364a52f --staged --worktree -- :/

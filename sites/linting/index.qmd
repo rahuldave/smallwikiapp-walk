@@ -5,8 +5,8 @@ title: "The formatter and the linter of smallwikiapp"
 <!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
 
 We give `wikiapp` a formatter and a linter. `wikiapp` is a small command that prints the title and the summary of
-a random Wikipedia page. A formatter writes every file in one style, so a change shows only what it changes. A
-linter finds problems that the tests do not find.
+a random Wikipedia page. A formatter writes every file in one style. Then, when someone changes the code, the list of
+changed lines shows only what they meant to change, and no changes of style. A linter finds problems that the tests do not find.
 
 This tutorial takes the parts about format and lint out of the
 whole tutorial of smallwikiapp. It starts from the project that `uv init` made, for Python 3.13. The command
@@ -46,7 +46,7 @@ Each kind of check comes in at the section in the table.
 | A fix by the tool | A fix that ruff counts as safe, such as the order of imports | Section 5 |
 | A fix by a person | The rest. ruff has no fix for some problems, and marks others unsafe | Section 5 |
 | A check of the configuration | Finds errors in `pyproject.toml`, the lockfile and the justfile | Sections 6 and 10 |
-| One recipe for every check | `just check` runs every check, and each `git commit` must pass it | Section 7 |
+| One recipe for every check | `just check` runs every check, one after the other | Section 7 |
 | A hook | Runs `just check` by itself, before each `git commit` | Section 8 |
 | A linter's rule about types | Checks that each type is written. The type checker checks that it is right | Section 9 |
 
@@ -77,12 +77,20 @@ Every command to run and every change to make by hand, to make the project yours
 
 ### Get the project
 
-You build the project in a clone of your own. The commands of each part run at the top of it. Clone the project, and start where the walk starts, on a branch of your own, `mine`:
+You build the project in a clone of your own, on a branch `mine` that starts where this walk starts. Run the commands of these pages in its top folder.
 
 ```bash
 git clone https://github.com/rahuldave/smallwikiapp
 cd smallwikiapp
 git switch -c mine ae86cb7d116c
+```
+
+Then add the command `git check`, which compares your files with the project's after each move. It compares `pyproject.toml` by the names of its packages, so another version of a package does not count as a difference. It does not compare the lines of `uv.lock`. It checks that you and the project both have a `uv.lock`, or both have none. It also checks that your `uv.lock` is up to date with your `pyproject.toml`.
+
+```bash
+echo '/pyproject.toml diff=names' >> .git/info/attributes
+git config diff.names.textconv "sed -E 's/^([[:space:]]*\"[A-Za-z0-9_.-]+(\\[[^]]*\\])?)[^\";]*/\\1/'"
+git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/" ":(top,exclude,glob)uv.lock" && git diff --cached --name-status --diff-filter=AD "$1" -- ":(top,glob)uv.lock" && { [ "$2" = --stale-lock ] || [ ! -f uv.lock ] || uv lock --check -q; }; }; f'
 ```
 
 ### The parts

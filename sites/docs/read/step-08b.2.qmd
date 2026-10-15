@@ -10,10 +10,33 @@ title: "8b.2 The docs on GitHub Pages"
 just setup
 ```
 
-The job `tests` on GitHub now installs the group `test` alone.
+The site that `just docs` builds is only on your own machine. In this section it goes on the web, and GitHub
+builds it again after each push. But first, this section starts from a change that the whole tutorial makes and
+this tutorial leaves out.
 
-The site that `just docs` builds is on one machine only. It goes on the web, and GitHub builds it again after
-each push.
+A job is a list of commands that GitHub runs on one of its own machines. GitHub runs the tests in twelve jobs, and
+each job is called `tests`. There is one job for each pair of an operating system and a version of Python. The
+systems are Linux, macOS and Windows, and the versions are Python 3.11 to 3.14. GitHub runs the jobs each time
+someone pushes to the branch `main`. GitHub also runs them for each pull request, which is a request to add
+changes to a branch.
+
+At first, each job ran `uv run --locked pytest`. `uv.lock` lists the exact version of each package that uv installs. With
+`--locked`, uv stops with an error if `uv.lock` does not match `pyproject.toml`.
+
+`pyproject.toml` has three groups, `docs`, `lint`
+and `test`. It sets `default-groups = "all"`, so `uv run` installs all three. But the tests need only the group
+`test`. So each job also installed smalldocs, ruff, ty and other tools, and never used them.
+
+A move of the [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) stops the extra installs. This tutorial
+leaves that move out. Your code for this section already contains the
+change from that move, so you do not make it yourself.
+
+That move changed the command of each job to `uv run --locked --no-default-groups --group test pytest`. With
+`--no-default-groups`, uv installs none of the groups that `default-groups` names. With `--group test`, uv adds the
+group `test` back. So uv installs the package `wikiapp`, the packages that `wikiapp` needs to run, and the group `test`. It installs
+no other group.
+
+But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your machine still installs every group.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
 

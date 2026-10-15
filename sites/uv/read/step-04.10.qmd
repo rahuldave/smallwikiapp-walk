@@ -10,14 +10,15 @@ title: "4.10 A lockfile that must be up to date"
 just setup
 ```
 
-The code now also has pytest-mock and pytest-cov, in the group `test`. The project has tests with a mock, a
-library, `src/wikiapp/wikipedia.py`, and recipes in the justfile that run each tool with `uv run`. ruff and
+The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
+mock, and recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
+of its own, `src/wikiapp/wikipedia.py`. ruff and
 validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.
 
-A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. Instead, `uv run` resolves the lockfile again and
-prints no warning.
-The justfile exports `UV_LOCKED`.
+A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. But with no option, `uv run` resolves
+the lockfile again and prints no warning. The justfile now exports `UV_LOCKED`, which makes every `uv run` refuse a
+lockfile that is out of date.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
 

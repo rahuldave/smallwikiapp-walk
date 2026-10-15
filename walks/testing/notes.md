@@ -25,7 +25,7 @@ This tutorial has fourteen sections:
 11. **The tests on GitHub**
 12. **Tests of a model**
 13. **A drop in coverage**
-14. **The tests with their group alone**
+14. **GitHub installs only the test tools**
 
 Where the whole tutorial makes changes that this one leaves out, the next section says what they did, and begins
 from their code.
@@ -37,7 +37,7 @@ Each kind of test comes in at the section in the table. The tutorial adds no tes
 | Kind | What it checks | Where |
 |---|---|---|
 | End-to-end | The code against the real Wikipedia, with no mock | Section 3. From section 10, it runs only when you ask for it |
-| Unit | One part of the code alone, with a mock in place of the network | Section 4 for the command, until the code splits in two. Section 7 for the library |
+| Unit | One part of the code alone, with a mock in place of the network | Section 4 for the command, until section 6 moves the request into a library. Section 7 for the library |
 | Integration | The command and the library together, with only the network a mock | Section 6. The unit tests of the command become integration tests |
 | Contract | That the real Wikipedia still answers as the mocks do | Section 10 |
 
@@ -68,8 +68,9 @@ runs them all.
 
 $ just setup
 
-The first test asks the real Wikipedia, so it is slow and needs the network. A fixture gives each test a runner,
-and a mock takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
+The first test asks the real Wikipedia, so it is slow and needs the network. A fixture is a function that pytest
+calls for each test that names it as a parameter. One fixture gives each test a runner, which runs the command and keeps what
+it prints. A mock is a stand-in that takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
 request ends the command with exit code 1.
 
 {{include step-02.5..step-02.9}}
@@ -136,9 +137,12 @@ every check. One of them fails when the tests run less than 90% of the code.
 $ just setup
 
 The code now also has a git hook, which `just hook` installs. Before each `git commit`, `pre-commit` runs three
-small checks of the files, then `just check`. ty checks the types, and the command reads its version by the name
-of its package. The code and the tests have their types. `random_page` returns `dict[str, Any]`, and `just check`
-runs the type checker too.
+small checks of the files, then `just check`.
+
+The code also has ty, a type checker. A type says what kind of value a name has, for example a string or a
+number. Each function of the code and the tests now names the types of its arguments and of the value it returns.
+`random_page` returns `dict[str, Any]`, a dictionary whose keys are strings, and `just check` runs ty too. The
+command also looks up its version by the fixed name of its package, `wikiapp`.
 
 The test that asks the real Wikipedia fails without the network, and so every check fails with it. It now runs
 only when you ask for it. A second test of that kind checks the library.
@@ -152,8 +156,9 @@ contract.
 
 $ just setup
 
-The tests run on one machine, with one version of Python. The project accepts any version of Python from 3.11 on,
-and GitHub runs the tests on three systems and four versions of Python.
+The tests run on one machine, with one version of Python. The project asks for Python 3.13 or newer. In this
+section it starts to accept any version of Python from 3.11 on. Then GitHub runs the tests on three
+systems and four versions of Python.
 
 {{include step-06.3..step-06.5}}
 
@@ -177,7 +182,7 @@ no test reaches it, so the coverage drops.
 
 {{include step-07.5}}
 
-## The tests with their group alone
+## GitHub installs only the test tools
 
 $ just setup
 

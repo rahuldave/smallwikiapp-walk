@@ -6,7 +6,7 @@ title: "10 Build"
 
 **Build it yourself.** [Read the tutorial](../read/step-10.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 259e6364a52f --staged --worktree -- :/
@@ -22,7 +22,7 @@ app says which versions of the library it accepts, and `just lint-config` checks
 too. Both packages say their licence and where their source is. Last, the library's User-Agent says the version
 that is installed.
 
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/78929cdbf6143d7f49804634e3ec3acb506f0b38).
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/73fc4e12cc7a5831163e61fc01a3699355f95d52).
 
 ## 10.1 The recipe `build` {#step-10.1}
 
@@ -52,13 +52,13 @@ version of wikirandom, because `uv add wikirandom` in a workspace writes no vers
 get any package that PyPI has under that name. Today PyPI has none, so wikirandom would have to be published
 first.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 7744a84a4715
+git check 7744a84a4715
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 259e6364a52f --staged -- :/ && git restore --source 7744a84a4715 --staged --worktree -- :/
@@ -98,8 +98,9 @@ could break the app. The app works with wikirandom 0.1.0, so its dependency gets
 uv add "wikirandom>=0.1.0,<0.2"
 ```
 
-Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
-`[tool.uv.sources]` says.
+The range changes only the metadata of the app's wheel, and uv installs the same code as before. In `pyproject.toml`,
+the table `[tool.uv.sources]` tells uv to take wikirandom from the workspace. `[tool.uv.workspace]` names the folder `packages/wikirandom` as a member of the
+workspace, so uv installs the library from that folder.
 
 ```bash
 just build
@@ -108,21 +109,21 @@ unzip -p dist/wikiapp-0.1.0-py3-none-any.whl wikiapp-0.1.0.dist-info/METADATA
 
 The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 6337f3cbe084
+git check 6e6d2844bc7a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6337f3cbe084 --staged --worktree -- :/
+git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d2844bc7a --staged --worktree -- :/
 ```
 
 ### What changed {#step-10.2-what-changed-182c57}
 
-- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6337f3cbe0844c520a51dc4debecffa0445ad539/pyproject.toml).
+- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml).
   - look at `"wikirandom>=0.1.0,<0.2",`
 
 <details><summary>The diff that <code>uv add "wikirandom&gt;=0.1.0,&lt;0.2"</code> makes in <code>pyproject.toml</code></summary>
@@ -141,7 +142,7 @@ git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6337f3c
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
 
 ## 10.3 lint-config checks both pyproject.toml files {#step-10.3}
 
@@ -151,7 +152,7 @@ library's file would reach a build unseen. The recipe `lint-config` now gives va
 Apply the patch to [`justfile`](#step-10.3-justfile-424f0b), from the top of the project:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/432c24094f21040ffd3c4df2bc37524763653f9f.diff | git apply --include=justfile
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055.diff | git apply --include=justfile
 ```
 
 The patch changes one line of the recipe `lint-config`, the line that runs `validate-pyproject`.
@@ -162,21 +163,21 @@ just lint-config
 
 `just lint-config` prints `Valid file` twice, once for each file.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 432c24094f21
+git check 522bcb941336
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 6337f3cbe084 --staged -- :/ && git restore --source 432c24094f21 --staged --worktree -- :/
+git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb941336 --staged --worktree -- :/
 ```
 
 ### What changed {#step-10.3-what-changed-182c57}
 
-- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/432c24094f21040ffd3c4df2bc37524763653f9f/justfile).
+- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -195,7 +196,7 @@ git restore --source 6337f3cbe084 --staged -- :/ && git restore --source 432c240
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/432c24094f21040ffd3c4df2bc37524763653f9f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
 
 ## 10.4 A licence for the library, and a repository link for both {#step-10.4}
 
@@ -212,13 +213,13 @@ Its `pyproject.toml` gives the licence and the author under `readme`, as the app
 Apply the patch to [`packages/wikirandom/pyproject.toml`](#step-10.4-packages-wikirandom-pyproject.toml-28d6f6), from the top of the project:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/615c3ce0604a1a5c440e529db71b414d6da31645.diff | git apply --include=packages/wikirandom/pyproject.toml
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/2c03603dc72a212f1575459528b3d269bb52be0d.diff | git apply --include=packages/wikirandom/pyproject.toml
 ```
 
 Apply the patch to [`pyproject.toml`](#step-10.4-pyproject.toml-5d07e7), from the top of the project:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/615c3ce0604a1a5c440e529db71b414d6da31645.diff | git apply --include=pyproject.toml
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/2c03603dc72a212f1575459528b3d269bb52be0d.diff | git apply --include=pyproject.toml
 ```
 
 In `packages/wikirandom/pyproject.toml`, the patch adds the licence, its file and the author under
@@ -233,25 +234,25 @@ unzip -p dist/wikirandom-0.1.0-py3-none-any.whl wikirandom-0.1.0.dist-info/METAD
 The library's metadata has `License-Expression: Apache-2.0`,
 `License-File: LICENSE` and `Project-URL: Repository, https://github.com/rahuldave/smallwikiapp`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 615c3ce0604a
+git check 2c03603dc72a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 432c24094f21 --staged -- :/ && git restore --source 615c3ce0604a --staged --worktree -- :/
+git restore --source 522bcb941336 --staged -- :/ && git restore --source 2c03603dc72a --staged --worktree -- :/
 ```
 
 ### What changed {#step-10.4-what-changed-182c57}
 
-- <a id="step-10.4-packages-wikirandom-LICENSE-56404f"></a>`packages/wikirandom/LICENSE`: the same Apache-2.0 licence as the app's. New, 202 lines. It comes from `cp LICENSE packages/wikirandom/LICENSE`. [The file](https://github.com/rahuldave/smallwikiapp/blob/615c3ce0604a1a5c440e529db71b414d6da31645/packages/wikirandom/LICENSE).
+- <a id="step-10.4-packages-wikirandom-LICENSE-56404f"></a>`packages/wikirandom/LICENSE`: the same Apache-2.0 licence as the app's. New, 202 lines. It comes from `cp LICENSE packages/wikirandom/LICENSE`. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/packages/wikirandom/LICENSE).
   - look at `Apache License`
-- <a id="step-10.4-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: what PyPI would show. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/615c3ce0604a1a5c440e529db71b414d6da31645/packages/wikirandom/pyproject.toml).
+- <a id="step-10.4-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: what PyPI would show. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/packages/wikirandom/pyproject.toml).
   - look at `license = "Apache-2.0"`
-- <a id="step-10.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's repository. 3 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/615c3ce0604a1a5c440e529db71b414d6da31645/pyproject.toml).
+- <a id="step-10.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's repository. 3 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/pyproject.toml).
   - look at `[project.urls]`
 
 <details><summary>The diff that <code>cp LICENSE packages/wikirandom/LICENSE</code> makes in <code>packages/wikirandom/LICENSE</code></summary>
@@ -507,7 +508,7 @@ git restore --source 432c24094f21 --staged -- :/ && git restore --source 615c3ce
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/615c3ce0604a1a5c440e529db71b414d6da31645). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/615c3ce0604a1a5c440e529db71b414d6da31645).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2c03603dc72a212f1575459528b3d269bb52be0d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2c03603dc72a212f1575459528b3d269bb52be0d).
 
 ## 10.5 The User-Agent says the installed version {#step-10.5}
 
@@ -518,7 +519,7 @@ installed package, as `wikiapp --version` does. `VERSION` is the installed versi
 Apply the patch to [`packages/wikirandom/src/wikirandom/__init__.py`](#step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23), from the top of the project:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/78929cdbf6143d7f49804634e3ec3acb506f0b38.diff | git apply --include=packages/wikirandom/src/wikirandom/__init__.py
+curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/73fc4e12cc7a5831163e61fc01a3699355f95d52.diff | git apply --include=packages/wikirandom/src/wikirandom/__init__.py
 ```
 
 The patch adds `import importlib.metadata` above `import re`, and puts two lines, `VERSION = ...` and
@@ -531,21 +532,21 @@ just check
 
 The first command prints `wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)`, and `just check` passes.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 78929cdbf614
+git check 73fc4e12cc7a
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 615c3ce0604a --staged -- :/ && git restore --source 78929cdbf614 --staged --worktree -- :/
+git restore --source 2c03603dc72a --staged -- :/ && git restore --source 73fc4e12cc7a --staged --worktree -- :/
 ```
 
 ### What changed {#step-10.5-what-changed-182c57}
 
-- <a id="step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: the version now comes from one place, the library's `pyproject.toml`. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78929cdbf6143d7f49804634e3ec3acb506f0b38/packages/wikirandom/src/wikirandom/__init__.py).
+- <a id="step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: the version now comes from one place, the library's `pyproject.toml`. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/73fc4e12cc7a5831163e61fc01a3699355f95d52/packages/wikirandom/src/wikirandom/__init__.py).
   - look at `VERSION = importlib.metadata.version("wikirandom")`
 
 <details open><summary>The patch to <code>packages/wikirandom/src/wikirandom/__init__.py</code></summary>
@@ -572,4 +573,4 @@ git restore --source 615c3ce0604a --staged -- :/ && git restore --source 78929cd
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/78929cdbf6143d7f49804634e3ec3acb506f0b38). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/78929cdbf6143d7f49804634e3ec3acb506f0b38).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/73fc4e12cc7a5831163e61fc01a3699355f95d52). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/73fc4e12cc7a5831163e61fc01a3699355f95d52).

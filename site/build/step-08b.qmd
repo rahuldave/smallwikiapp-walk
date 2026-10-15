@@ -6,7 +6,7 @@ title: "8b The docs on GitHub Pages"
 
 **Build it yourself.** [Read the tutorial](../read/step-08b.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/
@@ -24,8 +24,9 @@ alone. Then a new workflow builds the docs site with the group `docs` alone, and
 
 ## 8b.1 The tests install the group test alone {#step-08b.1}
 
-The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
-tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+The job `tests` runs twelve times on GitHub, and each run installs every group. So each run installs the linter, the type
+checker, the git hook tools and smalldocs. pytest needs only the package and the group `test`, so this move makes
+each run install only those.
 
 The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
 to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37
@@ -49,13 +50,13 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 `--isolated` runs the command as the job does, in a temporary environment with the group `test` alone, and leaves
 `.venv` as it is. The tests print `7 passed, 2 deselected`. The file is valid YAML.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 971e9d780fd5
+git check 971e9d780fd5
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
@@ -149,13 +150,13 @@ uv run --isolated --locked --no-default-groups --group docs smalldocs render doc
 The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
 prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 39a4b09f8563
+git check 39a4b09f8563
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09f8563 --staged --worktree -- :/

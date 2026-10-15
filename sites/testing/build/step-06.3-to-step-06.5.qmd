@@ -6,7 +6,7 @@ title: "6.3 to 6.5 The tests on GitHub"
 
 **Build it yourself.** [Read the tutorial](../read/step-06.3-to-step-06.5.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 307d4d7b36bb --staged --worktree -- :/
@@ -16,8 +16,9 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 307d4d7b36bb 
 just setup
 ```
 
-The tests run on one machine, with one version of Python. The project accepts any version of Python from 3.11 on,
-and GitHub runs the tests on three systems and four versions of Python.
+The tests run on one machine, with one version of Python. The project asks for Python 3.13 or newer. In this
+section it starts to accept any version of Python from 3.11 on. Then GitHub runs the tests on three
+systems and four versions of Python.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
 
@@ -39,7 +40,8 @@ The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
+be updated. Your files are right, and only the lockfile is out of date.
 
 ```bash
 uv lock --check
@@ -50,13 +52,13 @@ just test -q
 updated". Its hint is to run `uv lock`, and it exits with 1. `just test -q` stops with the same error, and runs
 no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat b97ee4cfc591
+git check b97ee4cfc591
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 307d4d7b36bb --staged -- :/ && git restore --source b97ee4cfc591 --staged --worktree -- :/
@@ -110,13 +112,13 @@ uv run --isolated --python 3.11 pytest -q
 change. The third command prints
 `Python 3.11.12`, and the tests print `6 passed, 2 deselected` on 3.11 too.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat d8af75e8fd57
+git check d8af75e8fd57
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source b97ee4cfc591 --staged -- :/ && git restore --source d8af75e8fd57 --staged --worktree -- :/
@@ -157,16 +159,16 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 ```
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
-thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
-section on the docs on GitHub Pages names the settings.
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
+part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 20cf458261ed
+git check 20cf458261ed
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458261ed --staged --worktree -- :/

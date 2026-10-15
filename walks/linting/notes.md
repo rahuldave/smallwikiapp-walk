@@ -1,6 +1,6 @@
 We give `wikiapp` a formatter and a linter. `wikiapp` is a small command that prints the title and the summary of
-a random Wikipedia page. A formatter writes every file in one style, so a change shows only what it changes. A
-linter finds problems that the tests do not find.
+a random Wikipedia page. A formatter writes every file in one style. Then, when someone changes the code, the list of
+changed lines shows only what they meant to change, and no changes of style. A linter finds problems that the tests do not find.
 
 This tutorial takes the parts about format and lint out of the
 whole tutorial of smallwikiapp. It starts from the project that `uv init` made, for Python 3.13. The command
@@ -40,7 +40,7 @@ Each kind of check comes in at the section in the table.
 | A fix by the tool | A fix that ruff counts as safe, such as the order of imports | Section 5 |
 | A fix by a person | The rest. ruff has no fix for some problems, and marks others unsafe | Section 5 |
 | A check of the configuration | Finds errors in `pyproject.toml`, the lockfile and the justfile | Sections 6 and 10 |
-| One recipe for every check | `just check` runs every check, and each `git commit` must pass it | Section 7 |
+| One recipe for every check | `just check` runs every check, one after the other | Section 7 |
 | A hook | Runs `just check` by itself, before each `git commit` | Section 8 |
 | A linter's rule about types | Checks that each type is written. The type checker checks that it is right | Section 9 |
 
@@ -126,11 +126,13 @@ before each `git commit`.
 
 $ just setup
 
-The code now also has ty, a type checker, which `just types` runs. The command reads its version by the name of
-its package.
+The code now also has ty, a type checker, which `just types` runs. A type says what kind of value a name has, for
+example a string or a number. ty found that `__name__ or __package__`
+could be None, but `importlib.metadata.version` needs a string. So the command now looks up its version with the
+string `"wikiapp"`, the name of its package.
 
-ty checks only the types that the code writes. A rule asks for a type on every parameter and return. The code and
-the tests get their types.
+ty checks only the types that are written in the code, and the code has almost none. ruff's rules `ANN` report
+each parameter and each return value that has no type. Then the code and the tests get their types.
 
 {{include step-05.4..step-05.6}}
 
@@ -138,13 +140,12 @@ the tests get their types.
 
 $ just setup
 
-The code now also has the type checker in `just check`. The tests that ask the real Wikipedia run
-only on request. The project accepts any Python from 3.11 on. GitHub runs the tests and `just check`. The job `tests` on GitHub installs the group `test` alone, and a
-workflow publishes the docs site.
+The code now also has the type checker in `just check`. The project accepts any Python from 3.11 on. On every push
+to main, GitHub runs the tests and `just check`, and it publishes a site with the docs.
 
 `random_page` returns a pydantic model, `Page`. smalldocs documents the code, and `just check` runs the check of
 the docs. The library is a package of its own, `packages/wikirandom`, with its own `pyproject.toml`. `just build`
-builds both packages, and the app asks for wikirandom 0.1.
+builds both packages. The app is the package `wikiapp`, and it needs a 0.1 version of wikirandom.
 
 Until this section, `just lint-config` checks only the app's `pyproject.toml`. After it, `just lint-config` also
 checks the library's `pyproject.toml`.

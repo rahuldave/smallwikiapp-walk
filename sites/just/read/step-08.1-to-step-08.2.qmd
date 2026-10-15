@@ -22,7 +22,8 @@ documentation. The words after `docs` go to `smalldocs api`.
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and the
 types are in the code. The docstring says what the function does. A docment is the comment beside a parameter, a field
-or a return type, and says what that thing is. To make room for a docment, later moves put each parameter on a line of its own.
+or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
+docment can follow it on that line.
 
 A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
 what has no documentation.

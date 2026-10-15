@@ -10,11 +10,13 @@ title: "5.4 to 5.6 The linter asks for types"
 just setup
 ```
 
-The code now also has ty, a type checker, which `just types` runs. The command reads its version by the name of
-its package.
+The code now also has ty, a type checker, which `just types` runs. A type says what kind of value a name has, for
+example a string or a number. ty found that `__name__ or __package__`
+could be None, but `importlib.metadata.version` needs a string. So the command now looks up its version with the
+string `"wikiapp"`, the name of its package.
 
-ty checks only the types that the code writes. A rule asks for a type on every parameter and return. The code and
-the tests get their types.
+ty checks only the types that are written in the code, and the code has almost none. ruff's rules `ANN` report
+each parameter and each return value that has no type. Then the code and the tests get their types.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7a3e6d212b439920f62f0a023554b86d14ebd4e). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5).
 

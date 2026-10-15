@@ -6,13 +6,13 @@ title: "6.3 to 6.4 The oldest Python, and other environments"
 
 **Build it yourself.** [Read the tutorial](../read/step-06.3-to-step-06.4.qmd) is the other way to read this part.
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source b7469ee81a82 --staged -- :/ && git restore --source 307d4d7b36bb --staged --worktree -- :/
 ```
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 307d4d7b36bb --staged --worktree -- :/
@@ -49,7 +49,8 @@ The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
+be updated. Your files are right, and only the lockfile is out of date.
 
 ```bash
 uv lock --check
@@ -60,13 +61,13 @@ just test -q
 updated". Its hint is to run `uv lock`, and it exits with 1. `just test -q` stops with the same error, and runs
 no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat b97ee4cfc591
+git check b97ee4cfc591
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 307d4d7b36bb --staged -- :/ && git restore --source b97ee4cfc591 --staged --worktree -- :/
@@ -123,7 +124,8 @@ change. The third command prints
 The first of these moves changes `requires-python` by hand, and the second runs `uv lock`. Between the two, the
 lockfile is out of date with `pyproject.toml`, and every recipe that runs `uv run` refuses it.
 
-`--isolated` made a second environment, which uv deletes after the command. `uvx` makes a third kind, an
+The second of these moves runs the tests with `uv run --isolated --python 3.11`. `--isolated` makes a second
+environment, and uv deletes it after the command. `uvx` makes a third kind, an
 environment of its own for one tool.
 
 ```bash
@@ -135,13 +137,13 @@ The first path ends in `.venv`. The second is a folder in the cache of uv, with 
 ruff of its own, which need not be the version that the lockfile names. So the recipes run ruff with `uv run`, and
 get the version of the lockfile.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat d8af75e8fd57
+git check d8af75e8fd57
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source b97ee4cfc591 --staged -- :/ && git restore --source d8af75e8fd57 --staged --worktree -- :/

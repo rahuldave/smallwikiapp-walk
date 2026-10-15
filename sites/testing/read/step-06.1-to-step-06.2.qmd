@@ -11,9 +11,12 @@ just setup
 ```
 
 The code now also has a git hook, which `just hook` installs. Before each `git commit`, `pre-commit` runs three
-small checks of the files, then `just check`. ty checks the types, and the command reads its version by the name
-of its package. The code and the tests have their types. `random_page` returns `dict[str, Any]`, and `just check`
-runs the type checker too.
+small checks of the files, then `just check`.
+
+The code also has ty, a type checker. A type says what kind of value a name has, for example a string or a
+number. Each function of the code and the tests now names the types of its arguments and of the value it returns.
+`random_page` returns `dict[str, Any]`, a dictionary whose keys are strings, and `just check` runs ty too. The
+command also looks up its version by the fixed name of its package, `wikiapp`.
 
 The test that asks the real Wikipedia fails without the network, and so every check fails with it. It now runs
 only when you ask for it. A second test of that kind checks the library.

@@ -1,5 +1,5 @@
 ---
-title: "8b.1 The tests with their group alone"
+title: "8b.1 GitHub installs only the test tools"
 ---
 
 <!-- Made by the walk skill's render.py from the facts of the walk. Do not edit it by hand: run just walk-update again. -->
@@ -20,8 +20,9 @@ section changes what GitHub installs to run the tests.
 
 ## 8b.1 The tests install the group test alone {#step-08b.1}
 
-The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
-tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+The job `tests` runs twelve times on GitHub, and each run installs every group. So each run installs the linter, the type
+checker, the git hook tools and smalldocs. pytest needs only the package and the group `test`, so this move makes
+each run install only those.
 
 The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
 to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37

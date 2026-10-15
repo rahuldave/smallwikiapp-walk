@@ -106,7 +106,7 @@ website:
             contents:
               - text: "7.5 Only a language code goes into the address"
                 href: read/step-07.5.qmd#step-07.5
-          - section: "8b.1 The tests with their group alone"
+          - section: "8b.1 GitHub installs only the test tools"
             href: read/step-08b.1.qmd
             contents:
               - text: "8b.1 The tests install the group test alone"
@@ -205,7 +205,7 @@ website:
             contents:
               - text: "7.5 Only a language code goes into the address"
                 href: build/step-07.5.qmd#step-07.5
-          - section: "8b.1 The tests with their group alone"
+          - section: "8b.1 GitHub installs only the test tools"
             href: build/step-08b.1.qmd
             contents:
               - text: "8b.1 The tests install the group test alone"

@@ -6,7 +6,7 @@ title: "4 Format, lint, a hook"
 
 **Build it yourself.** [Read the tutorial](../read/step-04.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source b6942869d5fc --staged --worktree -- :/
@@ -44,13 +44,13 @@ uv run ruff --version
 It prints `ruff 0.17.0`. uv installs every group, so ruff is in the environment of the project, and nothing has
 used it yet.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 8f7b800001ee
+git check 8f7b800001ee
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source b6942869d5fc --staged -- :/ && git restore --source 8f7b800001ee --staged --worktree -- :/
@@ -109,16 +109,17 @@ just fmt --check
 ```
 
 `--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
-reformatted, 1 file already formatted`. The seventh file is the README, whose code ruff formats too. The recipe
+reformatted, 1 file already formatted`. The six files that it names are the Python files. The seventh is
+`pyproject.toml`, which ruff also reads. The recipe
 runs the same command, and passes on the words after `just fmt`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 314457433791
+git check 314457433791
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 8f7b800001ee --staged -- :/ && git restore --source 314457433791 --staged --worktree -- :/
@@ -188,13 +189,13 @@ just test
 
 The check prints `7 files already formatted`, and the tests pass as before, `7 passed`. One test asks the real Wikipedia, so the tests still need the network.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 6690eee9f7e1
+git check 6690eee9f7e1
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee9f7e1 --staged --worktree -- :/
@@ -391,19 +392,19 @@ The linter finds five problems, and fails. Each problem has its code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
-`just lint` shows each problem with its lines. `uv run ruff rule S113` explains a code.
+Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
 
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
 in the next two moves, and then ruff fixes the last one.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 589f2f691557
+git check 589f2f691557
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 6690eee9f7e1 --staged -- :/ && git restore --source 589f2f691557 --staged --worktree -- :/
@@ -491,13 +492,13 @@ just fmt --check
 Two problems are left, `S113` and `I001`, and the linter still fails. The format is unchanged, and the check prints
 `7 files already formatted`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 2ec7932b37e2
+git check 2ec7932b37e2
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 589f2f691557 --staged -- :/ && git restore --source 2ec7932b37e2 --staged --worktree -- :/
@@ -572,13 +573,13 @@ just lint --statistics
 
 One problem is left, `I001`, so the linter still fails. Its `[*]` says that ruff can fix it.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 0fb498558273
+git check 0fb498558273
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 2ec7932b37e2 --staged -- :/ && git restore --source 0fb498558273 --staged --worktree -- :/
@@ -623,13 +624,13 @@ just lint
 
 `just lint --fix` reported `Found 1 error (1 fixed, 0 remaining).`, and exited with 0. Now `just lint` prints `All checks passed!`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat a57134d1cef6
+git check a57134d1cef6
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 0fb498558273 --staged -- :/ && git restore --source a57134d1cef6 --staged --worktree -- :/
@@ -676,13 +677,13 @@ uv run validate-pyproject --version
 
 It prints `validate_pyproject 0.26`. Nothing runs it yet.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 4e710d50a229
+git check 4e710d50a229
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source a57134d1cef6 --staged -- :/ && git restore --source 4e710d50a229 --staged --worktree -- :/
@@ -738,13 +739,13 @@ The three checks pass. validate-pyproject prints `Valid file: pyproject.toml`. `
 `Resolved 19 packages` and exits with 0, because the lockfile matches `pyproject.toml`. `just --fmt` prints
 nothing, because the `justfile` is in the format of `just`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat d8a9c8f71eb5
+git check d8a9c8f71eb5
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 4e710d50a229 --staged -- :/ && git restore --source d8a9c8f71eb5 --staged --worktree -- :/
@@ -801,13 +802,13 @@ just --evaluate UV_LOCKED
 It prints `1`. `just` puts the variable in the environment of every command of every recipe, so each `uv run`
 sees it.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat b7469ee81a82
+git check b7469ee81a82
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source d8a9c8f71eb5 --staged -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
@@ -857,13 +858,13 @@ just check
 
 `just check` passes. The tests must run at least 90% of the statements, and the coverage is 96.77%.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 1f73d6af30cc
+git check 1f73d6af30cc
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6af30cc --staged --worktree -- :/
@@ -915,13 +916,13 @@ uv run pre-commit --version
 
 It prints `pre-commit 4.7.0`. No hook is installed yet.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 29291b3575f2
+git check 29291b3575f2
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 1f73d6af30cc --staged -- :/ && git restore --source 29291b3575f2 --staged --worktree -- :/
@@ -992,13 +993,13 @@ a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints
 With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
 it.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 6860da13f0fd
+git check 6860da13f0fd
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 29291b3575f2 --staged -- :/ && git restore --source 6860da13f0fd --staged --worktree -- :/

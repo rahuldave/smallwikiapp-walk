@@ -6,13 +6,13 @@ title: "8.1 to 8.2 `just docs`"
 
 **Build it yourself.** [Read the tutorial](../read/step-08.1-to-step-08.2.qmd) is the other way to read this part.
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source 20cf458261ed --staged -- :/ && git restore --source be473b80441f --staged --worktree -- :/
 ```
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source be473b80441f --staged --worktree -- :/
@@ -34,7 +34,8 @@ documentation. The words after `docs` go to `smalldocs api`.
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and the
 types are in the code. The docstring says what the function does. A docment is the comment beside a parameter, a field
-or a return type, and says what that thing is. To make room for a docment, later moves put each parameter on a line of its own.
+or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
+docment can follow it on that line.
 
 A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
 what has no documentation.
@@ -60,13 +61,13 @@ uv tree --only-group docs
 The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
 markdown-it-py, mdit-py-plugins, pygments and pyyaml.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 71726f393670
+git check 71726f393670
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source be473b80441f --staged -- :/ && git restore --source 71726f393670 --staged --worktree -- :/
@@ -142,13 +143,13 @@ docstring are among them. Then it fails with `1 of 15 functions, methods and cla
 The one is `WikipediaError`, which needs only its docstring. Like
 coverage, which counts the lines that the tests run, `check` counts what has documentation.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 40d4293f5902
+git check 40d4293f5902
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293f5902 --staged --worktree -- :/

@@ -26,7 +26,8 @@ Written once, beside the code it describes.
 | Command | Does |
 |---|---|
 | `just docs module wikipedia` | one module's reference, as Markdown |
-| `just docs check` | each module without a docstring, and each function, class or field without its types and docs. It fails if any |
+| `just docs check` | lists each module without a docstring, and each function, class or field without its types and docs. It fails if it finds one |
 | `just docs` | the site, with the reference pages made from the code first |
 
-The check runs in `just check`, so the git hook refuses an undocumented function.
+`just check` runs the check, and the git hook runs `just check` before git records a change. So git refuses a
+change with an undocumented function.

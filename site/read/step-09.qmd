@@ -47,7 +47,10 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`.
+
+The check of your files after this move prints the same error. Your files are right, and only the
+lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -324,7 +327,7 @@ real Wikipedia, and prints the title of a French page, another one on each run.
 
 ## 9.6 The app depends on wikirandom {#step-09.6}
 
-The app and the library now have the same code twice. Before the app can import the library, the library must be
+The app and the library now each have a copy of the code that asks Wikipedia for a page. Before the app can import the library, the library must be
 a dependency of the app.
 
 This change came from running `uv add wikirandom`.
@@ -380,10 +383,10 @@ A plain `uv run` now installs the library too. The command prints a path that en
 ## 9.7 The app uses wikirandom {#step-09.7}
 
 The app must use the library, and drop its own `src/wikiapp/wikipedia.py`. Its tests then test the library,
-coverage measures both packages, and the README and the docs say that there are two packages. `git rm` deletes the
+coverage measures both packages, and the README and the docs say that there are two packages. `rm` deletes the
 app's file, and there is one patch for each of the six other files.
 
-This change came from running `git rm src/wikiapp/wikipedia.py`.
+This change came from running `rm src/wikiapp/wikipedia.py`.
 
 `src/wikiapp/console.py` imports from the library. The import goes with the installed packages, under
 `import click`, so the lines are already in ruff's order. `tests/test_wikipedia.py` keeps its name for now, and
@@ -438,7 +441,7 @@ names both packages, but `random_page` is not yet a link, because the settings o
   - look at `addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"`
 - <a id="step-09.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: one import. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/src/wikiapp/console.py).
   - look at `from wikirandom import WikipediaError, random_page`
-- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `git rm src/wikiapp/wikipedia.py`.
+- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `rm src/wikiapp/wikipedia.py`.
 - <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py).
   - look at `wikirandom.random_page(language="es")`
 

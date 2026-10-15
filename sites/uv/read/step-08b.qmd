@@ -6,8 +6,9 @@ title: "8b Each job on GitHub with its own group"
 
 **Read the tutorial.** [Build it yourself](../build/step-08b.qmd) is the other way to read this part.
 
-The code now also has pydantic in the dependencies, from `uv add pydantic`. `random_page` returns a `Page`, a
-pydantic model. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
+The code now also has pydantic in the dependencies, from `uv add pydantic`. The function `random_page`, which asks
+Wikipedia for a page, now returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of
+its fields. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
 and `just docs check` counts what has documentation.
 
 ```bash
@@ -22,8 +23,9 @@ alone. Then a new workflow builds the docs site with the group `docs` alone, and
 
 ## 8b.1 The tests install the group test alone {#step-08b.1}
 
-The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
-tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+The job `tests` runs twelve times on GitHub, and each run installs every group. So each run installs the linter, the type
+checker, the git hook tools and smalldocs. pytest needs only the package and the group `test`, so this move makes
+each run install only those.
 
 The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
 to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37

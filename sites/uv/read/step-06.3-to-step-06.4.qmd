@@ -33,7 +33,8 @@ In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
+be updated. Your files are right, and only the lockfile is out of date.
 
 ```bash
 uv lock --check
@@ -104,7 +105,8 @@ change. The third command prints
 The first of these moves changes `requires-python` by hand, and the second runs `uv lock`. Between the two, the
 lockfile is out of date with `pyproject.toml`, and every recipe that runs `uv run` refuses it.
 
-`--isolated` made a second environment, which uv deletes after the command. `uvx` makes a third kind, an
+The second of these moves runs the tests with `uv run --isolated --python 3.11`. `--isolated` makes a second
+environment, and uv deletes it after the command. `uvx` makes a third kind, an
 environment of its own for one tool.
 
 ```bash

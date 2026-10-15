@@ -763,14 +763,15 @@ name.
 just setup
 ```
 
-The code now also has pytest-mock and pytest-cov, in the group `test`. The project has tests with a mock, a
-library, `src/wikiapp/wikipedia.py`, and recipes in the justfile that run each tool with `uv run`. ruff and
+The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
+mock, and recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
+of its own, `src/wikiapp/wikipedia.py`. ruff and
 validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.
 
-A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. Instead, `uv run` resolves the lockfile again and
-prints no warning.
-The justfile exports `UV_LOCKED`.
+A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. But with no option, `uv run` resolves
+the lockfile again and prints no warning. The justfile now exports `UV_LOCKED`, which makes every `uv run` refuse a
+lockfile that is out of date.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
 
@@ -857,7 +858,8 @@ In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
+be updated. Your files are right, and only the lockfile is out of date.
 
 ```bash
 uv lock --check
@@ -930,7 +932,8 @@ change. The third command prints
 The first of these moves changes `requires-python` by hand, and the second runs `uv lock`. Between the two, the
 lockfile is out of date with `pyproject.toml`, and every recipe that runs `uv run` refuses it.
 
-`--isolated` made a second environment, which uv deletes after the command. `uvx` makes a third kind, an
+The second of these moves runs the tests with `uv run --isolated --python 3.11`. `--isolated` makes a second
+environment, and uv deletes it after the command. `uvx` makes a third kind, an
 environment of its own for one tool.
 
 ```bash
@@ -988,8 +991,8 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 ```
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
-thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
-section on the docs on GitHub Pages names the settings.
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
+part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
 
 The job `tests` runs `uv run --locked pytest`, and so it installs every group, with ruff, ty and `pre-commit`.
 pytest needs none of them. A dry run shows what the job would leave out with the group `test` alone.
@@ -1057,8 +1060,9 @@ change in the next section.
 
 ## 8b Each job on GitHub with its own group
 
-The code now also has pydantic in the dependencies, from `uv add pydantic`. `random_page` returns a `Page`, a
-pydantic model. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
+The code now also has pydantic in the dependencies, from `uv add pydantic`. The function `random_page`, which asks
+Wikipedia for a page, now returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of
+its fields. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
 and `just docs check` counts what has documentation.
 
 ```bash
@@ -1075,8 +1079,9 @@ alone. Then a new workflow builds the docs site with the group `docs` alone, and
 
 ### 8b.1 The tests install the group test alone
 
-The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
-tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+The job `tests` runs twelve times on GitHub, and each run installs every group. So each run installs the linter, the type
+checker, the git hook tools and smalldocs. pytest needs only the package and the group `test`, so this move makes
+each run install only those.
 
 The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
 to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37
@@ -1274,7 +1279,10 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`.
+
+The check of your files after this move prints the same error. Your files are right, and only the
+lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -1433,7 +1441,7 @@ dependency, and `[tool.uv.sources]` says where uv gets it.
 
 ### 9.6 The app depends on wikirandom
 
-The app and the library now have the same code twice. Before the app can import the library, the library must be
+The app and the library now each have a copy of the code that asks Wikipedia for a page. Before the app can import the library, the library must be
 a dependency of the app.
 
 This change came from running `uv add wikirandom`.
@@ -1491,10 +1499,10 @@ A plain `uv run` now installs the library too. The command prints a path that en
 ### 9.7 The app uses wikirandom
 
 The app must use the library, and drop its own `src/wikiapp/wikipedia.py`. Its tests then test the library,
-coverage measures both packages, and the README and the docs say that there are two packages. `git rm` deletes the
+coverage measures both packages, and the README and the docs say that there are two packages. `rm` deletes the
 app's file, and there is one patch for each of the six other files.
 
-This change came from running `git rm src/wikiapp/wikipedia.py`.
+This change came from running `rm src/wikiapp/wikipedia.py`.
 
 `src/wikiapp/console.py` imports from the library. The import goes with the installed packages, under
 `import click`, so the lines are already in ruff's order. `tests/test_wikipedia.py` keeps its name for now, and
@@ -1549,7 +1557,7 @@ names both packages, but `random_page` is not yet a link, because the settings o
   - look at `addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"`
 - <a id="step-09.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: one import. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/src/wikiapp/console.py).
   - look at `from wikirandom import WikipediaError, random_page`
-- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `git rm src/wikiapp/wikipedia.py`.
+- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `rm src/wikiapp/wikipedia.py`.
 - <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py).
   - look at `wikirandom.random_page(language="es")`
 
@@ -1873,9 +1881,10 @@ just setup
 ```
 
 `uv build` copies each entry of `dependencies` into a line `Requires-Dist` in the wheel's metadata. `[tool.uv.sources]` does not
-go into the wheel. So a user who installs the app from PyPI gets any version of wikirandom.
+go into the wheel. The app names wikirandom with no range of versions, so a user who installs the app from PyPI
+can get any version of wikirandom.
 
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
 
 <a id="step-10.2"></a>
 
@@ -1887,8 +1896,9 @@ could break the app. The app works with wikirandom 0.1.0, so its dependency gets
 
 This change came from running `uv add "wikirandom>=0.1.0,<0.2"`.
 
-Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
-`[tool.uv.sources]` says.
+The range changes only the metadata of the app's wheel, and uv installs the same code as before. In `pyproject.toml`,
+the table `[tool.uv.sources]` tells uv to take wikirandom from the workspace. `[tool.uv.workspace]` names the folder `packages/wikirandom` as a member of the
+workspace, so uv installs the library from that folder.
 
 ```bash
 just build
@@ -1903,7 +1913,7 @@ author. Both packages get a link to the repository. The User-Agent says the inst
 
 #### What changed
 
-- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6337f3cbe0844c520a51dc4debecffa0445ad539/pyproject.toml).
+- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml).
   - look at `"wikirandom>=0.1.0,<0.2",`
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
@@ -1922,4 +1932,4 @@ author. Both packages get a link to the repository. The User-Agent says the inst
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).

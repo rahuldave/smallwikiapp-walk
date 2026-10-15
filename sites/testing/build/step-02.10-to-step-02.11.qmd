@@ -6,7 +6,7 @@ title: "2.10 to 2.11 Coverage"
 
 **Build it yourself.** [Read the tutorial](../read/step-02.10-to-step-02.11.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source bfc38e738984 --staged --worktree -- :/
@@ -37,13 +37,13 @@ just test --cov=wikiapp
 Under the tests, a table lists each file of `src/wikiapp`, with its statements and the share of them that ran.
 `console.py` has 18 statements. One of them did not run, so its line reads `94%`. The total is `95%`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 8409e0f2e7f6
+git check 8409e0f2e7f6
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source bfc38e738984 --staged -- :/ && git restore --source 8409e0f2e7f6 --staged --worktree -- :/
@@ -96,13 +96,13 @@ just test
 The table under the tests now has a column `Missing`. `console.py` reads `94%`, and its missing line is 22. Line 22
 is the call to `main` at the end, which runs only when you run the file as a script.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 7508f1d424d5
+git check 7508f1d424d5
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d424d5 --staged --worktree -- :/

@@ -6,7 +6,7 @@ title: "7.5 A drop in coverage"
 
 **Build it yourself.** [Read the tutorial](../read/step-07.5.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 06ff2caa1958 --staged --worktree -- :/
@@ -24,8 +24,8 @@ no test reaches it, so the coverage drops.
 ## 7.5 Only a language code goes into the address {#step-07.5}
 
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as `example.com/x?`
-sends the request to example.com, with the User-Agent. The code of every Wikipedia has only letters and hyphens,
-for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
+sends the request to example.com, with the User-Agent. The language code of every Wikipedia has only lower-case
+letters and hyphens, for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
 code first, before the `try`, and any other language raises a WikipediaError.
 
 The pattern is a constant, `LANGUAGE`, made with the module `re`. No request goes out for a language that does
@@ -50,13 +50,13 @@ The command prints `Error: 'example.com/x?' is not a language code, such as en, 
 request. The tests print `7 passed, 2 deselected`. No test reaches the new `raise`, so the coverage table lists
 its line as missing. The coverage is 95% in all, which is still over the floor of 90%.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat be473b80441f
+git check be473b80441f
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 06ff2caa1958 --staged -- :/ && git restore --source be473b80441f --staged --worktree -- :/

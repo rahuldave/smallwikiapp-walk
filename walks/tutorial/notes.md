@@ -132,8 +132,9 @@ Wikipedia for the page, and the last two lines of the block print it.
 $ uv run wikiapp
 
 The command fails. The last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error:
-Forbidden for url:` and the address. Wikipedia refuses a request whose User-Agent header is the default of a
-library. requests sends `python-requests/` and its version.
+Forbidden for url:` and the address. A request carries headers, which are named lines of text sent with the
+address. The header User-Agent names the program that sends the request. Wikipedia refuses a request whose
+User-Agent is the default of a library. requests sends `python-requests/` and its version.
 
 files:
 - diff `src/wikiapp/console.py`: a request, and two lines printed.
@@ -821,7 +822,8 @@ $ just --show fmt
 $ just fmt --check
 
 `--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
-reformatted, 1 file already formatted`. The seventh file is the README, whose code ruff formats too. The recipe
+reformatted, 1 file already formatted`. The six files that it names are the Python files. The seventh is
+`pyproject.toml`, which ruff also reads. The recipe
 runs the same command, and passes on the words after `just fmt`.
 
 files:
@@ -897,7 +899,7 @@ The linter finds five problems, and fails. Each problem has its code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
-`just lint` shows each problem with its lines. `uv run ruff rule S113` explains a code.
+Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
 
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
@@ -1198,7 +1200,7 @@ version of ty.
 
 $ uv run ty --version
 
-It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`. Nothing runs it yet.
+It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs it yet.
 
 files:
 - diff `pyproject.toml`: ty in the group `lint`.
@@ -1514,7 +1516,8 @@ In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
+be updated. Your files are right, and only the lockfile is out of date.
 
 $ uv lock --check
 
@@ -1602,8 +1605,8 @@ uv which Python to use. If that Python is missing, `uv run` installs it.
 $ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
-thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
-section on the docs on GitHub Pages names the settings.
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
+part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
 
 files:
 - file `.github/workflows/test.yaml`: the matrix of systems and versions of Python.
@@ -1777,8 +1780,8 @@ files:
 ### step-07.5 Only a language code goes into the address
 
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as `example.com/x?`
-sends the request to example.com, with the User-Agent. The code of every Wikipedia has only letters and hyphens,
-for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
+sends the request to example.com, with the User-Agent. The language code of every Wikipedia has only lower-case
+letters and hyphens, for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
 code first, before the `try`, and any other language raises a WikipediaError.
 
 The pattern is a constant, `LANGUAGE`, made with the module `re`. No request goes out for a language that does
@@ -1822,7 +1825,8 @@ build a site with a front page, and name the tests and the docs in the README.
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and the
 types are in the code. The docstring says what the function does. A docment is the comment beside a parameter, a field
-or a return type, and says what that thing is. To make room for a docment, later moves put each parameter on a line of its own.
+or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
+docment can follow it on that line.
 
 A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
 what has no documentation.
@@ -2026,7 +2030,8 @@ patch$ tests/test_console.py
 ::: do
 The patch adds a docstring at the top of the file. Each test gets a docment on each parameter, one to a line, and a
 docstring of one line. Read `test_main_prints_title` first. Its docstring is "The command prints the title of the
-page."
+page." The fixture `runner` gets a docstring, and a docment beside its return type on its `def`
+line.
 :::
 
 ::: watch
@@ -2180,8 +2185,9 @@ alone. Then a new workflow builds the docs site with the group `docs` alone, and
 
 ### step-08b.1 The tests install the group test alone
 
-The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
-tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+The job `tests` runs twelve times on GitHub, and each run installs every group. So each run installs the linter, the type
+checker, the git hook tools and smalldocs. pytest needs only the package and the group `test`, so this move makes
+each run install only those.
 
 The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
 to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37
@@ -2323,7 +2329,10 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`.
+
+The check of your files after this move prints the same error. Your files are right, and only the
+lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 $ uv lock --check
 
@@ -2444,7 +2453,7 @@ files:
 
 ### step-09.6 The app depends on wikirandom
 
-The app and the library now have the same code twice. Before the app can import the library, the library must be
+The app and the library now each have a copy of the code that asks Wikipedia for a page. Before the app can import the library, the library must be
 a dependency of the app.
 
 do$ uv add wikirandom
@@ -2472,10 +2481,10 @@ files:
 ### step-09.7 The app uses wikirandom
 
 The app must use the library, and drop its own `src/wikiapp/wikipedia.py`. Its tests then test the library,
-coverage measures both packages, and the README and the docs say that there are two packages. `git rm` deletes the
+coverage measures both packages, and the README and the docs say that there are two packages. `rm` deletes the
 app's file, and there is one patch for each of the six other files.
 
-do$ git rm src/wikiapp/wikipedia.py
+do$ rm src/wikiapp/wikipedia.py
 
 `src/wikiapp/console.py` imports from the library. The import goes with the installed packages, under
 `import click`, so the lines are already in ruff's order. `tests/test_wikipedia.py` keeps its name for now, and
@@ -2662,8 +2671,9 @@ could break the app. The app works with wikirandom 0.1.0, so its dependency gets
 
 do$ uv add "wikirandom>=0.1.0,<0.2"
 
-Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
-`[tool.uv.sources]` says.
+The range changes only the metadata of the app's wheel, and uv installs the same code as before. In `pyproject.toml`,
+the table `[tool.uv.sources]` tells uv to take wikirandom from the workspace. `[tool.uv.workspace]` names the folder `packages/wikirandom` as a member of the
+workspace, so uv installs the library from that folder.
 
 $ just build
 

@@ -6,20 +6,21 @@ title: "8b Each job on GitHub with its own group"
 
 **Build it yourself.** [Read the tutorial](../read/step-08b.qmd) is the other way to read this part.
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source 20cf458261ed --staged -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/
 ```
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/
 ```
 
-The code now also has pydantic in the dependencies, from `uv add pydantic`. `random_page` returns a `Page`, a
-pydantic model. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
+The code now also has pydantic in the dependencies, from `uv add pydantic`. The function `random_page`, which asks
+Wikipedia for a page, now returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of
+its fields. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
 and `just docs check` counts what has documentation.
 
 ```bash
@@ -34,8 +35,9 @@ alone. Then a new workflow builds the docs site with the group `docs` alone, and
 
 ## 8b.1 The tests install the group test alone {#step-08b.1}
 
-The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
-tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+The job `tests` runs twelve times on GitHub, and each run installs every group. So each run installs the linter, the type
+checker, the git hook tools and smalldocs. pytest needs only the package and the group `test`, so this move makes
+each run install only those.
 
 The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
 to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37
@@ -59,13 +61,13 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 `--isolated` runs the command as the job does, in a temporary environment with the group `test` alone, and leaves
 `.venv` as it is. The tests print `7 passed, 2 deselected`. The file is valid YAML.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 971e9d780fd5
+git check 971e9d780fd5
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
@@ -162,13 +164,13 @@ prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 `--no-default-groups --group NAME` installs the package and one group. A person and the job `check` still install
 every group, since they run every tool.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 39a4b09f8563
+git check 39a4b09f8563
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09f8563 --staged --worktree -- :/

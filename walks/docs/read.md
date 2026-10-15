@@ -595,8 +595,9 @@ uv run wikiapp
 ```
 
 The command fails. The last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error:
-Forbidden for url:` and the address. Wikipedia refuses a request whose User-Agent header is the default of a
-library. requests sends `python-requests/` and its version.
+Forbidden for url:` and the address. A request carries headers, which are named lines of text sent with the
+address. The header User-Agent names the program that sends the request. Wikipedia refuses a request whose
+User-Agent is the default of a library. requests sends `python-requests/` and its version.
 
 #### What changed
 
@@ -753,15 +754,20 @@ decorators and the docstring. So the docstring of `main` is also help text, for 
 just setup
 ```
 
-The code now also has pytest, in a dependency group `test`, and uv installs every group. It has tests, with a
-mock in place of Wikipedia, and coverage on every run. The code is split into a library,
+A dependency group is a named list of packages in `pyproject.toml`. The project uses them to test, check or
+document the code, but the code does not need them to run. The code now also has pytest, in a group `test`, and
+uv installs every group.
+
+The code has tests. In the tests, a stand-in called a mock answers in place of Wikipedia, so the tests need no
+network. Each run also measures coverage, which is the share of the lines of the code that the tests run. The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
 
 ruff formats and lints the code, in a group `lint`, and `just check` runs every check. `just hook` installs a git
 hook, which runs `just check` before each `git commit`. ty checks the types.
 
 The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
-`random_page` returns a `Page`, a pydantic model with a title and an extract. An answer that is not a page, or a
+`random_page` returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of its fields.
+Its fields are a title and an extract. An answer that is not a page, or a
 language that is not a language code, raises `WikipediaError`.
 
 Nothing yet says which parts of the code have documentation. smalldocs, in a new group `docs`, makes the reference
@@ -776,7 +782,8 @@ from the code.
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and the
 types are in the code. The docstring says what the function does. A docment is the comment beside a parameter, a field
-or a return type, and says what that thing is. To make room for a docment, later moves put each parameter on a line of its own.
+or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
+docment can follow it on that line.
 
 A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
 what has no documentation.
@@ -1590,10 +1597,33 @@ it runs the docs check too.
 just setup
 ```
 
-The job `tests` on GitHub now installs the group `test` alone.
+The site that `just docs` builds is only on your own machine. In this section it goes on the web, and GitHub
+builds it again after each push. But first, this section starts from a change that the whole tutorial makes and
+this tutorial leaves out.
 
-The site that `just docs` builds is on one machine only. It goes on the web, and GitHub builds it again after
-each push.
+A job is a list of commands that GitHub runs on one of its own machines. GitHub runs the tests in twelve jobs, and
+each job is called `tests`. There is one job for each pair of an operating system and a version of Python. The
+systems are Linux, macOS and Windows, and the versions are Python 3.11 to 3.14. GitHub runs the jobs each time
+someone pushes to the branch `main`. GitHub also runs them for each pull request, which is a request to add
+changes to a branch.
+
+At first, each job ran `uv run --locked pytest`. `uv.lock` lists the exact version of each package that uv installs. With
+`--locked`, uv stops with an error if `uv.lock` does not match `pyproject.toml`.
+
+`pyproject.toml` has three groups, `docs`, `lint`
+and `test`. It sets `default-groups = "all"`, so `uv run` installs all three. But the tests need only the group
+`test`. So each job also installed smalldocs, ruff, ty and other tools, and never used them.
+
+A move of the [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) stops the extra installs. This tutorial
+leaves that move out. Your code for this section already contains the
+change from that move, so you do not make it yourself.
+
+That move changed the command of each job to `uv run --locked --no-default-groups --group test pytest`. With
+`--no-default-groups`, uv installs none of the groups that `default-groups` names. With `--group test`, uv adds the
+group `test` back. So uv installs the package `wikiapp`, the packages that `wikiapp` needs to run, and the group `test`. It installs
+no other group.
+
+But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your machine still installs every group.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
 
@@ -1708,7 +1738,9 @@ its own. Its code went there with its docstrings and docments. The app uses it, 
 gone. The README and the front page of the docs name both packages. The tests of the library are now
 `tests/test_wikirandom.py`.
 
-Before this section, `just docs check` counts only the app and the tests, 12 of 12. After it, the check counts the library too.
+When the library's code left the app, it also left the count of `just docs check`. Before this section, the check
+counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
+too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
 
@@ -1733,9 +1765,10 @@ The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in a
 pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
 passes.
 
-This tutorial ends here. After it, `just build` builds both packages, and the app asks for wikirandom 0.1.
-`just lint-config` checks the library's `pyproject.toml` too. The library gets a licence and an author, both
-packages get a link to the repository, and the User-Agent says the installed version. The
+This tutorial ends here. Later, `just build` builds both packages, and the app needs a 0.1 version of
+wikirandom. `just lint-config` checks the library's `pyproject.toml` too, and the library gets a licence and an
+author. Both packages get a link to the repository. Each request to Wikipedia carries a name for the program, called
+its User-Agent, and that name also gets the installed version. The
 [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
 
 #### What changed

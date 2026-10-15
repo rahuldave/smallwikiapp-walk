@@ -16,9 +16,9 @@ The justfile is the interface of the project. Each task is a verb, such as `just
 verb names the tool that does the work. A person, a git hook and GitHub each run `just check`, and `check` runs
 other verbs. A tool can change behind a verb, and the callers of the verb stay the same.
 
-Each new verb comes in the same way. `just --show VERB` shows the recipe, then the verb runs. Most sections that
-bring in a verb also run the tool's own command first. The sections of `test` and `check` do not, and section 1
-runs `just setup` before it shows the recipe.
+Most sections bring in a verb with three commands. First the tool's own command runs, then `just --show VERB` shows
+the recipe, and then the verb runs. The sections of `test` and `check` skip the tool's command. Section 1 runs
+`just setup` before it shows the recipe.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the text says "the original wikiapp", it means that project.
@@ -722,7 +722,8 @@ just fmt --check
 ```
 
 `--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
-reformatted, 1 file already formatted`. The seventh file is the README, whose code ruff formats too. The recipe
+reformatted, 1 file already formatted`. The six files that it names are the Python files. The seventh is
+`pyproject.toml`, which ruff also reads. The recipe
 runs the same command, and passes on the words after `just fmt`.
 
 #### What changed
@@ -819,7 +820,7 @@ The linter finds five problems, and fails. Each problem has its code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
-`just lint` shows each problem with its lines. `uv run ruff rule S113` explains a code.
+Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
 
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
@@ -1137,8 +1138,9 @@ From here on, "each `git commit` must pass `just check`" is the rule of the proj
 just setup
 ```
 
-A person can forget to run `just check`. `pre-commit` installs a git hook. The hook is one more caller of
-`just check`, and its only check of the Python code is `just check`.
+A person can forget to run `just check`. `pre-commit` installs a git hook, which is one more caller of
+`just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only check of
+the Python code is `just check`.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
 
@@ -1321,7 +1323,7 @@ version of ty.
 uv run ty --version
 ```
 
-It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`. Nothing runs it yet.
+It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs it yet.
 
 #### What changed
 
@@ -1506,8 +1508,8 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 ```
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
-thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
-section on the docs on GitHub Pages names the settings.
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
+part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
 
 The job `check` is the third caller of `just check`, after a person and the git hook. It runs from a fresh clone.
 No person has to install it or remember it, and `--no-verify` does not skip it. The job `tests` runs
@@ -1587,7 +1589,8 @@ documentation. The words after `docs` go to `smalldocs api`.
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and the
 types are in the code. The docstring says what the function does. A docment is the comment beside a parameter, a field
-or a return type, and says what that thing is. To make room for a docment, later moves put each parameter on a line of its own.
+or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
+docment can follow it on that line.
 
 A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
 what has no documentation.
@@ -1957,17 +1960,42 @@ it runs the docs check too.
 just setup
 ```
 
-The job `tests` on GitHub now installs the group `test` alone. A second workflow builds the docs site and
-publishes it. It runs smalldocs with `uv run`, not `just docs`, because the recipe installs every group. So
-that workflow is a caller that skips the verb.
+In the code now, the library is a package of its own, `wikirandom`, in `packages/wikirandom`, in a uv workspace.
+The app uses it, and `src/wikiapp/wikipedia.py` is gone. The tests of the library are in `tests/test_wikirandom.py`.
+The project on GitHub also changed, and the next paragraphs say what it does now.
 
-The library is a package of its own, `wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses it,
-and `src/wikiapp/wikipedia.py` is gone. The tests of the library are now in `tests/test_wikirandom.py`.
+A dependency group is a named list of packages in `pyproject.toml`. This project has three groups. Their names are
+`docs`, `lint` and `test`. The line `default-groups = "all"` in `pyproject.toml` makes `uv sync` and `uv run` install
+all three.
+
+GitHub reads the jobs of the project from files in `.github/workflows`. Each of these files is a workflow. The jobs
+`tests` and `check` are in one workflow, `.github/workflows/test.yaml`. A second workflow,
+`.github/workflows/docs.yaml`, has two jobs. The job `build` builds the docs site. Then the job `deploy` puts the site
+on GitHub Pages, the part of GitHub that serves websites.
+
+The job `tests` runs only the tests, and needs only the group `test`. It runs `uv run --locked
+--no-default-groups --group test pytest`. `--no-default-groups` tells uv to install none of the groups that
+`default-groups = "all"` names. `--group test` then adds the group `test` alone. So uv installs the app, the
+packages that the app needs, and the group `test`, and no other group.
+
+`uv.lock` lists the exact version of each package that uv installs. `--locked` makes uv stop with an error if
+`uv.lock` does not match `pyproject.toml`.
+
+The docs workflow runs `uv run --locked --no-default-groups --group docs smalldocs render docs`. The options work as
+they do in the job `tests`. uv installs the app, the packages that the app needs, and the group `docs`, and no other
+group.
+
+The docs workflow does not run `just docs`. With no words, the recipe `docs` runs `uv run smalldocs render docs`,
+with no option for dependency groups. So `just docs` makes uv install all three groups, but the workflow needs only
+the group `docs`. Line 26 of `.github/workflows/docs.yaml` runs `uv run` directly, so the docs workflow is
+not a caller of `just docs`. If someone changes the command in the recipe `docs`, the change does not reach the
+workflow.
 
 Those changes did not change the justfile. One justfile, one `.pre-commit-config.yaml` and one hook work for both
 packages. `just fmt`, `just lint` and `just types` read every Python file of the repository, so they checked the
 library's code from the first. `just test` measures the coverage of both packages, since `pyproject.toml` has
-`--cov=wikirandom`. Here, `just docs check` still counts only the app and the tests, 12 of 12. This section
+`--cov=wikirandom`. Here, `just docs check` still counts only the functions, methods and classes of the app and
+the tests. This section
 changes `docs/_smalldocs.yml`, behind the verb.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
@@ -2095,7 +2123,7 @@ Since the library became a package, validate-pyproject, in `just lint-config`, h
 `pyproject.toml`. The hook and `just check` let every `git commit` through with no check of the library's
 `pyproject.toml` against the standard.
 
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
 
 <a id="step-10.3"></a>
 
@@ -2121,7 +2149,7 @@ repository, and the User-Agent says the installed version. The
 
 #### What changed
 
-- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/432c24094f21040ffd3c4df2bc37524763653f9f/justfile).
+- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 <details><summary>The diff of <code>justfile</code></summary>
@@ -2140,4 +2168,4 @@ repository, and the User-Agent says the installed version. The
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/432c24094f21040ffd3c4df2bc37524763653f9f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).

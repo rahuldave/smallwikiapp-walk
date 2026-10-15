@@ -7,16 +7,20 @@
 Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change. What changed is what you check your files against.
 
 We build `wikiapp`, a small command that prints the title and the summary of a random Wikipedia page. Around the
-command we build the project. It gets its packages with uv, tests, a library, a formatter, a linter and types. It
-also gets checks on GitHub, documentation made from the code, and a build.
+command we build the project. A tool called uv installs the project's packages, which are code that other people wrote and
+that the project uses. The project also gets tests, a library, a formatter for the layout of the code, and a linter
+for likely mistakes. It gets a check that each value in the code is the kind of value that the code expects. It also gets checks on
+GitHub, documentation made from the code, and a build.
 
-We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
-file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
-against it.
+We make the project in moves. A move is one small change, made by one patch or by one command. A patch is a list of
+lines to add to a file and lines to take out of it. A command, such as `uv add`, changes its files by itself,
+with no patch. In **Build it yourself**, you make each move by hand, and then check your files against it. In **Read the
+tutorial**, each move is already made, and the text explains what changed.
 
-Each move first says what problem it solves. Then it gives
-the change, piece by piece, and a command that checks the result. Every section starts with `just setup`, which
-makes the environment of the project match the code.
+Each move first says what problem it solves. Then it gives the change, piece by piece, and a command that checks
+the result. Each larger part of the tutorial starts with the command `just setup`. The tool `just` runs
+short commands that the project names. `just setup` asks uv to install the packages that the code needs at that
+point.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the text says "the original wikiapp", it means that project.
@@ -563,8 +567,9 @@ uv run wikiapp
 ```
 
 The command fails. The last line of the traceback is `requests.exceptions.HTTPError: 403 Client Error:
-Forbidden for url:` and the address. Wikipedia refuses a request whose User-Agent header is the default of a
-library. requests sends `python-requests/` and its version.
+Forbidden for url:` and the address. A request carries headers, which are named lines of text sent with the
+address. The header User-Agent names the program that sends the request. Wikipedia refuses a request whose
+User-Agent is the default of a library. requests sends `python-requests/` and its version.
 
 #### What changed
 
@@ -1801,7 +1806,8 @@ just fmt --check
 ```
 
 `--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
-reformatted, 1 file already formatted`. The seventh file is the README, whose code ruff formats too. The recipe
+reformatted, 1 file already formatted`. The six files that it names are the Python files. The seventh is
+`pyproject.toml`, which ruff also reads. The recipe
 runs the same command, and passes on the words after `just fmt`.
 
 #### What changed
@@ -2059,7 +2065,7 @@ The linter finds five problems, and fails. Each problem has its code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
-`just lint` shows each problem with its lines. `uv run ruff rule S113` explains a code.
+Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
 
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
@@ -2637,7 +2643,7 @@ version of ty.
 uv run ty --version
 ```
 
-It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`. Nothing runs it yet.
+It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs it yet.
 
 #### What changed
 
@@ -3218,7 +3224,8 @@ In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
+be updated. Your files are right, and only the lockfile is out of date.
 
 ```bash
 uv lock --check
@@ -3321,8 +3328,8 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 ```
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
-thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. The
-section on the docs on GitHub Pages names the settings.
+thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
+part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
 
 #### What changed
 
@@ -3686,8 +3693,8 @@ The output is `1 passed, 8 deselected`.
 ### 7.5 Only a language code goes into the address
 
 The code puts the language into the host name, `{language}.wikipedia.org`. A language such as `example.com/x?`
-sends the request to example.com, with the User-Agent. The code of every Wikipedia has only letters and hyphens,
-for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
+sends the request to example.com, with the User-Agent. The language code of every Wikipedia has only lower-case
+letters and hyphens, for example `en`, `fr`, `simple` and `zh-yue`. So `random_page` checks the language against a pattern of such a
 code first, before the `try`, and any other language raises a WikipediaError.
 
 The pattern is a constant, `LANGUAGE`, made with the module `re`. No request goes out for a language that does
@@ -3762,7 +3769,8 @@ build a site with a front page, and name the tests and the docs in the README.
 
 The reference of a function gives its signature, what it does, and what each parameter is. The signature and the
 types are in the code. The docstring says what the function does. A docment is the comment beside a parameter, a field
-or a return type, and says what that thing is. To make room for a docment, later moves put each parameter on a line of its own.
+or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
+docment can follow it on that line.
 
 A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
 what has no documentation.
@@ -4511,8 +4519,9 @@ alone. Then a new workflow builds the docs site with the group `docs` alone, and
 
 ### 8b.1 The tests install the group test alone
 
-The twelve jobs `tests` on GitHub install every group, so each gets the linter, the type checker, the git hook
-tools and smalldocs. pytest needs only the package and the group `test`, so each job installs only those.
+The job `tests` runs twelve times on GitHub, and each run installs every group. So each run installs the linter, the type
+checker, the git hook tools and smalldocs. pytest needs only the package and the group `test`, so this move makes
+each run install only those.
 
 The line `default-groups = "all"` in `pyproject.toml` makes uv install every group. `--no-default-groups` tells uv
 to install none of them, and `--group test` then names the one group to install. The job `check`, at lines 30 to 37
@@ -4708,7 +4717,10 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`.
+
+The check of your files after this move prints the same error. Your files are right, and only the
+lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -4995,7 +5007,7 @@ real Wikipedia, and prints the title of a French page, another one on each run.
 
 ### 9.6 The app depends on wikirandom
 
-The app and the library now have the same code twice. Before the app can import the library, the library must be
+The app and the library now each have a copy of the code that asks Wikipedia for a page. Before the app can import the library, the library must be
 a dependency of the app.
 
 This change came from running `uv add wikirandom`.
@@ -5053,10 +5065,10 @@ A plain `uv run` now installs the library too. The command prints a path that en
 ### 9.7 The app uses wikirandom
 
 The app must use the library, and drop its own `src/wikiapp/wikipedia.py`. Its tests then test the library,
-coverage measures both packages, and the README and the docs say that there are two packages. `git rm` deletes the
+coverage measures both packages, and the README and the docs say that there are two packages. `rm` deletes the
 app's file, and there is one patch for each of the six other files.
 
-This change came from running `git rm src/wikiapp/wikipedia.py`.
+This change came from running `rm src/wikiapp/wikipedia.py`.
 
 `src/wikiapp/console.py` imports from the library. The import goes with the installed packages, under
 `import click`, so the lines are already in ruff's order. `tests/test_wikipedia.py` keeps its name for now, and
@@ -5111,7 +5123,7 @@ names both packages, but `random_page` is not yet a link, because the settings o
   - look at `addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"`
 - <a id="step-09.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: one import. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/src/wikiapp/console.py).
   - look at `from wikirandom import WikipediaError, random_page`
-- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `git rm src/wikiapp/wikipedia.py`.
+- <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `rm src/wikiapp/wikipedia.py`.
 - <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py).
   - look at `wikirandom.random_page(language="es")`
 
@@ -5431,7 +5443,7 @@ app says which versions of the library it accepts, and `just lint-config` checks
 too. Both packages say their licence and where their source is. Last, the library's User-Agent says the version
 that is installed.
 
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/78929cdbf6143d7f49804634e3ec3acb506f0b38).
+[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/73fc4e12cc7a5831163e61fc01a3699355f95d52).
 
 <a id="step-10.1"></a>
 
@@ -5493,8 +5505,9 @@ could break the app. The app works with wikirandom 0.1.0, so its dependency gets
 
 This change came from running `uv add "wikirandom>=0.1.0,<0.2"`.
 
-Nothing else changes in the workspace. uv still installs the library from `packages/wikirandom`, as
-`[tool.uv.sources]` says.
+The range changes only the metadata of the app's wheel, and uv installs the same code as before. In `pyproject.toml`,
+the table `[tool.uv.sources]` tells uv to take wikirandom from the workspace. `[tool.uv.workspace]` names the folder `packages/wikirandom` as a member of the
+workspace, so uv installs the library from that folder.
 
 ```bash
 just build
@@ -5505,7 +5518,7 @@ The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 
 #### What changed
 
-- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6337f3cbe0844c520a51dc4debecffa0445ad539/pyproject.toml).
+- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml).
   - look at `"wikirandom>=0.1.0,<0.2",`
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
@@ -5524,7 +5537,7 @@ The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6337f3cbe0844c520a51dc4debecffa0445ad539). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6337f3cbe0844c520a51dc4debecffa0445ad539).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
 
 <a id="step-10.3"></a>
 
@@ -5543,7 +5556,7 @@ just lint-config
 
 #### What changed
 
-- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/432c24094f21040ffd3c4df2bc37524763653f9f/justfile).
+- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 <details><summary>The diff of <code>justfile</code></summary>
@@ -5562,7 +5575,7 @@ just lint-config
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/432c24094f21040ffd3c4df2bc37524763653f9f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/432c24094f21040ffd3c4df2bc37524763653f9f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
 
 <a id="step-10.4"></a>
 
@@ -5593,11 +5606,11 @@ The library's metadata has `License-Expression: Apache-2.0`,
 
 #### What changed
 
-- <a id="step-10.4-packages-wikirandom-LICENSE-56404f"></a>`packages/wikirandom/LICENSE`: the same Apache-2.0 licence as the app's. New, 202 lines. It comes from `cp LICENSE packages/wikirandom/LICENSE`. [The file](https://github.com/rahuldave/smallwikiapp/blob/615c3ce0604a1a5c440e529db71b414d6da31645/packages/wikirandom/LICENSE).
+- <a id="step-10.4-packages-wikirandom-LICENSE-56404f"></a>`packages/wikirandom/LICENSE`: the same Apache-2.0 licence as the app's. New, 202 lines. It comes from `cp LICENSE packages/wikirandom/LICENSE`. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/packages/wikirandom/LICENSE).
   - look at `Apache License`
-- <a id="step-10.4-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: what PyPI would show. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/615c3ce0604a1a5c440e529db71b414d6da31645/packages/wikirandom/pyproject.toml).
+- <a id="step-10.4-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: what PyPI would show. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/packages/wikirandom/pyproject.toml).
   - look at `license = "Apache-2.0"`
-- <a id="step-10.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's repository. 3 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/615c3ce0604a1a5c440e529db71b414d6da31645/pyproject.toml).
+- <a id="step-10.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's repository. 3 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/pyproject.toml).
   - look at `[project.urls]`
 
 <details><summary>The diff of <code>packages/wikirandom/LICENSE</code></summary>
@@ -5853,7 +5866,7 @@ The library's metadata has `License-Expression: Apache-2.0`,
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/615c3ce0604a1a5c440e529db71b414d6da31645). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/615c3ce0604a1a5c440e529db71b414d6da31645).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2c03603dc72a212f1575459528b3d269bb52be0d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2c03603dc72a212f1575459528b3d269bb52be0d).
 
 <a id="step-10.5"></a>
 
@@ -5877,7 +5890,7 @@ The first command prints `wikirandom/0.1.0 (https://github.com/rahuldave/smallwi
 
 #### What changed
 
-- <a id="step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: the version now comes from one place, the library's `pyproject.toml`. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78929cdbf6143d7f49804634e3ec3acb506f0b38/packages/wikirandom/src/wikirandom/__init__.py).
+- <a id="step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: the version now comes from one place, the library's `pyproject.toml`. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/73fc4e12cc7a5831163e61fc01a3699355f95d52/packages/wikirandom/src/wikirandom/__init__.py).
   - look at `VERSION = importlib.metadata.version("wikirandom")`
 
 <details><summary>The diff of <code>packages/wikirandom/src/wikirandom/__init__.py</code></summary>
@@ -5904,4 +5917,4 @@ The first command prints `wikirandom/0.1.0 (https://github.com/rahuldave/smallwi
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/78929cdbf6143d7f49804634e3ec3acb506f0b38). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/78929cdbf6143d7f49804634e3ec3acb506f0b38).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/73fc4e12cc7a5831163e61fc01a3699355f95d52). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/73fc4e12cc7a5831163e61fc01a3699355f95d52).

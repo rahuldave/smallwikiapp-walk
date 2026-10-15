@@ -8,9 +8,9 @@ The justfile is the interface of the project. Each task is a verb, such as `just
 verb names the tool that does the work. A person, a git hook and GitHub each run `just check`, and `check` runs
 other verbs. A tool can change behind a verb, and the callers of the verb stay the same.
 
-Each new verb comes in the same way. `just --show VERB` shows the recipe, then the verb runs. Most sections that
-bring in a verb also run the tool's own command first. The sections of `test` and `check` do not, and section 1
-runs `just setup` before it shows the recipe.
+Most sections bring in a verb with three commands. First the tool's own command runs, then `just --show VERB` shows
+the recipe, and then the verb runs. The sections of `test` and `check` skip the tool's command. Section 1 runs
+`just setup` before it shows the recipe.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the text says "the original wikiapp", it means that project.
@@ -208,8 +208,9 @@ From here on, "each `git commit` must pass `just check`" is the rule of the proj
 
 $ just setup
 
-A person can forget to run `just check`. `pre-commit` installs a git hook. The hook is one more caller of
-`just check`, and its only check of the Python code is `just check`.
+A person can forget to run `just check`. `pre-commit` installs a git hook, which is one more caller of
+`just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only check of
+the Python code is `just check`.
 
 {{include step-04.12..step-04.13}}
 
@@ -304,17 +305,42 @@ The code now also has a README that names the tests and the docs.
 
 $ just setup
 
-The job `tests` on GitHub now installs the group `test` alone. A second workflow builds the docs site and
-publishes it. It runs smalldocs with `uv run`, not `just docs`, because the recipe installs every group. So
-that workflow is a caller that skips the verb.
+In the code now, the library is a package of its own, `wikirandom`, in `packages/wikirandom`, in a uv workspace.
+The app uses it, and `src/wikiapp/wikipedia.py` is gone. The tests of the library are in `tests/test_wikirandom.py`.
+The project on GitHub also changed, and the next paragraphs say what it does now.
 
-The library is a package of its own, `wikirandom`, in `packages/wikirandom`, in a uv workspace. The app uses it,
-and `src/wikiapp/wikipedia.py` is gone. The tests of the library are now in `tests/test_wikirandom.py`.
+A dependency group is a named list of packages in `pyproject.toml`. This project has three groups. Their names are
+`docs`, `lint` and `test`. The line `default-groups = "all"` in `pyproject.toml` makes `uv sync` and `uv run` install
+all three.
+
+GitHub reads the jobs of the project from files in `.github/workflows`. Each of these files is a workflow. The jobs
+`tests` and `check` are in one workflow, `.github/workflows/test.yaml`. A second workflow,
+`.github/workflows/docs.yaml`, has two jobs. The job `build` builds the docs site. Then the job `deploy` puts the site
+on GitHub Pages, the part of GitHub that serves websites.
+
+The job `tests` runs only the tests, and needs only the group `test`. It runs `uv run --locked
+--no-default-groups --group test pytest`. `--no-default-groups` tells uv to install none of the groups that
+`default-groups = "all"` names. `--group test` then adds the group `test` alone. So uv installs the app, the
+packages that the app needs, and the group `test`, and no other group.
+
+`uv.lock` lists the exact version of each package that uv installs. `--locked` makes uv stop with an error if
+`uv.lock` does not match `pyproject.toml`.
+
+The docs workflow runs `uv run --locked --no-default-groups --group docs smalldocs render docs`. The options work as
+they do in the job `tests`. uv installs the app, the packages that the app needs, and the group `docs`, and no other
+group.
+
+The docs workflow does not run `just docs`. With no words, the recipe `docs` runs `uv run smalldocs render docs`,
+with no option for dependency groups. So `just docs` makes uv install all three groups, but the workflow needs only
+the group `docs`. Line 26 of `.github/workflows/docs.yaml` runs `uv run` directly, so the docs workflow is
+not a caller of `just docs`. If someone changes the command in the recipe `docs`, the change does not reach the
+workflow.
 
 Those changes did not change the justfile. One justfile, one `.pre-commit-config.yaml` and one hook work for both
 packages. `just fmt`, `just lint` and `just types` read every Python file of the repository, so they checked the
 library's code from the first. `just test` measures the coverage of both packages, since `pyproject.toml` has
-`--cov=wikirandom`. Here, `just docs check` still counts only the app and the tests, 12 of 12. This section
+`--cov=wikirandom`. Here, `just docs check` still counts only the functions, methods and classes of the app and
+the tests. This section
 changes `docs/_smalldocs.yml`, behind the verb.
 
 {{include step-09.10}}

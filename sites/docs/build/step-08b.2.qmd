@@ -6,13 +6,13 @@ title: "8b.2 The docs on GitHub Pages"
 
 **Build it yourself.** [Read the tutorial](../read/step-08b.2.qmd) is the other way to read this part.
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
 ```
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
@@ -22,10 +22,33 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 971e9d780fd5 
 just setup
 ```
 
-The job `tests` on GitHub now installs the group `test` alone.
+The site that `just docs` builds is only on your own machine. In this section it goes on the web, and GitHub
+builds it again after each push. But first, this section starts from a change that the whole tutorial makes and
+this tutorial leaves out.
 
-The site that `just docs` builds is on one machine only. It goes on the web, and GitHub builds it again after
-each push.
+A job is a list of commands that GitHub runs on one of its own machines. GitHub runs the tests in twelve jobs, and
+each job is called `tests`. There is one job for each pair of an operating system and a version of Python. The
+systems are Linux, macOS and Windows, and the versions are Python 3.11 to 3.14. GitHub runs the jobs each time
+someone pushes to the branch `main`. GitHub also runs them for each pull request, which is a request to add
+changes to a branch.
+
+At first, each job ran `uv run --locked pytest`. `uv.lock` lists the exact version of each package that uv installs. With
+`--locked`, uv stops with an error if `uv.lock` does not match `pyproject.toml`.
+
+`pyproject.toml` has three groups, `docs`, `lint`
+and `test`. It sets `default-groups = "all"`, so `uv run` installs all three. But the tests need only the group
+`test`. So each job also installed smalldocs, ruff, ty and other tools, and never used them.
+
+A move of the [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) stops the extra installs. This tutorial
+leaves that move out. Your code for this section already contains the
+change from that move, so you do not make it yourself.
+
+That move changed the command of each job to `uv run --locked --no-default-groups --group test pytest`. With
+`--no-default-groups`, uv installs none of the groups that `default-groups` names. With `--group test`, uv adds the
+group `test` back. So uv installs the package `wikiapp`, the packages that `wikiapp` needs to run, and the group `test`. It installs
+no other group.
+
+But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your machine still installs every group.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
 
@@ -86,13 +109,13 @@ uv run --isolated --locked --no-default-groups --group docs smalldocs render doc
 The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
 prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 39a4b09f8563
+git check 39a4b09f8563
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09f8563 --staged --worktree -- :/

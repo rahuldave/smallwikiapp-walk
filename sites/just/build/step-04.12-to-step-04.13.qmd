@@ -6,7 +6,7 @@ title: "4.12 to 4.13 The git hook runs `just check`"
 
 **Build it yourself.** [Read the tutorial](../read/step-04.12-to-step-04.13.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 1f73d6af30cc --staged --worktree -- :/
@@ -16,8 +16,9 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 1f73d6af30cc 
 just setup
 ```
 
-A person can forget to run `just check`. `pre-commit` installs a git hook. The hook is one more caller of
-`just check`, and its only check of the Python code is `just check`.
+A person can forget to run `just check`. `pre-commit` installs a git hook, which is one more caller of
+`just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only check of
+the Python code is `just check`.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
 
@@ -37,13 +38,13 @@ uv run pre-commit --version
 
 It prints `pre-commit 4.7.0`. No hook is installed yet.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 29291b3575f2
+git check 29291b3575f2
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 1f73d6af30cc --staged -- :/ && git restore --source 29291b3575f2 --staged --worktree -- :/
@@ -128,13 +129,13 @@ The hook makes sure that `just check` runs on this machine before each `git comm
 So the hook runs `just check` on one machine only. In section 11, GitHub runs `just check` too, on
 its own machines, for every push to main and every pull request.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 6860da13f0fd
+git check 6860da13f0fd
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 29291b3575f2 --staged -- :/ && git restore --source 6860da13f0fd --staged --worktree -- :/

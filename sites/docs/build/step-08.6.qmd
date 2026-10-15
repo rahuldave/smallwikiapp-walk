@@ -6,7 +6,7 @@ title: "8.6 A site"
 
 **Build it yourself.** [Read the tutorial](../read/step-08.6.qmd) is the other way to read this part.
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 7a0e50948873 --staged --worktree -- :/
@@ -79,13 +79,13 @@ smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is 
 browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
 pages, and git ignores them.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat e99ed4f3ab32
+git check e99ed4f3ab32
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f3ab32 --staged --worktree -- :/

@@ -6,13 +6,13 @@ title: "9.10 The docs check counts the library"
 
 **Build it yourself.** [Read the tutorial](../read/step-09.10.qmd) is the other way to read this part.
 
-This part does not start where the part before it ends. The project changed between the two parts. Take the code before this part with the command below, and then go on.
+This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
 git restore --source 39a4b09f8563 --staged -- :/ && git restore --source 008e616610b0 --staged --worktree -- :/
 ```
 
-To start here, and not from the part before, take the code before this part with the command below.
+If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
 git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 008e616610b0 --staged --worktree -- :/
@@ -27,7 +27,9 @@ its own. Its code went there with its docstrings and docments. The app uses it, 
 gone. The README and the front page of the docs name both packages. The tests of the library are now
 `tests/test_wikirandom.py`.
 
-Before this section, `just docs check` counts only the app and the tests, 12 of 12. After it, the check counts the library too.
+When the library's code left the app, it also left the count of `just docs check`. Before this section, the check
+counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
+too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
 
@@ -54,18 +56,19 @@ The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in a
 pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
 passes.
 
-This tutorial ends here. After it, `just build` builds both packages, and the app asks for wikirandom 0.1.
-`just lint-config` checks the library's `pyproject.toml` too. The library gets a licence and an author, both
-packages get a link to the repository, and the User-Agent says the installed version. The
+This tutorial ends here. Later, `just build` builds both packages, and the app needs a 0.1 version of
+wikirandom. `just lint-config` checks the library's `pyproject.toml` too, and the library gets a licence and an
+author. Both packages get a link to the repository. Each request to Wikipedia carries a name for the program, called
+its User-Agent, and that name also gets the installed version. The
 [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
 
-Check your files against this move. The command lists each file that differs, and prints nothing when all match. A file of your own shows in the list too:
+Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
 ```bash
-git add -A && git diff --cached --stat 259e6364a52f
+git check 259e6364a52f
 ```
 
-To take the files of this move in place of yours, run the command below. A file of your own stays, unless the project has a file or a folder of its name.
+If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
 git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e6364a52f --staged --worktree -- :/

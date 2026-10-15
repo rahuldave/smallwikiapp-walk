@@ -10,8 +10,9 @@ title: "4.12 to 4.13 The git hook runs `just check`"
 just setup
 ```
 
-A person can forget to run `just check`. `pre-commit` installs a git hook. The hook is one more caller of
-`just check`, and its only check of the Python code is `just check`.
+A person can forget to run `just check`. `pre-commit` installs a git hook, which is one more caller of
+`just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only check of
+the Python code is `just check`.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
 
