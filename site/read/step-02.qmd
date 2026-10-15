@@ -41,7 +41,7 @@ The setting changes which groups uv installs, not which versions. So `uv.lock` s
 uv lock --check
 ```
 
-uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
+uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so the setting changes nothing until a later move adds one.
 
 ### What changed {#step-02.1-what-changed-182c57}
 
@@ -353,8 +353,8 @@ which address. A mock keeps a record of each call to it, and two tests read that
 `test_main_invokes_requests_get` checks that the command calls `requests.get`, and `test_main_uses_correct_url`
 checks the address.
 
-`call_args[0]` is the tuple of the positional arguments of the last call. Here it contains
-only the address. The header is a keyword argument, in `call_args[1]`.
+`call_args[0]` contains the arguments that the last call gave in order, without a name. Here that is only the
+address. The call gives the header by name, as `headers=...`, so the header is in `call_args[1]`.
 
 A patch to [`tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee).
 

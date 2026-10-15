@@ -30,8 +30,10 @@ The code has tests. In the tests, a stand-in called a mock answers in place of W
 network. Each run also measures coverage, which is the share of the lines of the code that the tests run. The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
 
-ruff formats and lints the code, in a group `lint`, and `just check` runs every check. `just hook` installs a git
-hook, which runs `just check` before each `git commit`. ty checks the types.
+The code now also has ruff and ty, in a group `lint`. ruff formats the code, and lints it, which means that it
+checks the code against a list of rules. ty checks the types, the kind of value, such as a string or a number,
+that each name has. `just check` runs every check. `just hook` installs a git hook, a script that git runs by
+itself before each `git commit`, and the hook runs `just check`.
 
 The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
 `random_page` returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of its fields.
@@ -72,7 +74,7 @@ uv run smalldocs --version
 uv tree --only-group docs
 ```
 
-The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
+The first command prints `smalldocs 0.1.5`, or a newer version. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
 markdown-it-py, mdit-py-plugins, pygments and pyyaml.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:

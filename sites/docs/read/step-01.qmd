@@ -67,9 +67,11 @@ uv tree --depth 1
 ## 1.2 Ask Wikipedia for a page {#step-01.2}
 
 `main` prints a fixed line. It must ask Wikipedia for a random page instead, and print the title and the summary.
-The new `main` is the command of the first version of the original wikiapp, from 2024. Its docstring is new, and
-says what the command does. The `main` of the original wikiapp had no `-> None`. This `main` keeps the
-annotation that `uv init` gave it.
+The new `main` is the command of the first version of the original wikiapp, from 2024.
+
+Its docstring, the text in triple quotes under `def main`, is new, and says what the command does. The `-> None`
+after `main()` says that `main` returns no value. `uv init` wrote it, and this `main` keeps it. The `main` of the
+original wikiapp did not have it.
 
 - `@click.command()` makes `main` a command.
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.
@@ -132,7 +134,8 @@ User-Agent is the default of a library. requests sends `python-requests/` and it
 
 ## 1.3 A User-Agent {#step-01.3}
 
-Wikipedia refused the request, because it did not say who sent it. The User-Agent header says that. The policy of
+Wikipedia refused the request, because its User-Agent named only the library requests, and not the program that
+sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 

@@ -44,7 +44,7 @@ uv run smalldocs --version
 uv tree --only-group docs
 ```
 
-The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
+The first command prints `smalldocs 0.1.5`, or a newer version. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
 markdown-it-py, mdit-py-plugins, pygments and pyyaml.
 
 ### What changed {#step-08.1-what-changed-182c57}

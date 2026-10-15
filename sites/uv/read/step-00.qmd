@@ -36,7 +36,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -48,7 +49,8 @@ just help setup
 ```
 
 `.venv` is the environment of the project. It has a Python, and every package that the lockfile names. `uv run`
-runs a command with that Python. So `uv run wikiapp` needs no command to activate `.venv` first.
+runs a command with that Python. So `uv run wikiapp` works at once. Without uv, a person
+first activates `.venv`, with a command that makes the shell use the Python of `.venv`.
 
 ## What changed {#step-00-what-changed-182c57}
 

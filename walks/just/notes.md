@@ -1,7 +1,10 @@
-We give `wikiapp` one interface for every task, a justfile. `wikiapp` is a small command that prints the title and
-the summary of a random Wikipedia page. Its project has many tools, each with its own options. A person, a git hook
-and GitHub must all run them the same way. This tutorial takes the parts about the justfile out of the whole
-tutorial of smallwikiapp. It starts from the project that `uv init` made, for Python 3.13, and has a justfile
+We give `wikiapp` one way to run every task, a justfile. A justfile is a file of named tasks, and the program
+`just` runs them, as in `just test`. `wikiapp` is a small command that prints the title and the summary of a
+random Wikipedia page. Its project has many tools, each with its own options. A person, a git hook and GitHub
+must all run them the same way.
+
+The project is called smallwikiapp, and a longer tutorial builds all of it. This tutorial takes only the parts
+about the justfile out of that longer tutorial. It starts from the project that `uv init` made, for Python 3.13, and has a justfile
 from the start.
 
 The justfile is the interface of the project. Each task is a verb, such as `just test`, and the recipe behind the
@@ -116,8 +119,9 @@ A recipe has up to four parts, from the top.
 $ just setup
 
 The command now asks Wikipedia for a random page, and prints its title and summary, with click and requests. It
-sends a User-Agent, and has an option `--version`. `default-groups = "all"` in `pyproject.toml` makes uv install
-every dependency group. pytest is in a dependency group `test`, with the first test.
+sends a User-Agent, and has an option `--version`. A dependency group is a named list of packages in `pyproject.toml`.
+`default-groups = "all"` in `pyproject.toml` makes uv install every group. pytest is in the group `test`, and
+the project has its first test.
 `uv run pytest` printed `1 passed`.
 
 A person who runs the tests must know the tool and its options. `just test` is the first verb after `setup`, and
@@ -182,8 +186,10 @@ of section 2, since `"$*"` is the words after the verb, joined by spaces.
 
 $ just setup
 
-A recipe that runs `uv` can change the lockfile, and prints no warning. This section changes no recipe. It
-changes how each recipe that runs `uv` runs it.
+uv writes the exact version of each package in a file, the lockfile `uv.lock`. A recipe that runs `uv` can
+change the lockfile, and uv prints no warning. This section changes no recipe. It sets one variable,
+`UV_LOCKED`, which each recipe gives to `uv`. With it, uv stops with an error when it would have to change the
+lockfile.
 
 {{include step-04.10}}
 
@@ -208,9 +214,12 @@ From here on, "each `git commit` must pass `just check`" is the rule of the proj
 
 $ just setup
 
-A person can forget to run `just check`. `pre-commit` installs a git hook, which is one more caller of
-`just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only check of
-the Python code is `just check`.
+A person can forget to run `just check`. A git hook is a script that git runs by itself before each
+`git commit`. If the script fails, `git commit` stops and saves nothing.
+
+`just hook` runs `pre-commit install`, which installs a git hook that runs `just check`. The hook is one more
+caller of `just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only
+check of the Python code is `just check`.
 
 {{include step-04.12..step-04.13}}
 

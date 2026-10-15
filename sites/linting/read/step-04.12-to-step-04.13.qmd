@@ -30,7 +30,7 @@ version, and those of the nine packages that it needs, such as `pyyaml` and `vir
 uv run pre-commit --version
 ```
 
-It prints `pre-commit 4.7.0`. No hook is installed yet.
+It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
 
 ### What changed {#step-04.12-what-changed-182c57}
 

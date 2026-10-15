@@ -11,9 +11,11 @@ just setup
 ```
 
 The code now also has ty, a type checker, which `just types` runs. A type says what kind of value a name has, for
-example a string or a number. ty found that `__name__ or __package__`
-could be None, but `importlib.metadata.version` needs a string. So the command now looks up its version with the
-string `"wikiapp"`, the name of its package.
+example a string or a number. The code found the name of its package with
+`__name__ or __package__`. It gave that name to `importlib.metadata.version`, which looks up the version of a
+package. ty found that the name could be None, the value Python uses for no value at all, but
+`importlib.metadata.version` needs a string. So the code now gives it the string `"wikiapp"`, the name of its
+package.
 
 ty checks only the types that are written in the code, and the code has almost none. ruff's rules `ANN` report
 each parameter and each return value that has no type. Then the code and the tests get their types.

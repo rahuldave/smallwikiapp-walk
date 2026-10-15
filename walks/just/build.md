@@ -8,10 +8,13 @@ Each part ends with a section called **What changed**. It lists every file that 
 
 In Build it yourself, a file that a command makes says which command. A diff that is open is a patch. Apply it with the command in the text, or make the same change in your editor.
 
-We give `wikiapp` one interface for every task, a justfile. `wikiapp` is a small command that prints the title and
-the summary of a random Wikipedia page. Its project has many tools, each with its own options. A person, a git hook
-and GitHub must all run them the same way. This tutorial takes the parts about the justfile out of the whole
-tutorial of smallwikiapp. It starts from the project that `uv init` made, for Python 3.13, and has a justfile
+We give `wikiapp` one way to run every task, a justfile. A justfile is a file of named tasks, and the program
+`just` runs them, as in `just test`. `wikiapp` is a small command that prints the title and the summary of a
+random Wikipedia page. Its project has many tools, each with its own options. A person, a git hook and GitHub
+must all run them the same way.
+
+The project is called smallwikiapp, and a longer tutorial builds all of it. This tutorial takes only the parts
+about the justfile out of that longer tutorial. It starts from the project that `uv init` made, for Python 3.13, and has a justfile
 from the start.
 
 The justfile is the interface of the project. Each task is a verb, such as `just test`, and the recipe behind the
@@ -107,12 +110,105 @@ cd smallwikiapp
 git switch -c mine ae86cb7d116c
 ```
 
-Then add the command `git check`, which compares your files with the project's after each move. It compares `pyproject.toml` by the names of its packages, so another version of a package does not count as a difference. It does not compare the lines of `uv.lock`. It checks that you and the project both have a `uv.lock`, or both have none. It also checks that your `uv.lock` is up to date with your `pyproject.toml`.
+Then add the command `git check`, which compares your files with the project's after each move, and leaves what `git add` has staged as it was. It compares `pyproject.toml` and `uv.lock` by the names of their packages, so another version of a package does not count as a difference. A small Python program, `package_names.py`, reads each of these files as data, and uv runs it. These commands write the program into the folder `.git`, and tell git to show each file as the program prints it.
 
 ```bash
-echo '/pyproject.toml diff=names' >> .git/info/attributes
-git config diff.names.textconv "sed -E 's/^([[:space:]]*\"[A-Za-z0-9_.-]+(\\[[^]]*\\])?)[^\";]*/\\1/'"
-git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/" ":(top,exclude,glob)uv.lock" && git diff --cached --name-status --diff-filter=AD "$1" -- ":(top,glob)uv.lock" && { [ "$2" = --stale-lock ] || [ ! -f uv.lock ] || uv lock --check -q; }; }; f'
+cat > "$(git rev-parse --git-common-dir)/package_names.py" <<'PY'
+"""Print a pyproject.toml or a uv.lock without the versions of its packages, so that git check compares their names.
+
+    python package_names.py pyproject.toml FILE
+    python package_names.py uv.lock FILE
+
+A pyproject.toml keeps all it says, with each requirement cut to its name, its extras, its address and its marker. A
+uv.lock keeps the names that the project's own packages ask for, and the members of the workspace. The rules are those
+of timewalk's package_names. The result is JSON, one item a line. A file that is not TOML is printed as it is.
+"""
+
+import json
+import re
+import sys
+import tomllib
+
+# A requirement such as "pytest>=8.3.4", "Uvicorn[standard] ; python_version < '3.12'" or "x @ git+https://...": its name,
+# its extras, what comes between (the versions, or "@" and an address), and its marker after the ";".
+REQUIREMENT = re.compile(r"^\s*([A-Za-z0-9][A-Za-z0-9._-]*)\s*(\[[^\]]*\])?([^;]*)(?:;(.*))?$", re.S)
+
+
+def package_names(
+    path: str,  # The file's path in the project; its name says how to read it
+    data: bytes,  # Its contents
+) -> object | None:  # What it says without the versions of packages, to compare; None if it is not a file of packages
+    """Read a pyproject.toml or a uv.lock with the versions left out, as timewalk's package_names does."""
+    name = path.rsplit("/", 1)[-1]
+    if name not in ("pyproject.toml", "uv.lock"):
+        return None
+    try:
+        doc = tomllib.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, tomllib.TOMLDecodeError):
+        return None
+
+    def cut(requirement: object) -> object:   # "pytest>=8.3.4" is pytest; a table, such as { include-group = "test" }, stays
+        found = REQUIREMENT.match(requirement) if isinstance(requirement, str) else None
+        if not found:
+            return requirement
+        extras = sorted(e.strip().lower() for e in (found.group(2) or "[]")[1:-1].split(",") if e.strip())
+        between, marker = found.group(3).strip(), " ".join((found.group(4) or "").split())
+        address = between[1:].strip() if between.startswith("@") else ""   # a package from an address: the address counts
+        return (re.sub(r"[-_.]+", "-", found.group(1)).lower() + (f"[{','.join(extras)}]" if extras else "")
+                + (f" @ {address}" if address else "") + (f"; {marker}" if marker else ""))
+
+    def names(value: object) -> list:   # every name = "..." in a table, at any depth
+        if isinstance(value, dict):
+            return [*([value["name"]] if isinstance(value.get("name"), str) else []), *(n for v in value.values() for n in names(v))]
+        return [n for v in value for n in names(v)] if isinstance(value, list) else []
+
+    if name == "uv.lock":
+        own = [p for p in doc.get("package", []) if isinstance(p, dict) and isinstance(p.get("source"), dict)
+               and {"editable", "virtual"} & set(p["source"])]
+        return {"requires-python": doc.get("requires-python"), "manifest": sorted(set(names(doc.get("manifest", {})))),
+                "own": {p.get("name"): sorted(set(names({k: v for k, v in p.items() if k not in ("name", "version", "source")})))
+                        for p in own}}
+    lists = [("project", "dependencies"), ("build-system", "requires"), ("tool", "uv", "dev-dependencies")]
+    groups = [("project", "optional-dependencies"), ("dependency-groups",)]
+
+    def at(keys: tuple) -> object:   # the table or list at a path of keys, or None
+        value = doc
+        for key in keys:
+            value = value.get(key) if isinstance(value, dict) else None
+        return value
+
+    for keys in lists:
+        if isinstance(at(keys), list):
+            at(keys[:-1])[keys[-1]] = sorted(map(cut, at(keys)), key=repr)
+    for keys in groups:
+        table = at(keys)
+        for group, wanted in (table.items() if isinstance(table, dict) else []):
+            if isinstance(wanted, list):
+                table[group] = sorted(map(cut, wanted), key=repr)
+    return doc
+
+
+def main() -> int:  # The exit code
+    """Print a file as package_names reads it, or as it is when it is not TOML."""
+    kind, file = sys.argv[1], sys.argv[2]
+    with open(file, "rb") as handle:
+        data = handle.read()
+    found = package_names(kind, data)
+    if found is None:
+        sys.stdout.buffer.write(data)
+    else:
+        print(json.dumps(found, indent=1, sort_keys=True, ensure_ascii=False, default=str))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+PY
+echo '/pyproject.toml diff=pyproject' >> .git/info/attributes
+echo '/uv.lock diff=uvlock' >> .git/info/attributes
+git config diff.pyproject.textconv 'uv run --quiet --no-config --no-project --python ">=3.11" python "$(git rev-parse --git-common-dir)/package_names.py" pyproject.toml'
+git config diff.uvlock.textconv 'uv run --quiet --no-config --no-project --python ">=3.11" python "$(git rev-parse --git-common-dir)/package_names.py" uv.lock'
+git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp -p "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/"; }; f'
 ```
 
 <a id="step-00"></a>
@@ -150,7 +246,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -176,6 +273,18 @@ A recipe has up to four parts, from the top.
   section 5 explains.
 
 `just` with no verb runs the first recipe of the file. Here that is `default`, which lists the others.
+
+Check your files against this part. The command prints nothing when they match, and otherwise shows what differs:
+
+```bash
+git check ae86cb7d116c
+```
+
+If you are stuck, this command puts the files of this part in place of yours. A file that you made yourself stays:
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c --staged --worktree -- :/
+```
 
 ### What changed
 
@@ -596,16 +705,15 @@ just setup
 ```
 
 The command now asks Wikipedia for a random page, and prints its title and summary, with click and requests. It
-sends a User-Agent, and has an option `--version`. `default-groups = "all"` in `pyproject.toml` makes uv install
-every dependency group. pytest is in a dependency group `test`, with the first test.
+sends a User-Agent, and has an option `--version`. A dependency group is a named list of packages in `pyproject.toml`.
+`default-groups = "all"` in `pyproject.toml` makes uv install every group. pytest is in the group `test`, and
+the project has its first test.
 `uv run pytest` printed `1 passed`.
 
 A person who runs the tests must know the tool and its options. `just test` is the first verb after `setup`, and
 the first that runs a check.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837).
-
-<a id="step-02.4"></a>
 
 ### 2.4 The recipe `just test`
 
@@ -717,7 +825,7 @@ uv add --group lint ruff
 uv run ruff --version
 ```
 
-It prints `ruff 0.17.0`. uv installs every group, so ruff is in the environment of the project, and nothing has
+It prints `ruff 0.17.0`, or a newer version. uv installs every group, so ruff is in the environment of the project, and nothing has
 used it yet.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
@@ -765,10 +873,35 @@ ruff needs its settings, at the end of `pyproject.toml`. They allow lines of up 
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
-Apply the patch to [`pyproject.toml`](#step-04.2-pyproject.toml-5d07e7), from the top of the project:
+Set the values that this change sets in [`pyproject.toml`](#step-04.2-pyproject.toml-5d07e7). Run this command from the top of the project. It reads your file with tomlkit, a library for TOML files. It sets each of these values as the project has it, and keeps the rest of your file:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/31445743379186b800fd4c035c8f04eed7ad7f3d.diff | git apply --include=pyproject.toml
+uv run --quiet --no-config --no-project --with tomlkit python - <<'PY'
+import pathlib, tomlkit
+path = pathlib.Path('pyproject.toml')
+doc = tomlkit.parse(path.read_text(encoding='utf-8')) if path.exists() else tomlkit.document()
+# Each value that the change sets, by its keys
+SET = [
+    (('tool', 'ruff'),
+     {'line-length': 100,
+      'format': {'quote-style': 'double', 'indent-style': 'space', 'skip-magic-trailing-comma': False}}),
+]
+
+def put(table, keys, value):   # make each table on the way; a table goes into the one there, key by key
+    for key in keys[:-1]:
+        if key not in table:
+            table[key] = tomlkit.table(True)
+        table = table[key]
+    if isinstance(value, dict) and isinstance(table.get(keys[-1]), dict):
+        for key, item in value.items():
+            put(table[keys[-1]], [key], item)
+    else:
+        table[keys[-1]] = value
+
+for keys, value in SET:
+    put(doc, keys, value)
+path.write_text(tomlkit.dumps(doc), encoding='utf-8')
+PY
 ```
 
 Apply the patch to [`justfile`](#step-04.2-justfile-424f0b), from the top of the project:
@@ -787,8 +920,8 @@ just fmt --check
 ```
 
 `--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
-reformatted, 1 file already formatted`. The six files that it names are the Python files. The seventh is
-`pyproject.toml`, which ruff also reads. The recipe
+reformatted, 1 file already formatted`. It names the six files that it would
+change. The recipe
 runs the same command, and passes on the words after `just fmt`.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
@@ -872,8 +1005,6 @@ A formatter changes how the code looks, and finds no mistakes. The rules of the 
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce).
 
-<a id="step-04.4"></a>
-
 ### 4.4 The linter's rules, and the recipe lint
 
 The linter checks the code against rules, and it needs to know which. A table at the end of `pyproject.toml`
@@ -882,10 +1013,34 @@ tests may use `assert`. The rest of the code may not, because Python skips every
 
 A recipe `lint` runs the linter. The words after `just lint` go to `ruff check`.
 
-Apply the patch to [`pyproject.toml`](#step-04.4-pyproject.toml-5d07e7), from the top of the project:
+Set the values that this change sets in [`pyproject.toml`](#step-04.4-pyproject.toml-5d07e7). Run this command from the top of the project. It reads your file with tomlkit, a library for TOML files. It sets each of these values as the project has it, and keeps the rest of your file:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/589f2f691557470eac084858d430a302c98390ce.diff | git apply --include=pyproject.toml
+uv run --quiet --no-config --no-project --with tomlkit python - <<'PY'
+import pathlib, tomlkit
+path = pathlib.Path('pyproject.toml')
+doc = tomlkit.parse(path.read_text(encoding='utf-8')) if path.exists() else tomlkit.document()
+# Each value that the change sets, by its keys
+SET = [
+    (('tool', 'ruff', 'lint'),
+     {'select': ['E', 'W', 'F', 'I', 'B', 'UP', 'SIM', 'S', 'N'], 'per-file-ignores': {'tests/**': ['S101']}}),
+]
+
+def put(table, keys, value):   # make each table on the way; a table goes into the one there, key by key
+    for key in keys[:-1]:
+        if key not in table:
+            table[key] = tomlkit.table(True)
+        table = table[key]
+    if isinstance(value, dict) and isinstance(table.get(keys[-1]), dict):
+        for key, item in value.items():
+            put(table[keys[-1]], [key], item)
+    else:
+        table[keys[-1]] = value
+
+for keys, value in SET:
+    put(doc, keys, value)
+path.write_text(tomlkit.dumps(doc), encoding='utf-8')
+PY
 ```
 
 Apply the patch to [`justfile`](#step-04.4-justfile-424f0b), from the top of the project:
@@ -1144,12 +1299,12 @@ git restore --source 4e710d50a229 --staged -- :/ && git restore --source d8a9c8f
 just setup
 ```
 
-A recipe that runs `uv` can change the lockfile, and prints no warning. This section changes no recipe. It
-changes how each recipe that runs `uv` runs it.
+uv writes the exact version of each package in a file, the lockfile `uv.lock`. A recipe that runs `uv` can
+change the lockfile, and uv prints no warning. This section changes no recipe. It sets one variable,
+`UV_LOCKED`, which each recipe gives to `uv`. With it, uv stops with an error when it would have to change the
+lockfile.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
-
-<a id="step-04.10"></a>
 
 ### 4.10 Recipes refuse an old lockfile
 
@@ -1220,8 +1375,6 @@ A person must remember four verbs before each `git commit`. `just check` runs th
 other. It names no tool of its own.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
-
-<a id="step-04.11"></a>
 
 ### 4.11 The recipe check
 
@@ -1304,9 +1457,12 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 just setup
 ```
 
-A person can forget to run `just check`. `pre-commit` installs a git hook, which is one more caller of
-`just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only check of
-the Python code is `just check`.
+A person can forget to run `just check`. A git hook is a script that git runs by itself before each
+`git commit`. If the script fails, `git commit` stops and saves nothing.
+
+`just hook` runs `pre-commit install`, which installs a git hook that runs `just check`. The hook is one more
+caller of `just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only
+check of the Python code is `just check`.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
 
@@ -1326,7 +1482,7 @@ uv add --group lint pre-commit
 uv run pre-commit --version
 ```
 
-It prints `pre-commit 4.7.0`. No hook is installed yet.
+It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -1641,8 +1797,6 @@ their types.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9).
 
-<a id="step-05.7"></a>
-
 ### 5.7 The recipe check runs the type checker
 
 `just check` is what a person and the git hook run before git records a change, and it does not run ty yet. So a
@@ -1729,8 +1883,6 @@ The hook runs only in a clone where `just hook` ran. GitHub's job `check` runs `
 a fresh machine.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
-
-<a id="step-06.5"></a>
 
 ### 6.5 GitHub runs the tests
 
@@ -1884,7 +2036,7 @@ uv run smalldocs --version
 uv tree --only-group docs
 ```
 
-The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
+The first command prints `smalldocs 0.1.5`, or a newer version. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
 markdown-it-py, mdit-py-plugins, pygments and pyyaml.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
@@ -2043,8 +2195,6 @@ The reference is text in a terminal. The recipe `docs` changes. With no words, i
 works as before, so `just docs check` is the same command.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
-
-<a id="step-08.6"></a>
 
 ### 8.6 A site
 
@@ -2240,8 +2390,6 @@ The code now also has a README that names the tests and the docs.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
 
-<a id="step-08.8"></a>
-
 ### 8.8 The docs check in `just check`
 
 Every function, parameter and field has documentation now, but no check fails when a new function has none. `just check` runs before
@@ -2362,8 +2510,6 @@ changes `docs/_smalldocs.yml`, behind the verb.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
 
-<a id="step-09.10"></a>
-
 ### 9.10 The docs check counts the library
 
 The front page names `random_page`, but it is not a link, and the docs check counts only the app. The settings of
@@ -2436,8 +2582,6 @@ The packages must be built before anyone can install them. The last verb is abou
 so `check` does not run it.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
-
-<a id="step-10.1"></a>
 
 ### 10.1 The recipe `build`
 
@@ -2524,8 +2668,6 @@ Since the library became a package, validate-pyproject, in `just lint-config`, h
 `pyproject.toml` against the standard.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
-
-<a id="step-10.3"></a>
 
 ### 10.3 lint-config checks both pyproject.toml files
 

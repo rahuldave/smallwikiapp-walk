@@ -47,10 +47,7 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`.
-
-The check of your files after this move prints the same error. Your files are right, and only the
-lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -344,7 +341,8 @@ In `pyproject.toml`, see `"wikirandom",` in line 14, at the end of `dependencies
 uv run python -c "import wikirandom; print(wikirandom.__file__)"
 ```
 
-A plain `uv run` now installs the library too. The command prints a path that ends with
+`uv add` installed the library, and the app now depends on it, so Python finds it under a plain `uv run`. The
+command prints a path that ends with
 `packages/wikirandom/src/wikirandom/__init__.py`, the file in the repository, not a copy.
 
 ### What changed {#step-09.6-what-changed-182c57}
@@ -683,10 +681,10 @@ under it, and `wikiapp v0.1.0` under that. The app gets requests only through th
 
 ## 9.9 The tests of the library are named for it {#step-09.9}
 
-`tests/test_wikipedia.py` tests wikirandom, and its name should say so. `git mv` renames the file, and git keeps
-its history.
+`tests/test_wikipedia.py` tests wikirandom, and its name should say so. `mv` renames the file, and changes none of
+its lines.
 
-This change came from running `git mv tests/test_wikipedia.py tests/test_wikirandom.py`.
+This change came from running `mv tests/test_wikipedia.py tests/test_wikirandom.py`.
 
 ```bash
 just docs check
@@ -696,7 +694,7 @@ The docs check lists the file under its new name, `tests/test_wikirandom.py   3 
 
 ### What changed {#step-09.9-what-changed-182c57}
 
-- <a id="step-09.9-tests-test_wikirandom.py-6f8588"></a>`tests/test_wikirandom.py`: the tests of the library, under their new name. No line changes. Renamed from `tests/test_wikipedia.py`. It comes from `git mv tests/test_wikipedia.py tests/test_wikirandom.py`. [The file](https://github.com/rahuldave/smallwikiapp/blob/008e616610b0829196a2f61182e45255015b95c1/tests/test_wikirandom.py).
+- <a id="step-09.9-tests-test_wikirandom.py-6f8588"></a>`tests/test_wikirandom.py`: the tests of the library, under their new name. No line changes. Renamed from `tests/test_wikipedia.py`. It comes from `mv tests/test_wikipedia.py tests/test_wikirandom.py`. [The file](https://github.com/rahuldave/smallwikiapp/blob/008e616610b0829196a2f61182e45255015b95c1/tests/test_wikirandom.py).
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1).
 

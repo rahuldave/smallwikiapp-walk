@@ -61,12 +61,105 @@ cd smallwikiapp
 git switch -c mine ae86cb7d116c
 ```
 
-Then add the command `git check`, which compares your files with the project's after each move. It compares `pyproject.toml` by the names of its packages, so another version of a package does not count as a difference. It does not compare the lines of `uv.lock`. It checks that you and the project both have a `uv.lock`, or both have none. It also checks that your `uv.lock` is up to date with your `pyproject.toml`.
+Then add the command `git check`, which compares your files with the project's after each move, and leaves what `git add` has staged as it was. It compares `pyproject.toml` and `uv.lock` by the names of their packages, so another version of a package does not count as a difference. A small Python program, `package_names.py`, reads each of these files as data, and uv runs it. These commands write the program into the folder `.git`, and tell git to show each file as the program prints it.
 
 ```bash
-echo '/pyproject.toml diff=names' >> .git/info/attributes
-git config diff.names.textconv "sed -E 's/^([[:space:]]*\"[A-Za-z0-9_.-]+(\\[[^]]*\\])?)[^\";]*/\\1/'"
-git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/" ":(top,exclude,glob)uv.lock" && git diff --cached --name-status --diff-filter=AD "$1" -- ":(top,glob)uv.lock" && { [ "$2" = --stale-lock ] || [ ! -f uv.lock ] || uv lock --check -q; }; }; f'
+cat > "$(git rev-parse --git-common-dir)/package_names.py" <<'PY'
+"""Print a pyproject.toml or a uv.lock without the versions of its packages, so that git check compares their names.
+
+    python package_names.py pyproject.toml FILE
+    python package_names.py uv.lock FILE
+
+A pyproject.toml keeps all it says, with each requirement cut to its name, its extras, its address and its marker. A
+uv.lock keeps the names that the project's own packages ask for, and the members of the workspace. The rules are those
+of timewalk's package_names. The result is JSON, one item a line. A file that is not TOML is printed as it is.
+"""
+
+import json
+import re
+import sys
+import tomllib
+
+# A requirement such as "pytest>=8.3.4", "Uvicorn[standard] ; python_version < '3.12'" or "x @ git+https://...": its name,
+# its extras, what comes between (the versions, or "@" and an address), and its marker after the ";".
+REQUIREMENT = re.compile(r"^\s*([A-Za-z0-9][A-Za-z0-9._-]*)\s*(\[[^\]]*\])?([^;]*)(?:;(.*))?$", re.S)
+
+
+def package_names(
+    path: str,  # The file's path in the project; its name says how to read it
+    data: bytes,  # Its contents
+) -> object | None:  # What it says without the versions of packages, to compare; None if it is not a file of packages
+    """Read a pyproject.toml or a uv.lock with the versions left out, as timewalk's package_names does."""
+    name = path.rsplit("/", 1)[-1]
+    if name not in ("pyproject.toml", "uv.lock"):
+        return None
+    try:
+        doc = tomllib.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, tomllib.TOMLDecodeError):
+        return None
+
+    def cut(requirement: object) -> object:   # "pytest>=8.3.4" is pytest; a table, such as { include-group = "test" }, stays
+        found = REQUIREMENT.match(requirement) if isinstance(requirement, str) else None
+        if not found:
+            return requirement
+        extras = sorted(e.strip().lower() for e in (found.group(2) or "[]")[1:-1].split(",") if e.strip())
+        between, marker = found.group(3).strip(), " ".join((found.group(4) or "").split())
+        address = between[1:].strip() if between.startswith("@") else ""   # a package from an address: the address counts
+        return (re.sub(r"[-_.]+", "-", found.group(1)).lower() + (f"[{','.join(extras)}]" if extras else "")
+                + (f" @ {address}" if address else "") + (f"; {marker}" if marker else ""))
+
+    def names(value: object) -> list:   # every name = "..." in a table, at any depth
+        if isinstance(value, dict):
+            return [*([value["name"]] if isinstance(value.get("name"), str) else []), *(n for v in value.values() for n in names(v))]
+        return [n for v in value for n in names(v)] if isinstance(value, list) else []
+
+    if name == "uv.lock":
+        own = [p for p in doc.get("package", []) if isinstance(p, dict) and isinstance(p.get("source"), dict)
+               and {"editable", "virtual"} & set(p["source"])]
+        return {"requires-python": doc.get("requires-python"), "manifest": sorted(set(names(doc.get("manifest", {})))),
+                "own": {p.get("name"): sorted(set(names({k: v for k, v in p.items() if k not in ("name", "version", "source")})))
+                        for p in own}}
+    lists = [("project", "dependencies"), ("build-system", "requires"), ("tool", "uv", "dev-dependencies")]
+    groups = [("project", "optional-dependencies"), ("dependency-groups",)]
+
+    def at(keys: tuple) -> object:   # the table or list at a path of keys, or None
+        value = doc
+        for key in keys:
+            value = value.get(key) if isinstance(value, dict) else None
+        return value
+
+    for keys in lists:
+        if isinstance(at(keys), list):
+            at(keys[:-1])[keys[-1]] = sorted(map(cut, at(keys)), key=repr)
+    for keys in groups:
+        table = at(keys)
+        for group, wanted in (table.items() if isinstance(table, dict) else []):
+            if isinstance(wanted, list):
+                table[group] = sorted(map(cut, wanted), key=repr)
+    return doc
+
+
+def main() -> int:  # The exit code
+    """Print a file as package_names reads it, or as it is when it is not TOML."""
+    kind, file = sys.argv[1], sys.argv[2]
+    with open(file, "rb") as handle:
+        data = handle.read()
+    found = package_names(kind, data)
+    if found is None:
+        sys.stdout.buffer.write(data)
+    else:
+        print(json.dumps(found, indent=1, sort_keys=True, ensure_ascii=False, default=str))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+PY
+echo '/pyproject.toml diff=pyproject' >> .git/info/attributes
+echo '/uv.lock diff=uvlock' >> .git/info/attributes
+git config diff.pyproject.textconv 'uv run --quiet --no-config --no-project --python ">=3.11" python "$(git rev-parse --git-common-dir)/package_names.py" pyproject.toml'
+git config diff.uvlock.textconv 'uv run --quiet --no-config --no-project --python ">=3.11" python "$(git rev-parse --git-common-dir)/package_names.py" uv.lock'
+git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp -p "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/"; }; f'
 ```
 
 <a id="step-00"></a>
@@ -103,7 +196,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -112,6 +206,18 @@ just
 just --show setup
 just --show help
 just help setup
+```
+
+Check your files against this part. The command prints nothing when they match, and otherwise shows what differs:
+
+```bash
+git check ae86cb7d116c
+```
+
+If you are stuck, this command puts the files of this part in place of yours. A file that you made yourself stays:
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c --staged --worktree -- :/
 ```
 
 ### What changed
@@ -600,9 +706,11 @@ git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d4958
 ### 1.2 Ask Wikipedia for a page
 
 `main` prints a fixed line. It must ask Wikipedia for a random page instead, and print the title and the summary.
-The new `main` is the command of the first version of the original wikiapp, from 2024. Its docstring is new, and
-says what the command does. The `main` of the original wikiapp had no `-> None`. This `main` keeps the
-annotation that `uv init` gave it.
+The new `main` is the command of the first version of the original wikiapp, from 2024.
+
+Its docstring, the text in triple quotes under `def main`, is new, and says what the command does. The `-> None`
+after `main()` says that `main` returns no value. `uv init` wrote it, and this `main` keeps it. The `main` of the
+original wikiapp did not have it.
 
 - `@click.command()` makes `main` a command.
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.
@@ -683,7 +791,8 @@ git restore --source 36d49582843a --staged -- :/ && git restore --source 571c82e
 
 ### 1.3 A User-Agent
 
-Wikipedia refused the request, because it did not say who sent it. The User-Agent header says that. The policy of
+Wikipedia refused the request, because its User-Agent named only the library requests, and not the program that
+sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
@@ -853,10 +962,33 @@ uv installs only the group `dev` by default. The setting `default-groups = "all"
 install every group. So each later `uv add --group` needs no other change to `pyproject.toml`. A patch adds the
 table `[tool.uv]` with this setting.
 
-Apply the patch to [`pyproject.toml`](#step-02.1-pyproject.toml-5d07e7), from the top of the project:
+Set the values that this change sets in [`pyproject.toml`](#step-02.1-pyproject.toml-5d07e7). Run this command from the top of the project. It reads your file with tomlkit, a library for TOML files. It sets each of these values as the project has it, and keeps the rest of your file:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/46dc20fb9092170695699eaa052f4830563cb930.diff | git apply --include=pyproject.toml
+uv run --quiet --no-config --no-project --with tomlkit python - <<'PY'
+import pathlib, tomlkit
+path = pathlib.Path('pyproject.toml')
+doc = tomlkit.parse(path.read_text(encoding='utf-8')) if path.exists() else tomlkit.document()
+# Each value that the change sets, by its keys
+SET = [
+    (('tool', 'uv'), {'default-groups': 'all'}),
+]
+
+def put(table, keys, value):   # make each table on the way; a table goes into the one there, key by key
+    for key in keys[:-1]:
+        if key not in table:
+            table[key] = tomlkit.table(True)
+        table = table[key]
+    if isinstance(value, dict) and isinstance(table.get(keys[-1]), dict):
+        for key, item in value.items():
+            put(table[keys[-1]], [key], item)
+    else:
+        table[keys[-1]] = value
+
+for keys, value in SET:
+    put(doc, keys, value)
+path.write_text(tomlkit.dumps(doc), encoding='utf-8')
+PY
 ```
 
 The patch adds the table `[tool.uv]` at the end of `pyproject.toml`, after the table `[build-system]`. It has a
@@ -868,7 +1000,7 @@ The setting changes which groups uv installs, not which versions. So `uv.lock` s
 uv lock --check
 ```
 
-uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
+uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so the setting changes nothing until a later move adds one.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -1094,10 +1226,15 @@ git restore --source d92e2dec921d --staged -- :/ && git restore --source 45807a0
 just setup
 ```
 
-The first test asks the real Wikipedia, so it is slow and needs the network. A fixture is a function that pytest
-calls for each test that names it as a parameter. One fixture gives each test a runner, which runs the command and keeps what
-it prints. A mock is a stand-in that takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
-request ends the command with exit code 1.
+The first test asks the real Wikipedia, so it is slow and needs the network. A mock solves that. It takes the
+place of Wikipedia in the tests, and gives back a made-up page, "Lorem Ipsum", with no network.
+
+The tests get the mock from a fixture. A fixture is a function that pytest calls for each test that names it as a
+parameter. A second fixture gives each test a runner, which runs the command and keeps what it prints. The tests
+check the title that the command prints, that the command made a request, and the address of the request.
+
+When a command ends, it gives back a number, its exit code. The number is 0 when the command works, and another number,
+such as 1, when it fails. A last test makes the request fail, and checks that the command ends with exit code 1.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
 
@@ -1303,8 +1440,8 @@ which address. A mock keeps a record of each call to it, and two tests read that
 `test_main_invokes_requests_get` checks that the command calls `requests.get`, and `test_main_uses_correct_url`
 checks the address.
 
-`call_args[0]` is the tuple of the positional arguments of the last call. Here it contains
-only the address. The header is a keyword argument, in `call_args[1]`.
+`call_args[0]` contains the arguments that the last call gave in order, without a name. Here that is only the
+address. The call gives the header by name, as `headers=...`, so the header is in `call_args[1]`.
 
 Apply the patch to [`tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee), from the top of the project:
 
@@ -1496,10 +1633,34 @@ A person can forget to type `--cov=wikiapp`. The settings of pytest in `pyprojec
 every run. They tell pytest to look for tests in `tests`, to measure coverage, and to list the lines that no test
 ran.
 
-Apply the patch to [`pyproject.toml`](#step-02.11-pyproject.toml-5d07e7), from the top of the project:
+Set the values that this change sets in [`pyproject.toml`](#step-02.11-pyproject.toml-5d07e7). Run this command from the top of the project. It reads your file with tomlkit, a library for TOML files. It sets each of these values as the project has it, and keeps the rest of your file:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4.diff | git apply --include=pyproject.toml
+uv run --quiet --no-config --no-project --with tomlkit python - <<'PY'
+import pathlib, tomlkit
+path = pathlib.Path('pyproject.toml')
+doc = tomlkit.parse(path.read_text(encoding='utf-8')) if path.exists() else tomlkit.document()
+# Each value that the change sets, by its keys
+SET = [
+    (('tool', 'pytest', 'ini_options'),
+     {'testpaths': ['tests'], 'addopts': '--cov=wikiapp --cov-report=term-missing'}),
+]
+
+def put(table, keys, value):   # make each table on the way; a table goes into the one there, key by key
+    for key in keys[:-1]:
+        if key not in table:
+            table[key] = tomlkit.table(True)
+        table = table[key]
+    if isinstance(value, dict) and isinstance(table.get(keys[-1]), dict):
+        for key, item in value.items():
+            put(table[keys[-1]], [key], item)
+    else:
+        table[keys[-1]] = value
+
+for keys, value in SET:
+    put(doc, keys, value)
+path.write_text(tomlkit.dumps(doc), encoding='utf-8')
+PY
 ```
 
 The patch adds the table `[tool.pytest.ini_options]` at the end of `pyproject.toml`, after the table
@@ -1571,8 +1732,6 @@ Tests of the library need the mock too, and it is in the tests of the command. T
 `tests/conftest.py`, so that every test file can use it.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).
-
-<a id="step-03.2"></a>
 
 ### 3.2 The mock goes to conftest.py
 
@@ -1679,8 +1838,6 @@ just setup
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520).
 
-<a id="step-03.3"></a>
-
 ### 3.3 A language
 
 `random_page` asks only the English Wikipedia. Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. So
@@ -1783,14 +1940,14 @@ just setup
 ```
 
 The code now also has an option `--language` on the command. When a request fails, `random_page` raises an error
-of its own, `WikipediaError`.
+of its own, `WikipediaError`. To raise an error is to stop and report what went wrong.
 
-The command should print that error as a message, not as a traceback. A test checks that a failed request prints
-`Error`.
+The command should print that error as a short message. It should not print a traceback, the long list of lines
+of code that Python prints when a program stops on an error. The command is built with click, a package for
+command-line programs. The command now passes the error to click, and click prints the word `Error` and then the
+message. A test checks that a failed request prints `Error`.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a6f5ae9a475d916d4053315c9e6699f16951193f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
-
-<a id="step-03.6"></a>
 
 ### 3.6 The command prints the error
 
@@ -1921,17 +2078,18 @@ git restore --source b6942869d5fc --staged -- :/ && git restore --source b7469ee
 just setup
 ```
 
-The code now also has ruff, which formats the code and the tests with `just fmt`, and lints them with
-`just lint`. `just lint-config` checks the configuration. In the tests, the linter found an import below the code,
-and unused variables, and a person fixed them. `just lint --fix` sorted the imports of the command. The request
-has a timeout of 10 seconds, and the recipes refuse a lockfile that is out of date.
+The code now also has ruff, a tool that checks Python code. A recipe is a named task of the justfile, such as `fmt`
+or `lint`. `just fmt` makes ruff lay out the code and the tests
+in one fixed way. `just lint` makes ruff check them against a list of rules. `just lint-config` checks the
+settings in `pyproject.toml`, the lockfile and the justfile.
 
-Each check is a recipe of its own, and a person must remember to run them all. A new recipe, `just check`, runs
-every check. One of them fails when the tests run less than 90% of the code.
+In the tests, ruff found an import below the code, and unused variables. A person fixed them. `just lint --fix`
+put the imports of the command in order. The request now stops after 10 seconds with no answer. The lockfile,
+`uv.lock`, lists the exact version of each package, and the recipes now refuse to run when it is out of date.
+
+Each check is a recipe of its own, and a person must remember to run them all. A new recipe, `just check`, runs every check. One of them fails when the tests run less than 90% of the code.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
-
-<a id="step-04.11"></a>
 
 ### 4.11 The recipe check
 
@@ -2044,10 +2202,35 @@ new name.
 pytest must know the marker, and leave the e2e tests out of every run that does not ask for them.
 `pyproject.toml` declares the marker in `markers`. The option `-m 'not e2e'` in `addopts` leaves the e2e tests out.
 
-Apply the patch to [`pyproject.toml`](#step-06.1-pyproject.toml-5d07e7), from the top of the project:
+Set the values that this change sets in [`pyproject.toml`](#step-06.1-pyproject.toml-5d07e7). Run this command from the top of the project. It reads your file with tomlkit, a library for TOML files. It sets each of these values as the project has it, and keeps the rest of your file:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735.diff | git apply --include=pyproject.toml
+uv run --quiet --no-config --no-project --with tomlkit python - <<'PY'
+import pathlib, tomlkit
+path = pathlib.Path('pyproject.toml')
+doc = tomlkit.parse(path.read_text(encoding='utf-8')) if path.exists() else tomlkit.document()
+# Each value that the change sets, by its keys
+SET = [
+    (('tool', 'pytest', 'ini_options', 'addopts'), "--cov=wikiapp --cov-report=term-missing -m 'not e2e'"),
+    (('tool', 'pytest', 'ini_options', 'markers'),
+     ['e2e: end to end, against the real Wikipedia; run with -m e2e']),
+]
+
+def put(table, keys, value):   # make each table on the way; a table goes into the one there, key by key
+    for key in keys[:-1]:
+        if key not in table:
+            table[key] = tomlkit.table(True)
+        table = table[key]
+    if isinstance(value, dict) and isinstance(table.get(keys[-1]), dict):
+        for key, item in value.items():
+            put(table[keys[-1]], [key], item)
+    else:
+        table[keys[-1]] = value
+
+for keys, value in SET:
+    put(doc, keys, value)
+path.write_text(tomlkit.dumps(doc), encoding='utf-8')
+PY
 ```
 
 The patch changes `[tool.pytest.ini_options]`, under `testpaths`. It replaces the comment and the line `addopts`,
@@ -2213,10 +2396,33 @@ The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv in
 its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
 `pyproject.toml` now says 3.11.
 
-Apply the patch to [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7), from the top of the project:
+Set the values that this change sets in [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7). Run this command from the top of the project. It reads your file with tomlkit, a library for TOML files. It sets each of these values as the project has it, and keeps the rest of your file:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264.diff | git apply --include=pyproject.toml
+uv run --quiet --no-config --no-project --with tomlkit python - <<'PY'
+import pathlib, tomlkit
+path = pathlib.Path('pyproject.toml')
+doc = tomlkit.parse(path.read_text(encoding='utf-8')) if path.exists() else tomlkit.document()
+# Each value that the change sets, by its keys
+SET = [
+    (('project', 'requires-python'), '>=3.11'),
+]
+
+def put(table, keys, value):   # make each table on the way; a table goes into the one there, key by key
+    for key in keys[:-1]:
+        if key not in table:
+            table[key] = tomlkit.table(True)
+        table = table[key]
+    if isinstance(value, dict) and isinstance(table.get(keys[-1]), dict):
+        for key, item in value.items():
+            put(table[keys[-1]], [key], item)
+    else:
+        table[keys[-1]] = value
+
+for keys, value in SET:
+    put(doc, keys, value)
+path.write_text(tomlkit.dumps(doc), encoding='utf-8')
+PY
 ```
 
 The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
@@ -2224,8 +2430,7 @@ The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
-be updated. Your files are right, and only the lockfile is out of date.
+lockfile again.
 
 ```bash
 uv lock --check
@@ -2428,7 +2633,9 @@ git restore --source 20cf458261ed --staged -- :/ && git restore --source 1baf060
 just setup
 ```
 
-The code now also has pydantic, and `wikipedia.py` has `Page`, a pydantic model with a title and an extract.
+The code now also has pydantic, a library that checks data. In `wikipedia.py`, `Page` is a pydantic model, a
+class with two fields, `title` and `extract`, the summary. pydantic checks that the answer of Wikipedia has both,
+as strings.
 
 `random_page` returns a `Page` in place of a dictionary, so one test changes. An answer that is not a page is a
 `WikipediaError` too, and a new test checks it.
@@ -2679,12 +2886,11 @@ git restore --source 88fe0e20d645 --staged -- :/ && git restore --source 06ff2ca
 just setup
 ```
 
-A language that is not a language code can send the request to another site. New code checks the language, and
-no test reaches it, so the coverage drops.
+The language goes into the address of the request, as `en` does in `en.wikipedia.org`. So a language such as
+`example.com/x?` sends the request to the site `example.com`. New code now accepts only lowercase letters,
+joined by hyphens, as in `en` or `zh-yue`. No test reaches the new code, so the coverage drops.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
-
-<a id="step-07.5"></a>
 
 ### 7.5 Only a language code goes into the address
 
@@ -2782,8 +2988,6 @@ GitHub installs every tool of the project to run the tests, and the tests need o
 section changes what GitHub installs to run the tests.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
-
-<a id="step-08b.1"></a>
 
 ### 8b.1 The tests install the group test alone
 

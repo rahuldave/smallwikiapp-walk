@@ -47,7 +47,7 @@ The table gives each kind of documentation, and the sections where it appears.
 | Kind | Who reads it, and what it says | Where |
 |---|---|---|
 | README | A reader on GitHub. What the project is, and where each part is | Sections 1 and 8 |
-| Help text | A person who runs the command. click writes it from the docstring and the options | Sections 2 and 5 |
+| Help text | A person who runs the command. click, the library that the command is built on, writes it from the docstring and the options | Sections 2 and 5 |
 | Reference | A person who calls the code. smalldocs makes it from the code | Sections 3, 7 and 11 |
 | Docstring | What a module, a class or a function does | Sections 1 to 6 |
 | Docment | What each parameter, field and return is | Sections 3 to 6 |
@@ -66,12 +66,105 @@ cd smallwikiapp
 git switch -c mine ae86cb7d116c
 ```
 
-Then add the command `git check`, which compares your files with the project's after each move. It compares `pyproject.toml` by the names of its packages, so another version of a package does not count as a difference. It does not compare the lines of `uv.lock`. It checks that you and the project both have a `uv.lock`, or both have none. It also checks that your `uv.lock` is up to date with your `pyproject.toml`.
+Then add the command `git check`, which compares your files with the project's after each move, and leaves what `git add` has staged as it was. It compares `pyproject.toml` and `uv.lock` by the names of their packages, so another version of a package does not count as a difference. A small Python program, `package_names.py`, reads each of these files as data, and uv runs it. These commands write the program into the folder `.git`, and tell git to show each file as the program prints it.
 
 ```bash
-echo '/pyproject.toml diff=names' >> .git/info/attributes
-git config diff.names.textconv "sed -E 's/^([[:space:]]*\"[A-Za-z0-9_.-]+(\\[[^]]*\\])?)[^\";]*/\\1/'"
-git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/" ":(top,exclude,glob)uv.lock" && git diff --cached --name-status --diff-filter=AD "$1" -- ":(top,glob)uv.lock" && { [ "$2" = --stale-lock ] || [ ! -f uv.lock ] || uv lock --check -q; }; }; f'
+cat > "$(git rev-parse --git-common-dir)/package_names.py" <<'PY'
+"""Print a pyproject.toml or a uv.lock without the versions of its packages, so that git check compares their names.
+
+    python package_names.py pyproject.toml FILE
+    python package_names.py uv.lock FILE
+
+A pyproject.toml keeps all it says, with each requirement cut to its name, its extras, its address and its marker. A
+uv.lock keeps the names that the project's own packages ask for, and the members of the workspace. The rules are those
+of timewalk's package_names. The result is JSON, one item a line. A file that is not TOML is printed as it is.
+"""
+
+import json
+import re
+import sys
+import tomllib
+
+# A requirement such as "pytest>=8.3.4", "Uvicorn[standard] ; python_version < '3.12'" or "x @ git+https://...": its name,
+# its extras, what comes between (the versions, or "@" and an address), and its marker after the ";".
+REQUIREMENT = re.compile(r"^\s*([A-Za-z0-9][A-Za-z0-9._-]*)\s*(\[[^\]]*\])?([^;]*)(?:;(.*))?$", re.S)
+
+
+def package_names(
+    path: str,  # The file's path in the project; its name says how to read it
+    data: bytes,  # Its contents
+) -> object | None:  # What it says without the versions of packages, to compare; None if it is not a file of packages
+    """Read a pyproject.toml or a uv.lock with the versions left out, as timewalk's package_names does."""
+    name = path.rsplit("/", 1)[-1]
+    if name not in ("pyproject.toml", "uv.lock"):
+        return None
+    try:
+        doc = tomllib.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, tomllib.TOMLDecodeError):
+        return None
+
+    def cut(requirement: object) -> object:   # "pytest>=8.3.4" is pytest; a table, such as { include-group = "test" }, stays
+        found = REQUIREMENT.match(requirement) if isinstance(requirement, str) else None
+        if not found:
+            return requirement
+        extras = sorted(e.strip().lower() for e in (found.group(2) or "[]")[1:-1].split(",") if e.strip())
+        between, marker = found.group(3).strip(), " ".join((found.group(4) or "").split())
+        address = between[1:].strip() if between.startswith("@") else ""   # a package from an address: the address counts
+        return (re.sub(r"[-_.]+", "-", found.group(1)).lower() + (f"[{','.join(extras)}]" if extras else "")
+                + (f" @ {address}" if address else "") + (f"; {marker}" if marker else ""))
+
+    def names(value: object) -> list:   # every name = "..." in a table, at any depth
+        if isinstance(value, dict):
+            return [*([value["name"]] if isinstance(value.get("name"), str) else []), *(n for v in value.values() for n in names(v))]
+        return [n for v in value for n in names(v)] if isinstance(value, list) else []
+
+    if name == "uv.lock":
+        own = [p for p in doc.get("package", []) if isinstance(p, dict) and isinstance(p.get("source"), dict)
+               and {"editable", "virtual"} & set(p["source"])]
+        return {"requires-python": doc.get("requires-python"), "manifest": sorted(set(names(doc.get("manifest", {})))),
+                "own": {p.get("name"): sorted(set(names({k: v for k, v in p.items() if k not in ("name", "version", "source")})))
+                        for p in own}}
+    lists = [("project", "dependencies"), ("build-system", "requires"), ("tool", "uv", "dev-dependencies")]
+    groups = [("project", "optional-dependencies"), ("dependency-groups",)]
+
+    def at(keys: tuple) -> object:   # the table or list at a path of keys, or None
+        value = doc
+        for key in keys:
+            value = value.get(key) if isinstance(value, dict) else None
+        return value
+
+    for keys in lists:
+        if isinstance(at(keys), list):
+            at(keys[:-1])[keys[-1]] = sorted(map(cut, at(keys)), key=repr)
+    for keys in groups:
+        table = at(keys)
+        for group, wanted in (table.items() if isinstance(table, dict) else []):
+            if isinstance(wanted, list):
+                table[group] = sorted(map(cut, wanted), key=repr)
+    return doc
+
+
+def main() -> int:  # The exit code
+    """Print a file as package_names reads it, or as it is when it is not TOML."""
+    kind, file = sys.argv[1], sys.argv[2]
+    with open(file, "rb") as handle:
+        data = handle.read()
+    found = package_names(kind, data)
+    if found is None:
+        sys.stdout.buffer.write(data)
+    else:
+        print(json.dumps(found, indent=1, sort_keys=True, ensure_ascii=False, default=str))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+PY
+echo '/pyproject.toml diff=pyproject' >> .git/info/attributes
+echo '/uv.lock diff=uvlock' >> .git/info/attributes
+git config diff.pyproject.textconv 'uv run --quiet --no-config --no-project --python ">=3.11" python "$(git rev-parse --git-common-dir)/package_names.py" pyproject.toml'
+git config diff.uvlock.textconv 'uv run --quiet --no-config --no-project --python ">=3.11" python "$(git rev-parse --git-common-dir)/package_names.py" uv.lock'
+git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp -p "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/"; }; f'
 ```
 
 <a id="step-00"></a>
@@ -108,7 +201,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -117,6 +211,18 @@ just
 just --show setup
 just --show help
 just help setup
+```
+
+Check your files against this part. The command prints nothing when they match, and otherwise shows what differs:
+
+```bash
+git check ae86cb7d116c
+```
+
+If you are stuck, this command puts the files of this part in place of yours. A file that you made yourself stays:
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c --staged --worktree -- :/
 ```
 
 ### What changed
@@ -605,9 +711,11 @@ git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d4958
 ### 1.2 Ask Wikipedia for a page
 
 `main` prints a fixed line. It must ask Wikipedia for a random page instead, and print the title and the summary.
-The new `main` is the command of the first version of the original wikiapp, from 2024. Its docstring is new, and
-says what the command does. The `main` of the original wikiapp had no `-> None`. This `main` keeps the
-annotation that `uv init` gave it.
+The new `main` is the command of the first version of the original wikiapp, from 2024.
+
+Its docstring, the text in triple quotes under `def main`, is new, and says what the command does. The `-> None`
+after `main()` says that `main` returns no value. `uv init` wrote it, and this `main` keeps it. The `main` of the
+original wikiapp did not have it.
 
 - `@click.command()` makes `main` a command.
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.
@@ -688,7 +796,8 @@ git restore --source 36d49582843a --staged -- :/ && git restore --source 571c82e
 
 ### 1.3 A User-Agent
 
-Wikipedia refused the request, because it did not say who sent it. The User-Agent header says that. The policy of
+Wikipedia refused the request, because its User-Agent named only the library requests, and not the program that
+sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
@@ -854,8 +963,10 @@ The code has tests. In the tests, a stand-in called a mock answers in place of W
 network. Each run also measures coverage, which is the share of the lines of the code that the tests run. The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
 
-ruff formats and lints the code, in a group `lint`, and `just check` runs every check. `just hook` installs a git
-hook, which runs `just check` before each `git commit`. ty checks the types.
+The code now also has ruff and ty, in a group `lint`. ruff formats the code, and lints it, which means that it
+checks the code against a list of rules. ty checks the types, the kind of value, such as a string or a number,
+that each name has. `just check` runs every check. `just hook` installs a git hook, a script that git runs by
+itself before each `git commit`, and the hook runs `just check`.
 
 The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
 `random_page` returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of its fields.
@@ -898,7 +1009,7 @@ uv run smalldocs --version
 uv tree --only-group docs
 ```
 
-The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
+The first command prints `smalldocs 0.1.5`, or a newer version. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
 markdown-it-py, mdit-py-plugins, pygments and pyyaml.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
@@ -1044,11 +1155,11 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 just setup
 ```
 
-The check lists gaps in the library. The library gets docstrings, and a docment beside each parameter and field.
+The check lists gaps in the library. The module gets a docstring, and `random_page` a longer one. A docment is a
+short comment at the end of the line of a name, which says what it is. Each field of `Page`, the parameter of
+`random_page`, and the value it returns get a docment.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
-
-<a id="step-08.3"></a>
 
 ### 8.3 The library documented
 
@@ -1147,8 +1258,6 @@ The check lists gaps in the command, `console.py`. It and `src/wikiapp/__init__.
 a longer docstring and a docment, and the option `--language` a clearer help.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).
-
-<a id="step-08.4"></a>
 
 ### 8.4 The command documented
 
@@ -1271,8 +1380,6 @@ The tests say what the code must do, and the check lists them as gaps too. Each 
 the docs check finds no gap.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
-
-<a id="step-08.5"></a>
 
 ### 8.5 The tests documented
 
@@ -1513,8 +1620,6 @@ The reference is text in a terminal. smalldocs builds a site, with a front page 
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
 
-<a id="step-08.6"></a>
-
 ### 8.6 A site
 
 The reference exists only as Markdown that `just docs module` prints. A reader wants a site, with a front page
@@ -1701,8 +1806,6 @@ The README does not name the tests and the docs among the folders. Now it names 
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).
 
-<a id="step-08.7"></a>
-
 ### 8.7 The README names the tests and the docs
 
 The README is the first page that a reader sees on GitHub. Its table of folders says where each part of the
@@ -1771,8 +1874,6 @@ just setup
 A person must remember to run the docs check. Now `just check` runs it, so each `git commit` must pass it.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
-
-<a id="step-08.8"></a>
 
 ### 8.8 The docs check in `just check`
 
@@ -1883,8 +1984,6 @@ no other group.
 But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your machine still installs every group.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
-
-<a id="step-08b.2"></a>
 
 ### 8b.2 A workflow that publishes the docs
 
@@ -2029,13 +2128,13 @@ its own. Its code went there with its docstrings and docments. The app uses it, 
 gone. The README and the front page of the docs name both packages. The tests of the library are now
 `tests/test_wikirandom.py`.
 
-When the library's code left the app, it also left the count of `just docs check`. Before this section, the check
+The settings of smalldocs are in `docs/_smalldocs.yml`. Besides the tests, the check counts only the packages that
+this file names, and it names only `wikiapp`. So when
+the library's code moved to `wikirandom`, `just docs check` stopped counting it. Before this section, the check
 counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
 too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
-
-<a id="step-09.10"></a>
 
 ### 9.10 The docs check counts the library
 

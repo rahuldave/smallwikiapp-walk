@@ -16,8 +16,10 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source d8a9c8f71eb5 
 just setup
 ```
 
-A recipe that runs `uv` can change the lockfile, and prints no warning. This section changes no recipe. It
-changes how each recipe that runs `uv` runs it.
+uv writes the exact version of each package in a file, the lockfile `uv.lock`. A recipe that runs `uv` can
+change the lockfile, and uv prints no warning. This section changes no recipe. It sets one variable,
+`UV_LOCKED`, which each recipe gives to `uv`. With it, uv stops with an error when it would have to change the
+lockfile.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
 

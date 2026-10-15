@@ -19,6 +19,6 @@ except requests.RequestException as error:
     raise WikipediaError(str(error)) from error
 ```
 
-The package requests fetches the page, and it can raise many kinds of error. `wikipedia.py` turns each of them into
-`WikipediaError`, so a program that uses the library catches one error. The app turns that error into `Error: ...`
+`wikipedia.py` fetches the page with the package `requests`, which can raise many kinds of error. `wikipedia.py` turns
+each of them into `WikipediaError`, so a program that uses the library catches one error. The app turns that error into `Error: ...`
 and exit code 1.

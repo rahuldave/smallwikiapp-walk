@@ -22,7 +22,8 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source b7469ee81a82 
 just setup
 ```
 
-The code now also has recipes that refuse a lockfile that is out of date.
+The lockfile, `uv.lock`, lists the exact version of each package. Until now, `uv run` updated it without a
+word. The justfile now sets `UV_LOCKED`, so each recipe that runs `uv` refuses a lockfile that is out of date.
 
 Each check is a recipe of its own, and a person must remember to run them all. `just check` runs the format, the
 linter, the tests and the configuration, in order.

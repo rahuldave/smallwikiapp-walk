@@ -37,7 +37,7 @@ The table gives each kind of documentation, and the sections where it appears.
 | Kind | Who reads it, and what it says | Where |
 |---|---|---|
 | README | A reader on GitHub. What the project is, and where each part is | Sections 1 and 8 |
-| Help text | A person who runs the command. click writes it from the docstring and the options | Sections 2 and 5 |
+| Help text | A person who runs the command. click, the library that the command is built on, writes it from the docstring and the options | Sections 2 and 5 |
 | Reference | A person who calls the code. smalldocs makes it from the code | Sections 3, 7 and 11 |
 | Docstring | What a module, a class or a function does | Sections 1 to 6 |
 | Docment | What each parameter, field and return is | Sections 3 to 6 |
@@ -72,8 +72,10 @@ The code has tests. In the tests, a stand-in called a mock answers in place of W
 network. Each run also measures coverage, which is the share of the lines of the code that the tests run. The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
 
-ruff formats and lints the code, in a group `lint`, and `just check` runs every check. `just hook` installs a git
-hook, which runs `just check` before each `git commit`. ty checks the types.
+The code now also has ruff and ty, in a group `lint`. ruff formats the code, and lints it, which means that it
+checks the code against a list of rules. ty checks the types, the kind of value, such as a string or a number,
+that each name has. `just check` runs every check. `just hook` installs a git hook, a script that git runs by
+itself before each `git commit`, and the hook runs `just check`.
 
 The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
 `random_page` returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of its fields.
@@ -90,7 +92,9 @@ from the code.
 
 $ just setup
 
-The check lists gaps in the library. The library gets docstrings, and a docment beside each parameter and field.
+The check lists gaps in the library. The module gets a docstring, and `random_page` a longer one. A docment is a
+short comment at the end of the line of a name, which says what it is. Each field of `Page`, the parameter of
+`random_page`, and the value it returns get a docment.
 
 {{include step-08.3}}
 
@@ -180,7 +184,9 @@ its own. Its code went there with its docstrings and docments. The app uses it, 
 gone. The README and the front page of the docs name both packages. The tests of the library are now
 `tests/test_wikirandom.py`.
 
-When the library's code left the app, it also left the count of `just docs check`. Before this section, the check
+The settings of smalldocs are in `docs/_smalldocs.yml`. Besides the tests, the check counts only the packages that
+this file names, and it names only `wikiapp`. So when
+the library's code moved to `wikirandom`, `just docs check` stopped counting it. Before this section, the check
 counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
 too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
 

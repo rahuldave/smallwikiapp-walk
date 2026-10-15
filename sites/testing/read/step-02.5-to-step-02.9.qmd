@@ -10,10 +10,15 @@ title: "2.5 to 2.9 Fixtures and mocks"
 just setup
 ```
 
-The first test asks the real Wikipedia, so it is slow and needs the network. A fixture is a function that pytest
-calls for each test that names it as a parameter. One fixture gives each test a runner, which runs the command and keeps what
-it prints. A mock is a stand-in that takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
-request ends the command with exit code 1.
+The first test asks the real Wikipedia, so it is slow and needs the network. A mock solves that. It takes the
+place of Wikipedia in the tests, and gives back a made-up page, "Lorem Ipsum", with no network.
+
+The tests get the mock from a fixture. A fixture is a function that pytest calls for each test that names it as a
+parameter. A second fixture gives each test a runner, which runs the command and keeps what it prints. The tests
+check the title that the command prints, that the command made a request, and the address of the request.
+
+When a command ends, it gives back a number, its exit code. The number is 0 when the command works, and another number,
+such as 1, when it fails. A last test makes the request fail, and checks that the command ends with exit code 1.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
 
@@ -169,8 +174,8 @@ which address. A mock keeps a record of each call to it, and two tests read that
 `test_main_invokes_requests_get` checks that the command calls `requests.get`, and `test_main_uses_correct_url`
 checks the address.
 
-`call_args[0]` is the tuple of the positional arguments of the last call. Here it contains
-only the address. The header is a keyword argument, in `call_args[1]`.
+`call_args[0]` contains the arguments that the last call gave in order, without a name. Here that is only the
+address. The call gives the header by name, as `headers=...`, so the header is in `call_args[1]`.
 
 A patch to [`tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee).
 

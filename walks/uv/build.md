@@ -66,13 +66,106 @@ cd smallwikiapp
 git switch -c mine ae86cb7d116c
 ```
 
-Then add the command `git check`, which compares your files with the project's after each move. It compares `pyproject.toml` by the names of its packages, so another version of a package does not count as a difference. It does not compare the lines of `uv.lock`. It checks that you and the project both have a `uv.lock`, or both have none. It also checks that your `uv.lock` is up to date with your `pyproject.toml`.
+Then add the command `git check`, which compares your files with the project's after each move, and leaves what `git add` has staged as it was. It compares `pyproject.toml` and `uv.lock` by the names of their packages, so another version of a package does not count as a difference. A small Python program, `package_names.py`, reads each of these files as data, and uv runs it. These commands write the program into the folder `.git`, and tell git to show each file as the program prints it.
 
 ```bash
-echo '/pyproject.toml diff=names' >> .git/info/attributes
-echo 'packages/wikirandom/pyproject.toml diff=names' >> .git/info/attributes
-git config diff.names.textconv "sed -E 's/^([[:space:]]*\"[A-Za-z0-9_.-]+(\\[[^]]*\\])?)[^\";]*/\\1/'"
-git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/" ":(top,exclude,glob)uv.lock" && git diff --cached --name-status --diff-filter=AD "$1" -- ":(top,glob)uv.lock" && { [ "$2" = --stale-lock ] || [ ! -f uv.lock ] || uv lock --check -q; }; }; f'
+cat > "$(git rev-parse --git-common-dir)/package_names.py" <<'PY'
+"""Print a pyproject.toml or a uv.lock without the versions of its packages, so that git check compares their names.
+
+    python package_names.py pyproject.toml FILE
+    python package_names.py uv.lock FILE
+
+A pyproject.toml keeps all it says, with each requirement cut to its name, its extras, its address and its marker. A
+uv.lock keeps the names that the project's own packages ask for, and the members of the workspace. The rules are those
+of timewalk's package_names. The result is JSON, one item a line. A file that is not TOML is printed as it is.
+"""
+
+import json
+import re
+import sys
+import tomllib
+
+# A requirement such as "pytest>=8.3.4", "Uvicorn[standard] ; python_version < '3.12'" or "x @ git+https://...": its name,
+# its extras, what comes between (the versions, or "@" and an address), and its marker after the ";".
+REQUIREMENT = re.compile(r"^\s*([A-Za-z0-9][A-Za-z0-9._-]*)\s*(\[[^\]]*\])?([^;]*)(?:;(.*))?$", re.S)
+
+
+def package_names(
+    path: str,  # The file's path in the project; its name says how to read it
+    data: bytes,  # Its contents
+) -> object | None:  # What it says without the versions of packages, to compare; None if it is not a file of packages
+    """Read a pyproject.toml or a uv.lock with the versions left out, as timewalk's package_names does."""
+    name = path.rsplit("/", 1)[-1]
+    if name not in ("pyproject.toml", "uv.lock"):
+        return None
+    try:
+        doc = tomllib.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, tomllib.TOMLDecodeError):
+        return None
+
+    def cut(requirement: object) -> object:   # "pytest>=8.3.4" is pytest; a table, such as { include-group = "test" }, stays
+        found = REQUIREMENT.match(requirement) if isinstance(requirement, str) else None
+        if not found:
+            return requirement
+        extras = sorted(e.strip().lower() for e in (found.group(2) or "[]")[1:-1].split(",") if e.strip())
+        between, marker = found.group(3).strip(), " ".join((found.group(4) or "").split())
+        address = between[1:].strip() if between.startswith("@") else ""   # a package from an address: the address counts
+        return (re.sub(r"[-_.]+", "-", found.group(1)).lower() + (f"[{','.join(extras)}]" if extras else "")
+                + (f" @ {address}" if address else "") + (f"; {marker}" if marker else ""))
+
+    def names(value: object) -> list:   # every name = "..." in a table, at any depth
+        if isinstance(value, dict):
+            return [*([value["name"]] if isinstance(value.get("name"), str) else []), *(n for v in value.values() for n in names(v))]
+        return [n for v in value for n in names(v)] if isinstance(value, list) else []
+
+    if name == "uv.lock":
+        own = [p for p in doc.get("package", []) if isinstance(p, dict) and isinstance(p.get("source"), dict)
+               and {"editable", "virtual"} & set(p["source"])]
+        return {"requires-python": doc.get("requires-python"), "manifest": sorted(set(names(doc.get("manifest", {})))),
+                "own": {p.get("name"): sorted(set(names({k: v for k, v in p.items() if k not in ("name", "version", "source")})))
+                        for p in own}}
+    lists = [("project", "dependencies"), ("build-system", "requires"), ("tool", "uv", "dev-dependencies")]
+    groups = [("project", "optional-dependencies"), ("dependency-groups",)]
+
+    def at(keys: tuple) -> object:   # the table or list at a path of keys, or None
+        value = doc
+        for key in keys:
+            value = value.get(key) if isinstance(value, dict) else None
+        return value
+
+    for keys in lists:
+        if isinstance(at(keys), list):
+            at(keys[:-1])[keys[-1]] = sorted(map(cut, at(keys)), key=repr)
+    for keys in groups:
+        table = at(keys)
+        for group, wanted in (table.items() if isinstance(table, dict) else []):
+            if isinstance(wanted, list):
+                table[group] = sorted(map(cut, wanted), key=repr)
+    return doc
+
+
+def main() -> int:  # The exit code
+    """Print a file as package_names reads it, or as it is when it is not TOML."""
+    kind, file = sys.argv[1], sys.argv[2]
+    with open(file, "rb") as handle:
+        data = handle.read()
+    found = package_names(kind, data)
+    if found is None:
+        sys.stdout.buffer.write(data)
+    else:
+        print(json.dumps(found, indent=1, sort_keys=True, ensure_ascii=False, default=str))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+PY
+echo '/pyproject.toml diff=pyproject' >> .git/info/attributes
+echo 'packages/wikirandom/pyproject.toml diff=pyproject' >> .git/info/attributes
+echo '/uv.lock diff=uvlock' >> .git/info/attributes
+git config diff.pyproject.textconv 'uv run --quiet --no-config --no-project --python ">=3.11" python "$(git rev-parse --git-common-dir)/package_names.py" pyproject.toml'
+git config diff.uvlock.textconv 'uv run --quiet --no-config --no-project --python ">=3.11" python "$(git rev-parse --git-common-dir)/package_names.py" uv.lock'
+git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { cp -p "$(git rev-parse --git-path index)" "$i" 2>/dev/null || rm -f "$i"; } && export GIT_INDEX_FILE="$i" && git add -A && git diff --cached "$1" -- ":/"; }; f'
 ```
 
 <a id="step-00"></a>
@@ -109,7 +202,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -121,7 +215,20 @@ just help setup
 ```
 
 `.venv` is the environment of the project. It has a Python, and every package that the lockfile names. `uv run`
-runs a command with that Python. So `uv run wikiapp` needs no command to activate `.venv` first.
+runs a command with that Python. So `uv run wikiapp` works at once. Without uv, a person
+first activates `.venv`, with a command that makes the shell use the Python of `.venv`.
+
+Check your files against this part. The command prints nothing when they match, and otherwise shows what differs:
+
+```bash
+git check ae86cb7d116c
+```
+
+If you are stuck, this command puts the files of this part in place of yours. A file that you made yourself stays:
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c --staged --worktree -- :/
+```
 
 ### What changed
 
@@ -541,8 +648,6 @@ versions in `uv.lock`. uv calls this choice resolving.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).
 
-<a id="step-01.1"></a>
-
 ### 1.1 click and requests
 
 The command needs two packages that Python does not have. click makes command lines, with options and help.
@@ -619,8 +724,8 @@ git restore --source 36d49582843a --staged -- :/ && git restore --source f05d3c3
 just setup
 ```
 
-The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, and
-`wikiapp --version` prints the version.
+The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, a line
+that tells Wikipedia the name of the program that asks. `wikiapp --version` prints the version.
 
 The tests need pytest, and a user of the command does not. A dependency group is a list of packages for the
 people who work on the project. By default uv installs only a group named `dev`. The project first sets
@@ -642,10 +747,33 @@ uv installs only the group `dev` by default. The setting `default-groups = "all"
 install every group. So each later `uv add --group` needs no other change to `pyproject.toml`. A patch adds the
 table `[tool.uv]` with this setting.
 
-Apply the patch to [`pyproject.toml`](#step-02.1-pyproject.toml-5d07e7), from the top of the project:
+Set the values that this change sets in [`pyproject.toml`](#step-02.1-pyproject.toml-5d07e7). Run this command from the top of the project. It reads your file with tomlkit, a library for TOML files. It sets each of these values as the project has it, and keeps the rest of your file:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/46dc20fb9092170695699eaa052f4830563cb930.diff | git apply --include=pyproject.toml
+uv run --quiet --no-config --no-project --with tomlkit python - <<'PY'
+import pathlib, tomlkit
+path = pathlib.Path('pyproject.toml')
+doc = tomlkit.parse(path.read_text(encoding='utf-8')) if path.exists() else tomlkit.document()
+# Each value that the change sets, by its keys
+SET = [
+    (('tool', 'uv'), {'default-groups': 'all'}),
+]
+
+def put(table, keys, value):   # make each table on the way; a table goes into the one there, key by key
+    for key in keys[:-1]:
+        if key not in table:
+            table[key] = tomlkit.table(True)
+        table = table[key]
+    if isinstance(value, dict) and isinstance(table.get(keys[-1]), dict):
+        for key, item in value.items():
+            put(table[keys[-1]], [key], item)
+    else:
+        table[keys[-1]] = value
+
+for keys, value in SET:
+    put(doc, keys, value)
+path.write_text(tomlkit.dumps(doc), encoding='utf-8')
+PY
 ```
 
 The patch adds the table `[tool.uv]` at the end of `pyproject.toml`, after the table `[build-system]`. It has a
@@ -657,7 +785,7 @@ The setting changes which groups uv installs, not which versions. So `uv.lock` s
 uv lock --check
 ```
 
-uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
+uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so the setting changes nothing until a later move adds one.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -851,7 +979,7 @@ just setup
 ```
 
 The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
-mock, and recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
+mock, a stand-in that answers in place of Wikipedia with no network. It also has recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
 of its own, `src/wikiapp/wikipedia.py`. ruff and
 validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.
@@ -861,8 +989,6 @@ the lockfile again and prints no warning. The justfile now exports `UV_LOCKED`, 
 lockfile that is out of date.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
-
-<a id="step-04.10"></a>
 
 ### 4.10 Recipes refuse an old lockfile
 
@@ -961,10 +1087,33 @@ The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv in
 its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
 `pyproject.toml` now says 3.11.
 
-Apply the patch to [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7), from the top of the project:
+Set the values that this change sets in [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7). Run this command from the top of the project. It reads your file with tomlkit, a library for TOML files. It sets each of these values as the project has it, and keeps the rest of your file:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264.diff | git apply --include=pyproject.toml
+uv run --quiet --no-config --no-project --with tomlkit python - <<'PY'
+import pathlib, tomlkit
+path = pathlib.Path('pyproject.toml')
+doc = tomlkit.parse(path.read_text(encoding='utf-8')) if path.exists() else tomlkit.document()
+# Each value that the change sets, by its keys
+SET = [
+    (('project', 'requires-python'), '>=3.11'),
+]
+
+def put(table, keys, value):   # make each table on the way; a table goes into the one there, key by key
+    for key in keys[:-1]:
+        if key not in table:
+            table[key] = tomlkit.table(True)
+        table = table[key]
+    if isinstance(value, dict) and isinstance(table.get(keys[-1]), dict):
+        for key, item in value.items():
+            put(table[keys[-1]], [key], item)
+    else:
+        table[keys[-1]] = value
+
+for keys, value in SET:
+    put(doc, keys, value)
+path.write_text(tomlkit.dumps(doc), encoding='utf-8')
+PY
 ```
 
 The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
@@ -972,8 +1121,7 @@ The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
-be updated. Your files are right, and only the lockfile is out of date.
+lockfile again.
 
 ```bash
 uv lock --check
@@ -1092,8 +1240,6 @@ GitHub runs the tests on several versions of Python, and each job installs group
 jobs install.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
-
-<a id="step-06.5"></a>
 
 ### 6.5 GitHub runs the tests
 
@@ -1436,7 +1582,7 @@ git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09
 just setup
 ```
 
-The library and the app are in one package, and other programs could use the library. The library becomes a
+The library and the app are in one package. So a program that needs only the library must install the app too. The library becomes a
 second package of the project. The two packages form a workspace. The library also needs packages of its own.
 `--package wikirandom` makes `uv add` change the library's `pyproject.toml`, and not the app's.
 
@@ -1476,10 +1622,7 @@ version numbers.
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`.
-
-The check of your files after this move prints the same error. Your files are right, and only the
-lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -1682,7 +1825,8 @@ once, with no new install.
 uv run python -c "import wikirandom; print(wikirandom.__file__)"
 ```
 
-A plain `uv run` now installs the library too. The command prints a path that ends with
+`uv add` installed the library, and the app now depends on it, so Python finds it under a plain `uv run`. The
+command prints a path that ends with
 `packages/wikirandom/src/wikirandom/__init__.py`, the file in the repository, not a copy.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
@@ -1763,10 +1907,34 @@ Apply the patch to [`tests/test_wikipedia.py`](#step-09.7-tests-test_wikipedia.p
 curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/78ab09579fdffcb2db04e83807817e2edba27ebe.diff | git apply --include=tests/test_wikipedia.py
 ```
 
-Apply the patch to [`pyproject.toml`](#step-09.7-pyproject.toml-5d07e7), from the top of the project:
+Set the values that this change sets in [`pyproject.toml`](#step-09.7-pyproject.toml-5d07e7). Run this command from the top of the project. It reads your file with tomlkit, a library for TOML files. It sets each of these values as the project has it, and keeps the rest of your file:
 
 ```bash
-curl -fsSL https://github.com/rahuldave/smallwikiapp/commit/78ab09579fdffcb2db04e83807817e2edba27ebe.diff | git apply --include=pyproject.toml
+uv run --quiet --no-config --no-project --with tomlkit python - <<'PY'
+import pathlib, tomlkit
+path = pathlib.Path('pyproject.toml')
+doc = tomlkit.parse(path.read_text(encoding='utf-8')) if path.exists() else tomlkit.document()
+# Each value that the change sets, by its keys
+SET = [
+    (('tool', 'pytest', 'ini_options', 'addopts'),
+     "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"),
+]
+
+def put(table, keys, value):   # make each table on the way; a table goes into the one there, key by key
+    for key in keys[:-1]:
+        if key not in table:
+            table[key] = tomlkit.table(True)
+        table = table[key]
+    if isinstance(value, dict) and isinstance(table.get(keys[-1]), dict):
+        for key, item in value.items():
+            put(table[keys[-1]], [key], item)
+    else:
+        table[keys[-1]] = value
+
+for keys, value in SET:
+    put(doc, keys, value)
+path.write_text(tomlkit.dumps(doc), encoding='utf-8')
+PY
 ```
 
 Apply the patch to [`README.md`](#step-09.7-README.md-8ec9a0), from the top of the project:
@@ -2111,12 +2279,11 @@ just setup
 The code now also has a docs check that counts the library. The tests of the library are now in
 `tests/test_wikirandom.py`.
 
-A user installs a package from a wheel, not from a clone. `uv build` builds a package with the build backend that
-its `pyproject.toml` names, here `uv_build`.
+A user installs a package from a wheel, and not from a copy of the repository. A wheel is one file that contains
+the package, ready to install. `uv build` makes the wheel, and also a source archive of the code, with the build
+backend that its `pyproject.toml` names, here `uv_build`. A build backend is the tool that packs the code into that file.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
-
-<a id="step-10.1"></a>
 
 ### 10.1 The recipe `build`
 
@@ -2195,8 +2362,6 @@ go into the wheel. The app names wikirandom with no range of versions, so a user
 can get any version of wikirandom.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
-
-<a id="step-10.2"></a>
 
 ### 10.2 The app needs wikirandom 0.1
 

@@ -4,7 +4,7 @@
 
 **Read the tutorial.** Each change explained, with the code to look at. [Build it yourself](build.md) is the other way to read it.
 
-Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change. What changed is what you check your files against.
+Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change.
 
 We build the tests of `wikiapp`, a small command that prints the title and the summary of a random Wikipedia
 page. A test runs the code and checks what it gives back, so a later change cannot break the command without a
@@ -83,7 +83,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -567,9 +568,11 @@ uv tree --depth 1
 ### 1.2 Ask Wikipedia for a page
 
 `main` prints a fixed line. It must ask Wikipedia for a random page instead, and print the title and the summary.
-The new `main` is the command of the first version of the original wikiapp, from 2024. Its docstring is new, and
-says what the command does. The `main` of the original wikiapp had no `-> None`. This `main` keeps the
-annotation that `uv init` gave it.
+The new `main` is the command of the first version of the original wikiapp, from 2024.
+
+Its docstring, the text in triple quotes under `def main`, is new, and says what the command does. The `-> None`
+after `main()` says that `main` returns no value. `uv init` wrote it, and this `main` keeps it. The `main` of the
+original wikiapp did not have it.
 
 - `@click.command()` makes `main` a command.
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.
@@ -634,7 +637,8 @@ User-Agent is the default of a library. requests sends `python-requests/` and it
 
 ### 1.3 A User-Agent
 
-Wikipedia refused the request, because it did not say who sent it. The User-Agent header says that. The policy of
+Wikipedia refused the request, because its User-Agent named only the library requests, and not the program that
+sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
@@ -778,7 +782,7 @@ The setting changes which groups uv installs, not which versions. So `uv.lock` s
 uv lock --check
 ```
 
-uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
+uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so the setting changes nothing until a later move adds one.
 
 #### What changed
 
@@ -952,10 +956,15 @@ result as before, `1 passed`.
 just setup
 ```
 
-The first test asks the real Wikipedia, so it is slow and needs the network. A fixture is a function that pytest
-calls for each test that names it as a parameter. One fixture gives each test a runner, which runs the command and keeps what
-it prints. A mock is a stand-in that takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
-request ends the command with exit code 1.
+The first test asks the real Wikipedia, so it is slow and needs the network. A mock solves that. It takes the
+place of Wikipedia in the tests, and gives back a made-up page, "Lorem Ipsum", with no network.
+
+The tests get the mock from a fixture. A fixture is a function that pytest calls for each test that names it as a
+parameter. A second fixture gives each test a runner, which runs the command and keeps what it prints. The tests
+check the title that the command prints, that the command made a request, and the address of the request.
+
+When a command ends, it gives back a number, its exit code. The number is 0 when the command works, and another number,
+such as 1, when it fails. A last test makes the request fail, and checks that the command ends with exit code 1.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
 
@@ -1119,8 +1128,8 @@ which address. A mock keeps a record of each call to it, and two tests read that
 `test_main_invokes_requests_get` checks that the command calls `requests.get`, and `test_main_uses_correct_url`
 checks the address.
 
-`call_args[0]` is the tuple of the positional arguments of the last call. Here it contains
-only the address. The header is a keyword argument, in `call_args[1]`.
+`call_args[0]` contains the arguments that the last call gave in order, without a name. Here that is only the
+address. The call gives the header by name, as `headers=...`, so the header is in `call_args[1]`.
 
 A patch to [`tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee).
 
@@ -1325,8 +1334,6 @@ Tests of the library need the mock too, and it is in the tests of the command. T
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).
 
-<a id="step-03.2"></a>
-
 ### 3.2 The mock goes to conftest.py
 
 The tests of the library, which come next, need the mock too. Only the tests of `tests/test_console.py` can use
@@ -1412,8 +1419,6 @@ just setup
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520).
 
-<a id="step-03.3"></a>
-
 ### 3.3 A language
 
 `random_page` asks only the English Wikipedia. Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. So
@@ -1491,14 +1496,14 @@ just setup
 ```
 
 The code now also has an option `--language` on the command. When a request fails, `random_page` raises an error
-of its own, `WikipediaError`.
+of its own, `WikipediaError`. To raise an error is to stop and report what went wrong.
 
-The command should print that error as a message, not as a traceback. A test checks that a failed request prints
-`Error`.
+The command should print that error as a short message. It should not print a traceback, the long list of lines
+of code that Python prints when a program stops on an error. The command is built with click, a package for
+command-line programs. The command now passes the error to click, and click prints the word `Error` and then the
+message. A test checks that a failed request prints `Error`.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a6f5ae9a475d916d4053315c9e6699f16951193f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
-
-<a id="step-03.6"></a>
 
 ### 3.6 The command prints the error
 
@@ -1604,17 +1609,18 @@ The first command prints `Error:` and the message in place of a traceback, then 
 just setup
 ```
 
-The code now also has ruff, which formats the code and the tests with `just fmt`, and lints them with
-`just lint`. `just lint-config` checks the configuration. In the tests, the linter found an import below the code,
-and unused variables, and a person fixed them. `just lint --fix` sorted the imports of the command. The request
-has a timeout of 10 seconds, and the recipes refuse a lockfile that is out of date.
+The code now also has ruff, a tool that checks Python code. A recipe is a named task of the justfile, such as `fmt`
+or `lint`. `just fmt` makes ruff lay out the code and the tests
+in one fixed way. `just lint` makes ruff check them against a list of rules. `just lint-config` checks the
+settings in `pyproject.toml`, the lockfile and the justfile.
 
-Each check is a recipe of its own, and a person must remember to run them all. A new recipe, `just check`, runs
-every check. One of them fails when the tests run less than 90% of the code.
+In the tests, ruff found an import below the code, and unused variables. A person fixed them. `just lint --fix`
+put the imports of the command in order. The request now stops after 10 seconds with no answer. The lockfile,
+`uv.lock`, lists the exact version of each package, and the recipes now refuse to run when it is out of date.
+
+Each check is a recipe of its own, and a person must remember to run them all. A new recipe, `just check`, runs every check. One of them fails when the tests run less than 90% of the code.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
-
-<a id="step-04.11"></a>
 
 ### 4.11 The recipe check
 
@@ -1844,8 +1850,7 @@ In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
-be updated. Your files are right, and only the lockfile is out of date.
+lockfile again.
 
 ```bash
 uv lock --check
@@ -2011,7 +2016,9 @@ part of the tutorial publishes the docs with GitHub Pages, and lists each settin
 just setup
 ```
 
-The code now also has pydantic, and `wikipedia.py` has `Page`, a pydantic model with a title and an extract.
+The code now also has pydantic, a library that checks data. In `wikipedia.py`, `Page` is a pydantic model, a
+class with two fields, `title` and `extract`, the summary. pydantic checks that the answer of Wikipedia has both,
+as strings.
 
 `random_page` returns a `Page` in place of a dictionary, so one test changes. An answer that is not a page is a
 `WikipediaError` too, and a new test checks it.
@@ -2214,12 +2221,11 @@ The output is `1 passed, 8 deselected`.
 just setup
 ```
 
-A language that is not a language code can send the request to another site. New code checks the language, and
-no test reaches it, so the coverage drops.
+The language goes into the address of the request, as `en` does in `en.wikipedia.org`. So a language such as
+`example.com/x?` sends the request to the site `example.com`. New code now accepts only lowercase letters,
+joined by hyphens, as in `en` or `zh-yue`. No test reaches the new code, so the coverage drops.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
-
-<a id="step-07.5"></a>
 
 ### 7.5 Only a language code goes into the address
 
@@ -2294,8 +2300,6 @@ GitHub installs every tool of the project to run the tests, and the tests need o
 section changes what GitHub installs to run the tests.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
-
-<a id="step-08b.1"></a>
 
 ### 8b.1 The tests install the group test alone
 

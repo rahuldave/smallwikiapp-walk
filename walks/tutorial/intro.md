@@ -6,7 +6,7 @@ GitHub, documentation made from the code, and a build.
 
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch is a list of
 lines to add to a file and lines to take out of it. A command, such as `uv add`, changes its files by itself,
-with no patch. In **Build it yourself**, you make each move by hand, and then check your files against it. In **Read the
+with no patch. In **Build it yourself**, you make each move by hand, and then a command compares your files with the project's. In **Read the
 tutorial**, each move is already made, and the text explains what changed.
 
 Each move first says what problem it solves. Then it gives the change, piece by piece, and a command that checks
@@ -15,7 +15,7 @@ short commands that the project names. `just setup` asks uv to install the packa
 point.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
-2024 with pixi. Where the text says "the original wikiapp", it means that project.
+2024 with pixi, another tool that installs a project's packages. Where the text says "the original wikiapp", it means that project.
 
 Five shorter tutorials take parts of this one. Each has its own site, for
 [testing](https://rahuldave.com/smallwikiapp-walk/testing/),

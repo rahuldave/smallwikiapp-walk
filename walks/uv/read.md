@@ -4,7 +4,7 @@
 
 **Read the tutorial.** Each change explained, with the code to look at. [Build it yourself](build.md) is the other way to read it.
 
-Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change. What changed is what you check your files against.
+Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change.
 
 We manage the packages of `wikiapp` with uv. `wikiapp` is a small command that prints the title and the summary of
 a random Wikipedia page. A project must install the same packages on every machine, and keep the tools of its
@@ -88,7 +88,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -100,7 +101,8 @@ just help setup
 ```
 
 `.venv` is the environment of the project. It has a Python, and every package that the lockfile names. `uv run`
-runs a command with that Python. So `uv run wikiapp` needs no command to activate `.venv` first.
+runs a command with that Python. So `uv run wikiapp` works at once. Without uv, a person
+first activates `.venv`, with a command that makes the shell use the Python of `.venv`.
 
 ### What changed
 
@@ -520,8 +522,6 @@ versions in `uv.lock`. uv calls this choice resolving.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).
 
-<a id="step-01.1"></a>
-
 ### 1.1 click and requests
 
 The command needs two packages that Python does not have. click makes command lines, with options and help.
@@ -579,8 +579,8 @@ versions of every package that click and requests need. Two people with the same
 just setup
 ```
 
-The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, and
-`wikiapp --version` prints the version.
+The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, a line
+that tells Wikipedia the name of the program that asks. `wikiapp --version` prints the version.
 
 The tests need pytest, and a user of the command does not. A dependency group is a list of packages for the
 people who work on the project. By default uv installs only a group named `dev`. The project first sets
@@ -613,7 +613,7 @@ The setting changes which groups uv installs, not which versions. So `uv.lock` s
 uv lock --check
 ```
 
-uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
+uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so the setting changes nothing until a later move adds one.
 
 #### What changed
 
@@ -764,7 +764,7 @@ just setup
 ```
 
 The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
-mock, and recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
+mock, a stand-in that answers in place of Wikipedia with no network. It also has recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
 of its own, `src/wikiapp/wikipedia.py`. ruff and
 validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.
@@ -774,8 +774,6 @@ the lockfile again and prints no warning. The justfile now exports `UV_LOCKED`, 
 lockfile that is out of date.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
-
-<a id="step-04.10"></a>
 
 ### 4.10 Recipes refuse an old lockfile
 
@@ -858,8 +856,7 @@ In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
-be updated. Your files are right, and only the lockfile is out of date.
+lockfile again.
 
 ```bash
 uv lock --check
@@ -963,8 +960,6 @@ GitHub runs the tests on several versions of Python, and each job installs group
 jobs install.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
-
-<a id="step-06.5"></a>
 
 ### 6.5 GitHub runs the tests
 
@@ -1241,7 +1236,7 @@ every group, since they run every tool.
 just setup
 ```
 
-The library and the app are in one package, and other programs could use the library. The library becomes a
+The library and the app are in one package. So a program that needs only the library must install the app too. The library becomes a
 second package of the project. The two packages form a workspace. The library also needs packages of its own.
 `--package wikirandom` makes `uv add` change the library's `pyproject.toml`, and not the app's.
 
@@ -1279,10 +1274,7 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`.
-
-The check of your files after this move prints the same error. Your files are right, and only the
-lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -1458,7 +1450,8 @@ In `pyproject.toml`, see `"wikirandom",` in line 14, at the end of `dependencies
 uv run python -c "import wikirandom; print(wikirandom.__file__)"
 ```
 
-A plain `uv run` now installs the library too. The command prints a path that ends with
+`uv add` installed the library, and the app now depends on it, so Python finds it under a plain `uv run`. The
+command prints a path that ends with
 `packages/wikirandom/src/wikirandom/__init__.py`, the file in the repository, not a copy.
 
 #### What changed
@@ -1817,12 +1810,11 @@ just setup
 The code now also has a docs check that counts the library. The tests of the library are now in
 `tests/test_wikirandom.py`.
 
-A user installs a package from a wheel, not from a clone. `uv build` builds a package with the build backend that
-its `pyproject.toml` names, here `uv_build`.
+A user installs a package from a wheel, and not from a copy of the repository. A wheel is one file that contains
+the package, ready to install. `uv build` makes the wheel, and also a source archive of the code, with the build
+backend that its `pyproject.toml` names, here `uv_build`. A build backend is the tool that packs the code into that file.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
-
-<a id="step-10.1"></a>
 
 ### 10.1 The recipe `build`
 
@@ -1885,8 +1877,6 @@ go into the wheel. The app names wikirandom with no range of versions, so a user
 can get any version of wikirandom.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
-
-<a id="step-10.2"></a>
 
 ### 10.2 The app needs wikirandom 0.1
 

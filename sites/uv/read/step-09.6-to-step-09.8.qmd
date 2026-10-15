@@ -37,7 +37,8 @@ In `pyproject.toml`, see `"wikirandom",` in line 14, at the end of `dependencies
 uv run python -c "import wikirandom; print(wikirandom.__file__)"
 ```
 
-A plain `uv run` now installs the library too. The command prints a path that ends with
+`uv add` installed the library, and the app now depends on it, so Python finds it under a plain `uv run`. The
+command prints a path that ends with
 `packages/wikirandom/src/wikirandom/__init__.py`, the file in the repository, not a copy.
 
 ### What changed {#step-09.6-what-changed-182c57}

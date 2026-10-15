@@ -4,7 +4,7 @@
 
 **Read the tutorial.** Each change explained, with the code to look at. [Build it yourself](build.md) is the other way to read it.
 
-Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change. What changed is what you check your files against.
+Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change.
 
 We document `wikiapp`, a small command that prints the title and the summary of a random Wikipedia page. A person
 who calls the code needs to know what each part does. A person who reads the project on GitHub needs to know where
@@ -45,7 +45,7 @@ The table gives each kind of documentation, and the sections where it appears.
 | Kind | Who reads it, and what it says | Where |
 |---|---|---|
 | README | A reader on GitHub. What the project is, and where each part is | Sections 1 and 8 |
-| Help text | A person who runs the command. click writes it from the docstring and the options | Sections 2 and 5 |
+| Help text | A person who runs the command. click, the library that the command is built on, writes it from the docstring and the options | Sections 2 and 5 |
 | Reference | A person who calls the code. smalldocs makes it from the code | Sections 3, 7 and 11 |
 | Docstring | What a module, a class or a function does | Sections 1 to 6 |
 | Docment | What each parameter, field and return is | Sections 3 to 6 |
@@ -88,7 +88,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -572,9 +573,11 @@ uv tree --depth 1
 ### 1.2 Ask Wikipedia for a page
 
 `main` prints a fixed line. It must ask Wikipedia for a random page instead, and print the title and the summary.
-The new `main` is the command of the first version of the original wikiapp, from 2024. Its docstring is new, and
-says what the command does. The `main` of the original wikiapp had no `-> None`. This `main` keeps the
-annotation that `uv init` gave it.
+The new `main` is the command of the first version of the original wikiapp, from 2024.
+
+Its docstring, the text in triple quotes under `def main`, is new, and says what the command does. The `-> None`
+after `main()` says that `main` returns no value. `uv init` wrote it, and this `main` keeps it. The `main` of the
+original wikiapp did not have it.
 
 - `@click.command()` makes `main` a command.
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.
@@ -639,7 +642,8 @@ User-Agent is the default of a library. requests sends `python-requests/` and it
 
 ### 1.3 A User-Agent
 
-Wikipedia refused the request, because it did not say who sent it. The User-Agent header says that. The policy of
+Wikipedia refused the request, because its User-Agent named only the library requests, and not the program that
+sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
@@ -762,8 +766,10 @@ The code has tests. In the tests, a stand-in called a mock answers in place of W
 network. Each run also measures coverage, which is the share of the lines of the code that the tests run. The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
 
-ruff formats and lints the code, in a group `lint`, and `just check` runs every check. `just hook` installs a git
-hook, which runs `just check` before each `git commit`. ty checks the types.
+The code now also has ruff and ty, in a group `lint`. ruff formats the code, and lints it, which means that it
+checks the code against a list of rules. ty checks the types, the kind of value, such as a string or a number,
+that each name has. `just check` runs every check. `just hook` installs a git hook, a script that git runs by
+itself before each `git commit`, and the hook runs `just check`.
 
 The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
 `random_page` returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of its fields.
@@ -805,7 +811,7 @@ uv run smalldocs --version
 uv tree --only-group docs
 ```
 
-The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
+The first command prints `smalldocs 0.1.5`, or a newer version. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
 markdown-it-py, mdit-py-plugins, pygments and pyyaml.
 
 #### What changed
@@ -921,11 +927,11 @@ coverage, which counts the lines that the tests run, `check` counts what has doc
 just setup
 ```
 
-The check lists gaps in the library. The library gets docstrings, and a docment beside each parameter and field.
+The check lists gaps in the library. The module gets a docstring, and `random_page` a longer one. A docment is a
+short comment at the end of the line of a name, which says what it is. Each field of `Page`, the parameter of
+`random_page`, and the value it returns get a docment.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
-
-<a id="step-08.3"></a>
 
 ### 8.3 The library documented
 
@@ -1008,8 +1014,6 @@ The check lists gaps in the command, `console.py`. It and `src/wikiapp/__init__.
 a longer docstring and a docment, and the option `--language` a clearer help.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).
-
-<a id="step-08.4"></a>
 
 ### 8.4 The command documented
 
@@ -1111,8 +1115,6 @@ The tests say what the code must do, and the check lists them as gaps too. Each 
 the docs check finds no gap.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
-
-<a id="step-08.5"></a>
 
 ### 8.5 The tests documented
 
@@ -1322,8 +1324,6 @@ The reference is text in a terminal. smalldocs builds a site, with a front page 
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
 
-<a id="step-08.6"></a>
-
 ### 8.6 A site
 
 The reference exists only as Markdown that `just docs module` prints. A reader wants a site, with a front page
@@ -1485,8 +1485,6 @@ The README does not name the tests and the docs among the folders. Now it names 
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).
 
-<a id="step-08.7"></a>
-
 ### 8.7 The README names the tests and the docs
 
 The README is the first page that a reader sees on GitHub. Its table of folders says where each part of the
@@ -1537,8 +1535,6 @@ just setup
 A person must remember to run the docs check. Now `just check` runs it, so each `git commit` must pass it.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
-
-<a id="step-08.8"></a>
 
 ### 8.8 The docs check in `just check`
 
@@ -1626,8 +1622,6 @@ no other group.
 But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your machine still installs every group.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
-
-<a id="step-08b.2"></a>
 
 ### 8b.2 A workflow that publishes the docs
 
@@ -1738,13 +1732,13 @@ its own. Its code went there with its docstrings and docments. The app uses it, 
 gone. The README and the front page of the docs name both packages. The tests of the library are now
 `tests/test_wikirandom.py`.
 
-When the library's code left the app, it also left the count of `just docs check`. Before this section, the check
+The settings of smalldocs are in `docs/_smalldocs.yml`. Besides the tests, the check counts only the packages that
+this file names, and it names only `wikiapp`. So when
+the library's code moved to `wikirandom`, `just docs check` stopped counting it. Before this section, the check
 counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
 too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
-
-<a id="step-09.10"></a>
 
 ### 9.10 The docs check counts the library
 

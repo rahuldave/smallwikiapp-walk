@@ -54,7 +54,8 @@ project, and `uv lock` wrote its lockfile.
 {{include step-00}}
 
 `.venv` is the environment of the project. It has a Python, and every package that the lockfile names. `uv run`
-runs a command with that Python. So `uv run wikiapp` needs no command to activate `.venv` first.
+runs a command with that Python. So `uv run wikiapp` works at once. Without uv, a person
+first activates `.venv`, with a command that makes the shell use the Python of `.venv`.
 
 ## Two dependencies, and the lockfile
 
@@ -73,8 +74,8 @@ versions of every package that click and requests need. Two people with the same
 
 $ just setup
 
-The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, and
-`wikiapp --version` prints the version.
+The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, a line
+that tells Wikipedia the name of the program that asks. `wikiapp --version` prints the version.
 
 The tests need pytest, and a user of the command does not. A dependency group is a list of packages for the
 people who work on the project. By default uv installs only a group named `dev`. The project first sets
@@ -112,7 +113,7 @@ name.
 $ just setup
 
 The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
-mock, and recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
+mock, a stand-in that answers in place of Wikipedia with no network. It also has recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
 of its own, `src/wikiapp/wikipedia.py`. ruff and
 validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.
@@ -192,7 +193,7 @@ every group, since they run every tool.
 
 $ just setup
 
-The library and the app are in one package, and other programs could use the library. The library becomes a
+The library and the app are in one package. So a program that needs only the library must install the app too. The library becomes a
 second package of the project. The two packages form a workspace. The library also needs packages of its own.
 `--package wikirandom` makes `uv add` change the library's `pyproject.toml`, and not the app's.
 
@@ -241,8 +242,9 @@ $ just setup
 The code now also has a docs check that counts the library. The tests of the library are now in
 `tests/test_wikirandom.py`.
 
-A user installs a package from a wheel, not from a clone. `uv build` builds a package with the build backend that
-its `pyproject.toml` names, here `uv_build`.
+A user installs a package from a wheel, and not from a copy of the repository. A wheel is one file that contains
+the package, ready to install. `uv build` makes the wheel, and also a source archive of the code, with the build
+backend that its `pyproject.toml` names, here `uv_build`. A build backend is the tool that packs the code into that file.
 
 {{include step-10.1}}
 

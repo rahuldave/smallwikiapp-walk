@@ -4,7 +4,7 @@
 
 **Read the tutorial.** Each change explained, with the code to look at. [Build it yourself](build.md) is the other way to read it.
 
-Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change. What changed is what you check your files against.
+Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change.
 
 We give `wikiapp` a formatter and a linter. `wikiapp` is a small command that prints the title and the summary of
 a random Wikipedia page. A formatter writes every file in one style. Then, when someone changes the code, the list of
@@ -86,7 +86,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -570,9 +571,11 @@ uv tree --depth 1
 ### 1.2 Ask Wikipedia for a page
 
 `main` prints a fixed line. It must ask Wikipedia for a random page instead, and print the title and the summary.
-The new `main` is the command of the first version of the original wikiapp, from 2024. Its docstring is new, and
-says what the command does. The `main` of the original wikiapp had no `-> None`. This `main` keeps the
-annotation that `uv init` gave it.
+The new `main` is the command of the first version of the original wikiapp, from 2024.
+
+Its docstring, the text in triple quotes under `def main`, is new, and says what the command does. The `-> None`
+after `main()` says that `main` returns no value. `uv init` wrote it, and this `main` keeps it. The `main` of the
+original wikiapp did not have it.
 
 - `@click.command()` makes `main` a command.
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.
@@ -637,7 +640,8 @@ User-Agent is the default of a library. requests sends `python-requests/` and it
 
 ### 1.3 A User-Agent
 
-Wikipedia refused the request, because it did not say who sent it. The User-Agent header says that. The policy of
+Wikipedia refused the request, because its User-Agent named only the library requests, and not the program that
+sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
@@ -752,8 +756,12 @@ decorators and the docstring. So the docstring of `main` is also help text, for 
 just setup
 ```
 
-The code now also has pytest, in a dependency group `test`, and uv installs every group. It has tests, with a
-mock in place of Wikipedia, and coverage on every run. The code is split into a library,
+The code now also has tests, and pytest runs them. pytest is in a dependency group `test`, a named list of
+packages in `pyproject.toml`, and uv installs every group. In the tests, a mock takes the place of Wikipedia, so
+the tests never ask the real site. Each run of the tests also measures the coverage, the share of the lines of
+code that the tests run.
+
+The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`. The library takes a language
 and raises its own error, `WikipediaError`, and the command prints it as a message.
 
@@ -780,7 +788,7 @@ In `pyproject.toml`, the new group `lint` starts at line 27, above `test`, with 
 uv run ruff --version
 ```
 
-It prints `ruff 0.17.0`. uv installs every group, so ruff is in the environment of the project, and nothing has
+It prints `ruff 0.17.0`, or a newer version. uv installs every group, so ruff is in the environment of the project, and nothing has
 used it yet.
 
 #### What changed
@@ -831,8 +839,8 @@ just fmt --check
 ```
 
 `--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
-reformatted, 1 file already formatted`. The six files that it names are the Python files. The seventh is
-`pyproject.toml`, which ruff also reads. The recipe
+reformatted, 1 file already formatted`. It names the six files that it would
+change. The recipe
 runs the same command, and passes on the words after `just fmt`.
 
 #### What changed
@@ -1070,8 +1078,6 @@ just setup
 A linter needs rules to check. The rules go in `pyproject.toml`, and `just lint` finds five problems.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce).
-
-<a id="step-04.4"></a>
 
 ### 4.4 The linter's rules, and the recipe lint
 
@@ -1456,14 +1462,13 @@ nothing, because the `justfile` is in the format of `just`.
 just setup
 ```
 
-The code now also has recipes that refuse a lockfile that is out of date.
+The lockfile, `uv.lock`, lists the exact version of each package. Until now, `uv run` updated it without a
+word. The justfile now sets `UV_LOCKED`, so each recipe that runs `uv` refuses a lockfile that is out of date.
 
 Each check is a recipe of its own, and a person must remember to run them all. `just check` runs the format, the
 linter, the tests and the configuration, in order.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
-
-<a id="step-04.11"></a>
 
 ### 4.11 The recipe check
 
@@ -1545,7 +1550,7 @@ version, and those of the nine packages that it needs, such as `pyyaml` and `vir
 uv run pre-commit --version
 ```
 
-It prints `pre-commit 4.7.0`. No hook is installed yet.
+It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
 
 #### What changed
 
@@ -1673,9 +1678,11 @@ just setup
 ```
 
 The code now also has ty, a type checker, which `just types` runs. A type says what kind of value a name has, for
-example a string or a number. ty found that `__name__ or __package__`
-could be None, but `importlib.metadata.version` needs a string. So the command now looks up its version with the
-string `"wikiapp"`, the name of its package.
+example a string or a number. The code found the name of its package with
+`__name__ or __package__`. It gave that name to `importlib.metadata.version`, which looks up the version of a
+package. ty found that the name could be None, the value Python uses for no value at all, but
+`importlib.metadata.version` needs a string. So the code now gives it the string `"wikiapp"`, the name of its
+package.
 
 ty checks only the types that are written in the code, and the code has almost none. ruff's rules `ANN` report
 each parameter and each return value that has no type. Then the code and the tests get their types.
@@ -1959,7 +1966,9 @@ just setup
 The code now also has the type checker in `just check`. The project accepts any Python from 3.11 on. On every push
 to main, GitHub runs the tests and `just check`, and it publishes a site with the docs.
 
-`random_page` returns a pydantic model, `Page`. smalldocs documents the code, and `just check` runs the check of
+`random_page`, the function of the library that asks Wikipedia for a random page, returns a `Page`. A `Page`
+has a title and a summary, and pydantic, a library that checks data, checks that the answer of Wikipedia has
+both. smalldocs documents the code, and `just check` runs the check of
 the docs. The library is a package of its own, `packages/wikirandom`, with its own `pyproject.toml`. `just build`
 builds both packages. The app is the package `wikiapp`, and it needs a 0.1 version of wikirandom.
 
@@ -1967,8 +1976,6 @@ Until this section, `just lint-config` checks only the app's `pyproject.toml`. A
 checks the library's `pyproject.toml`.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
-
-<a id="step-10.3"></a>
 
 ### 10.3 lint-config checks both pyproject.toml files
 

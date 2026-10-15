@@ -68,10 +68,15 @@ runs them all.
 
 $ just setup
 
-The first test asks the real Wikipedia, so it is slow and needs the network. A fixture is a function that pytest
-calls for each test that names it as a parameter. One fixture gives each test a runner, which runs the command and keeps what
-it prints. A mock is a stand-in that takes the place of Wikipedia. Tests check the title that the command prints, and the request. A failed
-request ends the command with exit code 1.
+The first test asks the real Wikipedia, so it is slow and needs the network. A mock solves that. It takes the
+place of Wikipedia in the tests, and gives back a made-up page, "Lorem Ipsum", with no network.
+
+The tests get the mock from a fixture. A fixture is a function that pytest calls for each test that names it as a
+parameter. A second fixture gives each test a runner, which runs the command and keeps what it prints. The tests
+check the title that the command prints, that the command made a request, and the address of the request.
+
+When a command ends, it gives back a number, its exit code. The number is 0 when the command works, and another number,
+such as 1, when it fails. A last test makes the request fail, and checks that the command ends with exit code 1.
 
 {{include step-02.5..step-02.9}}
 
@@ -111,10 +116,12 @@ $ just setup
 $ just setup
 
 The code now also has an option `--language` on the command. When a request fails, `random_page` raises an error
-of its own, `WikipediaError`.
+of its own, `WikipediaError`. To raise an error is to stop and report what went wrong.
 
-The command should print that error as a message, not as a traceback. A test checks that a failed request prints
-`Error`.
+The command should print that error as a short message. It should not print a traceback, the long list of lines
+of code that Python prints when a program stops on an error. The command is built with click, a package for
+command-line programs. The command now passes the error to click, and click prints the word `Error` and then the
+message. A test checks that a failed request prints `Error`.
 
 {{include step-03.6}}
 
@@ -122,13 +129,16 @@ The command should print that error as a message, not as a traceback. A test che
 
 $ just setup
 
-The code now also has ruff, which formats the code and the tests with `just fmt`, and lints them with
-`just lint`. `just lint-config` checks the configuration. In the tests, the linter found an import below the code,
-and unused variables, and a person fixed them. `just lint --fix` sorted the imports of the command. The request
-has a timeout of 10 seconds, and the recipes refuse a lockfile that is out of date.
+The code now also has ruff, a tool that checks Python code. A recipe is a named task of the justfile, such as `fmt`
+or `lint`. `just fmt` makes ruff lay out the code and the tests
+in one fixed way. `just lint` makes ruff check them against a list of rules. `just lint-config` checks the
+settings in `pyproject.toml`, the lockfile and the justfile.
 
-Each check is a recipe of its own, and a person must remember to run them all. A new recipe, `just check`, runs
-every check. One of them fails when the tests run less than 90% of the code.
+In the tests, ruff found an import below the code, and unused variables. A person fixed them. `just lint --fix`
+put the imports of the command in order. The request now stops after 10 seconds with no answer. The lockfile,
+`uv.lock`, lists the exact version of each package, and the recipes now refuse to run when it is out of date.
+
+Each check is a recipe of its own, and a person must remember to run them all. A new recipe, `just check`, runs every check. One of them fails when the tests run less than 90% of the code.
 
 {{include step-04.11}}
 
@@ -166,7 +176,9 @@ systems and four versions of Python.
 
 $ just setup
 
-The code now also has pydantic, and `wikipedia.py` has `Page`, a pydantic model with a title and an extract.
+The code now also has pydantic, a library that checks data. In `wikipedia.py`, `Page` is a pydantic model, a
+class with two fields, `title` and `extract`, the summary. pydantic checks that the answer of Wikipedia has both,
+as strings.
 
 `random_page` returns a `Page` in place of a dictionary, so one test changes. An answer that is not a page is a
 `WikipediaError` too, and a new test checks it.
@@ -177,8 +189,9 @@ The code now also has pydantic, and `wikipedia.py` has `Page`, a pydantic model 
 
 $ just setup
 
-A language that is not a language code can send the request to another site. New code checks the language, and
-no test reaches it, so the coverage drops.
+The language goes into the address of the request, as `en` does in `en.wikipedia.org`. So a language such as
+`example.com/x?` sends the request to the site `example.com`. New code now accepts only lowercase letters,
+joined by hyphens, as in `en` or `zh-yue`. No test reaches the new code, so the coverage drops.
 
 {{include step-07.5}}
 

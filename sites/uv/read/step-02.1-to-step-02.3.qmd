@@ -10,8 +10,8 @@ title: "2.1 to 2.3 A group for the tests, and when uv syncs"
 just setup
 ```
 
-The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, and
-`wikiapp --version` prints the version.
+The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, a line
+that tells Wikipedia the name of the program that asks. `wikiapp --version` prints the version.
 
 The tests need pytest, and a user of the command does not. A dependency group is a list of packages for the
 people who work on the project. By default uv installs only a group named `dev`. The project first sets
@@ -42,7 +42,7 @@ The setting changes which groups uv installs, not which versions. So `uv.lock` s
 uv lock --check
 ```
 
-uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
+uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so the setting changes nothing until a later move adds one.
 
 ### What changed {#step-02.1-what-changed-182c57}
 

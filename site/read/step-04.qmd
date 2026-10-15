@@ -36,7 +36,7 @@ In `pyproject.toml`, the new group `lint` starts at line 27, above `test`, with 
 uv run ruff --version
 ```
 
-It prints `ruff 0.17.0`. uv installs every group, so ruff is in the environment of the project, and nothing has
+It prints `ruff 0.17.0`, or a newer version. uv installs every group, so ruff is in the environment of the project, and nothing has
 used it yet.
 
 ### What changed {#step-04.1-what-changed-182c57}
@@ -85,8 +85,8 @@ just fmt --check
 ```
 
 `--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
-reformatted, 1 file already formatted`. The six files that it names are the Python files. The seventh is
-`pyproject.toml`, which ruff also reads. The recipe
+reformatted, 1 file already formatted`. It names the six files that it would
+change. The recipe
 runs the same command, and passes on the words after `just fmt`.
 
 ### What changed {#step-04.2-what-changed-182c57}
@@ -751,7 +751,7 @@ version, and those of the nine packages that it needs, such as `pyyaml` and `vir
 uv run pre-commit --version
 ```
 
-It prints `pre-commit 4.7.0`. No hook is installed yet.
+It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
 
 ### What changed {#step-04.12-what-changed-182c57}
 

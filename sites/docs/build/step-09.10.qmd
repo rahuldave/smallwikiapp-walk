@@ -27,7 +27,9 @@ its own. Its code went there with its docstrings and docments. The app uses it, 
 gone. The README and the front page of the docs name both packages. The tests of the library are now
 `tests/test_wikirandom.py`.
 
-When the library's code left the app, it also left the count of `just docs check`. Before this section, the check
+The settings of smalldocs are in `docs/_smalldocs.yml`. Besides the tests, the check counts only the packages that
+this file names, and it names only `wikiapp`. So when
+the library's code moved to `wikirandom`, `just docs check` stopped counting it. Before this section, the check
 counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
 too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
 

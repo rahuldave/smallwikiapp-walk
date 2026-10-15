@@ -10,8 +10,9 @@ title: "7.5 A drop in coverage"
 just setup
 ```
 
-A language that is not a language code can send the request to another site. New code checks the language, and
-no test reaches it, so the coverage drops.
+The language goes into the address of the request, as `en` does in `en.wikipedia.org`. So a language such as
+`example.com/x?` sends the request to the site `example.com`. New code now accepts only lowercase letters,
+joined by hyphens, as in `en` or `zh-yue`. No test reaches the new code, so the coverage drops.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
 

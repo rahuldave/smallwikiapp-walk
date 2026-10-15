@@ -22,7 +22,9 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 1baf0602c1d1 
 just setup
 ```
 
-The code now also has pydantic, and `wikipedia.py` has `Page`, a pydantic model with a title and an extract.
+The code now also has pydantic, a library that checks data. In `wikipedia.py`, `Page` is a pydantic model, a
+class with two fields, `title` and `extract`, the summary. pydantic checks that the answer of Wikipedia has both,
+as strings.
 
 `random_page` returns a `Page` in place of a dictionary, so one test changes. An answer that is not a page is a
 `WikipediaError` too, and a new test checks it.

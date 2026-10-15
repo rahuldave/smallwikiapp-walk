@@ -23,10 +23,12 @@ just setup
 ```
 
 The code now also has an option `--language` on the command. When a request fails, `random_page` raises an error
-of its own, `WikipediaError`.
+of its own, `WikipediaError`. To raise an error is to stop and report what went wrong.
 
-The command should print that error as a message, not as a traceback. A test checks that a failed request prints
-`Error`.
+The command should print that error as a short message. It should not print a traceback, the long list of lines
+of code that Python prints when a program stops on an error. The command is built with click, a package for
+command-line programs. The command now passes the error to click, and click prints the word `Error` and then the
+message. A test checks that a failed request prints `Error`.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a6f5ae9a475d916d4053315c9e6699f16951193f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
 

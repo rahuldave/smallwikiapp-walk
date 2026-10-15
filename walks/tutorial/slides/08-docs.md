@@ -17,17 +17,19 @@ def random_page(
 | what it does | the docstring |
 | what each parameter or field is | its **docment**, the comment beside it |
 
-Written once, beside the code it describes.
+The code contains its docs, once, and every page of the docs comes from them.
 
 ---
 
-## smalldocs: one recipe, three uses
+## `just docs`: one task, three uses
+
+smalldocs makes the docs from the code, and `just docs` runs it.
 
 | Command | Does |
 |---|---|
-| `just docs module wikipedia` | one module's reference, as Markdown |
+| `just docs module wikipedia` | prints the reference of the module `wikipedia`, as Markdown |
 | `just docs check` | lists each module without a docstring, and each function, class or field without its types and docs. It fails if it finds one |
-| `just docs` | the site, with the reference pages made from the code first |
+| `just docs` | makes the reference pages from the code, then builds the site in `docs/_site` |
 
-`just check` runs the check, and the git hook runs `just check` before git records a change. So git refuses a
+`just check` now also runs `just docs check`, and the git hook runs `just check` before git records a change. So git refuses a
 change with an undocumented function.

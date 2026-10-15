@@ -10,7 +10,9 @@ title: "8.3 The library documented"
 just setup
 ```
 
-The check lists gaps in the library. The library gets docstrings, and a docment beside each parameter and field.
+The check lists gaps in the library. The module gets a docstring, and `random_page` a longer one. A docment is a
+short comment at the end of the line of a name, which says what it is. Each field of `Page`, the parameter of
+`random_page`, and the value it returns get a docment.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
 

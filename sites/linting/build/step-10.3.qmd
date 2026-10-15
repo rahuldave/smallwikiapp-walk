@@ -25,7 +25,9 @@ just setup
 The code now also has the type checker in `just check`. The project accepts any Python from 3.11 on. On every push
 to main, GitHub runs the tests and `just check`, and it publishes a site with the docs.
 
-`random_page` returns a pydantic model, `Page`. smalldocs documents the code, and `just check` runs the check of
+`random_page`, the function of the library that asks Wikipedia for a random page, returns a `Page`. A `Page`
+has a title and a summary, and pydantic, a library that checks data, checks that the answer of Wikipedia has
+both. smalldocs documents the code, and `just check` runs the check of
 the docs. The library is a package of its own, `packages/wikirandom`, with its own `pyproject.toml`. `just build`
 builds both packages. The app is the package `wikiapp`, and it needs a 0.1 version of wikirandom.
 

@@ -62,8 +62,12 @@ sends a User-Agent, and has an option `--version`.
 
 $ just setup
 
-The code now also has pytest, in a dependency group `test`, and uv installs every group. It has tests, with a
-mock in place of Wikipedia, and coverage on every run. The code is split into a library,
+The code now also has tests, and pytest runs them. pytest is in a dependency group `test`, a named list of
+packages in `pyproject.toml`, and uv installs every group. In the tests, a mock takes the place of Wikipedia, so
+the tests never ask the real site. Each run of the tests also measures the coverage, the share of the lines of
+code that the tests run.
+
+The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`. The library takes a language
 and raises its own error, `WikipediaError`, and the command prints it as a message.
 
@@ -104,7 +108,8 @@ The linter reads the Python code, and nothing checks the files that set up the p
 
 $ just setup
 
-The code now also has recipes that refuse a lockfile that is out of date.
+The lockfile, `uv.lock`, lists the exact version of each package. Until now, `uv run` updated it without a
+word. The justfile now sets `UV_LOCKED`, so each recipe that runs `uv` refuses a lockfile that is out of date.
 
 Each check is a recipe of its own, and a person must remember to run them all. `just check` runs the format, the
 linter, the tests and the configuration, in order.
@@ -127,9 +132,11 @@ before each `git commit`.
 $ just setup
 
 The code now also has ty, a type checker, which `just types` runs. A type says what kind of value a name has, for
-example a string or a number. ty found that `__name__ or __package__`
-could be None, but `importlib.metadata.version` needs a string. So the command now looks up its version with the
-string `"wikiapp"`, the name of its package.
+example a string or a number. The code found the name of its package with
+`__name__ or __package__`. It gave that name to `importlib.metadata.version`, which looks up the version of a
+package. ty found that the name could be None, the value Python uses for no value at all, but
+`importlib.metadata.version` needs a string. So the code now gives it the string `"wikiapp"`, the name of its
+package.
 
 ty checks only the types that are written in the code, and the code has almost none. ruff's rules `ANN` report
 each parameter and each return value that has no type. Then the code and the tests get their types.
@@ -143,7 +150,9 @@ $ just setup
 The code now also has the type checker in `just check`. The project accepts any Python from 3.11 on. On every push
 to main, GitHub runs the tests and `just check`, and it publishes a site with the docs.
 
-`random_page` returns a pydantic model, `Page`. smalldocs documents the code, and `just check` runs the check of
+`random_page`, the function of the library that asks Wikipedia for a random page, returns a `Page`. A `Page`
+has a title and a summary, and pydantic, a library that checks data, checks that the answer of Wikipedia has
+both. smalldocs documents the code, and `just check` runs the check of
 the docs. The library is a package of its own, `packages/wikirandom`, with its own `pyproject.toml`. `just build`
 builds both packages. The app is the package `wikiapp`, and it needs a 0.1 version of wikirandom.
 

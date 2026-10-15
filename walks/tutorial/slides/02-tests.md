@@ -32,5 +32,5 @@ test = [
 ```
 
 A **group** is a named list of packages that only the people who work on wikiapp need. Someone who installs wikiapp
-gets click and requests, but not the group `test`. `uv sync` sets up the project for that work, and installs every
-group, because of `default-groups = "all"`.
+gets click and requests, but not the group `test`. `uv sync` sets up the project for the people
+who work on it. It installs every group, because of `default-groups = "all"`.

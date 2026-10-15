@@ -16,7 +16,7 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 39a4b09f8563 
 just setup
 ```
 
-The library and the app are in one package, and other programs could use the library. The library becomes a
+The library and the app are in one package. So a program that needs only the library must install the app too. The library becomes a
 second package of the project. The two packages form a workspace. The library also needs packages of its own.
 `--package wikirandom` makes `uv add` change the library's `pyproject.toml`, and not the app's.
 
@@ -54,10 +54,7 @@ version numbers.
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`.
-
-The check of your files after this move prints the same error. Your files are right, and only the
-lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check

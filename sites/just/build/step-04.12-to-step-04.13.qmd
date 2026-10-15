@@ -16,9 +16,12 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 1f73d6af30cc 
 just setup
 ```
 
-A person can forget to run `just check`. `pre-commit` installs a git hook, which is one more caller of
-`just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only check of
-the Python code is `just check`.
+A person can forget to run `just check`. A git hook is a script that git runs by itself before each
+`git commit`. If the script fails, `git commit` stops and saves nothing.
+
+`just hook` runs `pre-commit install`, which installs a git hook that runs `just check`. The hook is one more
+caller of `just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only
+check of the Python code is `just check`.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
 
@@ -36,7 +39,7 @@ uv add --group lint pre-commit
 uv run pre-commit --version
 ```
 
-It prints `pre-commit 4.7.0`. No hook is installed yet.
+It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 

@@ -40,7 +40,8 @@ $ uv run wikiapp
 
 $ cat src/wikiapp/console.py
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -104,9 +105,11 @@ files:
 ### step-01.2 Ask Wikipedia for a page
 
 `main` prints a fixed line. It must ask Wikipedia for a random page instead, and print the title and the summary.
-The new `main` is the command of the first version of the original wikiapp, from 2024. Its docstring is new, and
-says what the command does. The `main` of the original wikiapp had no `-> None`. This `main` keeps the
-annotation that `uv init` gave it.
+The new `main` is the command of the first version of the original wikiapp, from 2024.
+
+Its docstring, the text in triple quotes under `def main`, is new, and says what the command does. The `-> None`
+after `main()` says that `main` returns no value. `uv init` wrote it, and this `main` keeps it. The `main` of the
+original wikiapp did not have it.
 
 - `@click.command()` makes `main` a command.
 - `requests.get` asks the REST API of Wikipedia for the summary of a random page.
@@ -142,7 +145,8 @@ files:
 
 ### step-01.3 A User-Agent
 
-Wikipedia refused the request, because it did not say who sent it. The User-Agent header says that. The policy of
+Wikipedia refused the request, because its User-Agent named only the library requests, and not the program that
+sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
@@ -239,7 +243,7 @@ The setting changes which groups uv installs, not which versions. So `uv.lock` s
 
 $ uv lock --check
 
-uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so uv installs nothing new.
+uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so the setting changes nothing until a later move adds one.
 
 files:
 - diff `pyproject.toml`: the table `[tool.uv]`, so uv installs every dependency group.
@@ -421,8 +425,8 @@ which address. A mock keeps a record of each call to it, and two tests read that
 `test_main_invokes_requests_get` checks that the command calls `requests.get`, and `test_main_uses_correct_url`
 checks the address.
 
-`call_args[0]` is the tuple of the positional arguments of the last call. Here it contains
-only the address. The header is a keyword argument, in `call_args[1]`.
+`call_args[0]` contains the arguments that the last call gave in order, without a name. Here that is only the
+address. The call gives the header by name, as `headers=...`, so the header is in `call_args[1]`.
 
 patch$ tests/test_console.py
 
@@ -786,7 +790,7 @@ In `pyproject.toml`, the new group `lint` starts at line 27, above `test`, with 
 
 $ uv run ruff --version
 
-It prints `ruff 0.17.0`. uv installs every group, so ruff is in the environment of the project, and nothing has
+It prints `ruff 0.17.0`, or a newer version. uv installs every group, so ruff is in the environment of the project, and nothing has
 used it yet.
 
 files:
@@ -822,8 +826,8 @@ $ just --show fmt
 $ just fmt --check
 
 `--check` changes nothing. It shows what it would change in each file, and fails. It ends with `6 files would be
-reformatted, 1 file already formatted`. The six files that it names are the Python files. The seventh is
-`pyproject.toml`, which ruff also reads. The recipe
+reformatted, 1 file already formatted`. It names the six files that it would
+change. The recipe
 runs the same command, and passes on the words after `just fmt`.
 
 files:
@@ -1119,7 +1123,7 @@ version, and those of the nine packages that it needs, such as `pyyaml` and `vir
 
 $ uv run pre-commit --version
 
-It prints `pre-commit 4.7.0`. No hook is installed yet.
+It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
 
 files:
 - diff `pyproject.toml`: `pre-commit` in the group `lint`.
@@ -1516,8 +1520,7 @@ In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
 lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again. The check of your files after this move fails too, with an error that says `uv.lock` needs to
-be updated. Your files are right, and only the lockfile is out of date.
+lockfile again.
 
 $ uv lock --check
 
@@ -1853,7 +1856,7 @@ $ uv run smalldocs --version
 
 $ uv tree --only-group docs
 
-The first command prints `smalldocs 0.1.5`. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
+The first command prints `smalldocs 0.1.5`, or a newer version. `uv tree` prints smalldocs `(group: docs)`, and under it fastcore,
 markdown-it-py, mdit-py-plugins, pygments and pyyaml.
 
 files:
@@ -2329,10 +2332,7 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
 sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
 `just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`.
-
-The check of your files after this move prints the same error. Your files are right, and only the
-lockfile is out of date. The next move, `uv add`, resolves the lockfile again for the workspace.
+`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 $ uv lock --check
 
@@ -2470,7 +2470,8 @@ In `pyproject.toml`, see `"wikirandom",` in line 14, at the end of `dependencies
 
 $ uv run python -c "import wikirandom; print(wikirandom.__file__)"
 
-A plain `uv run` now installs the library too. The command prints a path that ends with
+`uv add` installed the library, and the app now depends on it, so Python finds it under a plain `uv run`. The
+command prints a path that ends with
 `packages/wikirandom/src/wikirandom/__init__.py`, the file in the repository, not a copy.
 
 files:
@@ -2576,10 +2577,10 @@ files:
 
 ### step-09.9 The tests of the library are named for it
 
-`tests/test_wikipedia.py` tests wikirandom, and its name should say so. `git mv` renames the file, and git keeps
-its history.
+`tests/test_wikipedia.py` tests wikirandom, and its name should say so. `mv` renames the file, and changes none of
+its lines.
 
-do$ git mv tests/test_wikipedia.py tests/test_wikirandom.py
+do$ mv tests/test_wikipedia.py tests/test_wikirandom.py
 
 $ just docs check
 

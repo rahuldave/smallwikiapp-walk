@@ -1,11 +1,11 @@
 ## smallwikiapp
 
-A command that prints a random page of Wikipedia, in any language.
+A command that prints the title and the summary of a random page of Wikipedia, in any language.
 
 The tutorial builds the project around the command, one step at a time:
 
-- packages, with **uv**
-- one interface for every task, with `just`
+- packages, with **uv**, a tool that installs Python and the packages the code uses
+- one command, `just`, that runs each task of the project by its name
 - tests, and mocks
 - a library, and an app that uses it
 - format, lint, types, a git hook, CI
@@ -33,6 +33,8 @@ Every step starts from the code of the step before. Run `just setup` first, to i
 ```
 uv init --package --python 3.13 --name wikiapp
 ```
+
+This uv command started the project, before it had any code. The table lists the first files, what each one says, and what made it.
 
 | File | What it says | Made by |
 |---|---|---|

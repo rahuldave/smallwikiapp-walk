@@ -11,8 +11,9 @@ just setup
 ```
 
 The command now asks Wikipedia for a random page, and prints its title and summary, with click and requests. It
-sends a User-Agent, and has an option `--version`. `default-groups = "all"` in `pyproject.toml` makes uv install
-every dependency group. pytest is in a dependency group `test`, with the first test.
+sends a User-Agent, and has an option `--version`. A dependency group is a named list of packages in `pyproject.toml`.
+`default-groups = "all"` in `pyproject.toml` makes uv install every group. pytest is in the group `test`, and
+the project has its first test.
 `uv run pytest` printed `1 passed`.
 
 A person who runs the tests must know the tool and its options. `just test` is the first verb after `setup`, and

@@ -23,7 +23,7 @@ just setup
 ```
 
 The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
-mock, and recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
+mock, a stand-in that answers in place of Wikipedia with no network. It also has recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
 of its own, `src/wikiapp/wikipedia.py`. ruff and
 validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.

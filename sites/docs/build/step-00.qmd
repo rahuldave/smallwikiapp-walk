@@ -36,7 +36,8 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The justfile is the interface of the project. Every task is a recipe in it. `just` lists the tasks, and
+The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
+has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -45,6 +46,18 @@ just
 just --show setup
 just --show help
 just help setup
+```
+
+Check your files against this part. The command prints nothing when they match, and otherwise shows what differs:
+
+```bash
+git check ae86cb7d116c
+```
+
+If you are stuck, this command puts the files of this part in place of yours. A file that you made yourself stays:
+
+```bash
+git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c --staged --worktree -- :/
 ```
 
 ## What changed {#step-00-what-changed-182c57}

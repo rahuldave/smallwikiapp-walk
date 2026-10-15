@@ -35,7 +35,7 @@ uv add --group lint pre-commit
 uv run pre-commit --version
 ```
 
-It prints `pre-commit 4.7.0`. No hook is installed yet.
+It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 

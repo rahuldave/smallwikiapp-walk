@@ -25,8 +25,9 @@ just setup
 The code now also has a docs check that counts the library. The tests of the library are now in
 `tests/test_wikirandom.py`.
 
-A user installs a package from a wheel, not from a clone. `uv build` builds a package with the build backend that
-its `pyproject.toml` names, here `uv_build`.
+A user installs a package from a wheel, and not from a copy of the repository. A wheel is one file that contains
+the package, ready to install. `uv build` makes the wheel, and also a source archive of the code, with the build
+backend that its `pyproject.toml` names, here `uv_build`. A build backend is the tool that packs the code into that file.
 
 [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
 
