@@ -172,6 +172,8 @@ git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { 
 
 ## 0 The project, and its `.venv`
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part is where the project starts, at `step-00`. [The code of this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
+
 A project needs a Python and its packages in one place, apart from the rest of the machine. `uv init` made the
 project, and `uv lock` wrote its lockfile.
 
@@ -632,11 +634,13 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c 
 
 </details>
 
-[The code](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830).
+This part ends at the code at `step-00`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 <a id="step-01.1"></a>
 
 ## 1.1 Two dependencies, and the lockfile
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-00`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 ```bash
 just setup
@@ -645,8 +649,6 @@ just setup
 The command needs two packages that Python does not have. `uv add` writes a package into `pyproject.toml`, and
 syncs `.venv`. It also chooses one version of each package that fits every range of versions, and writes the
 versions in `uv.lock`. uv calls this choice resolving.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).
 
 ### 1.1 click and requests
 
@@ -710,9 +712,13 @@ git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d4958
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/36d49582843a575d84ed178ad66157913be4c59c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).
 
+This part ends at the code at `36d49582843a`, partway through `step-01`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c)
+
 <a id="step-02.1-to-step-02.3"></a>
 
 ## 2.1 to 2.3 A group for the tests, and when uv syncs
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-01`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-01)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -731,8 +737,6 @@ The tests need pytest, and a user of the command does not. A dependency group is
 people who work on the project. By default uv installs only a group named `dev`. The project first sets
 `default-groups = "all"`, so that uv installs every group. Then the test tools, the linters and the docs tools can
 each have a group of their own.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849).
 
 <a id="step-02.1"></a>
 
@@ -964,9 +968,13 @@ git restore --source 6d7a6cfdae60 --staged -- :/ && git restore --source d92e2de
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d92e2dec921d6322e2a356af20dafef3837c1849). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849).
 
+This part ends at the code at `d92e2dec921d`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849)
+
 <a id="step-04.10"></a>
 
 ## 4.10 A lockfile that must be up to date
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `d8a9c8f71eb5`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -987,8 +995,6 @@ which fails if the lockfile is out of date with `pyproject.toml`.
 A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. But with no option, `uv run` resolves
 the lockfile again and prints no warning. The justfile now exports `UV_LOCKED`, which makes every `uv run` refuse a
 lockfile that is out of date.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
 
 ### 4.10 Recipes refuse an old lockfile
 
@@ -1055,9 +1061,13 @@ git restore --source d8a9c8f71eb5 --staged -- :/ && git restore --source b7469ee
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
 
+This part ends at the code at `b7469ee81a82`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade)
+
 <a id="step-06.3-to-step-06.4"></a>
 
 ## 6.3 to 6.4 The oldest Python, and other environments
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `307d4d7b36bb`, partway through `step-06`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1075,8 +1085,6 @@ Wikipedia run only on request.
 
 The project runs on one Python, and its users may have an older one. `.python-version` says which Python `.venv`
 has. `requires-python` says which versions of Python the project accepts.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84).
 
 <a id="step-06.3"></a>
 
@@ -1228,9 +1236,13 @@ git restore --source b97ee4cfc591 --staged -- :/ && git restore --source d8af75e
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84).
 
+This part ends at the code at `d8af75e8fd57`, partway through `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84)
+
 <a id="step-06.5"></a>
 
 ## 6.5 Versions of Python and groups on GitHub
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `d8af75e8fd57`, partway through `step-06`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84)
 
 ```bash
 just setup
@@ -1238,8 +1250,6 @@ just setup
 
 GitHub runs the tests on several versions of Python, and each job installs groups. This section shows which groups GitHub's
 jobs install.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
 
 ### 6.5 GitHub runs the tests
 
@@ -1345,11 +1355,15 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-06).
+
+This part ends at the code at `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-06)
 
 <a id="step-08b"></a>
 
 ## 8b Each job on GitHub with its own group
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-08)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1369,8 +1383,6 @@ just setup
 Every job on GitHub installs every dependency group, with every tool of the project, though most jobs need only a
 few. Also, the docs site exists only on the machine that builds it. So we make the job `tests` install the group `test`
 alone. Then a new workflow builds the docs site with the group `docs` alone, and GitHub Pages publishes it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
 
 <a id="step-08b.1"></a>
 
@@ -1572,11 +1584,15 @@ git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08b).
+
+This part ends at the code at `step-08b`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08b)
 
 <a id="step-09.1-to-step-09.2"></a>
 
 ## 9.1 to 9.2 A workspace
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-08b`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-08b)
 
 ```bash
 just setup
@@ -1585,8 +1601,6 @@ just setup
 The library and the app are in one package. So a program that needs only the library must install the app too. The library becomes a
 second package of the project. The two packages form a workspace. The library also needs packages of its own.
 `--package wikirandom` makes `uv add` change the library's `pyproject.toml`, and not the app's.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/c153cdfc43300110bd63502b3d53a85ab3aa79f1).
 
 <a id="step-09.1"></a>
 
@@ -1783,9 +1797,13 @@ git restore --source 01364831243e --staged -- :/ && git restore --source c153cdf
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/c153cdfc43300110bd63502b3d53a85ab3aa79f1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/c153cdfc43300110bd63502b3d53a85ab3aa79f1).
 
+This part ends at the code at `c153cdfc4330`, partway through `step-09`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/c153cdfc43300110bd63502b3d53a85ab3aa79f1)
+
 <a id="step-09.6-to-step-09.8"></a>
 
 ## 9.6 to 9.8 The app uses the library
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `34f1041135a7`, partway through `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/34f1041135a78b1015d73e8fcb2529102c5ccf9e)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1802,8 +1820,6 @@ its own docstring, and its User-Agent names `wikirandom`.
 
 The app must get the library from the workspace, not from PyPI. The app's `pyproject.toml` names the library as a
 dependency, and `[tool.uv.sources]` says where uv gets it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/34f1041135a78b1015d73e8fcb2529102c5ccf9e). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f2dd413c02c731553f8c103b0e6c892dac0fa2dc).
 
 <a id="step-09.6"></a>
 
@@ -2262,9 +2278,13 @@ git restore --source 78ab09579fdf --staged -- :/ && git restore --source f2dd413
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f2dd413c02c731553f8c103b0e6c892dac0fa2dc). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f2dd413c02c731553f8c103b0e6c892dac0fa2dc).
 
+This part ends at the code at `f2dd413c02c7`, partway through `step-09`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/f2dd413c02c731553f8c103b0e6c892dac0fa2dc)
+
 <a id="step-10.1"></a>
 
 ## 10.1 A build of both packages
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-09)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2282,8 +2302,6 @@ The code now also has a docs check that counts the library. The tests of the lib
 A user installs a package from a wheel, and not from a copy of the repository. A wheel is one file that contains
 the package, ready to install. `uv build` makes the wheel, and also a source archive of the code, with the build
 backend that its `pyproject.toml` names, here `uv_build`. A build backend is the tool that packs the code into that file.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
 
 ### 10.1 The recipe `build`
 
@@ -2349,9 +2367,13 @@ git restore --source 259e6364a52f --staged -- :/ && git restore --source 7744a84
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
 
+This part ends at the code at `7744a84a4715`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d)
+
 <a id="step-10.2"></a>
 
 ## 10.2 A range of versions for the library
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `7744a84a4715`, partway through `step-10`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d)
 
 ```bash
 just setup
@@ -2360,8 +2382,6 @@ just setup
 `uv build` copies each entry of `dependencies` into a line `Requires-Dist` in the wheel's metadata. `[tool.uv.sources]` does not
 go into the wheel. The app names wikirandom with no range of versions, so a user who installs the app from PyPI
 can get any version of wikirandom.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
 
 ### 10.2 The app needs wikirandom 0.1
 
@@ -2422,3 +2442,5 @@ git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d284
 </details>
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
+
+This part ends at the code at `6e6d2844bc7a`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be)

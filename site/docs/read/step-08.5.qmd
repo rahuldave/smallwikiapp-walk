@@ -6,14 +6,23 @@ title: "8.5 The tests documented"
 
 **Read the tutorial.** [Build it yourself](../build/step-08.5.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `bb648b91f4ab`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach bb648b91f4ab
+```
+
 ```bash
 just setup
 ```
 
 The tests say what the code must do, and the check lists them as gaps too. Each test now says what it checks, and
 the docs check finds no gap.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
 
 ## 8.5 The tests documented {#step-08.5}
 
@@ -49,11 +58,11 @@ and classes are typed and documented`.
 
 ### What changed {#step-08.5-what-changed-182c57}
 
-- <a id="step-08.5-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, documented. 6 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/conftest.py).
+- <a id="step-08.5-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, documented. 6 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/conftest.py){.btn .btn-sm .btn-secondary}
   - look at `mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test`
-- <a id="step-08.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: seven functions. 33 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_console.py).
+- <a id="step-08.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: seven functions. 33 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `"""The command prints the title of the page."""`
-- <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py).
+- <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `"""The language chooses the Wikipedia that is asked."""`
 
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
@@ -208,4 +217,6 @@ and classes are typed and documented`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `7a0e50948873`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97){.btn .btn-sm .btn-primary}

@@ -6,6 +6,8 @@ title: "9.10 The docs check counts the library"
 
 **Build it yourself.** [Read the tutorial](../read/step-09.10.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `008e616610b0`, partway through `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1){.btn .btn-sm .btn-primary}
+
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
@@ -32,8 +34,6 @@ this file names, and it names only `wikiapp`. So when
 the library's code moved to `wikirandom`, `just docs check` stopped counting it. Before this section, the check
 counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
 too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
 
 ## 9.10 The docs check counts the library {#step-09.10}
 
@@ -78,7 +78,7 @@ git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e636
 
 ### What changed {#step-09.10-what-changed-182c57}
 
-- <a id="step-09.10-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the list of packages. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/259e6364a52f83993c797f66148281b04eb92060/docs/_smalldocs.yml).
+- <a id="step-09.10-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the list of packages. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/259e6364a52f83993c797f66148281b04eb92060/docs/_smalldocs.yml){.btn .btn-sm .btn-secondary}
   - look at `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
 
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
@@ -96,4 +96,6 @@ git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e636
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-09){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-09`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-09){.btn .btn-sm .btn-primary}

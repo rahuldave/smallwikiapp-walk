@@ -6,6 +6,17 @@ title: "2 Tests, with mocks"
 
 **Read the tutorial.** [Build it yourself](../build/step-02.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-01`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-01){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach step-01
+```
+
 ```bash
 just setup
 ```
@@ -16,8 +27,6 @@ Tests run it for us. pytest finds the tests and runs them, and a recipe `just te
 The command asks the real Wikipedia, and a test cannot know which page comes back. So a mock takes the place of
 `requests.get`, and returns a page that the tests know. Last, coverage shows which lines of the code the tests run.
 One test still asks the real Wikipedia, so the tests need the network for now.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
 
 ## 2.1 uv installs every dependency group {#step-02.1}
 
@@ -45,7 +54,7 @@ uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so
 
 ### What changed {#step-02.1-what-changed-182c57}
 
-- <a id="step-02.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the table `[tool.uv]`, so uv installs every dependency group. 4 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/46dc20fb9092170695699eaa052f4830563cb930/pyproject.toml).
+- <a id="step-02.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the table `[tool.uv]`, so uv installs every dependency group. 4 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/46dc20fb9092170695699eaa052f4830563cb930/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `default-groups = "all"`
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
@@ -63,7 +72,7 @@ uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/46dc20fb9092170695699eaa052f4830563cb930). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/46dc20fb9092170695699eaa052f4830563cb930).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/46dc20fb9092170695699eaa052f4830563cb930){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/46dc20fb9092170695699eaa052f4830563cb930){.btn .btn-sm .btn-primary}
 
 ## 2.2 The first test {#step-02.2}
 
@@ -92,7 +101,7 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 ### What changed {#step-02.2-what-changed-182c57}
 
-- <a id="step-02.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: a test that runs the command and checks its exit code. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6d7a6cfdae6008a9687f3525348ab24ea05930cc/tests/test_console.py).
+- <a id="step-02.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: a test that runs the command and checks its exit code. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6d7a6cfdae6008a9687f3525348ab24ea05930cc/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert result.exit_code == 0`
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
@@ -111,7 +120,7 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6d7a6cfdae6008a9687f3525348ab24ea05930cc). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6d7a6cfdae6008a9687f3525348ab24ea05930cc).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6d7a6cfdae6008a9687f3525348ab24ea05930cc){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6d7a6cfdae6008a9687f3525348ab24ea05930cc){.btn .btn-sm .btn-primary}
 
 ## 2.3 pytest, in the group test {#step-02.3}
 
@@ -133,9 +142,9 @@ Wikipedia, so it needs the network.
 
 ### What changed {#step-02.3-what-changed-182c57}
 
-- <a id="step-02.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group `test`, with pytest. 5 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/pyproject.toml).
+- <a id="step-02.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group `test`, with pytest. 5 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"pytest>=9.1.1",`
-- <a id="step-02.3-uv.lock-8356d8"></a>`uv.lock`: pytest, and the packages that it needs. 69 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/uv.lock).
+- <a id="step-02.3-uv.lock-8356d8"></a>`uv.lock`: pytest, and the packages that it needs. 69 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -153,7 +162,7 @@ Wikipedia, so it needs the network.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d92e2dec921d6322e2a356af20dafef3837c1849). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d92e2dec921d6322e2a356af20dafef3837c1849){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849){.btn .btn-sm .btn-primary}
 
 ## 2.4 The recipe `just test` {#step-02.4}
 
@@ -179,7 +188,7 @@ result as before, `1 passed`.
 
 ### What changed {#step-02.4-what-changed-182c57}
 
-- <a id="step-02.4-justfile-424f0b"></a>`justfile`: the recipe `test`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/45807a0ddd9f97798c3f86a82b19782d4df45837/justfile).
+- <a id="step-02.4-justfile-424f0b"></a>`justfile`: the recipe `test`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/45807a0ddd9f97798c3f86a82b19782d4df45837/justfile){.btn .btn-sm .btn-secondary}
   - look at `test *args:`
 
 <details><summary>The diff of <code>justfile</code></summary>
@@ -199,7 +208,7 @@ result as before, `1 passed`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/45807a0ddd9f97798c3f86a82b19782d4df45837){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837){.btn .btn-sm .btn-primary}
 
 ## 2.5 The runner as a fixture {#step-02.5}
 
@@ -220,7 +229,7 @@ The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 
 ### What changed {#step-02.5-what-changed-182c57}
 
-- <a id="step-02.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture, and the test that names it. 6 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/8435ae56cf5630c401d83760b4dffe1fe5bde109/tests/test_console.py).
+- <a id="step-02.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture, and the test that names it. 6 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/8435ae56cf5630c401d83760b4dffe1fe5bde109/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `def test_main_succeeds(runner):`
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
@@ -245,7 +254,7 @@ The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8435ae56cf5630c401d83760b4dffe1fe5bde109). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8435ae56cf5630c401d83760b4dffe1fe5bde109).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8435ae56cf5630c401d83760b4dffe1fe5bde109){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8435ae56cf5630c401d83760b4dffe1fe5bde109){.btn .btn-sm .btn-primary}
 
 ## 2.6 pytest-mock, in the group test {#step-02.6}
 
@@ -266,9 +275,9 @@ No test uses the mock yet, so the result is the same, `1 passed`.
 
 ### What changed {#step-02.6-what-changed-182c57}
 
-- <a id="step-02.6-pyproject.toml-5d07e7"></a>`pyproject.toml`: pytest-mock in the group `test`. 1 line added. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/pyproject.toml).
+- <a id="step-02.6-pyproject.toml-5d07e7"></a>`pyproject.toml`: pytest-mock in the group `test`. 1 line added. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"pytest-mock>=3.16.0",`
-- <a id="step-02.6-uv.lock-8356d8"></a>`uv.lock`: the exact version of pytest-mock. 17 lines added, 1 removed. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/uv.lock).
+- <a id="step-02.6-uv.lock-8356d8"></a>`uv.lock`: the exact version of pytest-mock. 17 lines added, 1 removed. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -283,7 +292,7 @@ No test uses the mock yet, so the result is the same, `1 passed`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/55b7b55dffa30e6eb91a88c882201f955271e28d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/55b7b55dffa30e6eb91a88c882201f955271e28d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/55b7b55dffa30e6eb91a88c882201f955271e28d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/55b7b55dffa30e6eb91a88c882201f955271e28d){.btn .btn-sm .btn-primary}
 
 ## 2.7 A mock in place of Wikipedia {#step-02.7}
 
@@ -312,7 +321,7 @@ pytest runs only the test whose name contains `title`. The output shows `test_ma
 
 ### What changed {#step-02.7-what-changed-182c57}
 
-- <a id="step-02.7-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture of the mock, and the new test. 13 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7c1911b9f0155df43da70d010b25fc1ec947fe7c/tests/test_console.py).
+- <a id="step-02.7-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture of the mock, and the new test. 13 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7c1911b9f0155df43da70d010b25fc1ec947fe7c/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `mock = mocker.patch("requests.get")`
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
@@ -344,7 +353,7 @@ pytest runs only the test whose name contains `title`. The output shows `test_ma
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7c1911b9f0155df43da70d010b25fc1ec947fe7c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7c1911b9f0155df43da70d010b25fc1ec947fe7c).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7c1911b9f0155df43da70d010b25fc1ec947fe7c){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7c1911b9f0155df43da70d010b25fc1ec947fe7c){.btn .btn-sm .btn-primary}
 
 ## 2.8 Tests of the request {#step-02.8}
 
@@ -369,7 +378,7 @@ The result is `4 passed`.
 
 ### What changed {#step-02.8-what-changed-182c57}
 
-- <a id="step-02.8-tests-test_console.py-9442ee"></a>`tests/test_console.py`: two tests, that the command makes the request, and to the right address. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/9be013d11b88d0e40680024a8ea99d501c681252/tests/test_console.py).
+- <a id="step-02.8-tests-test_console.py-9442ee"></a>`tests/test_console.py`: two tests, that the command makes the request, and to the right address. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/9be013d11b88d0e40680024a8ea99d501c681252/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert mock_requests_get.called`
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
@@ -394,7 +403,7 @@ The result is `4 passed`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/9be013d11b88d0e40680024a8ea99d501c681252). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/9be013d11b88d0e40680024a8ea99d501c681252).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/9be013d11b88d0e40680024a8ea99d501c681252){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/9be013d11b88d0e40680024a8ea99d501c681252){.btn .btn-sm .btn-primary}
 
 ## 2.9 A test of a failed request {#step-02.9}
 
@@ -415,7 +424,7 @@ The result is `5 passed`.
 
 ### What changed {#step-02.9-what-changed-182c57}
 
-- <a id="step-02.9-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the mock raises. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bfc38e738984492a5dbf6a1a6a0b6691baad4c34/tests/test_console.py).
+- <a id="step-02.9-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the mock raises. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bfc38e738984492a5dbf6a1a6a0b6691baad4c34/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `mock_requests_get.side_effect = Exception("Boom")`
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
@@ -437,7 +446,7 @@ The result is `5 passed`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bfc38e738984492a5dbf6a1a6a0b6691baad4c34). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-primary}
 
 ## 2.10 pytest-cov, in the group test {#step-02.10}
 
@@ -458,9 +467,9 @@ Under the tests, a table lists each file of `src/wikiapp`, with its statements a
 
 ### What changed {#step-02.10-what-changed-182c57}
 
-- <a id="step-02.10-pyproject.toml-5d07e7"></a>`pyproject.toml`: pytest-cov in the group `test`. 1 line added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/pyproject.toml).
+- <a id="step-02.10-pyproject.toml-5d07e7"></a>`pyproject.toml`: pytest-cov in the group `test`. 1 line added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"pytest-cov>=7.1.0",`
-- <a id="step-02.10-uv.lock-8356d8"></a>`uv.lock`: pytest-cov, and coverage, the package that it needs. 100 lines added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/uv.lock).
+- <a id="step-02.10-uv.lock-8356d8"></a>`uv.lock`: pytest-cov, and coverage, the package that it needs. 100 lines added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -476,7 +485,7 @@ Under the tests, a table lists each file of `src/wikiapp`, with its statements a
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8409e0f2e7f68a697de1e8bf32a745658364f17f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8409e0f2e7f68a697de1e8bf32a745658364f17f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8409e0f2e7f68a697de1e8bf32a745658364f17f){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8409e0f2e7f68a697de1e8bf32a745658364f17f){.btn .btn-sm .btn-primary}
 
 ## 2.11 Coverage on every run {#step-02.11}
 
@@ -501,7 +510,7 @@ is the call to `main` at the end, which runs only when you run the file as a scr
 
 ### What changed {#step-02.11-what-changed-182c57}
 
-- <a id="step-02.11-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of pytest. They name the folder of the tests, and turn coverage on for every run. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7508f1d424d5f906ee4630be09b2fddf3483e9c4/pyproject.toml).
+- <a id="step-02.11-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of pytest. They name the folder of the tests, and turn coverage on for every run. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7508f1d424d5f906ee4630be09b2fddf3483e9c4/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `addopts = "--cov=wikiapp --cov-report=term-missing"`
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
@@ -520,4 +529,6 @@ is the call to `main` at the end, which runs only when you run the file as a scr
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-02){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-02){.btn .btn-sm .btn-primary}

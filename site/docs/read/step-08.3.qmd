@@ -6,6 +6,17 @@ title: "8.3 The library documented"
 
 **Read the tutorial.** [Build it yourself](../build/step-08.3.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `40d4293f5902`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach 40d4293f5902
+```
+
 ```bash
 just setup
 ```
@@ -13,8 +24,6 @@ just setup
 The check lists gaps in the library. The module gets a docstring, and `random_page` a longer one. A docment is a
 short comment at the end of the line of a name, which says what it is. Each field of `Page`, the parameter of
 `random_page`, and the value it returns get a docment.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
 
 ## 8.3 The library documented {#step-08.3}
 
@@ -44,7 +53,7 @@ The tables now have their descriptions.
 
 ### What changed {#step-08.3-what-changed-182c57}
 
-- <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py).
+- <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `) -> Page:  # A page chosen at random`
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
@@ -83,4 +92,6 @@ The tables now have their descriptions.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/66a702fe4a01d424177085b9ef056dd8d8d11cc8){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `66a702fe4a01`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8){.btn .btn-sm .btn-primary}

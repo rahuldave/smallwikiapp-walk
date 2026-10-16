@@ -6,6 +6,8 @@ title: "1.1 Two dependencies, and the lockfile"
 
 **Build it yourself.** [Read the tutorial](../read/step-01.1.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-00`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-00){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -19,8 +21,6 @@ just setup
 The command needs two packages that Python does not have. `uv add` writes a package into `pyproject.toml`, and
 syncs `.venv`. It also chooses one version of each package that fits every range of versions, and writes the
 versions in `uv.lock`. uv calls this choice resolving.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).
 
 ## 1.1 click and requests {#step-01.1}
 
@@ -59,9 +59,9 @@ git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d4958
 
 ### What changed {#step-01.1-what-changed-182c57}
 
-- <a id="step-01.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the dependencies of the package, which anyone who installs it gets. 4 lines added, 1 removed. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/pyproject.toml).
+- <a id="step-01.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the dependencies of the package, which anyone who installs it gets. 4 lines added, 1 removed. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"click>=8.5.0",`
-- <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock).
+- <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add click requests</code> makes in <code>pyproject.toml</code></summary>
 
@@ -82,4 +82,6 @@ git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d4958
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/36d49582843a575d84ed178ad66157913be4c59c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/36d49582843a575d84ed178ad66157913be4c59c){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `36d49582843a`, partway through `step-01`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c){.btn .btn-sm .btn-primary}

@@ -6,6 +6,17 @@ title: "8b.1 GitHub installs only the test tools"
 
 **Read the tutorial.** [Build it yourself](../build/step-08b.1.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-08){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach step-08
+```
+
 ```bash
 just setup
 ```
@@ -15,8 +26,6 @@ a check of the docs. `just docs` builds a site, and the README names the tests a
 
 GitHub installs every tool of the project to run the tests, and the tests need only pytest and its plugins. This
 section changes what GitHub installs to run the tests.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
 
 ## 8b.1 The tests install the group test alone {#step-08b.1}
 
@@ -48,7 +57,7 @@ The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
 
 ### What changed {#step-08b.1-what-changed-182c57}
 
-- <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml).
+- <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml){.btn .btn-sm .btn-secondary}
   - look at `- run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more`
 
 <details><summary>The diff of <code>.github/workflows/test.yaml</code></summary>
@@ -75,4 +84,6 @@ The [whole tutorial](https://rahuldave.com/smallwikiapp-walk/) has every change.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `971e9d780fd5`, partway through `step-08b`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0){.btn .btn-sm .btn-primary}

@@ -6,6 +6,8 @@ title: "5.1 to 5.2 `just types`"
 
 **Build it yourself.** [Read the tutorial](../read/step-05.1-to-step-05.2.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-04){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -17,8 +19,6 @@ just setup
 ```
 
 The linter does not check types. The next verb runs a type checker, and `check` does not run it yet.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368).
 
 ## 5.1 ty, in the group lint {#step-05.1}
 
@@ -50,9 +50,9 @@ git restore --source 6860da13f0fd --staged -- :/ && git restore --source 56a11f0
 
 ### What changed {#step-05.1-what-changed-182c57}
 
-- <a id="step-05.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: ty in the group `lint`. 1 line added. It comes from `uv add --group lint ty`. [The file](https://github.com/rahuldave/smallwikiapp/blob/56a11f0bb31a607e6c5ff37454c7915f2eddd86d/pyproject.toml).
+- <a id="step-05.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: ty in the group `lint`. 1 line added. It comes from `uv add --group lint ty`. [The file](https://github.com/rahuldave/smallwikiapp/blob/56a11f0bb31a607e6c5ff37454c7915f2eddd86d/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"ty>=0.0.87",`
-- <a id="step-05.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ty. 27 lines added. It comes from `uv add --group lint ty`. [The file](https://github.com/rahuldave/smallwikiapp/blob/56a11f0bb31a607e6c5ff37454c7915f2eddd86d/uv.lock).
+- <a id="step-05.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ty. 27 lines added. It comes from `uv add --group lint ty`. [The file](https://github.com/rahuldave/smallwikiapp/blob/56a11f0bb31a607e6c5ff37454c7915f2eddd86d/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add --group lint ty</code> makes in <code>pyproject.toml</code></summary>
 
@@ -69,7 +69,7 @@ git restore --source 6860da13f0fd --staged -- :/ && git restore --source 56a11f0
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/56a11f0bb31a607e6c5ff37454c7915f2eddd86d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/56a11f0bb31a607e6c5ff37454c7915f2eddd86d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/56a11f0bb31a607e6c5ff37454c7915f2eddd86d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/56a11f0bb31a607e6c5ff37454c7915f2eddd86d){.btn .btn-sm .btn-primary}
 
 ## 5.2 The recipe types {#step-05.2}
 
@@ -109,7 +109,7 @@ git restore --source 56a11f0bb31a --staged -- :/ && git restore --source 2a5904d
 
 ### What changed {#step-05.2-what-changed-182c57}
 
-- <a id="step-05.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2a5904d01d950678e8364d7f6958dccaf5b69368/justfile).
+- <a id="step-05.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2a5904d01d950678e8364d7f6958dccaf5b69368/justfile){.btn .btn-sm .btn-secondary}
   - look at `types *args:`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -132,4 +132,6 @@ git restore --source 56a11f0bb31a --staged -- :/ && git restore --source 2a5904d
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2a5904d01d950678e8364d7f6958dccaf5b69368). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2a5904d01d950678e8364d7f6958dccaf5b69368){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `2a5904d01d95`, partway through `step-05`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368){.btn .btn-sm .btn-primary}

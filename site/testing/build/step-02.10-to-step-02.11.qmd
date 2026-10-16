@@ -6,6 +6,8 @@ title: "2.10 to 2.11 Coverage"
 
 **Build it yourself.** [Read the tutorial](../read/step-02.10-to-step-02.11.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `bfc38e738984`, partway through `step-02`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -18,8 +20,6 @@ just setup
 
 The tests pass, but nothing says which lines of the code they run. From now on, each run of the tests measures
 the coverage, the share of the lines that the tests run.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
 
 ## 2.10 pytest-cov, in the group test {#step-02.10}
 
@@ -51,9 +51,9 @@ git restore --source bfc38e738984 --staged -- :/ && git restore --source 8409e0f
 
 ### What changed {#step-02.10-what-changed-182c57}
 
-- <a id="step-02.10-pyproject.toml-5d07e7"></a>`pyproject.toml`: pytest-cov in the group `test`. 1 line added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/pyproject.toml).
+- <a id="step-02.10-pyproject.toml-5d07e7"></a>`pyproject.toml`: pytest-cov in the group `test`. 1 line added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"pytest-cov>=7.1.0",`
-- <a id="step-02.10-uv.lock-8356d8"></a>`uv.lock`: pytest-cov, and coverage, the package that it needs. 100 lines added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/uv.lock).
+- <a id="step-02.10-uv.lock-8356d8"></a>`uv.lock`: pytest-cov, and coverage, the package that it needs. 100 lines added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add --group test pytest-cov</code> makes in <code>pyproject.toml</code></summary>
 
@@ -69,7 +69,7 @@ git restore --source bfc38e738984 --staged -- :/ && git restore --source 8409e0f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8409e0f2e7f68a697de1e8bf32a745658364f17f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8409e0f2e7f68a697de1e8bf32a745658364f17f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8409e0f2e7f68a697de1e8bf32a745658364f17f){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8409e0f2e7f68a697de1e8bf32a745658364f17f){.btn .btn-sm .btn-primary}
 
 ## 2.11 Coverage on every run {#step-02.11}
 
@@ -134,7 +134,7 @@ git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d
 
 ### What changed {#step-02.11-what-changed-182c57}
 
-- <a id="step-02.11-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of pytest. They name the folder of the tests, and turn coverage on for every run. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7508f1d424d5f906ee4630be09b2fddf3483e9c4/pyproject.toml).
+- <a id="step-02.11-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of pytest. They name the folder of the tests, and turn coverage on for every run. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7508f1d424d5f906ee4630be09b2fddf3483e9c4/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `addopts = "--cov=wikiapp --cov-report=term-missing"`
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
@@ -153,4 +153,6 @@ git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-02){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-02){.btn .btn-sm .btn-primary}

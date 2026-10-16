@@ -6,6 +6,8 @@ title: "4.11 `just check`, every check in one recipe"
 
 **Build it yourself.** [Read the tutorial](../read/step-04.11.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `b7469ee81a82`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade){.btn .btn-sm .btn-primary}
+
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
@@ -27,8 +29,6 @@ word. The justfile now sets `UV_LOCKED`, so each recipe that runs `uv` refuses a
 
 Each check is a recipe of its own, and a person must remember to run them all. `just check` runs the format, the
 linter, the tests and the configuration, in order.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
 
 ## 4.11 The recipe check {#step-04.11}
 
@@ -67,7 +67,7 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 
 ### What changed {#step-04.11-what-changed-182c57}
 
-- <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile).
+- <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile){.btn .btn-sm .btn-secondary}
   - look at `just test -q --cov-fail-under=90`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -93,4 +93,6 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `1f73d6af30cc`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543){.btn .btn-sm .btn-primary}

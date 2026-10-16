@@ -6,6 +6,8 @@ title: "8.6 A site"
 
 **Build it yourself.** [Read the tutorial](../read/step-08.6.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `7a0e50948873`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -18,8 +20,6 @@ just setup
 
 The reference is text in a terminal. smalldocs builds a site, with a front page and a reference page for
 `console.py` and one for `wikipedia.py`.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
 
 ## 8.6 A site {#step-08.6}
 
@@ -93,11 +93,11 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 
 ### What changed {#step-08.6-what-changed-182c57}
 
-- <a id="step-08.6-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the site. The sidebar lists the front page, then the reference pages. 17 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/_smalldocs.yml).
+- <a id="step-08.6-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the site. The sidebar lists the front page, then the reference pages. 17 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/_smalldocs.yml){.btn .btn-sm .btn-secondary}
   - look at `contents: api/*  # the reference pages, which each build makes from the code`
-- <a id="step-08.6-docs-index.qmd-d6d880"></a>`docs/index.qmd`: the front page, written by hand. New, 35 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/index.qmd).
+- <a id="step-08.6-docs-index.qmd-d6d880"></a>`docs/index.qmd`: the front page, written by hand. New, 35 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/index.qmd){.btn .btn-sm .btn-secondary}
   - look at `Each build of the site makes the pages under Reference from the code.`
-- <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile).
+- <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile){.btn .btn-sm .btn-secondary}
   - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
 
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
@@ -193,4 +193,6 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `e99ed4f3ab32`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0){.btn .btn-sm .btn-primary}

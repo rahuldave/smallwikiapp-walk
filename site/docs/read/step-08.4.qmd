@@ -6,14 +6,23 @@ title: "8.4 The command documented"
 
 **Read the tutorial.** [Build it yourself](../build/step-08.4.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `66a702fe4a01`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach 66a702fe4a01
+```
+
 ```bash
 just setup
 ```
 
 The check lists gaps in the command, `console.py`. It and `src/wikiapp/__init__.py` get a docstring each. `main` gets
 a longer docstring and a docment, and the option `--language` a clearer help.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).
 
 ## 8.4 The command documented {#step-08.4}
 
@@ -48,9 +57,9 @@ options shows the new help of `--language`, the same help that `--help` prints.
 
 ### What changed {#step-08.4-what-changed-182c57}
 
-- <a id="step-08.4-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: a docstring, which `help(wikiapp)` shows. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/__init__.py).
+- <a id="step-08.4-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: a docstring, which `help(wikiapp)` shows. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/__init__.py){.btn .btn-sm .btn-secondary}
   - look at `"""wikiapp: the title and summary of a random Wikipedia page."""`
-- <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py).
+- <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `language: str,  # The language of the Wikipedia to ask, from --language`
 
 <details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
@@ -101,4 +110,6 @@ options shows the new help of `--language`, the same help that `--help` prints.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bb648b91f4aba037eac04caa5cd7b41095e7c388){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `bb648b91f4ab`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388){.btn .btn-sm .btn-primary}

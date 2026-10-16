@@ -6,6 +6,17 @@ title: "8b The docs on GitHub Pages"
 
 **Read the tutorial.** [Build it yourself](../build/step-08b.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-08){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach step-08
+```
+
 ```bash
 just setup
 ```
@@ -13,8 +24,6 @@ just setup
 Every job on GitHub installs every dependency group, with every tool of the project, though most jobs need only a
 few. Also, the docs site exists only on the machine that builds it. So we make the job `tests` install the group `test`
 alone. Then a new workflow builds the docs site with the group `docs` alone, and GitHub Pages publishes it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
 
 ## 8b.1 The tests install the group test alone {#step-08b.1}
 
@@ -42,7 +51,7 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 ### What changed {#step-08b.1-what-changed-182c57}
 
-- <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml).
+- <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml){.btn .btn-sm .btn-secondary}
   - look at `- run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more`
 
 <details><summary>The diff of <code>.github/workflows/test.yaml</code></summary>
@@ -69,7 +78,7 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0){.btn .btn-sm .btn-primary}
 
 ## 8b.2 A workflow that publishes the docs {#step-08b.2}
 
@@ -114,7 +123,7 @@ prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 
 ### What changed {#step-08b.2-what-changed-182c57}
 
-- <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml).
+- <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml){.btn .btn-sm .btn-secondary}
   - look at `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
 
 <details><summary>The diff of <code>.github/workflows/docs.yaml</code></summary>
@@ -165,4 +174,6 @@ prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08b){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-08b`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08b){.btn .btn-sm .btn-primary}

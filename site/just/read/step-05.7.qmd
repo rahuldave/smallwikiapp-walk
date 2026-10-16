@@ -6,6 +6,17 @@ title: "5.7 The types join `just check`"
 
 **Read the tutorial.** [Build it yourself](../build/step-05.7.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `5873353449ad`, partway through `step-05`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach 5873353449ad
+```
+
 ```bash
 just setup
 ```
@@ -15,8 +26,6 @@ ty found. A family of rules, `ANN`, asks for a type on every parameter and retur
 their types.
 
 `just check` does not run the type checker yet. One line in `check` runs it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9).
 
 ## 5.7 The recipe check runs the type checker {#step-05.7}
 
@@ -40,7 +49,7 @@ checks the types too.
 
 ### What changed {#step-05.7-what-changed-182c57}
 
-- <a id="step-05.7-justfile-424f0b"></a>`justfile`: the comment, and one line in check. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/701783af434e19b17e38a10898a39adc1dc5dae9/justfile).
+- <a id="step-05.7-justfile-424f0b"></a>`justfile`: the comment, and one line in check. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/701783af434e19b17e38a10898a39adc1dc5dae9/justfile){.btn .btn-sm .btn-secondary}
   - look at `just types`
 
 <details><summary>The diff of <code>justfile</code></summary>
@@ -66,4 +75,6 @@ checks the types too.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/701783af434e19b17e38a10898a39adc1dc5dae9){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-05){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-05`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-05){.btn .btn-sm .btn-primary}

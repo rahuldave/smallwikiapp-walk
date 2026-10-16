@@ -166,6 +166,8 @@ git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { 
 
 ## 0 The project
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part is where the project starts, at `step-00`. [The code of this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
+
 Before there is code to test, there is a project. This section shows what `uv init` made, and the command
 `wikiapp`. The justfile lists the tasks of the project.
 
@@ -622,11 +624,13 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c 
 
 </details>
 
-[The code](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830).
+This part ends at the code at `step-00`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 <a id="step-01"></a>
 
 ## 1 The command under test
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-00`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 The tests need a command to test. The command asks Wikipedia for a random page, and prints its title and summary.
 It sends a User-Agent, and has an option `--version`. The next sections test this command.
@@ -637,8 +641,6 @@ just setup
 
 The command prints a fixed line. It should ask Wikipedia for a random page and print it. We need two packages for
 that, then the request, then a header that Wikipedia asks for, and last an option that prints the version.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
 
 <a id="step-01.1"></a>
 
@@ -934,11 +936,15 @@ git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c3
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-01).
+
+This part ends at the code at `step-01`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-01)
 
 <a id="step-02.1-to-step-02.4"></a>
 
 ## 2.1 to 2.4 pytest and a first test
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-01`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-01)
 
 ```bash
 just setup
@@ -946,8 +952,6 @@ just setup
 
 We can check the command only by running it and reading what it prints. pytest runs tests for us, and `just test`
 runs them all.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837).
 
 <a id="step-02.1"></a>
 
@@ -1218,9 +1222,13 @@ git restore --source d92e2dec921d --staged -- :/ && git restore --source 45807a0
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837).
 
+This part ends at the code at `45807a0ddd9f`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837)
+
 <a id="step-02.5-to-step-02.9"></a>
 
 ## 2.5 to 2.9 Fixtures and mocks
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `45807a0ddd9f`, partway through `step-02`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837)
 
 ```bash
 just setup
@@ -1235,8 +1243,6 @@ check the title that the command prints, that the command made a request, and th
 
 When a command ends, it gives back a number, its exit code. The number is 0 when the command works, and another number,
 such as 1, when it fails. A last test makes the request fail, and checks that the command ends with exit code 1.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
 
 <a id="step-02.5"></a>
 
@@ -1560,9 +1566,13 @@ git restore --source 9be013d11b88 --staged -- :/ && git restore --source bfc38e7
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bfc38e738984492a5dbf6a1a6a0b6691baad4c34). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
 
+This part ends at the code at `bfc38e738984`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34)
+
 <a id="step-02.10-to-step-02.11"></a>
 
 ## 2.10 to 2.11 Coverage
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `bfc38e738984`, partway through `step-02`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34)
 
 ```bash
 just setup
@@ -1570,8 +1580,6 @@ just setup
 
 The tests pass, but nothing says which lines of the code they run. From now on, each run of the tests measures
 the coverage, the share of the lines that the tests run.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
 
 <a id="step-02.10"></a>
 
@@ -1709,11 +1717,15 @@ git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-02).
+
+This part ends at the code at `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-02)
 
 <a id="step-03.2"></a>
 
 ## 3.2 A shared mock in conftest.py
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `3f6d8cf59ab3`, partway through `step-03`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1730,8 +1742,6 @@ moved out of the command into `random_page`, and the command calls it.
 
 Tests of the library need the mock too, and it is in the tests of the command. The mock goes to
 `tests/conftest.py`, so that every test file can use it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).
 
 ### 3.2 The mock goes to conftest.py
 
@@ -1826,17 +1836,19 @@ git restore --source 3f6d8cf59ab3 --staged -- :/ && git restore --source a65f7f1
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a65f7f11432be0a56de38e7d4babe10bda735c2c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).
 
+This part ends at the code at `a65f7f11432b`, partway through `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c)
+
 <a id="step-03.3"></a>
 
 ## 3.3 A test of the language
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `a65f7f11432b`, partway through `step-03`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c)
 
 ```bash
 just setup
 ```
 
 `random_page` asks only the English Wikipedia. It takes a language now, and a test checks the address.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520).
 
 ### 3.3 A language
 
@@ -1925,9 +1937,13 @@ git restore --source a65f7f11432b --staged -- :/ && git restore --source d9d02ca
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520).
 
+This part ends at the code at `d9d02ca26fd3`, partway through `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520)
+
 <a id="step-03.6"></a>
 
 ## 3.6 A test of an error message
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `a6f5ae9a475d`, partway through `step-03`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a6f5ae9a475d916d4053315c9e6699f16951193f)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1946,8 +1962,6 @@ The command should print that error as a short message. It should not print a tr
 of code that Python prints when a program stops on an error. The command is built with click, a package for
 command-line programs. The command now passes the error to click, and click prints the word `Error` and then the
 message. A test checks that a failed request prints `Error`.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a6f5ae9a475d916d4053315c9e6699f16951193f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
 
 ### 3.6 The command prints the error
 
@@ -2062,11 +2076,15 @@ git restore --source a6f5ae9a475d --staged -- :/ && git restore --source b694286
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-03).
+
+This part ends at the code at `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-03)
 
 <a id="step-04.11"></a>
 
 ## 4.11 `just check`, with a coverage floor
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `b7469ee81a82`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2088,8 +2106,6 @@ put the imports of the command in order. The request now stops after 10 seconds 
 `uv.lock`, lists the exact version of each package, and the recipes now refuse to run when it is out of date.
 
 Each check is a recipe of its own, and a person must remember to run them all. A new recipe, `just check`, runs every check. One of them fails when the tests run less than 90% of the code.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
 
 ### 4.11 The recipe check
 
@@ -2154,9 +2170,13 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
 
+This part ends at the code at `1f73d6af30cc`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543)
+
 <a id="step-06.1-to-step-06.2"></a>
 
 ## 6.1 to 6.2 End-to-end tests, on request
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-05`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-05)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2178,8 +2198,6 @@ command also looks up its version by the fixed name of its package, `wikiapp`.
 
 The test that asks the real Wikipedia fails without the network, and so every check fails with it. It now runs
 only when you ask for it. A second test of that kind checks the library.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35).
 
 <a id="step-06.1"></a>
 
@@ -2373,9 +2391,13 @@ git restore --source 35f4ffc8c67a --staged -- :/ && git restore --source 307d4d7
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35).
 
+This part ends at the code at `307d4d7b36bb`, partway through `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35)
+
 <a id="step-06.3-to-step-06.5"></a>
 
 ## 6.3 to 6.5 The tests on GitHub
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `307d4d7b36bb`, partway through `step-06`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35)
 
 ```bash
 just setup
@@ -2384,8 +2406,6 @@ just setup
 The tests run on one machine, with one version of Python. The project asks for Python 3.13 or newer. In this
 section it starts to accept any version of Python from 3.11 on. Then GitHub runs the tests on three
 systems and four versions of Python.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
 
 <a id="step-06.3"></a>
 
@@ -2617,11 +2637,15 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-06).
+
+This part ends at the code at `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-06)
 
 <a id="step-07.3-to-step-07.4"></a>
 
 ## 7.3 to 7.4 Tests of a model
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `1baf0602c1d1`, partway through `step-07`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1baf0602c1d1cec79277c2faec438b76a9a8c768)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2639,8 +2663,6 @@ as strings.
 
 `random_page` returns a `Page` in place of a dictionary, so one test changes. An answer that is not a page is a
 `WikipediaError` too, and a new test checks it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1baf0602c1d1cec79277c2faec438b76a9a8c768). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d).
 
 <a id="step-07.3"></a>
 
@@ -2878,9 +2900,13 @@ git restore --source 88fe0e20d645 --staged -- :/ && git restore --source 06ff2ca
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d).
 
+This part ends at the code at `06ff2caa1958`, partway through `step-07`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d)
+
 <a id="step-07.5"></a>
 
 ## 7.5 A drop in coverage
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `06ff2caa1958`, partway through `step-07`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d)
 
 ```bash
 just setup
@@ -2889,8 +2915,6 @@ just setup
 The language goes into the address of the request, as `en` does in `en.wikipedia.org`. So a language such as
 `example.com/x?` sends the request to the site `example.com`. New code now accepts only lowercase letters,
 joined by hyphens, as in `en` or `zh-yue`. No test reaches the new code, so the coverage drops.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
 
 ### 7.5 Only a language code goes into the address
 
@@ -2965,11 +2989,15 @@ git restore --source 06ff2caa1958 --staged -- :/ && git restore --source be473b8
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-07).
+
+This part ends at the code at `step-07`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-07)
 
 <a id="step-08b.1"></a>
 
 ## 8b.1 GitHub installs only the test tools
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-08)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2986,8 +3014,6 @@ a check of the docs. `just docs` builds a site, and the README names the tests a
 
 GitHub installs every tool of the project to run the tests, and the tests need only pytest and its plugins. This
 section changes what GitHub installs to run the tests.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
 
 ### 8b.1 The tests install the group test alone
 
@@ -3063,3 +3089,5 @@ git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d7
 </details>
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
+
+This part ends at the code at `971e9d780fd5`, partway through `step-08b`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0)

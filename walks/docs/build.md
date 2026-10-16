@@ -171,6 +171,8 @@ git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { 
 
 ## 0 The project
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part is where the project starts, at `step-00`. [The code of this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
+
 The first documentation of a project is its README. This section shows what `uv init` made, and the command
 `wikiapp`. The justfile lists the tasks of the project, and the README says what the project is.
 
@@ -627,11 +629,13 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c 
 
 </details>
 
-[The code](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830).
+This part ends at the code at `step-00`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 <a id="step-01"></a>
 
 ## 1 The command
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-00`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 The command asks Wikipedia for a random page, and prints its title and summary. Its docstring and its options make
 the text of `--help`, the first documentation that a person who runs it reads.
@@ -642,8 +646,6 @@ just setup
 
 The command prints a fixed line. It should ask Wikipedia for a random page and print it. We need two packages for
 that, then the request, then a header that Wikipedia asks for, and last an option that prints the version.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
 
 <a id="step-01.1"></a>
 
@@ -939,11 +941,15 @@ git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c3
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-01).
+
+This part ends at the code at `step-01`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-01)
 
 <a id="step-08.1-to-step-08.2"></a>
 
 ## 8.1 to 8.2 smalldocs, and what is not documented
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-07`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-07)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -976,8 +982,6 @@ language that is not a language code, raises `WikipediaError`.
 Nothing yet says which parts of the code have documentation. smalldocs, in a new group `docs`, makes the reference
 from the code.
 `just docs check` counts what has documentation, and lists each gap.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).
 
 <a id="step-08.1"></a>
 
@@ -1147,9 +1151,13 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).
 
+This part ends at the code at `40d4293f5902`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f)
+
 <a id="step-08.3"></a>
 
 ## 8.3 The library documented
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `40d4293f5902`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f)
 
 ```bash
 just setup
@@ -1158,8 +1166,6 @@ just setup
 The check lists gaps in the library. The module gets a docstring, and `random_page` a longer one. A docment is a
 short comment at the end of the line of a name, which says what it is. Each field of `Page`, the parameter of
 `random_page`, and the value it returns get a docment.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
 
 ### 8.3 The library documented
 
@@ -1246,9 +1252,13 @@ git restore --source 40d4293f5902 --staged -- :/ && git restore --source 66a702f
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
 
+This part ends at the code at `66a702fe4a01`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8)
+
 <a id="step-08.4"></a>
 
 ## 8.4 The command documented
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `66a702fe4a01`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8)
 
 ```bash
 just setup
@@ -1256,8 +1266,6 @@ just setup
 
 The check lists gaps in the command, `console.py`. It and `src/wikiapp/__init__.py` get a docstring each. `main` gets
 a longer docstring and a docment, and the option `--language` a clearer help.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).
 
 ### 8.4 The command documented
 
@@ -1368,9 +1376,13 @@ git restore --source 66a702fe4a01 --staged -- :/ && git restore --source bb648b9
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).
 
+This part ends at the code at `bb648b91f4ab`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388)
+
 <a id="step-08.5"></a>
 
 ## 8.5 The tests documented
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `bb648b91f4ab`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388)
 
 ```bash
 just setup
@@ -1378,8 +1390,6 @@ just setup
 
 The tests say what the code must do, and the check lists them as gaps too. Each test now says what it checks, and
 the docs check finds no gap.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
 
 ### 8.5 The tests documented
 
@@ -1607,9 +1617,13 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
 
+This part ends at the code at `7a0e50948873`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97)
+
 <a id="step-08.6"></a>
 
 ## 8.6 A site
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `7a0e50948873`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97)
 
 ```bash
 just setup
@@ -1617,8 +1631,6 @@ just setup
 
 The reference is text in a terminal. smalldocs builds a site, with a front page and a reference page for
 `console.py` and one for `wikipedia.py`.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
 
 ### 8.6 A site
 
@@ -1794,17 +1806,19 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
 
+This part ends at the code at `e99ed4f3ab32`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0)
+
 <a id="step-08.7"></a>
 
 ## 8.7 The README's folders
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `e99ed4f3ab32`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0)
 
 ```bash
 just setup
 ```
 
 The README does not name the tests and the docs among the folders. Now it names them.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).
 
 ### 8.7 The README names the tests and the docs
 
@@ -1863,17 +1877,19 @@ git restore --source e99ed4f3ab32 --staged -- :/ && git restore --source 79c8012
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).
 
+This part ends at the code at `79c80120fc8f`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362)
+
 <a id="step-08.8"></a>
 
 ## 8.8 The docs check in `just check`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `79c80120fc8f`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362)
 
 ```bash
 just setup
 ```
 
 A person must remember to run the docs check. Now `just check` runs it, so each `git commit` must pass it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
 
 ### 8.8 The docs check in `just check`
 
@@ -1939,11 +1955,15 @@ git restore --source 79c80120fc8f --staged -- :/ && git restore --source ce0734f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08).
+
+This part ends at the code at `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08)
 
 <a id="step-08b.2"></a>
 
 ## 8b.2 The docs on GitHub Pages
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `971e9d780fd5`, partway through `step-08b`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1982,8 +2002,6 @@ group `test` back. So uv installs the package `wikiapp`, the packages that `wiki
 no other group.
 
 But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your machine still installs every group.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
 
 ### 8b.2 A workflow that publishes the docs
 
@@ -2107,11 +2125,15 @@ git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08b).
+
+This part ends at the code at `step-08b`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08b)
 
 <a id="step-09.10"></a>
 
 ## 9.10 The docs check counts the library
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `008e616610b0`, partway through `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2133,8 +2155,6 @@ this file names, and it names only `wikiapp`. So when
 the library's code moved to `wikirandom`, `just docs check` stopped counting it. Before this section, the check
 counts only the functions, methods and classes of the app and the tests. After it, the check counts the library's
 too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` again.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
 
 ### 9.10 The docs check counts the library
 
@@ -2197,4 +2217,6 @@ git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e636
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-09).
+
+This part ends at the code at `step-09`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-09)

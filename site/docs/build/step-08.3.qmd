@@ -6,6 +6,8 @@ title: "8.3 The library documented"
 
 **Build it yourself.** [Read the tutorial](../read/step-08.3.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `40d4293f5902`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -19,8 +21,6 @@ just setup
 The check lists gaps in the library. The module gets a docstring, and `random_page` a longer one. A docment is a
 short comment at the end of the line of a name, which says what it is. Each field of `Page`, the parameter of
 `random_page`, and the value it returns get a docment.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
 
 ## 8.3 The library documented {#step-08.3}
 
@@ -66,7 +66,7 @@ git restore --source 40d4293f5902 --staged -- :/ && git restore --source 66a702f
 
 ### What changed {#step-08.3-what-changed-182c57}
 
-- <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py).
+- <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `) -> Page:  # A page chosen at random`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -105,4 +105,6 @@ git restore --source 40d4293f5902 --staged -- :/ && git restore --source 66a702f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/66a702fe4a01d424177085b9ef056dd8d8d11cc8){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `66a702fe4a01`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8){.btn .btn-sm .btn-primary}

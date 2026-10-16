@@ -6,6 +6,8 @@ title: "3 A library and an app"
 
 **Build it yourself.** [Read the tutorial](../read/step-03.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-02`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-02){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -21,8 +23,6 @@ command line, and a test of the request must run the command. So the code that a
 its own, `wikipedia.py`. The module then gets a language, and an error of its own. The command, in `console.py`,
 uses the module. So `wikipedia.py` is a library with no code for the command line, and `console.py` is the
 app that uses it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
 
 ## 3.1 random_page goes to wikipedia.py {#step-03.1}
 
@@ -71,9 +71,9 @@ git restore --source 7508f1d424d5 --staged -- :/ && git restore --source 3f6d8cf
 
 ### What changed {#step-03.1-what-changed-182c57}
 
-- <a id="step-03.1-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: only the command stays. 6 lines added, 10 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205/src/wikiapp/console.py).
+- <a id="step-03.1-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: only the command stays. 6 lines added, 10 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `data = random_page()`
-- <a id="step-03.1-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the code that talks to Wikipedia. New, 10 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205/src/wikiapp/wikipedia.py).
+- <a id="step-03.1-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the code that talks to Wikipedia. New, 10 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def random_page():`
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
@@ -130,7 +130,7 @@ git restore --source 7508f1d424d5 --staged -- :/ && git restore --source 3f6d8cf
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205){.btn .btn-sm .btn-primary}
 
 ## 3.2 The mock goes to conftest.py {#step-03.2}
 
@@ -178,9 +178,9 @@ git restore --source 3f6d8cf59ab3 --staged -- :/ && git restore --source a65f7f1
 
 ### What changed {#step-03.2-what-changed-182c57}
 
-- <a id="step-03.2-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, for every test file. New, 10 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/conftest.py).
+- <a id="step-03.2-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, for every test file. New, 10 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/conftest.py){.btn .btn-sm .btn-secondary}
   - look at `def mock_requests_get(mocker):`
-- <a id="step-03.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture is gone, but the tests still name it. 0 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/test_console.py).
+- <a id="step-03.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture is gone, but the tests still name it. 0 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/test_console.py){.btn .btn-sm .btn-secondary}
 
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
 
@@ -223,7 +223,7 @@ git restore --source 3f6d8cf59ab3 --staged -- :/ && git restore --source a65f7f1
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a65f7f11432be0a56de38e7d4babe10bda735c2c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a65f7f11432be0a56de38e7d4babe10bda735c2c){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c){.btn .btn-sm .btn-primary}
 
 ## 3.3 A language {#step-03.3}
 
@@ -270,9 +270,9 @@ git restore --source a65f7f11432b --staged -- :/ && git restore --source d9d02ca
 
 ### What changed {#step-03.3-what-changed-182c57}
 
-- <a id="step-03.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the placeholder, and the code that fills it. 3 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/src/wikiapp/wikipedia.py).
+- <a id="step-03.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the placeholder, and the code that fills it. 3 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def random_page(language="en"):`
-- <a id="step-03.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test uses the mock from `conftest.py`. New, 6 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/tests/test_wikipedia.py).
+- <a id="step-03.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test uses the mock from `conftest.py`. New, 6 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert "es.wikipedia.org" in args[0]`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -310,7 +310,7 @@ git restore --source a65f7f11432b --staged -- :/ && git restore --source d9d02ca
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520){.btn .btn-sm .btn-primary}
 
 ## 3.4 wikiapp --language {#step-03.4}
 
@@ -349,7 +349,7 @@ git restore --source d9d02ca26fd3 --staged -- :/ && git restore --source 5705a55
 
 ### What changed {#step-03.4-what-changed-182c57}
 
-- <a id="step-03.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the option, which `main` gives to `random_page`. 10 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5705a559523968eeab5379a65e30bf4122ba578e/src/wikiapp/console.py).
+- <a id="step-03.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the option, which `main` gives to `random_page`. 10 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5705a559523968eeab5379a65e30bf4122ba578e/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `data = random_page(language=language)`
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
@@ -380,7 +380,7 @@ git restore --source d9d02ca26fd3 --staged -- :/ && git restore --source 5705a55
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/5705a559523968eeab5379a65e30bf4122ba578e). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/5705a559523968eeab5379a65e30bf4122ba578e).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/5705a559523968eeab5379a65e30bf4122ba578e){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/5705a559523968eeab5379a65e30bf4122ba578e){.btn .btn-sm .btn-primary}
 
 ## 3.5 WikipediaError {#step-03.5}
 
@@ -420,7 +420,7 @@ git restore --source 5705a5595239 --staged -- :/ && git restore --source a6f5ae9
 
 ### What changed {#step-03.5-what-changed-182c57}
 
-- <a id="step-03.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the exception, and the line that raises it. 9 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a6f5ae9a475d916d4053315c9e6699f16951193f/src/wikiapp/wikipedia.py).
+- <a id="step-03.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the exception, and the line that raises it. 9 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a6f5ae9a475d916d4053315c9e6699f16951193f/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `raise WikipediaError(str(error)) from error`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -448,7 +448,7 @@ git restore --source 5705a5595239 --staged -- :/ && git restore --source a6f5ae9
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a6f5ae9a475d916d4053315c9e6699f16951193f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a6f5ae9a475d916d4053315c9e6699f16951193f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a6f5ae9a475d916d4053315c9e6699f16951193f){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a6f5ae9a475d916d4053315c9e6699f16951193f){.btn .btn-sm .btn-primary}
 
 ## 3.6 The command prints the error {#step-03.6}
 
@@ -504,9 +504,9 @@ git restore --source a6f5ae9a475d --staged -- :/ && git restore --source b694286
 
 ### What changed {#step-03.6-what-changed-182c57}
 
-- <a id="step-03.6-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the error becomes a message. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b6942869d5fcfffff81beb598630288fe3a67372/src/wikiapp/console.py).
+- <a id="step-03.6-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the error becomes a message. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b6942869d5fcfffff81beb598630288fe3a67372/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `raise click.ClickException(str(error)) from error`
-- <a id="step-03.6-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test of the message. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b6942869d5fcfffff81beb598630288fe3a67372/tests/test_console.py).
+- <a id="step-03.6-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test of the message. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b6942869d5fcfffff81beb598630288fe3a67372/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert "Error" in result.output`
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
@@ -563,4 +563,6 @@ git restore --source a6f5ae9a475d --staged -- :/ && git restore --source b694286
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-03){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-03){.btn .btn-sm .btn-primary}

@@ -6,6 +6,8 @@ title: "4.4 The linter's rules"
 
 **Build it yourself.** [Read the tutorial](../read/step-04.4.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `6690eee9f7e1`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -17,8 +19,6 @@ just setup
 ```
 
 A linter needs rules to check. The rules go in `pyproject.toml`, and `just lint` finds five problems.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce).
 
 ## 4.4 The linter's rules, and the recipe lint {#step-04.4}
 
@@ -100,9 +100,9 @@ git restore --source 6690eee9f7e1 --staged -- :/ && git restore --source 589f2f6
 
 ### What changed {#step-04.4-what-changed-182c57}
 
-- <a id="step-04.4-justfile-424f0b"></a>`justfile`: the recipe `lint`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/589f2f691557470eac084858d430a302c98390ce/justfile).
+- <a id="step-04.4-justfile-424f0b"></a>`justfile`: the recipe `lint`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/589f2f691557470eac084858d430a302c98390ce/justfile){.btn .btn-sm .btn-secondary}
   - look at `lint *args:`
-- <a id="step-04.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: a family of rules on each line. 18 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/589f2f691557470eac084858d430a302c98390ce/pyproject.toml).
+- <a id="step-04.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: a family of rules on each line. 18 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/589f2f691557470eac084858d430a302c98390ce/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"tests/**" = ["S101"]`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -151,4 +151,6 @@ git restore --source 6690eee9f7e1 --staged -- :/ && git restore --source 589f2f6
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/589f2f691557470eac084858d430a302c98390ce). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/589f2f691557470eac084858d430a302c98390ce){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `589f2f691557`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce){.btn .btn-sm .btn-primary}

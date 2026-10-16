@@ -6,6 +6,8 @@ title: "4.5 to 4.7 The linter's problems, fixed"
 
 **Build it yourself.** [Read the tutorial](../read/step-04.5-to-step-04.7.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `589f2f691557`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -18,8 +20,6 @@ just setup
 
 The linter found five problems. A person fixes the tests, and gives the request a timeout. Then
 `just lint --fix` fixes the last problem, the order of the imports.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9).
 
 ## 4.5 The tests' imports at the top, and no unused variables {#step-04.5}
 
@@ -62,7 +62,7 @@ git restore --source 589f2f691557 --staged -- :/ && git restore --source 2ec7932
 
 ### What changed {#step-04.5-what-changed-182c57}
 
-- <a id="step-04.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the import goes up, and two lines lose `result =`. 4 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/2ec7932b37e21c1533f319c03e0533bc755f6da7/tests/test_console.py).
+- <a id="step-04.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the import goes up, and two lines lose `result =`. 4 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/2ec7932b37e21c1533f319c03e0533bc755f6da7/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `from wikiapp import console`
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
@@ -104,7 +104,7 @@ git restore --source 589f2f691557 --staged -- :/ && git restore --source 2ec7932
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2ec7932b37e21c1533f319c03e0533bc755f6da7). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2ec7932b37e21c1533f319c03e0533bc755f6da7).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2ec7932b37e21c1533f319c03e0533bc755f6da7){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2ec7932b37e21c1533f319c03e0533bc755f6da7){.btn .btn-sm .btn-primary}
 
 ## 4.6 A timeout {#step-04.6}
 
@@ -143,7 +143,7 @@ git restore --source 2ec7932b37e2 --staged -- :/ && git restore --source 0fb4985
 
 ### What changed {#step-04.6-what-changed-182c57}
 
-- <a id="step-04.6-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: one more argument. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0fb4985582732edf7372a4b90659d703db138446/src/wikiapp/wikipedia.py).
+- <a id="step-04.6-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: one more argument. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0fb4985582732edf7372a4b90659d703db138446/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `timeout=10`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -162,7 +162,7 @@ git restore --source 2ec7932b37e2 --staged -- :/ && git restore --source 0fb4985
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/0fb4985582732edf7372a4b90659d703db138446). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/0fb4985582732edf7372a4b90659d703db138446).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/0fb4985582732edf7372a4b90659d703db138446){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/0fb4985582732edf7372a4b90659d703db138446){.btn .btn-sm .btn-primary}
 
 ## 4.7 The linter sorts the imports {#step-04.7}
 
@@ -196,7 +196,7 @@ git restore --source 0fb498558273 --staged -- :/ && git restore --source a57134d
 
 ### What changed {#step-04.7-what-changed-182c57}
 
-- <a id="step-04.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the imports, sorted. 3 lines added, 2 removed. It comes from `just lint --fix`. [The file](https://github.com/rahuldave/smallwikiapp/blob/a57134d1cef6ff24803235ace966e5870046fbd9/src/wikiapp/console.py).
+- <a id="step-04.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the imports, sorted. 3 lines added, 2 removed. It comes from `just lint --fix`. [The file](https://github.com/rahuldave/smallwikiapp/blob/a57134d1cef6ff24803235ace966e5870046fbd9/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `from wikiapp import __version__`
 
 <details><summary>The diff that <code>just lint --fix</code> makes in <code>src/wikiapp/console.py</code></summary>
@@ -217,4 +217,6 @@ git restore --source 0fb498558273 --staged -- :/ && git restore --source a57134d
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a57134d1cef6ff24803235ace966e5870046fbd9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a57134d1cef6ff24803235ace966e5870046fbd9){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `a57134d1cef6`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9){.btn .btn-sm .btn-primary}

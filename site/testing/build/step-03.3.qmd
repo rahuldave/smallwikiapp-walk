@@ -6,6 +6,8 @@ title: "3.3 A test of the language"
 
 **Build it yourself.** [Read the tutorial](../read/step-03.3.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `a65f7f11432b`, partway through `step-03`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -17,8 +19,6 @@ just setup
 ```
 
 `random_page` asks only the English Wikipedia. It takes a language now, and a test checks the address.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520).
 
 ## 3.3 A language {#step-03.3}
 
@@ -65,9 +65,9 @@ git restore --source a65f7f11432b --staged -- :/ && git restore --source d9d02ca
 
 ### What changed {#step-03.3-what-changed-182c57}
 
-- <a id="step-03.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the placeholder, and the code that fills it. 3 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/src/wikiapp/wikipedia.py).
+- <a id="step-03.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the placeholder, and the code that fills it. 3 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def random_page(language="en"):`
-- <a id="step-03.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test uses the mock from `conftest.py`. New, 6 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/tests/test_wikipedia.py).
+- <a id="step-03.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test uses the mock from `conftest.py`. New, 6 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert "es.wikipedia.org" in args[0]`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -105,4 +105,6 @@ git restore --source a65f7f11432b --staged -- :/ && git restore --source d9d02ca
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `d9d02ca26fd3`, partway through `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520){.btn .btn-sm .btn-primary}

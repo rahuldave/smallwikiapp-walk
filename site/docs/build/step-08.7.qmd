@@ -6,6 +6,8 @@ title: "8.7 The README's folders"
 
 **Build it yourself.** [Read the tutorial](../read/step-08.7.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `e99ed4f3ab32`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -17,8 +19,6 @@ just setup
 ```
 
 The README does not name the tests and the docs among the folders. Now it names them.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).
 
 ## 8.7 The README names the tests and the docs {#step-08.7}
 
@@ -54,7 +54,7 @@ git restore --source e99ed4f3ab32 --staged -- :/ && git restore --source 79c8012
 
 ### What changed {#step-08.7-what-changed-182c57}
 
-- <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md).
+- <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md){.btn .btn-sm .btn-secondary}
   - look at `| The docs site. smalldocs makes its reference from the code |`
 
 <details open><summary>The patch to <code>README.md</code></summary>
@@ -75,4 +75,6 @@ git restore --source e99ed4f3ab32 --staged -- :/ && git restore --source 79c8012
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/79c80120fc8fc12ec7b38474294b422e86619362){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `79c80120fc8f`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362){.btn .btn-sm .btn-primary}

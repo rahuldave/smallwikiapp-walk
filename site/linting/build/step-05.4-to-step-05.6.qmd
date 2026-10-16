@@ -6,6 +6,8 @@ title: "5.4 to 5.6 The linter asks for types"
 
 **Build it yourself.** [Read the tutorial](../read/step-05.4-to-step-05.6.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `b7a3e6d212b4`, partway through `step-05`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7a3e6d212b439920f62f0a023554b86d14ebd4e){.btn .btn-sm .btn-primary}
+
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
@@ -31,8 +33,6 @@ package.
 
 ty checks only the types that are written in the code, and the code has almost none. ruff's rules `ANN` report
 each parameter and each return value that has no type. Then the code and the tests get their types.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7a3e6d212b439920f62f0a023554b86d14ebd4e). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5).
 
 ## 5.4 A type on every parameter and return {#step-05.4}
 
@@ -93,7 +93,7 @@ git restore --source b7a3e6d212b4 --staged -- :/ && git restore --source 06613b9
 
 ### What changed {#step-05.4-what-changed-182c57}
 
-- <a id="step-05.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06613b9b25a8f16c7e60cf52803b2e471161d854/pyproject.toml).
+- <a id="step-05.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06613b9b25a8f16c7e60cf52803b2e471161d854/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"ANN", # annotations: every parameter and every return value has a type`
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
@@ -111,7 +111,7 @@ git restore --source b7a3e6d212b4 --staged -- :/ && git restore --source 06613b9
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06613b9b25a8f16c7e60cf52803b2e471161d854). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06613b9b25a8f16c7e60cf52803b2e471161d854).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06613b9b25a8f16c7e60cf52803b2e471161d854){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06613b9b25a8f16c7e60cf52803b2e471161d854){.btn .btn-sm .btn-primary}
 
 ## 5.5 Types in the code {#step-05.5}
 
@@ -160,9 +160,9 @@ git restore --source 06613b9b25a8 --staged -- :/ && git restore --source 643f653
 
 ### What changed {#step-05.5-what-changed-182c57}
 
-- <a id="step-05.5-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the parameter. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/643f65323fd11c5c6f518c59431b13867e155952/src/wikiapp/console.py).
+- <a id="step-05.5-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the parameter. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/643f65323fd11c5c6f518c59431b13867e155952/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `def main(language: str) -> None:`
-- <a id="step-05.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the parameter and the return. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/643f65323fd11c5c6f518c59431b13867e155952/src/wikiapp/wikipedia.py).
+- <a id="step-05.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the parameter and the return. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/643f65323fd11c5c6f518c59431b13867e155952/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def random_page(language: str = "en") -> dict[str, Any]:`
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
@@ -203,7 +203,7 @@ git restore --source 06613b9b25a8 --staged -- :/ && git restore --source 643f653
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/643f65323fd11c5c6f518c59431b13867e155952). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/643f65323fd11c5c6f518c59431b13867e155952).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/643f65323fd11c5c6f518c59431b13867e155952){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/643f65323fd11c5c6f518c59431b13867e155952){.btn .btn-sm .btn-primary}
 
 ## 5.6 Types in the tests {#step-05.6}
 
@@ -269,11 +269,11 @@ git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353
 
 ### What changed {#step-05.6-what-changed-182c57}
 
-- <a id="step-05.6-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture returns a Mock. 4 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/conftest.py).
+- <a id="step-05.6-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture returns a Mock. 4 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/conftest.py){.btn .btn-sm .btn-secondary}
   - look at `def mock_requests_get(mocker: MockerFixture) -> Mock:`
-- <a id="step-05.6-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the runner is a CliRunner, and every test has its types. 11 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/test_console.py).
+- <a id="step-05.6-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the runner is a CliRunner, and every test has its types. 11 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `def runner() -> CliRunner:`
-- <a id="step-05.6-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the import of `Mock`, and the types of one test. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/test_wikipedia.py).
+- <a id="step-05.6-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the import of `Mock`, and the types of one test. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
@@ -377,4 +377,6 @@ git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/5873353449adaf1734a9cb14d13262486b1fb5d5). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/5873353449adaf1734a9cb14d13262486b1fb5d5){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `5873353449ad`, partway through `step-05`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5){.btn .btn-sm .btn-primary}

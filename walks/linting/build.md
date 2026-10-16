@@ -169,6 +169,8 @@ git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { 
 
 ## 0 The project
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part is where the project starts, at `step-00`. [The code of this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
+
 Before there is code to check, there is a project. This section shows what `uv init` made, and the command
 `wikiapp`. The justfile lists the tasks of the project.
 
@@ -625,11 +627,13 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c 
 
 </details>
 
-[The code](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830).
+This part ends at the code at `step-00`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 <a id="step-01"></a>
 
 ## 1 The command
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-00`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 The checks need code to check. The command asks Wikipedia for a random page, and prints its title and summary. It
 sends a User-Agent, and has an option `--version`.
@@ -640,8 +644,6 @@ just setup
 
 The command prints a fixed line. It should ask Wikipedia for a random page and print it. We need two packages for
 that, then the request, then a header that Wikipedia asks for, and last an option that prints the version.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
 
 <a id="step-01.1"></a>
 
@@ -937,11 +939,15 @@ git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c3
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-01).
+
+This part ends at the code at `step-01`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-01)
 
 <a id="step-04.1-to-step-04.3"></a>
 
 ## 4.1 to 4.3 A formatter
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-03`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-03)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -964,8 +970,6 @@ and raises its own error, `WikipediaError`, and the command prints it as a messa
 
 The code mixes styles, and nothing keeps one style. ruff comes in, in a new group `lint`, and `just fmt` formats
 the code and the tests.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85).
 
 <a id="step-04.1"></a>
 
@@ -1328,17 +1332,19 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6690eee9f7e177a6df2ea5e1821b8f581948bc85). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85).
 
+This part ends at the code at `6690eee9f7e1`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85)
+
 <a id="step-04.4"></a>
 
 ## 4.4 The linter's rules
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `6690eee9f7e1`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85)
 
 ```bash
 just setup
 ```
 
 A linter needs rules to check. The rules go in `pyproject.toml`, and `just lint` finds five problems.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce).
 
 ### 4.4 The linter's rules, and the recipe lint
 
@@ -1473,9 +1479,13 @@ git restore --source 6690eee9f7e1 --staged -- :/ && git restore --source 589f2f6
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/589f2f691557470eac084858d430a302c98390ce). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce).
 
+This part ends at the code at `589f2f691557`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce)
+
 <a id="step-04.5-to-step-04.7"></a>
 
 ## 4.5 to 4.7 The linter's problems, fixed
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `589f2f691557`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce)
 
 ```bash
 just setup
@@ -1483,8 +1493,6 @@ just setup
 
 The linter found five problems. A person fixes the tests, and gives the request a timeout. Then
 `just lint --fix` fixes the last problem, the order of the imports.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9).
 
 <a id="step-04.5"></a>
 
@@ -1690,9 +1698,13 @@ git restore --source 0fb498558273 --staged -- :/ && git restore --source a57134d
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a57134d1cef6ff24803235ace966e5870046fbd9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9).
 
+This part ends at the code at `a57134d1cef6`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9)
+
 <a id="step-04.8-to-step-04.9"></a>
 
 ## 4.8 to 4.9 A check of the configuration
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `a57134d1cef6`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9)
 
 ```bash
 just setup
@@ -1700,8 +1712,6 @@ just setup
 
 The linter reads the Python code, and nothing checks the files that set up the project. `just lint-config` checks
 `pyproject.toml`, the lockfile and the justfile.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c).
 
 <a id="step-04.8"></a>
 
@@ -1826,9 +1836,13 @@ git restore --source 4e710d50a229 --staged -- :/ && git restore --source d8a9c8f
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c).
 
+This part ends at the code at `d8a9c8f71eb5`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c)
+
 <a id="step-04.11"></a>
 
 ## 4.11 `just check`, every check in one recipe
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `b7469ee81a82`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1845,8 +1859,6 @@ word. The justfile now sets `UV_LOCKED`, so each recipe that runs `uv` refuses a
 
 Each check is a recipe of its own, and a person must remember to run them all. `just check` runs the format, the
 linter, the tests and the configuration, in order.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
 
 ### 4.11 The recipe check
 
@@ -1913,9 +1925,13 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
 
+This part ends at the code at `1f73d6af30cc`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543)
+
 <a id="step-04.12-to-step-04.13"></a>
 
 ## 4.12 to 4.13 A git hook
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `1f73d6af30cc`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543)
 
 ```bash
 just setup
@@ -1923,8 +1939,6 @@ just setup
 
 A person can forget to run `just check`. `pre-commit` runs three small checks of the files, then `just check`,
 before each `git commit`.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
 
 <a id="step-04.12"></a>
 
@@ -2089,11 +2103,15 @@ git restore --source 29291b3575f2 --staged -- :/ && git restore --source 6860da1
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-04).
+
+This part ends at the code at `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-04)
 
 <a id="step-05.4-to-step-05.6"></a>
 
 ## 5.4 to 5.6 The linter asks for types
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `b7a3e6d212b4`, partway through `step-05`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7a3e6d212b439920f62f0a023554b86d14ebd4e)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2114,8 +2132,6 @@ package.
 
 ty checks only the types that are written in the code, and the code has almost none. ruff's rules `ANN` report
 each parameter and each return value that has no type. Then the code and the tests get their types.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7a3e6d212b439920f62f0a023554b86d14ebd4e). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5).
 
 <a id="step-05.4"></a>
 
@@ -2468,9 +2484,13 @@ git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/5873353449adaf1734a9cb14d13262486b1fb5d5). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5).
 
+This part ends at the code at `5873353449ad`, partway through `step-05`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5)
+
 <a id="step-10.3"></a>
 
 ## 10.3 The library's pyproject.toml too
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `6e6d2844bc7a`, partway through `step-10`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2493,8 +2513,6 @@ builds both packages. The app is the package `wikiapp`, and it needs a 0.1 versi
 
 Until this section, `just lint-config` checks only the app's `pyproject.toml`. After it, `just lint-config` also
 checks the library's `pyproject.toml`.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
 
 ### 10.3 lint-config checks both pyproject.toml files
 
@@ -2553,3 +2571,5 @@ git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb9
 </details>
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
+
+This part ends at the code at `522bcb941336`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055)

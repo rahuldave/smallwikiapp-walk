@@ -6,6 +6,8 @@ title: "1 A random page"
 
 **Build it yourself.** [Read the tutorial](../read/step-01.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-00`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-00){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -18,8 +20,6 @@ just setup
 
 The command prints a fixed line. It should ask Wikipedia for a random page and print it. We need two packages for
 that, then the request, then a header that Wikipedia asks for, and last an option that prints the version.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
 
 ## 1.1 click and requests {#step-01.1}
 
@@ -55,9 +55,9 @@ git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d4958
 
 ### What changed {#step-01.1-what-changed-182c57}
 
-- <a id="step-01.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the dependencies of the package, which anyone who installs it gets. 4 lines added, 1 removed. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/pyproject.toml).
+- <a id="step-01.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the dependencies of the package, which anyone who installs it gets. 4 lines added, 1 removed. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"click>=8.5.0",`
-- <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock).
+- <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add click requests</code> makes in <code>pyproject.toml</code></summary>
 
@@ -78,7 +78,7 @@ git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d4958
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/36d49582843a575d84ed178ad66157913be4c59c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/36d49582843a575d84ed178ad66157913be4c59c){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c){.btn .btn-sm .btn-primary}
 
 ## 1.2 Ask Wikipedia for a page {#step-01.2}
 
@@ -130,7 +130,7 @@ git restore --source 36d49582843a --staged -- :/ && git restore --source 571c82e
 
 ### What changed {#step-01.2-what-changed-182c57}
 
-- <a id="step-01.2-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: a request, and two lines printed. 17 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c/src/wikiapp/console.py).
+- <a id="step-01.2-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: a request, and two lines printed. 17 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `with requests.get(API_URL) as response:`
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
@@ -162,7 +162,7 @@ git restore --source 36d49582843a --staged -- :/ && git restore --source 571c82e
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c){.btn .btn-sm .btn-primary}
 
 ## 1.3 A User-Agent {#step-01.3}
 
@@ -200,7 +200,7 @@ git restore --source 571c82ebd31f --staged -- :/ && git restore --source 0ffd5df
 
 ### What changed {#step-01.3-what-changed-182c57}
 
-- <a id="step-01.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the header. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0ffd5df563acb876953855d86be30b6952ecfd44/src/wikiapp/console.py).
+- <a id="step-01.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the header. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0ffd5df563acb876953855d86be30b6952ecfd44/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:`
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
@@ -224,7 +224,7 @@ git restore --source 571c82ebd31f --staged -- :/ && git restore --source 0ffd5df
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/0ffd5df563acb876953855d86be30b6952ecfd44). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/0ffd5df563acb876953855d86be30b6952ecfd44).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/0ffd5df563acb876953855d86be30b6952ecfd44){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/0ffd5df563acb876953855d86be30b6952ecfd44){.btn .btn-sm .btn-primary}
 
 ## 1.4 --version {#step-01.4}
 
@@ -271,9 +271,9 @@ git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c3
 
 ### What changed {#step-01.4-what-changed-182c57}
 
-- <a id="step-01.4-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: the version, which Python reads when it imports the package. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/__init__.py).
+- <a id="step-01.4-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: the version, which Python reads when it imports the package. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/__init__.py){.btn .btn-sm .btn-secondary}
   - look at `__version__ = importlib.metadata.version(__name__ or __package__)`
-- <a id="step-01.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: click's version option. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/console.py).
+- <a id="step-01.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: click's version option. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `@click.version_option(version=__version__)`
 
 <details open><summary>The patch to <code>src/wikiapp/__init__.py</code></summary>
@@ -307,4 +307,6 @@ git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c3
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-01){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-01`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-01){.btn .btn-sm .btn-primary}

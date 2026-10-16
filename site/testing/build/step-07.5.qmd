@@ -6,6 +6,8 @@ title: "7.5 A drop in coverage"
 
 **Build it yourself.** [Read the tutorial](../read/step-07.5.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `06ff2caa1958`, partway through `step-07`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -19,8 +21,6 @@ just setup
 The language goes into the address of the request, as `en` does in `en.wikipedia.org`. So a language such as
 `example.com/x?` sends the request to the site `example.com`. New code now accepts only lowercase letters,
 joined by hyphens, as in `en` or `zh-yue`. No test reaches the new code, so the coverage drops.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
 
 ## 7.5 Only a language code goes into the address {#step-07.5}
 
@@ -65,7 +65,7 @@ git restore --source 06ff2caa1958 --staged -- :/ && git restore --source be473b8
 
 ### What changed {#step-07.5-what-changed-182c57}
 
-- <a id="step-07.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the code checks a language before it uses it. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/be473b80441f82ce87bf800deeb432fd4212dea4/src/wikiapp/wikipedia.py).
+- <a id="step-07.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the code checks a language before it uses it. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/be473b80441f82ce87bf800deeb432fd4212dea4/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `if not LANGUAGE.fullmatch(language):`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -95,4 +95,6 @@ git restore --source 06ff2caa1958 --staged -- :/ && git restore --source be473b8
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-07){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-07`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-07){.btn .btn-sm .btn-primary}

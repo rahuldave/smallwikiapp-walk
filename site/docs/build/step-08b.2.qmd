@@ -6,6 +6,8 @@ title: "8b.2 The docs on GitHub Pages"
 
 **Build it yourself.** [Read the tutorial](../read/step-08b.2.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `971e9d780fd5`, partway through `step-08b`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0){.btn .btn-sm .btn-primary}
+
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
@@ -49,8 +51,6 @@ group `test` back. So uv installs the package `wikiapp`, the packages that `wiki
 no other group.
 
 But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your machine still installs every group.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
 
 ## 8b.2 A workflow that publishes the docs {#step-08b.2}
 
@@ -123,7 +123,7 @@ git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09
 
 ### What changed {#step-08b.2-what-changed-182c57}
 
-- <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml).
+- <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml){.btn .btn-sm .btn-secondary}
   - look at `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
 
 <details open><summary>The patch to <code>.github/workflows/docs.yaml</code></summary>
@@ -174,4 +174,6 @@ git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08b){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-08b`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08b){.btn .btn-sm .btn-primary}

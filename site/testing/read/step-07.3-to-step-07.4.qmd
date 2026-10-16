@@ -6,6 +6,17 @@ title: "7.3 to 7.4 Tests of a model"
 
 **Read the tutorial.** [Build it yourself](../build/step-07.3-to-step-07.4.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `1baf0602c1d1`, partway through `step-07`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1baf0602c1d1cec79277c2faec438b76a9a8c768){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach 1baf0602c1d1
+```
+
 ```bash
 just setup
 ```
@@ -16,8 +27,6 @@ as strings.
 
 `random_page` returns a `Page` in place of a dictionary, so one test changes. An answer that is not a page is a
 `WikipediaError` too, and a new test checks it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1baf0602c1d1cec79277c2faec438b76a9a8c768). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d).
 
 ## 7.3 random_page returns a Page {#step-07.3}
 
@@ -54,11 +63,11 @@ uv run wikiapp
 
 ### What changed {#step-07.3-what-changed-182c57}
 
-- <a id="step-07.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: attributes, not keys. 3 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/console.py).
+- <a id="step-07.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: attributes, not keys. 3 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `click.secho(page.title, fg="green")`
-- <a id="step-07.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the return. 2 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/wikipedia.py).
+- <a id="step-07.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the return. 2 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `return Page.model_validate(response.json())`
-- <a id="step-07.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the e2e test checks for a Page. 2 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/tests/test_wikipedia.py).
+- <a id="step-07.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the e2e test checks for a Page. 2 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert isinstance(page, wikipedia.Page)`
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
@@ -131,7 +140,7 @@ uv run wikiapp
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d){.btn .btn-sm .btn-primary}
 
 ## 7.4 An answer that is not a page {#step-07.4}
 
@@ -158,9 +167,9 @@ The output is `1 passed, 8 deselected`.
 
 ### What changed {#step-07.4-what-changed-182c57}
 
-- <a id="step-07.4-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: two exceptions caught. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/src/wikiapp/wikipedia.py).
+- <a id="step-07.4-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: two exceptions caught. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `except (requests.RequestException, ValidationError) as error:`
-- <a id="step-07.4-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/tests/test_wikipedia.py).
+- <a id="step-07.4-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `with pytest.raises(wikipedia.WikipediaError):`
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
@@ -201,4 +210,6 @@ The output is `1 passed, 8 deselected`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06ff2caa1958318b960fa9b9c84b32b3a23ae18d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `06ff2caa1958`, partway through `step-07`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d){.btn .btn-sm .btn-primary}

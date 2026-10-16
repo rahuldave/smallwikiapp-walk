@@ -6,6 +6,8 @@ title: "8b.1 GitHub installs only the test tools"
 
 **Build it yourself.** [Read the tutorial](../read/step-08b.1.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-08){.btn .btn-sm .btn-primary}
+
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
@@ -27,8 +29,6 @@ a check of the docs. `just docs` builds a site, and the README names the tests a
 
 GitHub installs every tool of the project to run the tests, and the tests need only pytest and its plugins. This
 section changes what GitHub installs to run the tests.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
 
 ## 8b.1 The tests install the group test alone {#step-08b.1}
 
@@ -76,7 +76,7 @@ git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d7
 
 ### What changed {#step-08b.1-what-changed-182c57}
 
-- <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml).
+- <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml){.btn .btn-sm .btn-secondary}
   - look at `- run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more`
 
 <details open><summary>The patch to <code>.github/workflows/test.yaml</code></summary>
@@ -103,4 +103,6 @@ git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d7
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `971e9d780fd5`, partway through `step-08b`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0){.btn .btn-sm .btn-primary}

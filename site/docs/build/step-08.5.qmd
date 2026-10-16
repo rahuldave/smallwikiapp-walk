@@ -6,6 +6,8 @@ title: "8.5 The tests documented"
 
 **Build it yourself.** [Read the tutorial](../read/step-08.5.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `bb648b91f4ab`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -18,8 +20,6 @@ just setup
 
 The tests say what the code must do, and the check lists them as gaps too. Each test now says what it checks, and
 the docs check finds no gap.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
 
 ## 8.5 The tests documented {#step-08.5}
 
@@ -86,11 +86,11 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 
 ### What changed {#step-08.5-what-changed-182c57}
 
-- <a id="step-08.5-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, documented. 6 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/conftest.py).
+- <a id="step-08.5-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, documented. 6 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/conftest.py){.btn .btn-sm .btn-secondary}
   - look at `mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test`
-- <a id="step-08.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: seven functions. 33 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_console.py).
+- <a id="step-08.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: seven functions. 33 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `"""The command prints the title of the page."""`
-- <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py).
+- <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `"""The language chooses the Wikipedia that is asked."""`
 
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
@@ -245,4 +245,6 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `7a0e50948873`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97){.btn .btn-sm .btn-primary}

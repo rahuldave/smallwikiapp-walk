@@ -150,6 +150,8 @@ git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { 
 
 ## 0 The project
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part is where the project starts, at `step-00`. [The code of this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
+
 ```bash
 just setup
 ```
@@ -603,11 +605,13 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c 
 
 </details>
 
-[The code](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830).
+This part ends at the code at `step-00`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 <a id="step-01"></a>
 
 ## 1 A random page
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-00`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 ```bash
 just setup
@@ -615,8 +619,6 @@ just setup
 
 The command prints a fixed line. It should ask Wikipedia for a random page and print it. We need two packages for
 that, then the request, then a header that Wikipedia asks for, and last an option that prints the version.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
 
 <a id="step-01.1"></a>
 
@@ -912,11 +914,15 @@ git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c3
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-01).
+
+This part ends at the code at `step-01`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-01)
 
 <a id="step-02"></a>
 
 ## 2 Tests, with mocks
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-01`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-01)
 
 ```bash
 just setup
@@ -928,8 +934,6 @@ Tests run it for us. pytest finds the tests and runs them, and a recipe `just te
 The command asks the real Wikipedia, and a test cannot know which page comes back. So a mock takes the place of
 `requests.get`, and returns a page that the tests know. Last, coverage shows which lines of the code the tests run.
 One test still asks the real Wikipedia, so the tests need the network for now.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
 
 <a id="step-02.1"></a>
 
@@ -1656,11 +1660,15 @@ git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-02).
+
+This part ends at the code at `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-02)
 
 <a id="step-03"></a>
 
 ## 3 A library and an app
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-02`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-02)
 
 ```bash
 just setup
@@ -1671,8 +1679,6 @@ command line, and a test of the request must run the command. So the code that a
 its own, `wikipedia.py`. The module then gets a language, and an error of its own. The command, in `console.py`,
 uses the module. So `wikipedia.py` is a library with no code for the command line, and `console.py` is the
 app that uses it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
 
 <a id="step-03.1"></a>
 
@@ -2225,11 +2231,15 @@ git restore --source a6f5ae9a475d --staged -- :/ && git restore --source b694286
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-03).
+
+This part ends at the code at `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-03)
 
 <a id="step-04"></a>
 
 ## 4 Format, lint, a hook
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-03`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-03)
 
 ```bash
 just setup
@@ -2242,8 +2252,6 @@ change. Then a recipe checks the configuration, another runs every check, and a 
 records a change.
 
 The tests still need the network. `pre-commit` downloads its hooks from GitHub the first time it runs.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
 
 <a id="step-04.1"></a>
 
@@ -3353,11 +3361,15 @@ git restore --source 29291b3575f2 --staged -- :/ && git restore --source 6860da1
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-04).
+
+This part ends at the code at `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-04)
 
 <a id="step-05"></a>
 
 ## 5 Types
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-04)
 
 ```bash
 just setup
@@ -3367,8 +3379,6 @@ The tests run the code with the values that they choose, and Python checks no ty
 with the wrong kind of value fails only when it runs. A type checker reads the code without running it, and finds
 such calls. We add one, and fix the one problem that it finds. Then we write a type on every parameter and return,
 so that it has something to check.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9).
 
 <a id="step-05.1"></a>
 
@@ -3954,11 +3964,15 @@ git restore --source 5873353449ad --staged -- :/ && git restore --source 701783a
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-05).
+
+This part ends at the code at `step-05`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-05)
 
 <a id="step-06"></a>
 
 ## 6 End to end, and CI
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-05`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-05)
 
 ```bash
 just setup
@@ -3967,8 +3981,6 @@ just setup
 One test asks the real Wikipedia, so the tests fail without a network, and can fail when Wikipedia changes. We
 run such tests only on request. Then the project accepts every version of Python from 3.11 on. GitHub
 then runs the tests on three systems and four versions of Python after each push.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
 
 <a id="step-06.1"></a>
 
@@ -4389,11 +4401,15 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-06).
+
+This part ends at the code at `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-06)
 
 <a id="step-07"></a>
 
 ## 7 A page with a shape
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-06`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-06)
 
 ```bash
 just setup
@@ -4403,8 +4419,6 @@ just setup
 Nothing checks that the dictionary has them. We give a page a shape, with a pydantic model. `random_page` returns a page of that shape, and an
 answer that is not a page becomes an error like any other. Last, the code checks that the language is a language
 code before it puts it into the address.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
 
 <a id="step-07.1"></a>
 
@@ -4850,11 +4864,15 @@ git restore --source 06ff2caa1958 --staged -- :/ && git restore --source be473b8
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-07).
+
+This part ends at the code at `step-07`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-07)
 
 <a id="step-08"></a>
 
 ## 8 Docs from the code
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-07`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-07)
 
 ```bash
 just setup
@@ -4864,8 +4882,6 @@ A person who calls `random_page` must read its code to learn what it takes, what
 document the code, and let a tool, smalldocs, write the reference from it. smalldocs also lists what has no
 documentation, so `just check` can fail when a function has none. We document the library, the command and the tests. Then we
 build a site with a front page, and name the tests and the docs in the README.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
 
 <a id="step-08.1"></a>
 
@@ -5762,11 +5778,15 @@ git restore --source 79c80120fc8f --staged -- :/ && git restore --source ce0734f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08).
+
+This part ends at the code at `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08)
 
 <a id="step-08b"></a>
 
 ## 8b The docs on GitHub Pages
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-08)
 
 ```bash
 just setup
@@ -5775,8 +5795,6 @@ just setup
 Every job on GitHub installs every dependency group, with every tool of the project, though most jobs need only a
 few. Also, the docs site exists only on the machine that builds it. So we make the job `tests` install the group `test`
 alone. Then a new workflow builds the docs site with the group `docs` alone, and GitHub Pages publishes it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
 
 <a id="step-08b.1"></a>
 
@@ -5975,11 +5993,15 @@ git restore --source 971e9d780fd5 --staged -- :/ && git restore --source 39a4b09
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08b).
+
+This part ends at the code at `step-08b`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08b)
 
 <a id="step-09"></a>
 
 ## 9 The library as a package
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-08b`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-08b)
 
 ```bash
 just setup
@@ -5989,8 +6011,6 @@ The code that asks Wikipedia has no code for the command line, but another progr
 wikiapp, with click. So we make it a package of its own, `wikirandom`, in the same repository. First comes an empty
 package, with its dependencies and its README, then its code. Then the app uses the library, and drops requests
 and pydantic, which it no longer imports. Last, the docs check counts the library too.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
 
 <a id="step-09.1"></a>
 
@@ -6919,11 +6939,15 @@ git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e636
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-09).
+
+This part ends at the code at `step-09`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-09)
 
 <a id="step-10"></a>
 
 ## 10 Build
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-09)
 
 ```bash
 just setup
@@ -6934,8 +6958,6 @@ and uv install. So we build each package into a wheel and a source archive, and 
 app says which versions of the library it accepts, and `just lint-config` checks the library's `pyproject.toml`
 too. Both packages say their licence and where their source is. Last, the library's User-Agent says the version
 that is installed.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/73fc4e12cc7a5831163e61fc01a3699355f95d52).
 
 <a id="step-10.1"></a>
 
@@ -7545,4 +7567,6 @@ git restore --source 2c03603dc72a --staged -- :/ && git restore --source 73fc4e1
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/73fc4e12cc7a5831163e61fc01a3699355f95d52). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/73fc4e12cc7a5831163e61fc01a3699355f95d52).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/73fc4e12cc7a5831163e61fc01a3699355f95d52). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-10).
+
+This part ends at the code at `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-10)

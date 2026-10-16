@@ -6,6 +6,8 @@ title: "2.5 to 2.9 Fixtures and mocks"
 
 **Build it yourself.** [Read the tutorial](../read/step-02.5-to-step-02.9.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `45807a0ddd9f`, partway through `step-02`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -25,8 +27,6 @@ check the title that the command prints, that the command made a request, and th
 
 When a command ends, it gives back a number, its exit code. The number is 0 when the command works, and another number,
 such as 1, when it fails. A last test makes the request fail, and checks that the command ends with exit code 1.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
 
 ## 2.5 The runner as a fixture {#step-02.5}
 
@@ -63,7 +63,7 @@ git restore --source 45807a0ddd9f --staged -- :/ && git restore --source 8435ae5
 
 ### What changed {#step-02.5-what-changed-182c57}
 
-- <a id="step-02.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture, and the test that names it. 6 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/8435ae56cf5630c401d83760b4dffe1fe5bde109/tests/test_console.py).
+- <a id="step-02.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture, and the test that names it. 6 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/8435ae56cf5630c401d83760b4dffe1fe5bde109/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `def test_main_succeeds(runner):`
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
@@ -88,7 +88,7 @@ git restore --source 45807a0ddd9f --staged -- :/ && git restore --source 8435ae5
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8435ae56cf5630c401d83760b4dffe1fe5bde109). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8435ae56cf5630c401d83760b4dffe1fe5bde109).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8435ae56cf5630c401d83760b4dffe1fe5bde109){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8435ae56cf5630c401d83760b4dffe1fe5bde109){.btn .btn-sm .btn-primary}
 
 ## 2.6 pytest-mock, in the group test {#step-02.6}
 
@@ -120,9 +120,9 @@ git restore --source 8435ae56cf56 --staged -- :/ && git restore --source 55b7b55
 
 ### What changed {#step-02.6-what-changed-182c57}
 
-- <a id="step-02.6-pyproject.toml-5d07e7"></a>`pyproject.toml`: pytest-mock in the group `test`. 1 line added. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/pyproject.toml).
+- <a id="step-02.6-pyproject.toml-5d07e7"></a>`pyproject.toml`: pytest-mock in the group `test`. 1 line added. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"pytest-mock>=3.16.0",`
-- <a id="step-02.6-uv.lock-8356d8"></a>`uv.lock`: the exact version of pytest-mock. 17 lines added, 1 removed. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/uv.lock).
+- <a id="step-02.6-uv.lock-8356d8"></a>`uv.lock`: the exact version of pytest-mock. 17 lines added, 1 removed. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add --group test pytest-mock</code> makes in <code>pyproject.toml</code></summary>
 
@@ -137,7 +137,7 @@ git restore --source 8435ae56cf56 --staged -- :/ && git restore --source 55b7b55
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/55b7b55dffa30e6eb91a88c882201f955271e28d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/55b7b55dffa30e6eb91a88c882201f955271e28d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/55b7b55dffa30e6eb91a88c882201f955271e28d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/55b7b55dffa30e6eb91a88c882201f955271e28d){.btn .btn-sm .btn-primary}
 
 ## 2.7 A mock in place of Wikipedia {#step-02.7}
 
@@ -181,7 +181,7 @@ git restore --source 55b7b55dffa3 --staged -- :/ && git restore --source 7c1911b
 
 ### What changed {#step-02.7-what-changed-182c57}
 
-- <a id="step-02.7-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture of the mock, and the new test. 13 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7c1911b9f0155df43da70d010b25fc1ec947fe7c/tests/test_console.py).
+- <a id="step-02.7-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture of the mock, and the new test. 13 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7c1911b9f0155df43da70d010b25fc1ec947fe7c/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `mock = mocker.patch("requests.get")`
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
@@ -213,7 +213,7 @@ git restore --source 55b7b55dffa3 --staged -- :/ && git restore --source 7c1911b
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7c1911b9f0155df43da70d010b25fc1ec947fe7c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7c1911b9f0155df43da70d010b25fc1ec947fe7c).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7c1911b9f0155df43da70d010b25fc1ec947fe7c){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7c1911b9f0155df43da70d010b25fc1ec947fe7c){.btn .btn-sm .btn-primary}
 
 ## 2.8 Tests of the request {#step-02.8}
 
@@ -253,7 +253,7 @@ git restore --source 7c1911b9f015 --staged -- :/ && git restore --source 9be013d
 
 ### What changed {#step-02.8-what-changed-182c57}
 
-- <a id="step-02.8-tests-test_console.py-9442ee"></a>`tests/test_console.py`: two tests, that the command makes the request, and to the right address. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/9be013d11b88d0e40680024a8ea99d501c681252/tests/test_console.py).
+- <a id="step-02.8-tests-test_console.py-9442ee"></a>`tests/test_console.py`: two tests, that the command makes the request, and to the right address. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/9be013d11b88d0e40680024a8ea99d501c681252/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert mock_requests_get.called`
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
@@ -278,7 +278,7 @@ git restore --source 7c1911b9f015 --staged -- :/ && git restore --source 9be013d
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/9be013d11b88d0e40680024a8ea99d501c681252). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/9be013d11b88d0e40680024a8ea99d501c681252).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/9be013d11b88d0e40680024a8ea99d501c681252){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/9be013d11b88d0e40680024a8ea99d501c681252){.btn .btn-sm .btn-primary}
 
 ## 2.9 A test of a failed request {#step-02.9}
 
@@ -316,7 +316,7 @@ git restore --source 9be013d11b88 --staged -- :/ && git restore --source bfc38e7
 
 ### What changed {#step-02.9-what-changed-182c57}
 
-- <a id="step-02.9-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the mock raises. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bfc38e738984492a5dbf6a1a6a0b6691baad4c34/tests/test_console.py).
+- <a id="step-02.9-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the mock raises. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bfc38e738984492a5dbf6a1a6a0b6691baad4c34/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `mock_requests_get.side_effect = Exception("Boom")`
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
@@ -338,4 +338,6 @@ git restore --source 9be013d11b88 --staged -- :/ && git restore --source bfc38e7
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bfc38e738984492a5dbf6a1a6a0b6691baad4c34). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `bfc38e738984`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-primary}

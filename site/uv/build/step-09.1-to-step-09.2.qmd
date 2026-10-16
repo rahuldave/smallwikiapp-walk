@@ -6,6 +6,8 @@ title: "9.1 to 9.2 A workspace"
 
 **Build it yourself.** [Read the tutorial](../read/step-09.1-to-step-09.2.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-08b`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-08b){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -19,8 +21,6 @@ just setup
 The library and the app are in one package. So a program that needs only the library must install the app too. The library becomes a
 second package of the project. The two packages form a workspace. The library also needs packages of its own.
 `--package wikirandom` makes `uv add` change the library's `pyproject.toml`, and not the app's.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/39a4b09f85638bbe8424b243c4ba4477070f2740). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/c153cdfc43300110bd63502b3d53a85ab3aa79f1).
 
 ## 9.1 An empty library, wikirandom {#step-09.1}
 
@@ -77,13 +77,13 @@ git restore --source 39a4b09f8563 --staged -- :/ && git restore --source 0136483
 
 ### What changed {#step-09.1-what-changed-182c57}
 
-- <a id="step-09.1-packages-wikirandom-README.md-105646"></a>`packages/wikirandom/README.md`: empty. New, 0 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/README.md).
-- <a id="step-09.1-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: a package of its own, with its name, version, description, the versions of Python it accepts, and its build backend. New, 11 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/pyproject.toml).
+- <a id="step-09.1-packages-wikirandom-README.md-105646"></a>`packages/wikirandom/README.md`: empty. New, 0 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/README.md){.btn .btn-sm .btn-secondary}
+- <a id="step-09.1-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: a package of its own, with its name, version, description, the versions of Python it accepts, and its build backend. New, 11 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `name = "wikirandom"`
-- <a id="step-09.1-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: uv's example function. New, 2 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/src/wikirandom/__init__.py).
+- <a id="step-09.1-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: uv's example function. New, 2 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/src/wikirandom/__init__.py){.btn .btn-sm .btn-secondary}
   - look at `def hello() -> str:`
-- <a id="step-09.1-packages-wikirandom-src-wikirandom-py.typed-072343"></a>`packages/wikirandom/src/wikirandom/py.typed`: an empty file, which tells a type checker that the package has types. New, 0 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/src/wikirandom/py.typed).
-- <a id="step-09.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the workspace, with one member. 5 lines added. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/pyproject.toml).
+- <a id="step-09.1-packages-wikirandom-src-wikirandom-py.typed-072343"></a>`packages/wikirandom/src/wikirandom/py.typed`: an empty file, which tells a type checker that the package has types. New, 0 lines. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/packages/wikirandom/src/wikirandom/py.typed){.btn .btn-sm .btn-secondary}
+- <a id="step-09.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the workspace, with one member. 5 lines added. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"packages/wikirandom",`
 
 <details><summary>The diff that <code>uv init --lib --author-from none --no-pin-python --python "&gt;=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom</code> makes in <code>packages/wikirandom/pyproject.toml</code></summary>
@@ -134,7 +134,7 @@ git restore --source 39a4b09f8563 --staged -- :/ && git restore --source 0136483
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/01364831243e6c4c4f2fab3756eb1c633f6903c8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/01364831243e6c4c4f2fab3756eb1c633f6903c8).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/01364831243e6c4c4f2fab3756eb1c633f6903c8){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/01364831243e6c4c4f2fab3756eb1c633f6903c8){.btn .btn-sm .btn-primary}
 
 ## 9.2 requests and pydantic, for the library {#step-09.2}
 
@@ -188,9 +188,9 @@ git restore --source 01364831243e --staged -- :/ && git restore --source c153cdf
 
 ### What changed {#step-09.2-what-changed-182c57}
 
-- <a id="step-09.2-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: its dependencies. 4 lines added, 1 removed. It comes from `uv add --package wikirandom requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/c153cdfc43300110bd63502b3d53a85ab3aa79f1/packages/wikirandom/pyproject.toml).
+- <a id="step-09.2-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: its dependencies. 4 lines added, 1 removed. It comes from `uv add --package wikirandom requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/c153cdfc43300110bd63502b3d53a85ab3aa79f1/packages/wikirandom/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"pydantic>=2.14.1",`
-- <a id="step-09.2-uv.lock-8356d8"></a>`uv.lock`: the two members of the workspace, and the library with its dependencies. 21 lines added. It comes from `uv add --package wikirandom requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/c153cdfc43300110bd63502b3d53a85ab3aa79f1/uv.lock).
+- <a id="step-09.2-uv.lock-8356d8"></a>`uv.lock`: the two members of the workspace, and the library with its dependencies. 21 lines added. It comes from `uv add --package wikirandom requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/c153cdfc43300110bd63502b3d53a85ab3aa79f1/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add --package wikirandom requests pydantic</code> makes in <code>packages/wikirandom/pyproject.toml</code></summary>
 
@@ -211,4 +211,6 @@ git restore --source 01364831243e --staged -- :/ && git restore --source c153cdf
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/c153cdfc43300110bd63502b3d53a85ab3aa79f1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/c153cdfc43300110bd63502b3d53a85ab3aa79f1).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/c153cdfc43300110bd63502b3d53a85ab3aa79f1){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/c153cdfc43300110bd63502b3d53a85ab3aa79f1){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `c153cdfc4330`, partway through `step-09`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/c153cdfc43300110bd63502b3d53a85ab3aa79f1){.btn .btn-sm .btn-primary}

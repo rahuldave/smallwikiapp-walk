@@ -6,6 +6,8 @@ title: "10.2 A range of versions for the library"
 
 **Build it yourself.** [Read the tutorial](../read/step-10.2.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `7744a84a4715`, partway through `step-10`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -19,8 +21,6 @@ just setup
 `uv build` copies each entry of `dependencies` into a line `Requires-Dist` in the wheel's metadata. `[tool.uv.sources]` does not
 go into the wheel. The app names wikirandom with no range of versions, so a user who installs the app from PyPI
 can get any version of wikirandom.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
 
 ## 10.2 The app needs wikirandom 0.1 {#step-10.2}
 
@@ -61,7 +61,7 @@ git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d284
 
 ### What changed {#step-10.2-what-changed-182c57}
 
-- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml).
+- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"wikirandom>=0.1.0,<0.2",`
 
 <details><summary>The diff that <code>uv add "wikirandom&gt;=0.1.0,&lt;0.2"</code> makes in <code>pyproject.toml</code></summary>
@@ -80,4 +80,6 @@ git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d284
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `6e6d2844bc7a`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-primary}

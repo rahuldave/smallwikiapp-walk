@@ -215,6 +215,8 @@ git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { 
 
 ## 0 The project, and its justfile
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part is where the project starts, at `step-00`. [The code of this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
+
 The project has a justfile from the start, so the first task already has a verb. This section shows what
 `uv init` made, the command `wikiapp`, and the first justfile. The justfile has three recipes. `default` lists the
 verbs, `help` explains one, and `setup` installs the project.
@@ -688,11 +690,13 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c 
 
 </details>
 
-[The code](https://github.com/rahuldave/smallwikiapp/tree/ae86cb7d116c4103832edf25ab3a7a9077583830).
+This part ends at the code at `step-00`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
 
 <a id="step-02.4"></a>
 
 ## 2.4 `just test`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `d92e2dec921d`, partway through `step-02`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -712,8 +716,6 @@ the project has its first test.
 
 A person who runs the tests must know the tool and its options. `just test` is the first verb after `setup`, and
 the first that runs a check.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837).
 
 ### 2.4 The recipe `just test`
 
@@ -786,9 +788,13 @@ git restore --source d92e2dec921d --staged -- :/ && git restore --source 45807a0
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837).
 
+This part ends at the code at `45807a0ddd9f`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837)
+
 <a id="step-04.1-to-step-04.2"></a>
 
 ## 4.1 to 4.2 `just fmt`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-03`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-03)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -805,8 +811,6 @@ split into a library, `src/wikiapp/wikipedia.py`, and the command. The command h
 library raises its own error, `WikipediaError`, and the command turns it into a message.
 
 The code mixes styles. ruff comes in, and `just fmt` formats the code and the tests.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/31445743379186b800fd4c035c8f04eed7ad7f3d).
 
 <a id="step-04.1"></a>
 
@@ -984,9 +988,13 @@ git restore --source 8f7b800001ee --staged -- :/ && git restore --source 3144574
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/31445743379186b800fd4c035c8f04eed7ad7f3d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/31445743379186b800fd4c035c8f04eed7ad7f3d).
 
+This part ends at the code at `314457433791`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/31445743379186b800fd4c035c8f04eed7ad7f3d)
+
 <a id="step-04.4"></a>
 
 ## 4.4 `just lint`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `6690eee9f7e1`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1002,8 +1010,6 @@ The code is now formatted, by `just fmt`.
 
 A formatter changes how the code looks, and finds no mistakes. The rules of the linter go in `pyproject.toml`, and
 `just lint` runs the linter.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce).
 
 ### 4.4 The linter's rules, and the recipe lint
 
@@ -1138,9 +1144,13 @@ git restore --source 6690eee9f7e1 --staged -- :/ && git restore --source 589f2f6
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/589f2f691557470eac084858d430a302c98390ce). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce).
 
+This part ends at the code at `589f2f691557`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/589f2f691557470eac084858d430a302c98390ce)
+
 <a id="step-04.8-to-step-04.9"></a>
 
 ## 4.8 to 4.9 `just lint-config`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `a57134d1cef6`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1157,8 +1167,6 @@ words after `lint` go to ruff. A person fixed the other four problems.
 
 Nothing checks the files that set up the project. `just lint-config` checks the configuration. Its recipe is a
 small shell script, which runs three commands and ends at the first that fails.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c).
 
 <a id="step-04.8"></a>
 
@@ -1291,9 +1299,13 @@ git restore --source 4e710d50a229 --staged -- :/ && git restore --source d8a9c8f
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c).
 
+This part ends at the code at `d8a9c8f71eb5`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c)
+
 <a id="step-04.10"></a>
 
 ## 4.10 A variable for every recipe
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `d8a9c8f71eb5`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c)
 
 ```bash
 just setup
@@ -1303,8 +1315,6 @@ uv writes the exact version of each package in a file, the lockfile `uv.lock`. A
 change the lockfile, and uv prints no warning. This section changes no recipe. It sets one variable,
 `UV_LOCKED`, which each recipe gives to `uv`. With it, uv stops with an error when it would have to change the
 lockfile.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8a9c8f71eb58893025360c20b32c9078e5b0c3c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
 
 ### 4.10 Recipes refuse an old lockfile
 
@@ -1363,9 +1373,13 @@ git restore --source d8a9c8f71eb5 --staged -- :/ && git restore --source b7469ee
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade).
 
+This part ends at the code at `b7469ee81a82`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade)
+
 <a id="step-04.11"></a>
 
 ## 4.11 `just check`, everything a `git commit` must pass
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `b7469ee81a82`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade)
 
 ```bash
 just setup
@@ -1373,8 +1387,6 @@ just setup
 
 A person must remember four verbs before each `git commit`. `just check` runs those four verbs, one after the
 other. It names no tool of its own.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/b7469ee81a824a46e6799d60957ea09d7cf2eade). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
 
 ### 4.11 The recipe check
 
@@ -1449,9 +1461,13 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
 
+This part ends at the code at `1f73d6af30cc`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543)
+
 <a id="step-04.12-to-step-04.13"></a>
 
 ## 4.12 to 4.13 The git hook runs `just check`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `1f73d6af30cc`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543)
 
 ```bash
 just setup
@@ -1463,8 +1479,6 @@ A person can forget to run `just check`. A git hook is a script that git runs by
 `just hook` runs `pre-commit install`, which installs a git hook that runs `just check`. The hook is one more
 caller of `just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only
 check of the Python code is `just check`.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
 
 <a id="step-04.12"></a>
 
@@ -1643,19 +1657,21 @@ git restore --source 29291b3575f2 --staged -- :/ && git restore --source 6860da1
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-04).
+
+This part ends at the code at `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-04)
 
 <a id="step-05.1-to-step-05.2"></a>
 
 ## 5.1 to 5.2 `just types`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-04)
 
 ```bash
 just setup
 ```
 
 The linter does not check types. The next verb runs a type checker, and `check` does not run it yet.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368).
 
 <a id="step-05.1"></a>
 
@@ -1775,9 +1791,13 @@ git restore --source 56a11f0bb31a --staged -- :/ && git restore --source 2a5904d
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2a5904d01d950678e8364d7f6958dccaf5b69368). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368).
 
+This part ends at the code at `2a5904d01d95`, partway through `step-05`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368)
+
 <a id="step-05.7"></a>
 
 ## 5.7 The types join `just check`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `5873353449ad`, partway through `step-05`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1794,8 +1814,6 @@ ty found. A family of rules, `ANN`, asks for a type on every parameter and retur
 their types.
 
 `just check` does not run the type checker yet. One line in `check` runs it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/5873353449adaf1734a9cb14d13262486b1fb5d5). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9).
 
 ### 5.7 The recipe check runs the type checker
 
@@ -1860,11 +1878,15 @@ git restore --source 5873353449ad --staged -- :/ && git restore --source 701783a
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-05).
+
+This part ends at the code at `step-05`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-05)
 
 <a id="step-06.5"></a>
 
 ## 6.5 GitHub runs `just check`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `d8af75e8fd57`, partway through `step-06`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -1881,8 +1903,6 @@ accepts any Python from 3.11 on.
 
 The hook runs only in a clone where `just hook` ran. GitHub's job `check` runs `just setup`, then `just check`, on
 a fresh machine.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
 
 ### 6.5 GitHub runs the tests
 
@@ -1982,11 +2002,15 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-06).
+
+This part ends at the code at `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-06)
 
 <a id="step-08.1-to-step-08.2"></a>
 
 ## 8.1 to 8.2 `just docs`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-07`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-07)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2003,8 +2027,6 @@ is not a page, or a language that is not a language code, raises `WikipediaError
 
 Nothing says which parts of the code have documentation. smalldocs comes in, and `just docs check` counts what has
 documentation. The words after `docs` go to `smalldocs api`.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).
 
 <a id="step-08.1"></a>
 
@@ -2174,9 +2196,13 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).
 
+This part ends at the code at `40d4293f5902`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f)
+
 <a id="step-08.6"></a>
 
 ## 8.6 `just docs` alone builds a site
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `7a0e50948873`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2193,8 +2219,6 @@ gap.
 
 The reference is text in a terminal. The recipe `docs` changes. With no words, it builds a site. With words, it
 works as before, so `just docs check` is the same command.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
 
 ### 8.6 A site
 
@@ -2370,9 +2394,13 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
 
+This part ends at the code at `e99ed4f3ab32`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0)
+
 <a id="step-08.8"></a>
 
 ## 8.8 The docs check joins `just check`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `79c80120fc8f`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2387,8 +2415,6 @@ just setup
 The code now also has a README that names the tests and the docs.
 
 `just check` does not run the docs check yet. One line in `check` runs it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
 
 ### 8.8 The docs check in `just check`
 
@@ -2454,11 +2480,15 @@ git restore --source 79c80120fc8f --staged -- :/ && git restore --source ce0734f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08).
+
+This part ends at the code at `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08)
 
 <a id="step-09.10"></a>
 
 ## 9.10 The library, behind the same verbs
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `008e616610b0`, partway through `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2507,8 +2537,6 @@ library's code from the first. `just test` measures the coverage of both package
 `--cov=wikirandom`. Here, `just docs check` still counts only the functions, methods and classes of the app and
 the tests. This section
 changes `docs/_smalldocs.yml`, behind the verb.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/008e616610b0829196a2f61182e45255015b95c1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
 
 ### 9.10 The docs check counts the library
 
@@ -2568,11 +2596,15 @@ git restore --source 008e616610b0 --staged -- :/ && git restore --source 259e636
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-09).
+
+This part ends at the code at `step-09`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-09)
 
 <a id="step-10.1"></a>
 
 ## 10.1 `just build`
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-09)
 
 ```bash
 just setup
@@ -2580,8 +2612,6 @@ just setup
 
 The packages must be built before anyone can install them. The last verb is about the packages, not about checks,
 so `check` does not run it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
 
 ### 10.1 The recipe `build`
 
@@ -2647,9 +2677,13 @@ git restore --source 259e6364a52f --staged -- :/ && git restore --source 7744a84
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
 
+This part ends at the code at `7744a84a4715`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d)
+
 <a id="step-10.3"></a>
 
 ## 10.3 `just lint-config` checks the library too
+
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `6e6d2844bc7a`, partway through `step-10`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be)
 
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
@@ -2666,8 +2700,6 @@ In the code now, the app asks for wikirandom 0.1.
 Since the library became a package, validate-pyproject, in `just lint-config`, has read only the app's
 `pyproject.toml`. The hook and `just check` let every `git commit` through with no check of the library's
 `pyproject.toml` against the standard.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
 
 ### 10.3 lint-config checks both pyproject.toml files
 
@@ -2729,3 +2761,5 @@ git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb9
 </details>
 
 [This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
+
+This part ends at the code at `522bcb941336`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055)

@@ -6,6 +6,17 @@ title: "6.3 to 6.4 The oldest Python, and other environments"
 
 **Read the tutorial.** [Build it yourself](../build/step-06.3-to-step-06.4.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `307d4d7b36bb`, partway through `step-06`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach 307d4d7b36bb
+```
+
 ```bash
 just setup
 ```
@@ -16,8 +27,6 @@ Wikipedia run only on request.
 
 The project runs on one Python, and its users may have an older one. `.python-version` says which Python `.venv`
 has. `requires-python` says which versions of Python the project accepts.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84).
 
 ## 6.3 Any Python from 3.11 on {#step-06.3}
 
@@ -46,7 +55,7 @@ no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
 
 ### What changed {#step-06.3-what-changed-182c57}
 
-- <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml).
+- <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `requires-python = ">=3.11"`
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
@@ -65,7 +74,7 @@ no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b97ee4cfc59182c79e4a09ca19a7790b25f25264).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b97ee4cfc59182c79e4a09ca19a7790b25f25264){.btn .btn-sm .btn-primary}
 
 ## 6.4 The lockfile, for every Python from 3.11 on {#step-06.4}
 
@@ -119,6 +128,8 @@ get the version of the lockfile.
 
 ### What changed {#step-06.4-what-changed-182c57}
 
-- <a id="step-06.4-uv.lock-8356d8"></a>`uv.lock`: resolved for every version of Python from 3.11 on. 160 lines added, 2 removed. It comes from `uv lock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84/uv.lock).
+- <a id="step-06.4-uv.lock-8356d8"></a>`uv.lock`: resolved for every version of Python from 3.11 on. 160 lines added, 2 removed. It comes from `uv lock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84/uv.lock){.btn .btn-sm .btn-secondary}
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `d8af75e8fd57`, partway through `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84){.btn .btn-sm .btn-primary}

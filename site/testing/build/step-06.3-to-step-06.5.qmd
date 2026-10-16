@@ -6,6 +6,8 @@ title: "6.3 to 6.5 The tests on GitHub"
 
 **Build it yourself.** [Read the tutorial](../read/step-06.3-to-step-06.5.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `307d4d7b36bb`, partway through `step-06`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -19,8 +21,6 @@ just setup
 The tests run on one machine, with one version of Python. The project asks for Python 3.13 or newer. In this
 section it starts to accept any version of Python from 3.11 on. Then GitHub runs the tests on three
 systems and four versions of Python.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
 
 ## 6.3 Any Python from 3.11 on {#step-06.3}
 
@@ -88,7 +88,7 @@ git restore --source 307d4d7b36bb --staged -- :/ && git restore --source b97ee4c
 
 ### What changed {#step-06.3-what-changed-182c57}
 
-- <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml).
+- <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `requires-python = ">=3.11"`
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
@@ -107,7 +107,7 @@ git restore --source 307d4d7b36bb --staged -- :/ && git restore --source b97ee4c
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b97ee4cfc59182c79e4a09ca19a7790b25f25264).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b97ee4cfc59182c79e4a09ca19a7790b25f25264){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/b97ee4cfc59182c79e4a09ca19a7790b25f25264){.btn .btn-sm .btn-primary}
 
 ## 6.4 The lockfile, for every Python from 3.11 on {#step-06.4}
 
@@ -148,9 +148,9 @@ git restore --source b97ee4cfc591 --staged -- :/ && git restore --source d8af75e
 
 ### What changed {#step-06.4-what-changed-182c57}
 
-- <a id="step-06.4-uv.lock-8356d8"></a>`uv.lock`: resolved for every version of Python from 3.11 on. 160 lines added, 2 removed. It comes from `uv lock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84/uv.lock).
+- <a id="step-06.4-uv.lock-8356d8"></a>`uv.lock`: resolved for every version of Python from 3.11 on. 160 lines added, 2 removed. It comes from `uv lock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84/uv.lock){.btn .btn-sm .btn-secondary}
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84){.btn .btn-sm .btn-primary}
 
 ## 6.5 GitHub runs the tests {#step-06.5}
 
@@ -198,7 +198,7 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 ### What changed {#step-06.5-what-changed-182c57}
 
-- <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml).
+- <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml){.btn .btn-sm .btn-secondary}
   - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
 
 <details open><summary>The patch to <code>.github/workflows/test.yaml</code></summary>
@@ -246,4 +246,6 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-06){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-06){.btn .btn-sm .btn-primary}

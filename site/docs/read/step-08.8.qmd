@@ -6,13 +6,22 @@ title: "8.8 The docs check in `just check`"
 
 **Read the tutorial.** [Build it yourself](../build/step-08.8.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `79c80120fc8f`, partway through `step-08`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach 79c80120fc8f
+```
+
 ```bash
 just setup
 ```
 
 A person must remember to run the docs check. Now `just check` runs it, so each `git commit` must pass it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
 
 ## 8.8 The docs check in `just check` {#step-08.8}
 
@@ -34,7 +43,7 @@ it runs the docs check too.
 
 ### What changed {#step-08.8-what-changed-182c57}
 
-- <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile).
+- <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile){.btn .btn-sm .btn-secondary}
   - look at `just docs check`
 
 <details><summary>The diff of <code>justfile</code></summary>
@@ -61,4 +70,6 @@ it runs the docs check too.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08){.btn .btn-sm .btn-primary}

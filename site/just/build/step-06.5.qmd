@@ -6,6 +6,8 @@ title: "6.5 GitHub runs `just check`"
 
 **Build it yourself.** [Read the tutorial](../read/step-06.5.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `d8af75e8fd57`, partway through `step-06`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84){.btn .btn-sm .btn-primary}
+
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
@@ -27,8 +29,6 @@ accepts any Python from 3.11 on.
 
 The hook runs only in a clone where `just hook` ran. GitHub's job `check` runs `just setup`, then `just check`, on
 a fresh machine.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/d8af75e8fd576ae8d09cb76ed960b1c4892e0a84). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
 
 ## 6.5 GitHub runs the tests {#step-06.5}
 
@@ -80,7 +80,7 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 ### What changed {#step-06.5-what-changed-182c57}
 
-- <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml).
+- <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml){.btn .btn-sm .btn-secondary}
   - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
 
 <details open><summary>The patch to <code>.github/workflows/test.yaml</code></summary>
@@ -128,4 +128,6 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-06){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-06){.btn .btn-sm .btn-primary}

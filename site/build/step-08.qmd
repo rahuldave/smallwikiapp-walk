@@ -6,6 +6,8 @@ title: "8 Docs from the code"
 
 **Build it yourself.** [Read the tutorial](../read/step-08.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-07`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-07){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -20,8 +22,6 @@ A person who calls `random_page` must read its code to learn what it takes, what
 document the code, and let a tool, smalldocs, write the reference from it. smalldocs also lists what has no
 documentation, so `just check` can fail when a function has none. We document the library, the command and the tests. Then we
 build a site with a front page, and name the tests and the docs in the README.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
 
 ## 8.1 smalldocs {#step-08.1}
 
@@ -68,9 +68,9 @@ git restore --source be473b80441f --staged -- :/ && git restore --source 71726f3
 
 ### What changed {#step-08.1-what-changed-182c57}
 
-- <a id="step-08.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group. 3 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/pyproject.toml).
+- <a id="step-08.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group. 3 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `docs = [`
-- <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock).
+- <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add --group docs smalldocs</code> makes in <code>pyproject.toml</code></summary>
 
@@ -89,7 +89,7 @@ git restore --source be473b80441f --staged -- :/ && git restore --source 71726f3
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/71726f393670206ea480aaa2edc03ddeeeebc1fe). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/71726f393670206ea480aaa2edc03ddeeeebc1fe).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/71726f393670206ea480aaa2edc03ddeeeebc1fe){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/71726f393670206ea480aaa2edc03ddeeeebc1fe){.btn .btn-sm .btn-primary}
 
 ## 8.2 What is not documented {#step-08.2}
 
@@ -150,9 +150,9 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 
 ### What changed {#step-08.2-what-changed-182c57}
 
-- <a id="step-08.2-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the package to document, and the tests to check. New, 5 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/docs/_smalldocs.yml).
+- <a id="step-08.2-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the package to document, and the tests to check. New, 5 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/docs/_smalldocs.yml){.btn .btn-sm .btn-secondary}
   - look at `packages: [wikiapp]`
-- <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile).
+- <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile){.btn .btn-sm .btn-secondary}
   - look at `docs *args:`
 
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
@@ -185,7 +185,7 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f){.btn .btn-sm .btn-primary}
 
 ## 8.3 The library documented {#step-08.3}
 
@@ -231,7 +231,7 @@ git restore --source 40d4293f5902 --staged -- :/ && git restore --source 66a702f
 
 ### What changed {#step-08.3-what-changed-182c57}
 
-- <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py).
+- <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `) -> Page:  # A page chosen at random`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -270,7 +270,7 @@ git restore --source 40d4293f5902 --staged -- :/ && git restore --source 66a702f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/66a702fe4a01d424177085b9ef056dd8d8d11cc8). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/66a702fe4a01d424177085b9ef056dd8d8d11cc8){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/66a702fe4a01d424177085b9ef056dd8d8d11cc8){.btn .btn-sm .btn-primary}
 
 ## 8.4 The command documented {#step-08.4}
 
@@ -326,9 +326,9 @@ git restore --source 66a702fe4a01 --staged -- :/ && git restore --source bb648b9
 
 ### What changed {#step-08.4-what-changed-182c57}
 
-- <a id="step-08.4-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: a docstring, which `help(wikiapp)` shows. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/__init__.py).
+- <a id="step-08.4-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: a docstring, which `help(wikiapp)` shows. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/__init__.py){.btn .btn-sm .btn-secondary}
   - look at `"""wikiapp: the title and summary of a random Wikipedia page."""`
-- <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py).
+- <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `language: str,  # The language of the Wikipedia to ask, from --language`
 
 <details open><summary>The patch to <code>src/wikiapp/__init__.py</code></summary>
@@ -379,7 +379,7 @@ git restore --source 66a702fe4a01 --staged -- :/ && git restore --source bb648b9
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bb648b91f4aba037eac04caa5cd7b41095e7c388). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bb648b91f4aba037eac04caa5cd7b41095e7c388){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bb648b91f4aba037eac04caa5cd7b41095e7c388){.btn .btn-sm .btn-primary}
 
 ## 8.5 The tests documented {#step-08.5}
 
@@ -446,11 +446,11 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 
 ### What changed {#step-08.5-what-changed-182c57}
 
-- <a id="step-08.5-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, documented. 6 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/conftest.py).
+- <a id="step-08.5-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, documented. 6 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/conftest.py){.btn .btn-sm .btn-secondary}
   - look at `mocker: MockerFixture,  # pytest-mock's fixture, which undoes every patch after the test`
-- <a id="step-08.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: seven functions. 33 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_console.py).
+- <a id="step-08.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: seven functions. 33 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `"""The command prints the title of the page."""`
-- <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py).
+- <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `"""The language chooses the Wikipedia that is asked."""`
 
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
@@ -605,7 +605,7 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7a0e5094887304538655b706752de99408df2d97){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7a0e5094887304538655b706752de99408df2d97){.btn .btn-sm .btn-primary}
 
 ## 8.6 A site {#step-08.6}
 
@@ -679,11 +679,11 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 
 ### What changed {#step-08.6-what-changed-182c57}
 
-- <a id="step-08.6-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the site. The sidebar lists the front page, then the reference pages. 17 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/_smalldocs.yml).
+- <a id="step-08.6-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the site. The sidebar lists the front page, then the reference pages. 17 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/_smalldocs.yml){.btn .btn-sm .btn-secondary}
   - look at `contents: api/*  # the reference pages, which each build makes from the code`
-- <a id="step-08.6-docs-index.qmd-d6d880"></a>`docs/index.qmd`: the front page, written by hand. New, 35 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/index.qmd).
+- <a id="step-08.6-docs-index.qmd-d6d880"></a>`docs/index.qmd`: the front page, written by hand. New, 35 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/docs/index.qmd){.btn .btn-sm .btn-secondary}
   - look at `Each build of the site makes the pages under Reference from the code.`
-- <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile).
+- <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile){.btn .btn-sm .btn-secondary}
   - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
 
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
@@ -779,7 +779,7 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/e99ed4f3ab32aec60ae0e2329f4779673a5955d0){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/e99ed4f3ab32aec60ae0e2329f4779673a5955d0){.btn .btn-sm .btn-primary}
 
 ## 8.7 The README names the tests and the docs {#step-08.7}
 
@@ -815,7 +815,7 @@ git restore --source e99ed4f3ab32 --staged -- :/ && git restore --source 79c8012
 
 ### What changed {#step-08.7-what-changed-182c57}
 
-- <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md).
+- <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md){.btn .btn-sm .btn-secondary}
   - look at `| The docs site. smalldocs makes its reference from the code |`
 
 <details open><summary>The patch to <code>README.md</code></summary>
@@ -836,7 +836,7 @@ git restore --source e99ed4f3ab32 --staged -- :/ && git restore --source 79c8012
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/79c80120fc8fc12ec7b38474294b422e86619362). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/79c80120fc8fc12ec7b38474294b422e86619362){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/79c80120fc8fc12ec7b38474294b422e86619362){.btn .btn-sm .btn-primary}
 
 ## 8.8 The docs check in `just check` {#step-08.8}
 
@@ -875,7 +875,7 @@ git restore --source 79c80120fc8f --staged -- :/ && git restore --source ce0734f
 
 ### What changed {#step-08.8-what-changed-182c57}
 
-- <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile).
+- <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile){.btn .btn-sm .btn-secondary}
   - look at `just docs check`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -902,4 +902,6 @@ git restore --source 79c80120fc8f --staged -- :/ && git restore --source ce0734f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/ce0734f1272cf16f4aadeaa6712e589010ccd69f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/ce0734f1272cf16f4aadeaa6712e589010ccd69f){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-08){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-08){.btn .btn-sm .btn-primary}

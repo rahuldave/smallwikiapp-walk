@@ -6,6 +6,8 @@ title: "7 A page with a shape"
 
 **Build it yourself.** [Read the tutorial](../read/step-07.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-06`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-06){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -20,8 +22,6 @@ just setup
 Nothing checks that the dictionary has them. We give a page a shape, with a pydantic model. `random_page` returns a page of that shape, and an
 answer that is not a page becomes an error like any other. Last, the code checks that the language is a language
 code before it puts it into the address.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
 
 ## 7.1 pydantic {#step-07.1}
 
@@ -60,9 +60,9 @@ git restore --source 20cf458261ed --staged -- :/ && git restore --source 47fc24f
 
 ### What changed {#step-07.1-what-changed-182c57}
 
-- <a id="step-07.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: pydantic, a dependency of the package. 1 line added. It comes from `uv add pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10/pyproject.toml).
+- <a id="step-07.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: pydantic, a dependency of the package. 1 line added. It comes from `uv add pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"pydantic>=2.14.1",`
-- <a id="step-07.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of pydantic, and of what it needs. 180 lines added. It comes from `uv add pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10/uv.lock).
+- <a id="step-07.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of pydantic, and of what it needs. 180 lines added. It comes from `uv add pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add pydantic</code> makes in <code>pyproject.toml</code></summary>
 
@@ -79,7 +79,7 @@ git restore --source 20cf458261ed --staged -- :/ && git restore --source 47fc24f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10){.btn .btn-sm .btn-primary}
 
 ## 7.2 The model Page {#step-07.2}
 
@@ -118,7 +118,7 @@ git restore --source 47fc24f56c91 --staged -- :/ && git restore --source 1baf060
 
 ### What changed {#step-07.2-what-changed-182c57}
 
-- <a id="step-07.2-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the model. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1baf0602c1d1cec79277c2faec438b76a9a8c768/src/wikiapp/wikipedia.py).
+- <a id="step-07.2-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the model. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1baf0602c1d1cec79277c2faec438b76a9a8c768/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `class Page(BaseModel):`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -150,7 +150,7 @@ git restore --source 47fc24f56c91 --staged -- :/ && git restore --source 1baf060
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1baf0602c1d1cec79277c2faec438b76a9a8c768). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1baf0602c1d1cec79277c2faec438b76a9a8c768).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1baf0602c1d1cec79277c2faec438b76a9a8c768){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1baf0602c1d1cec79277c2faec438b76a9a8c768){.btn .btn-sm .btn-primary}
 
 ## 7.3 random_page returns a Page {#step-07.3}
 
@@ -213,11 +213,11 @@ git restore --source 1baf0602c1d1 --staged -- :/ && git restore --source 88fe0e2
 
 ### What changed {#step-07.3-what-changed-182c57}
 
-- <a id="step-07.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: attributes, not keys. 3 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/console.py).
+- <a id="step-07.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: attributes, not keys. 3 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `click.secho(page.title, fg="green")`
-- <a id="step-07.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the return. 2 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/wikipedia.py).
+- <a id="step-07.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the return. 2 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `return Page.model_validate(response.json())`
-- <a id="step-07.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the e2e test checks for a Page. 2 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/tests/test_wikipedia.py).
+- <a id="step-07.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the e2e test checks for a Page. 2 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert isinstance(page, wikipedia.Page)`
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
@@ -290,7 +290,7 @@ git restore --source 1baf0602c1d1 --staged -- :/ && git restore --source 88fe0e2
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d){.btn .btn-sm .btn-primary}
 
 ## 7.4 An answer that is not a page {#step-07.4}
 
@@ -339,9 +339,9 @@ git restore --source 88fe0e20d645 --staged -- :/ && git restore --source 06ff2ca
 
 ### What changed {#step-07.4-what-changed-182c57}
 
-- <a id="step-07.4-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: two exceptions caught. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/src/wikiapp/wikipedia.py).
+- <a id="step-07.4-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: two exceptions caught. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `except (requests.RequestException, ValidationError) as error:`
-- <a id="step-07.4-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/tests/test_wikipedia.py).
+- <a id="step-07.4-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `with pytest.raises(wikipedia.WikipediaError):`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -382,7 +382,7 @@ git restore --source 88fe0e20d645 --staged -- :/ && git restore --source 06ff2ca
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06ff2caa1958318b960fa9b9c84b32b3a23ae18d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d){.btn .btn-sm .btn-primary}
 
 ## 7.5 Only a language code goes into the address {#step-07.5}
 
@@ -427,7 +427,7 @@ git restore --source 06ff2caa1958 --staged -- :/ && git restore --source be473b8
 
 ### What changed {#step-07.5-what-changed-182c57}
 
-- <a id="step-07.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the code checks a language before it uses it. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/be473b80441f82ce87bf800deeb432fd4212dea4/src/wikiapp/wikipedia.py).
+- <a id="step-07.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the code checks a language before it uses it. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/be473b80441f82ce87bf800deeb432fd4212dea4/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `if not LANGUAGE.fullmatch(language):`
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
@@ -457,4 +457,6 @@ git restore --source 06ff2caa1958 --staged -- :/ && git restore --source be473b8
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-07){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-07`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-07){.btn .btn-sm .btn-primary}

@@ -6,6 +6,8 @@ title: "8.1 to 8.2 smalldocs, and what is not documented"
 
 **Build it yourself.** [Read the tutorial](../read/step-08.1-to-step-08.2.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-07`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-07){.btn .btn-sm .btn-primary}
+
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
@@ -43,8 +45,6 @@ language that is not a language code, raises `WikipediaError`.
 Nothing yet says which parts of the code have documentation. smalldocs, in a new group `docs`, makes the reference
 from the code.
 `just docs check` counts what has documentation, and lists each gap.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).
 
 ## 8.1 smalldocs {#step-08.1}
 
@@ -91,9 +91,9 @@ git restore --source be473b80441f --staged -- :/ && git restore --source 71726f3
 
 ### What changed {#step-08.1-what-changed-182c57}
 
-- <a id="step-08.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group. 3 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/pyproject.toml).
+- <a id="step-08.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group. 3 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `docs = [`
-- <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock).
+- <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add --group docs smalldocs</code> makes in <code>pyproject.toml</code></summary>
 
@@ -112,7 +112,7 @@ git restore --source be473b80441f --staged -- :/ && git restore --source 71726f3
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/71726f393670206ea480aaa2edc03ddeeeebc1fe). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/71726f393670206ea480aaa2edc03ddeeeebc1fe).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/71726f393670206ea480aaa2edc03ddeeeebc1fe){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/71726f393670206ea480aaa2edc03ddeeeebc1fe){.btn .btn-sm .btn-primary}
 
 ## 8.2 What is not documented {#step-08.2}
 
@@ -173,9 +173,9 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 
 ### What changed {#step-08.2-what-changed-182c57}
 
-- <a id="step-08.2-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the package to document, and the tests to check. New, 5 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/docs/_smalldocs.yml).
+- <a id="step-08.2-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the package to document, and the tests to check. New, 5 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/docs/_smalldocs.yml){.btn .btn-sm .btn-secondary}
   - look at `packages: [wikiapp]`
-- <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile).
+- <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile){.btn .btn-sm .btn-secondary}
   - look at `docs *args:`
 
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
@@ -208,4 +208,6 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/40d4293f5902e4a5ee51c9240e0eab4b59de797f){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `40d4293f5902`, partway through `step-08`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/40d4293f5902e4a5ee51c9240e0eab4b59de797f){.btn .btn-sm .btn-primary}

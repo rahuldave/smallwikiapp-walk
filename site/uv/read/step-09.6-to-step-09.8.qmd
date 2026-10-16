@@ -6,6 +6,17 @@ title: "9.6 to 9.8 The app uses the library"
 
 **Read the tutorial.** [Build it yourself](../build/step-09.6-to-step-09.8.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `34f1041135a7`, partway through `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/34f1041135a78b1015d73e8fcb2529102c5ccf9e){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach 34f1041135a7
+```
+
 ```bash
 just setup
 ```
@@ -15,8 +26,6 @@ its own docstring, and its User-Agent names `wikirandom`.
 
 The app must get the library from the workspace, not from PyPI. The app's `pyproject.toml` names the library as a
 dependency, and `[tool.uv.sources]` says where uv gets it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/34f1041135a78b1015d73e8fcb2529102c5ccf9e). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f2dd413c02c731553f8c103b0e6c892dac0fa2dc).
 
 ## 9.6 The app depends on wikirandom {#step-09.6}
 
@@ -43,9 +52,9 @@ command prints a path that ends with
 
 ### What changed {#step-09.6-what-changed-182c57}
 
-- <a id="step-09.6-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app depends on the library, from the workspace. 4 lines added. It comes from `uv add wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8545346928730b73e69a52a7652ff4fbf15a333c/pyproject.toml).
+- <a id="step-09.6-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app depends on the library, from the workspace. 4 lines added. It comes from `uv add wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8545346928730b73e69a52a7652ff4fbf15a333c/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `wikirandom = { workspace = true }`
-- <a id="step-09.6-uv.lock-8356d8"></a>`uv.lock`: the app's dependencies have wikirandom. 2 lines added. It comes from `uv add wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8545346928730b73e69a52a7652ff4fbf15a333c/uv.lock).
+- <a id="step-09.6-uv.lock-8356d8"></a>`uv.lock`: the app's dependencies have wikirandom. 2 lines added. It comes from `uv add wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8545346928730b73e69a52a7652ff4fbf15a333c/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -72,7 +81,7 @@ command prints a path that ends with
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8545346928730b73e69a52a7652ff4fbf15a333c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8545346928730b73e69a52a7652ff4fbf15a333c).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/8545346928730b73e69a52a7652ff4fbf15a333c){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/8545346928730b73e69a52a7652ff4fbf15a333c){.btn .btn-sm .btn-primary}
 
 ## 9.7 The app uses wikirandom {#step-09.7}
 
@@ -125,18 +134,18 @@ names both packages, but `random_page` is not yet a link, because the settings o
 
 ### What changed {#step-09.7-what-changed-182c57}
 
-- <a id="step-09.7-README.md-8ec9a0"></a>`README.md`: one row more, and the `src/wikiapp/` row says the app. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/README.md).
+- <a id="step-09.7-README.md-8ec9a0"></a>`README.md`: one row more, and the `src/wikiapp/` row says the app. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/README.md){.btn .btn-sm .btn-secondary}
   - look at `| The library the app uses: a random page of Wikipedia. A package of its own |`
-- <a id="step-09.7-docs-index.qmd-d6d880"></a>`docs/index.qmd`: two packages. 8 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/docs/index.qmd).
+- <a id="step-09.7-docs-index.qmd-d6d880"></a>`docs/index.qmd`: two packages. 8 lines added, 7 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/docs/index.qmd){.btn .btn-sm .btn-secondary}
   - look at `The code has two packages, in one repository:`
-- <a id="step-09.7-packages-wikirandom-README.md-105646"></a>`packages/wikirandom/README.md`: the library's README says that the app uses it. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/packages/wikirandom/README.md).
+- <a id="step-09.7-packages-wikirandom-README.md-105646"></a>`packages/wikirandom/README.md`: the library's README says that the app uses it. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/packages/wikirandom/README.md){.btn .btn-sm .btn-secondary}
   - look at ``A random page of Wikipedia, in any language. The command `wikiapp` uses this library.``
-- <a id="step-09.7-pyproject.toml-5d07e7"></a>`pyproject.toml`: coverage measures both packages. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/pyproject.toml).
+- <a id="step-09.7-pyproject.toml-5d07e7"></a>`pyproject.toml`: coverage measures both packages. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `addopts = "--cov=wikiapp --cov=wikirandom --cov-report=term-missing -m 'not e2e'"`
-- <a id="step-09.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: one import. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/src/wikiapp/console.py).
+- <a id="step-09.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: one import. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `from wikirandom import WikipediaError, random_page`
 - <a id="step-09.7-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: deleted. Its code is in the library. Deleted. It comes from `rm src/wikiapp/wikipedia.py`.
-- <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py).
+- <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `wikirandom.random_page(language="es")`
 
 <details><summary>The diff of <code>README.md</code></summary>
@@ -331,7 +340,7 @@ names both packages, but `random_page` is not yet a link, because the settings o
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/78ab09579fdffcb2db04e83807817e2edba27ebe). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/78ab09579fdffcb2db04e83807817e2edba27ebe).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/78ab09579fdffcb2db04e83807817e2edba27ebe){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/78ab09579fdffcb2db04e83807817e2edba27ebe){.btn .btn-sm .btn-primary}
 
 ## 9.8 The app no longer needs requests and pydantic {#step-09.8}
 
@@ -361,8 +370,8 @@ The library's folder has its `pyproject.toml`, and no `uv.lock` or `.venv`. The 
 
 ### What changed {#step-09.8-what-changed-182c57}
 
-- <a id="step-09.8-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's dependencies are click and wikirandom. 0 lines added, 2 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/pyproject.toml).
-- <a id="step-09.8-uv.lock-8356d8"></a>`uv.lock`: the app no longer depends on pydantic and requests by itself. 0 lines added, 4 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/uv.lock).
+- <a id="step-09.8-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's dependencies are click and wikirandom. 0 lines added, 2 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/pyproject.toml){.btn .btn-sm .btn-secondary}
+- <a id="step-09.8-uv.lock-8356d8"></a>`uv.lock`: the app no longer depends on pydantic and requests by itself. 0 lines added, 4 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -380,4 +389,6 @@ The library's folder has its `pyproject.toml`, and no `uv.lock` or `.venv`. The 
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f2dd413c02c731553f8c103b0e6c892dac0fa2dc). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f2dd413c02c731553f8c103b0e6c892dac0fa2dc).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f2dd413c02c731553f8c103b0e6c892dac0fa2dc){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f2dd413c02c731553f8c103b0e6c892dac0fa2dc){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `f2dd413c02c7`, partway through `step-09`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/f2dd413c02c731553f8c103b0e6c892dac0fa2dc){.btn .btn-sm .btn-primary}

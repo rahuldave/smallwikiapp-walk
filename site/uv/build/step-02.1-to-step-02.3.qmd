@@ -6,6 +6,8 @@ title: "2.1 to 2.3 A group for the tests, and when uv syncs"
 
 **Build it yourself.** [Read the tutorial](../read/step-02.1-to-step-02.3.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-01`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-01){.btn .btn-sm .btn-primary}
+
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
@@ -29,8 +31,6 @@ The tests need pytest, and a user of the command does not. A dependency group is
 people who work on the project. By default uv installs only a group named `dev`. The project first sets
 `default-groups = "all"`, so that uv installs every group. Then the test tools, the linters and the docs tools can
 each have a group of their own.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849).
 
 ## 2.1 uv installs every dependency group {#step-02.1}
 
@@ -97,7 +97,7 @@ git restore --source f05d3c31be2c --staged -- :/ && git restore --source 46dc20f
 
 ### What changed {#step-02.1-what-changed-182c57}
 
-- <a id="step-02.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the table `[tool.uv]`, so uv installs every dependency group. 4 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/46dc20fb9092170695699eaa052f4830563cb930/pyproject.toml).
+- <a id="step-02.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the table `[tool.uv]`, so uv installs every dependency group. 4 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/46dc20fb9092170695699eaa052f4830563cb930/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `default-groups = "all"`
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
@@ -115,7 +115,7 @@ git restore --source f05d3c31be2c --staged -- :/ && git restore --source 46dc20f
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/46dc20fb9092170695699eaa052f4830563cb930). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/46dc20fb9092170695699eaa052f4830563cb930).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/46dc20fb9092170695699eaa052f4830563cb930){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/46dc20fb9092170695699eaa052f4830563cb930){.btn .btn-sm .btn-primary}
 
 ## 2.2 The first test {#step-02.2}
 
@@ -159,7 +159,7 @@ git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cf
 
 ### What changed {#step-02.2-what-changed-182c57}
 
-- <a id="step-02.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: a test that runs the command and checks its exit code. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6d7a6cfdae6008a9687f3525348ab24ea05930cc/tests/test_console.py).
+- <a id="step-02.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: a test that runs the command and checks its exit code. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6d7a6cfdae6008a9687f3525348ab24ea05930cc/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert result.exit_code == 0`
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
@@ -178,7 +178,7 @@ git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cf
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6d7a6cfdae6008a9687f3525348ab24ea05930cc). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6d7a6cfdae6008a9687f3525348ab24ea05930cc).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6d7a6cfdae6008a9687f3525348ab24ea05930cc){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6d7a6cfdae6008a9687f3525348ab24ea05930cc){.btn .btn-sm .btn-primary}
 
 ## 2.3 pytest, in the group test {#step-02.3}
 
@@ -234,9 +234,9 @@ git restore --source 6d7a6cfdae60 --staged -- :/ && git restore --source d92e2de
 
 ### What changed {#step-02.3-what-changed-182c57}
 
-- <a id="step-02.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group `test`, with pytest. 5 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/pyproject.toml).
+- <a id="step-02.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group `test`, with pytest. 5 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"pytest>=9.1.1",`
-- <a id="step-02.3-uv.lock-8356d8"></a>`uv.lock`: pytest, and the packages that it needs. 69 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/uv.lock).
+- <a id="step-02.3-uv.lock-8356d8"></a>`uv.lock`: pytest, and the packages that it needs. 69 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add --group test pytest</code> makes in <code>pyproject.toml</code></summary>
 
@@ -254,4 +254,6 @@ git restore --source 6d7a6cfdae60 --staged -- :/ && git restore --source d92e2de
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d92e2dec921d6322e2a356af20dafef3837c1849). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d92e2dec921d6322e2a356af20dafef3837c1849){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `d92e2dec921d`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849){.btn .btn-sm .btn-primary}

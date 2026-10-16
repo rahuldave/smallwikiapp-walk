@@ -6,6 +6,8 @@ title: "10.1 `just build`"
 
 **Build it yourself.** [Read the tutorial](../read/step-10.1.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-09){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -18,8 +20,6 @@ just setup
 
 The packages must be built before anyone can install them. The last verb is about the packages, not about checks,
 so `check` does not run it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
 
 ## 10.1 The recipe `build` {#step-10.1}
 
@@ -63,7 +63,7 @@ git restore --source 259e6364a52f --staged -- :/ && git restore --source 7744a84
 
 ### What changed {#step-10.1-what-changed-182c57}
 
-- <a id="step-10.1-justfile-424f0b"></a>`justfile`: the recipe `build`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7744a84a4715e6edb876e1c4f3255daf524dd07d/justfile).
+- <a id="step-10.1-justfile-424f0b"></a>`justfile`: the recipe `build`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7744a84a4715e6edb876e1c4f3255daf524dd07d/justfile){.btn .btn-sm .btn-secondary}
   - look at `build *args:`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -83,4 +83,6 @@ git restore --source 259e6364a52f --staged -- :/ && git restore --source 7744a84
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `7744a84a4715`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-primary}

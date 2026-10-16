@@ -6,6 +6,8 @@ title: "4.12 to 4.13 The git hook runs `just check`"
 
 **Build it yourself.** [Read the tutorial](../read/step-04.12-to-step-04.13.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `1f73d6af30cc`, partway through `step-04`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -22,8 +24,6 @@ A person can forget to run `just check`. A git hook is a script that git runs by
 `just hook` runs `pre-commit install`, which installs a git hook that runs `just check`. The hook is one more
 caller of `just check`. The hook also checks YAML files, large files and leftover marks of a merge. But its only
 check of the Python code is `just check`.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
 
 ## 4.12 `pre-commit`, in the group lint {#step-04.12}
 
@@ -55,9 +55,9 @@ git restore --source 1f73d6af30cc --staged -- :/ && git restore --source 29291b3
 
 ### What changed {#step-04.12-what-changed-182c57}
 
-- <a id="step-04.12-pyproject.toml-5d07e7"></a>`pyproject.toml`: `pre-commit` in the group `lint`. 1 line added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/pyproject.toml).
+- <a id="step-04.12-pyproject.toml-5d07e7"></a>`pyproject.toml`: `pre-commit` in the group `lint`. 1 line added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"pre-commit>=4.7.0",`
-- <a id="step-04.12-uv.lock-8356d8"></a>`uv.lock`: the exact version of `pre-commit`, and of what it needs. 136 lines added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/uv.lock).
+- <a id="step-04.12-uv.lock-8356d8"></a>`uv.lock`: the exact version of `pre-commit`, and of what it needs. 136 lines added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/uv.lock){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff that <code>uv add --group lint pre-commit</code> makes in <code>pyproject.toml</code></summary>
 
@@ -74,7 +74,7 @@ git restore --source 1f73d6af30cc --staged -- :/ && git restore --source 29291b3
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/29291b3575f2efd8f6062e3d04bbea648ae1fc11). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/29291b3575f2efd8f6062e3d04bbea648ae1fc11).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/29291b3575f2efd8f6062e3d04bbea648ae1fc11){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/29291b3575f2efd8f6062e3d04bbea648ae1fc11){.btn .btn-sm .btn-primary}
 
 ## 4.13 A git hook {#step-04.13}
 
@@ -146,9 +146,9 @@ git restore --source 29291b3575f2 --staged -- :/ && git restore --source 6860da1
 
 ### What changed {#step-04.13-what-changed-182c57}
 
-- <a id="step-04.13-.pre-commit-config.yaml-e7d14d"></a>`.pre-commit-config.yaml`: three hooks from `pre-commit`'s collection, then `just check`. New, 20 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/.pre-commit-config.yaml).
+- <a id="step-04.13-.pre-commit-config.yaml-e7d14d"></a>`.pre-commit-config.yaml`: three hooks from `pre-commit`'s collection, then `just check`. New, 20 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/.pre-commit-config.yaml){.btn .btn-sm .btn-secondary}
   - look at `entry: just check`
-- <a id="step-04.13-justfile-424f0b"></a>`justfile`: the recipe `hook`. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/justfile).
+- <a id="step-04.13-justfile-424f0b"></a>`justfile`: the recipe `hook`. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/justfile){.btn .btn-sm .btn-secondary}
   - look at `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
 
 <details open><summary>The patch to <code>.pre-commit-config.yaml</code></summary>
@@ -198,4 +198,6 @@ git restore --source 29291b3575f2 --staged -- :/ && git restore --source 6860da1
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6860da13f0fdf9595f32390f2fa70fe0976159b1). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6860da13f0fdf9595f32390f2fa70fe0976159b1).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6860da13f0fdf9595f32390f2fa70fe0976159b1){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-04){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-04){.btn .btn-sm .btn-primary}

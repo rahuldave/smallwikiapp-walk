@@ -6,6 +6,17 @@ title: "6.1 to 6.2 End-to-end tests, on request"
 
 **Read the tutorial.** [Build it yourself](../build/step-06.1-to-step-06.2.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-05`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-05){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach step-05
+```
+
 ```bash
 just setup
 ```
@@ -20,8 +31,6 @@ command also looks up its version by the fixed name of its package, `wikiapp`.
 
 The test that asks the real Wikipedia fails without the network, and so every check fails with it. It now runs
 only when you ask for it. A second test of that kind checks the library.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/701783af434e19b17e38a10898a39adc1dc5dae9). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35).
 
 ## 6.1 The end-to-end test runs only on request {#step-06.1}
 
@@ -50,9 +59,9 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
 
 ### What changed {#step-06.1-what-changed-182c57}
 
-- <a id="step-06.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the option `-m 'not e2e'`, and the marker `e2e` in `markers`, with a comment. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/pyproject.toml).
+- <a id="step-06.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the option `-m 'not e2e'`, and the marker `e2e` in `markers`, with a comment. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
-- <a id="step-06.1-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test, marked. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/tests/test_console.py).
+- <a id="step-06.1-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test, marked. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `@pytest.mark.e2e`
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
@@ -92,7 +101,7 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735){.btn .btn-sm .btn-primary}
 
 ## 6.2 An end-to-end test of the library {#step-06.2}
 
@@ -117,7 +126,7 @@ contract.
 
 ### What changed {#step-06.2-what-changed-182c57}
 
-- <a id="step-06.2-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 9 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/307d4d7b36bb9dc7bc8ad601c8275d5241283e35/tests/test_wikipedia.py).
+- <a id="step-06.2-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 9 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/307d4d7b36bb9dc7bc8ad601c8275d5241283e35/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert "extract" in page`
 
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
@@ -146,4 +155,6 @@ contract.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/307d4d7b36bb9dc7bc8ad601c8275d5241283e35){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `307d4d7b36bb`, partway through `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35){.btn .btn-sm .btn-primary}

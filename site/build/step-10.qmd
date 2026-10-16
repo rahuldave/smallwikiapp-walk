@@ -6,6 +6,8 @@ title: "10 Build"
 
 **Build it yourself.** [Read the tutorial](../read/step-10.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `step-09`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/step-09){.btn .btn-sm .btn-primary}
+
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
@@ -21,8 +23,6 @@ and uv install. So we build each package into a wheel and a source archive, and 
 app says which versions of the library it accepts, and `just lint-config` checks the library's `pyproject.toml`
 too. Both packages say their licence and where their source is. Last, the library's User-Agent says the version
 that is installed.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/259e6364a52f83993c797f66148281b04eb92060). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/73fc4e12cc7a5831163e61fc01a3699355f95d52).
 
 ## 10.1 The recipe `build` {#step-10.1}
 
@@ -66,7 +66,7 @@ git restore --source 259e6364a52f --staged -- :/ && git restore --source 7744a84
 
 ### What changed {#step-10.1-what-changed-182c57}
 
-- <a id="step-10.1-justfile-424f0b"></a>`justfile`: the recipe `build`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7744a84a4715e6edb876e1c4f3255daf524dd07d/justfile).
+- <a id="step-10.1-justfile-424f0b"></a>`justfile`: the recipe `build`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7744a84a4715e6edb876e1c4f3255daf524dd07d/justfile){.btn .btn-sm .btn-secondary}
   - look at `build *args:`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -86,7 +86,7 @@ git restore --source 259e6364a52f --staged -- :/ && git restore --source 7744a84
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7744a84a4715e6edb876e1c4f3255daf524dd07d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-primary}
 
 ## 10.2 The app needs wikirandom 0.1 {#step-10.2}
 
@@ -123,7 +123,7 @@ git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d284
 
 ### What changed {#step-10.2-what-changed-182c57}
 
-- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml).
+- <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"wikirandom>=0.1.0,<0.2",`
 
 <details><summary>The diff that <code>uv add "wikirandom&gt;=0.1.0,&lt;0.2"</code> makes in <code>pyproject.toml</code></summary>
@@ -142,7 +142,7 @@ git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d284
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-primary}
 
 ## 10.3 lint-config checks both pyproject.toml files {#step-10.3}
 
@@ -177,7 +177,7 @@ git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb9
 
 ### What changed {#step-10.3-what-changed-182c57}
 
-- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
+- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile){.btn .btn-sm .btn-secondary}
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -196,7 +196,7 @@ git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb9
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055){.btn .btn-sm .btn-primary}
 
 ## 10.4 A licence for the library, and a repository link for both {#step-10.4}
 
@@ -297,11 +297,11 @@ git restore --source 522bcb941336 --staged -- :/ && git restore --source 2c03603
 
 ### What changed {#step-10.4-what-changed-182c57}
 
-- <a id="step-10.4-packages-wikirandom-LICENSE-56404f"></a>`packages/wikirandom/LICENSE`: the same Apache-2.0 licence as the app's. New, 202 lines. It comes from `cp LICENSE packages/wikirandom/LICENSE`. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/packages/wikirandom/LICENSE).
+- <a id="step-10.4-packages-wikirandom-LICENSE-56404f"></a>`packages/wikirandom/LICENSE`: the same Apache-2.0 licence as the app's. New, 202 lines. It comes from `cp LICENSE packages/wikirandom/LICENSE`. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/packages/wikirandom/LICENSE){.btn .btn-sm .btn-secondary}
   - look at `Apache License`
-- <a id="step-10.4-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: what PyPI would show. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/packages/wikirandom/pyproject.toml).
+- <a id="step-10.4-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: what PyPI would show. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/packages/wikirandom/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `license = "Apache-2.0"`
-- <a id="step-10.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's repository. 3 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/pyproject.toml).
+- <a id="step-10.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's repository. 3 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `[project.urls]`
 
 <details><summary>The diff that <code>cp LICENSE packages/wikirandom/LICENSE</code> makes in <code>packages/wikirandom/LICENSE</code></summary>
@@ -557,7 +557,7 @@ git restore --source 522bcb941336 --staged -- :/ && git restore --source 2c03603
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2c03603dc72a212f1575459528b3d269bb52be0d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2c03603dc72a212f1575459528b3d269bb52be0d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2c03603dc72a212f1575459528b3d269bb52be0d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2c03603dc72a212f1575459528b3d269bb52be0d){.btn .btn-sm .btn-primary}
 
 ## 10.5 The User-Agent says the installed version {#step-10.5}
 
@@ -595,7 +595,7 @@ git restore --source 2c03603dc72a --staged -- :/ && git restore --source 73fc4e1
 
 ### What changed {#step-10.5-what-changed-182c57}
 
-- <a id="step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: the version now comes from one place, the library's `pyproject.toml`. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/73fc4e12cc7a5831163e61fc01a3699355f95d52/packages/wikirandom/src/wikirandom/__init__.py).
+- <a id="step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: the version now comes from one place, the library's `pyproject.toml`. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/73fc4e12cc7a5831163e61fc01a3699355f95d52/packages/wikirandom/src/wikirandom/__init__.py){.btn .btn-sm .btn-secondary}
   - look at `VERSION = importlib.metadata.version("wikirandom")`
 
 <details open><summary>The patch to <code>packages/wikirandom/src/wikirandom/__init__.py</code></summary>
@@ -622,4 +622,6 @@ git restore --source 2c03603dc72a --staged -- :/ && git restore --source 73fc4e1
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/73fc4e12cc7a5831163e61fc01a3699355f95d52). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/73fc4e12cc7a5831163e61fc01a3699355f95d52).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/73fc4e12cc7a5831163e61fc01a3699355f95d52){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-10){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-10){.btn .btn-sm .btn-primary}

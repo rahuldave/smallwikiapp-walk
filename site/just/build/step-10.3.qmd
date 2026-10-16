@@ -6,6 +6,8 @@ title: "10.3 `just lint-config` checks the library too"
 
 **Build it yourself.** [Read the tutorial](../read/step-10.3.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `6e6d2844bc7a`, partway through `step-10`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-primary}
+
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
@@ -27,8 +29,6 @@ In the code now, the app asks for wikirandom 0.1.
 Since the library became a package, validate-pyproject, in `just lint-config`, has read only the app's
 `pyproject.toml`. The hook and `just check` let every `git commit` through with no check of the library's
 `pyproject.toml` against the standard.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
 
 ## 10.3 lint-config checks both pyproject.toml files {#step-10.3}
 
@@ -70,7 +70,7 @@ git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb9
 
 ### What changed {#step-10.3-what-changed-182c57}
 
-- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
+- <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile){.btn .btn-sm .btn-secondary}
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
 <details open><summary>The patch to <code>justfile</code></summary>
@@ -89,4 +89,6 @@ git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb9
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/522bcb94133654c1e72a9592c852681e0b5e2055){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `522bcb941336`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/522bcb94133654c1e72a9592c852681e0b5e2055){.btn .btn-sm .btn-primary}

@@ -49,6 +49,8 @@ Each kind of test comes in at the section in the table. The tutorial adds no tes
 | Integration | The command and the library together, with only the network a mock | Section 6. The unit tests of the command become integration tests |
 | Contract | That the real Wikipedia still answers as the mocks do | Section 10 |
 
+Each page is one part. A part is one or more changes to the project, each a section of its page. The code where a part starts and where it ends has a tag on GitHub, such as `step-00`, or is a commit between two tags. The top of each page says where its part starts, and the bottom says where it ends, each with a link to that code.
+
 There are two ways to read this tutorial. Both have the same parts, in the same order.
 
 Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change. In Build it yourself, What changed is what you check your files against.

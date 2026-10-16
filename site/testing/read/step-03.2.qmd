@@ -6,6 +6,17 @@ title: "3.2 A shared mock in conftest.py"
 
 **Read the tutorial.** [Build it yourself](../build/step-03.2.qmd) is the other way to read this part.
 
+This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp) on GitHub. This part starts from the code at `3f6d8cf59ab3`, partway through `step-03`. [The code before this part](https://github.com/rahuldave/smallwikiapp/tree/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205){.btn .btn-sm .btn-primary}
+
+To look at this code on your machine, run these commands. The first one makes a clone, if this folder has none:
+
+```bash
+[ -d smallwikiapp ] || git clone https://github.com/rahuldave/smallwikiapp
+cd smallwikiapp
+git fetch --quiet --tags --force origin
+git switch --detach 3f6d8cf59ab3
+```
+
 ```bash
 just setup
 ```
@@ -15,8 +26,6 @@ moved out of the command into `random_page`, and the command calls it.
 
 Tests of the library need the mock too, and it is in the tests of the command. The mock goes to
 `tests/conftest.py`, so that every test file can use it.
-
-[The code before this part](https://github.com/rahuldave/smallwikiapp/tree/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).
 
 ## 3.2 The mock goes to conftest.py {#step-03.2}
 
@@ -44,9 +53,9 @@ The result is `5 passed`. pytest finds the fixture in `conftest.py`.
 
 ### What changed {#step-03.2-what-changed-182c57}
 
-- <a id="step-03.2-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, for every test file. New, 10 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/conftest.py).
+- <a id="step-03.2-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, for every test file. New, 10 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/conftest.py){.btn .btn-sm .btn-secondary}
   - look at `def mock_requests_get(mocker):`
-- <a id="step-03.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture is gone, but the tests still name it. 0 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/test_console.py).
+- <a id="step-03.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture is gone, but the tests still name it. 0 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/test_console.py){.btn .btn-sm .btn-secondary}
 
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
 
@@ -89,4 +98,6 @@ The result is `5 passed`. pytest finds the fixture in `conftest.py`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a65f7f11432be0a56de38e7d4babe10bda735c2c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a65f7f11432be0a56de38e7d4babe10bda735c2c){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c){.btn .btn-sm .btn-primary}
+
+This part ends at the code at `a65f7f11432b`, partway through `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c){.btn .btn-sm .btn-primary}
