@@ -1200,7 +1200,8 @@ website:
                 - text: "10.2 The app needs wikirandom 0.1"
                   href: uv/build/step-10.2.qmd#step-10.2
 
-theme: cosmo
+metadata-files: ["_settings.yml"]   # the class's own settings
+theme: "ac215"
 css: styles.css
 toc: true
 toc-depth: 2

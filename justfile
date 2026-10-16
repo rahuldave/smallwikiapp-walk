@@ -3,7 +3,7 @@
 # This file names the project and the upstream owner here. `just setup` clones the project into repo/, and
 # timewalk puts its replay copy in worktree/. Both folders are in .gitignore. toc.toml lists seven walks over the
 # same notes: show (watch mode, the first) and do, the whole tutorial, and five small walks, testing, linting,
-# docs, just and uv. Made from the walk skill's template, with `site` added.
+# docs, just and uv. Made from the walk skill's template, with `check` added.
 
 project := "smallwikiapp"
 upstream := "rahuldave"
@@ -93,16 +93,6 @@ pdf id="":
 check: setup
     uvx --refresh-package timewalk --from {{ quote(timewalk) }} timewalk-check repo --replay worktree --toc toc.toml
 
-# Build the websites into site/_site with smalldocs, as GitHub Pages does: open site/_site/index.html
-site:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    uvx --from 'smalldocs>=0.1.5' smalldocs render site
-    # Each small walk's site, from sites/ID, goes into site/_site/ID
-    for small in sites/*/; do
-        [ -d "$small" ] || continue  # no small walk: the glob stays as written
-        id=$(basename "$small")
-        uvx --from 'smalldocs>=0.1.5' smalldocs render "sites/$id"
-        mkdir -p "site/_site/$id"
-        cp -R "sites/$id/_site/." "site/_site/$id/"
-    done
+# Build the website in site/ with smalldocs, serve it on this machine, and rebuild it on every change. The theme is in site/_extensions/
+site *args:
+    uvx --from 'smalldocs>=0.3.3' smalldocs preview site "$@"
