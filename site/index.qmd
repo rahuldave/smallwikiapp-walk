@@ -203,10 +203,36 @@ git config alias.check '!f() { i="$(git rev-parse --git-path check-index)" && { 
 
 ## The other walks
 
-Each other walk through the project has a website of its own:
+Each other walk through the project has pages of its own:
 
 - [The tests of smallwikiapp](testing/index.html). The project and its command, then pytest, fixtures and mocks, coverage, end-to-end tests, and the tests on GitHub, with their own group.
 - [The formatter and the linter of smallwikiapp](linting/index.html). The project and its command, then a formatter and a linter, their fixes, a check of the configuration, and every check before each `git commit`.
 - [The documentation of smallwikiapp](docs/index.html). The project and its command, then documentation of the code, a check of it, a site built with smalldocs, and the site on GitHub Pages.
 - [just, the interface of smallwikiapp](just/index.html). The project and its first justfile, then each verb as it comes in, and `just check`. A person and a git hook run it before each `git commit`, and GitHub after a push.
 - [uv in smallwikiapp](uv/index.html). The project and its `.venv`, then the lockfile, dependency groups, and when uv syncs. Then Python versions, environments, a group for each job on GitHub, a workspace of two packages, and a build.
+
+## Follow the walks in timewalk
+
+[timewalk](https://rahuldave.com/timewalk/) replays these walks in your browser. At each part, it shows the files of smallwikiapp as they were, and what the part changed. It also shows the notes, and terminals in the project as it was then.
+
+A narrative goes from part to part. A tutorial has two modes. In watch mode, timewalk shows each change. In do mode, you make each change yourself, and timewalk tells you when your files match.
+
+![A part in timewalk: a slide, the files, a file, a terminal and the notes](https://rahuldave.com/timewalk/images/page.png)
+
+You need [uv](https://docs.astral.sh/uv/), [git](https://git-scm.com/), [just](https://just.systems/) and a recent browser. Fork [rahuldave/smallwikiapp-walk](https://github.com/rahuldave/smallwikiapp-walk) on GitHub, so that you can keep your own notes, and clone your fork. In its folder, run `just present`, and open the address that timewalk prints. The first time, it clones smallwikiapp into the folder `repo/`.
+
+```bash
+git clone https://github.com/YOU/smallwikiapp-walk
+cd smallwikiapp-walk
+just present
+```
+
+`just present` opens the first walk, *smallwikiapp, one change at a time* (a tutorial). To open another, give its id:
+
+- `just present testing`: *The tests of smallwikiapp* (a tutorial)
+- `just present linting`: *The formatter and the linter of smallwikiapp* (a tutorial)
+- `just present docs`: *The documentation of smallwikiapp* (a tutorial)
+- `just present just`: *just, the interface of smallwikiapp* (a tutorial)
+- `just present uv`: *uv in smallwikiapp* (a tutorial)
+
+![Do mode: you make each change, and timewalk checks your files](https://rahuldave.com/timewalk/images/tutorial-do.png)
