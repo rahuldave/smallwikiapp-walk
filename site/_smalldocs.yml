@@ -5,27 +5,27 @@ project:
   render: ["index.qmd", "read/*.qmd", "build/*.qmd", "testing/index.qmd", "testing/read/*.qmd", "testing/build/*.qmd", "linting/index.qmd", "linting/read/*.qmd", "linting/build/*.qmd", "docs/index.qmd", "docs/read/*.qmd", "docs/build/*.qmd", "just/index.qmd", "just/read/*.qmd", "just/build/*.qmd", "uv/index.qmd", "uv/read/*.qmd", "uv/build/*.qmd"]   # only these pages
 
 website:
-  title: "smallwikiapp, one change at a time"
+  title: "smallwikiapp"
   page-navigation: true
   search: true
   navbar:
     left:
       - text: "Walks"
         menu:
-          - text: "smallwikiapp, one change at a time"
+          - text: "smallwikiapp"
             href: index.qmd
-          - text: "The tests of smallwikiapp"
+          - text: "The tests"
             href: testing/index.qmd
-          - text: "The formatter and the linter of smallwikiapp"
+          - text: "Format and lint"
             href: linting/index.qmd
-          - text: "The documentation of smallwikiapp"
+          - text: "The docs"
             href: docs/index.qmd
-          - text: "just, the interface of smallwikiapp"
+          - text: "just"
             href: just/index.qmd
-          - text: "uv in smallwikiapp"
+          - text: "uv"
             href: uv/index.qmd
   sidebar:
-    - title: "smallwikiapp, one change at a time"
+    - title: "smallwikiapp"
       style: docked
       contents:
         - index.qmd
@@ -407,7 +407,7 @@ website:
                   href: build/step-10.qmd#step-10.4
                 - text: "10.5 The User-Agent says the installed version"
                   href: build/step-10.qmd#step-10.5
-    - title: "The tests of smallwikiapp"
+    - title: "The tests"
       style: docked
       contents:
         - testing/index.qmd
@@ -609,7 +609,7 @@ website:
               contents:
                 - text: "8b.1 The tests install the group test alone"
                   href: testing/build/step-08b.1.qmd#step-08b.1
-    - title: "The formatter and the linter of smallwikiapp"
+    - title: "Format and lint"
       style: docked
       contents:
         - linting/index.qmd
@@ -755,7 +755,7 @@ website:
               contents:
                 - text: "10.3 lint-config checks both pyproject.toml files"
                   href: linting/build/step-10.3.qmd#step-10.3
-    - title: "The documentation of smallwikiapp"
+    - title: "The docs"
       style: docked
       contents:
         - docs/index.qmd
@@ -883,7 +883,7 @@ website:
               contents:
                 - text: "9.10 The docs check counts the library"
                   href: docs/build/step-09.10.qmd#step-09.10
-    - title: "just, the interface of smallwikiapp"
+    - title: "just"
       style: docked
       contents:
         - just/index.qmd
@@ -1075,7 +1075,7 @@ website:
               contents:
                 - text: "10.3 lint-config checks both pyproject.toml files"
                   href: just/build/step-10.3.qmd#step-10.3
-    - title: "uv in smallwikiapp"
+    - title: "uv"
       style: docked
       contents:
         - uv/index.qmd
