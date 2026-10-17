@@ -73,7 +73,7 @@ used it yet.
 
 ## 4.2 The settings of ruff, and the recipe fmt {#step-04.2}
 
-ruff needs its settings, at the end of `pyproject.toml`. They allow lines of up to 100 characters, and write out
+ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 characters, and write out
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 

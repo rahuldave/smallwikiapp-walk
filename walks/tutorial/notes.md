@@ -230,8 +230,7 @@ table `[tool.uv]` with this setting.
 patch$ pyproject.toml
 
 ::: do
-The patch adds the table `[tool.uv]` at the end of `pyproject.toml`, after the table `[build-system]`. It has a
-comment and one setting.
+The change adds the table `[tool.uv]` to `pyproject.toml`. It has a comment and one setting.
 :::
 
 ::: watch
@@ -503,8 +502,7 @@ ran.
 patch$ pyproject.toml
 
 ::: do
-The patch adds the table `[tool.pytest.ini_options]` at the end of `pyproject.toml`, after the table
-`[dependency-groups]`.
+The change adds the table `[tool.pytest.ini_options]` to `pyproject.toml`.
 :::
 
 ::: watch
@@ -800,7 +798,7 @@ files:
 
 ### step-04.2 The settings of ruff, and the recipe fmt
 
-ruff needs its settings, at the end of `pyproject.toml`. They allow lines of up to 100 characters, and write out
+ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 characters, and write out
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
@@ -809,8 +807,8 @@ patch$ pyproject.toml
 patch$ justfile
 
 ::: do
-In `pyproject.toml`, the patch adds the tables `[tool.ruff]` and `[tool.ruff.format]` at the end. In the
-`justfile`, it adds the recipe `fmt` at the end.
+In `pyproject.toml`, the change adds the tables `[tool.ruff]` and `[tool.ruff.format]`. In the `justfile`, it
+adds the recipe `fmt` at the end.
 :::
 
 ::: watch
@@ -869,7 +867,7 @@ files:
 
 ### step-04.4 The linter's rules, and the recipe lint
 
-The linter checks the code against rules, and it needs to know which. A table at the end of `pyproject.toml`
+The linter checks the code against rules, and it needs to know which. A table in `pyproject.toml`
 chooses the families of rules. Each family is on a line of its own, with a comment that says why it is on. The
 tests may use `assert`. The rest of the code may not, because Python skips every `assert` when it runs with `-O`.
 
@@ -880,8 +878,8 @@ patch$ pyproject.toml
 patch$ justfile
 
 ::: do
-In `pyproject.toml`, the patch adds the tables `[tool.ruff.lint]` and `[tool.ruff.lint.per-file-ignores]` at the
-end. Read the comment beside each family of rules. In the `justfile`, it adds the recipe `lint` at the end.
+In `pyproject.toml`, the change adds the tables `[tool.ruff.lint]` and `[tool.ruff.lint.per-file-ignores]`.
+Read the comment beside each family of rules. In the `justfile`, it adds the recipe `lint` at the end.
 :::
 
 ::: watch
@@ -1453,7 +1451,7 @@ pytest must know the marker, and leave the e2e tests out of every run that does 
 patch$ pyproject.toml
 
 ::: do
-The patch changes `[tool.pytest.ini_options]`, under `testpaths`. It replaces the comment and the line `addopts`,
+The change is in `[tool.pytest.ini_options]`. It replaces the comment and the line `addopts`,
 and adds the line `markers`.
 :::
 
@@ -2712,16 +2710,15 @@ three on the page of a package. The library gets a copy of the project's `LICENS
 
 do$ cp LICENSE packages/wikirandom/LICENSE
 
-Its `pyproject.toml` gives the licence and the author under `readme`, as the app's `pyproject.toml` does. Both
+Its `pyproject.toml` gives the licence and the author in `[project]`, as the app's `pyproject.toml` does. Both
 `pyproject.toml` files name the repository, in a table `[project.urls]`.
 
 patch$ packages/wikirandom/pyproject.toml
 patch$ pyproject.toml
 
 ::: do
-In `packages/wikirandom/pyproject.toml`, the patch adds the licence, its file and the author under
-`readme = "README.md"`. It adds the table `[project.urls]` after the list `dependencies`. In the app's
-`pyproject.toml`, the same table goes after `[project.scripts]`.
+In `packages/wikirandom/pyproject.toml`, the change adds the licence, its file and the author to `[project]`, and
+the table `[project.urls]`. The app's `pyproject.toml` gets the same table.
 :::
 
 ::: watch

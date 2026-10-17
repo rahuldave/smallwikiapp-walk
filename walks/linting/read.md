@@ -822,7 +822,7 @@ used it yet.
 
 ### 4.2 The settings of ruff, and the recipe fmt
 
-ruff needs its settings, at the end of `pyproject.toml`. They allow lines of up to 100 characters, and write out
+ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 characters, and write out
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
@@ -1085,7 +1085,7 @@ A linter needs rules to check. The rules go in `pyproject.toml`, and `just lint`
 
 ### 4.4 The linter's rules, and the recipe lint
 
-The linter checks the code against rules, and it needs to know which. A table at the end of `pyproject.toml`
+The linter checks the code against rules, and it needs to know which. A table in `pyproject.toml`
 chooses the families of rules. Each family is on a line of its own, with a comment that says why it is on. The
 tests may use `assert`. The rest of the code may not, because Python skips every `assert` when it runs with `-O`.
 

@@ -160,7 +160,7 @@ three on the page of a package. The library gets a copy of the project's `LICENS
 
 This change came from running `cp LICENSE packages/wikirandom/LICENSE`.
 
-Its `pyproject.toml` gives the licence and the author under `readme`, as the app's `pyproject.toml` does. Both
+Its `pyproject.toml` gives the licence and the author in `[project]`, as the app's `pyproject.toml` does. Both
 `pyproject.toml` files name the repository, in a table `[project.urls]`.
 
 A patch to [`packages/wikirandom/pyproject.toml`](#step-10.4-packages-wikirandom-pyproject.toml-28d6f6).
