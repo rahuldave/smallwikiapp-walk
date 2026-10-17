@@ -80,6 +80,8 @@ git restore --source 3f6d8cf59ab3 --staged -- :/ && git restore --source a65f7f1
   - look at `def mock_requests_get(mocker):`
 - <a id="step-03.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture is gone, but the tests still name it. 0 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/test_console.py){.btn .btn-sm .btn-secondary}
 
+<a id="step-03.2-tests-conftest.py-626af3-diff"></a>
+
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -97,6 +99,8 @@ git restore --source 3f6d8cf59ab3 --staged -- :/ && git restore --source a65f7f1
 ```
 
 </details>
+
+<a id="step-03.2-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 

@@ -58,6 +58,8 @@ git restore --source bfc38e738984 --staged -- :/ && git restore --source 8409e0f
   - look at `"pytest-cov>=7.1.0",`
 - <a id="step-02.10-uv.lock-8356d8"></a>`uv.lock`: pytest-cov, and coverage, the package that it needs. 100 lines added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-02.10-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add --group test pytest-cov</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -154,6 +156,8 @@ git fetch --quiet --tags --force origin; git restore --source 8409e0f2e7f6 --sta
 
 - <a id="step-02.11-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of pytest. They name the folder of the tests, and turn coverage on for every run. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7508f1d424d5f906ee4630be09b2fddf3483e9c4/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `addopts = "--cov=wikiapp --cov-report=term-missing"`
+
+<a id="step-02.11-pyproject.toml-5d07e7-diff"></a>
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 

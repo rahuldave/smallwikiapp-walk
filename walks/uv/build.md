@@ -252,6 +252,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 - <a id="step-00-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: `main`, which prints one line. New, 4 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/src/wikiapp/console.py).
 - <a id="step-00-uv.lock-8356d8"></a>`uv.lock`: the exact packages, the same on every machine. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/uv.lock).
 
+<a id="step-00-.gitignore-a5cc29-diff"></a>
+
 <details><summary>The diff of <code>.gitignore</code></summary>
 
 ```diff
@@ -290,6 +292,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-.python-version-7696e9-diff"></a>
+
 <details><summary>The diff of <code>.python-version</code></summary>
 
 ```diff
@@ -298,6 +302,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 ```
 
 </details>
+
+<a id="step-00-LICENSE-0398cc-diff"></a>
 
 <details><summary>The diff of <code>LICENSE</code></summary>
 
@@ -509,6 +515,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-README.md-8ec9a0-diff"></a>
+
 <details><summary>The diff of <code>README.md</code></summary>
 
 ````diff
@@ -574,6 +582,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -603,6 +613,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -627,6 +639,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 ```
 
 </details>
+
+<a id="step-00-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -699,6 +713,8 @@ git fetch --quiet --tags --force origin; git restore --source step-00 --staged -
 - <a id="step-01.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the dependencies of the package, which anyone who installs it gets. 4 lines added, 1 removed. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/pyproject.toml).
   - look at `"click>=8.5.0",`
 - <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock).
+
+<a id="step-01.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff that <code>uv add click requests</code> makes in <code>pyproject.toml</code></summary>
 
@@ -833,6 +849,8 @@ git fetch --quiet --tags --force origin; git restore --source step-01 --staged -
 - <a id="step-02.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the table `[tool.uv]`, so uv installs every dependency group. 4 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/46dc20fb9092170695699eaa052f4830563cb930/pyproject.toml).
   - look at `default-groups = "all"`
 
+<a id="step-02.1-pyproject.toml-5d07e7-diff"></a>
+
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
 ```diff
@@ -896,6 +914,8 @@ git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cf
 
 - <a id="step-02.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: a test that runs the command and checks its exit code. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6d7a6cfdae6008a9687f3525348ab24ea05930cc/tests/test_console.py).
   - look at `assert result.exit_code == 0`
+
+<a id="step-02.2-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 
@@ -978,6 +998,8 @@ git restore --source 6d7a6cfdae60 --staged -- :/ && git restore --source d92e2de
 - <a id="step-02.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group `test`, with pytest. 5 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/pyproject.toml).
   - look at `"pytest>=9.1.1",`
 - <a id="step-02.3-uv.lock-8356d8"></a>`uv.lock`: pytest, and the packages that it needs. 69 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/uv.lock).
+
+<a id="step-02.3-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff that <code>uv add --group test pytest</code> makes in <code>pyproject.toml</code></summary>
 
@@ -1071,6 +1093,8 @@ git restore --source d8a9c8f71eb5 --staged -- :/ && git restore --source b7469ee
 
 - <a id="step-04.10-justfile-424f0b"></a>`justfile`: one line, which exports `UV_LOCKED` to every recipe. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b7469ee81a824a46e6799d60957ea09d7cf2eade/justfile).
   - look at `export UV_LOCKED := "1"`
+
+<a id="step-04.10-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 
@@ -1174,8 +1198,7 @@ The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
 
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
-lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile that does not match, until the next move resolves the lockfile again.
 
 ```bash
 uv lock --check
@@ -1202,6 +1225,8 @@ git restore --source 307d4d7b36bb --staged -- :/ && git restore --source b97ee4c
 
 - <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml).
   - look at `requires-python = ">=3.11"`
+
+<a id="step-06.3-pyproject.toml-5d07e7-diff"></a>
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
@@ -1359,6 +1384,8 @@ git fetch --quiet --tags --force origin; git restore --source d8af75e8fd57 --sta
 - <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml).
   - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
 
+<a id="step-06.5-.github-workflows-test.yaml-a60e23-diff"></a>
+
 <details open><summary>The patch to <code>.github/workflows/test.yaml</code></summary>
 
 ```diff
@@ -1480,6 +1507,8 @@ git fetch --quiet --tags --force origin; git restore --source step-08 --staged -
 - <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml).
   - look at `- run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more`
 
+<a id="step-08b.1-.github-workflows-test.yaml-a60e23-diff"></a>
+
 <details open><summary>The patch to <code>.github/workflows/test.yaml</code></summary>
 
 ```diff
@@ -1587,6 +1616,8 @@ git fetch --quiet --tags --force origin; git restore --source 971e9d780fd5 --sta
 
 - <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml).
   - look at `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
+
+<a id="step-08b.2-.github-workflows-docs.yaml-ce7835-diff"></a>
 
 <details open><summary>The patch to <code>.github/workflows/docs.yaml</code></summary>
 
@@ -1725,6 +1756,8 @@ git fetch --quiet --tags --force origin; git restore --source step-08b --staged 
 - <a id="step-09.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the workspace, with one member. 5 lines added. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/pyproject.toml).
   - look at `"packages/wikirandom",`
 
+<a id="step-09.1-packages-wikirandom-pyproject.toml-28d6f6-diff"></a>
+
 <details><summary>The diff that <code>uv init --lib --author-from none --no-pin-python --python "&gt;=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom</code> makes in <code>packages/wikirandom/pyproject.toml</code></summary>
 
 ```diff
@@ -1744,6 +1777,8 @@ git fetch --quiet --tags --force origin; git restore --source step-08b --staged 
 
 </details>
 
+<a id="step-09.1-packages-wikirandom-src-wikirandom-__init__.py-343c23-diff"></a>
+
 <details><summary>The diff that <code>uv init --lib --author-from none --no-pin-python --python "&gt;=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom</code> makes in <code>packages/wikirandom/src/wikirandom/__init__.py</code></summary>
 
 ```diff
@@ -1753,6 +1788,8 @@ git fetch --quiet --tags --force origin; git restore --source step-08b --staged 
 ```
 
 </details>
+
+<a id="step-09.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff that <code>uv init --lib --author-from none --no-pin-python --python "&gt;=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom</code> makes in <code>pyproject.toml</code></summary>
 
@@ -1831,6 +1868,8 @@ git restore --source 01364831243e --staged -- :/ && git restore --source c153cdf
 - <a id="step-09.2-packages-wikirandom-pyproject.toml-28d6f6"></a>`packages/wikirandom/pyproject.toml`: its dependencies. 4 lines added, 1 removed. It comes from `uv add --package wikirandom requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/c153cdfc43300110bd63502b3d53a85ab3aa79f1/packages/wikirandom/pyproject.toml).
   - look at `"pydantic>=2.14.1",`
 - <a id="step-09.2-uv.lock-8356d8"></a>`uv.lock`: the two members of the workspace, and the library with its dependencies. 21 lines added. It comes from `uv add --package wikirandom requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/c153cdfc43300110bd63502b3d53a85ab3aa79f1/uv.lock).
+
+<a id="step-09.2-packages-wikirandom-pyproject.toml-28d6f6-diff"></a>
 
 <details><summary>The diff that <code>uv add --package wikirandom requests pydantic</code> makes in <code>packages/wikirandom/pyproject.toml</code></summary>
 
@@ -1918,6 +1957,8 @@ git restore --source 34f1041135a7 --staged -- :/ && git restore --source 8545346
 - <a id="step-09.6-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app depends on the library, from the workspace. 4 lines added. It comes from `uv add wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8545346928730b73e69a52a7652ff4fbf15a333c/pyproject.toml).
   - look at `wikirandom = { workspace = true }`
 - <a id="step-09.6-uv.lock-8356d8"></a>`uv.lock`: the app's dependencies have wikirandom. 2 lines added. It comes from `uv add wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8545346928730b73e69a52a7652ff4fbf15a333c/uv.lock).
+
+<a id="step-09.6-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff that <code>uv add wikirandom</code> makes in <code>pyproject.toml</code></summary>
 
@@ -2062,8 +2103,8 @@ The tests print `7 passed, 2 deselected`, and the coverage table lists
 `packages/wikirandom/src/wikirandom/__init__.py`, and no longer `src/wikiapp/wikipedia.py`. `uv tree` shows that
 wikirandom needs pydantic and requests, and that wikiapp still lists them too, beside click and wikirandom. The
 app no longer imports them, so the next move removes them. `just docs check` still counts the app and the tests
-alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app. The front page
-names both packages, but `random_page` is not yet a link, because the settings of the site name only the app.
+alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app, because the
+settings of the site name only the app.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -2093,6 +2134,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 - <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py).
   - look at `wikirandom.random_page(language="es")`
 
+<a id="step-09.7-README.md-8ec9a0-diff"></a>
+
 <details open><summary>The patch to <code>README.md</code></summary>
 
 ```diff
@@ -2109,6 +2152,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 ```
 
 </details>
+
+<a id="step-09.7-docs-index.qmd-d6d880-diff"></a>
 
 <details open><summary>The patch to <code>docs/index.qmd</code></summary>
 
@@ -2139,6 +2184,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 
 </details>
 
+<a id="step-09.7-packages-wikirandom-README.md-105646-diff"></a>
+
 <details open><summary>The patch to <code>packages/wikirandom/README.md</code></summary>
 
 ```diff
@@ -2150,6 +2197,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 ```
 
 </details>
+
+<a id="step-09.7-pyproject.toml-5d07e7-diff"></a>
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
@@ -2171,6 +2220,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 
 </details>
 
+<a id="step-09.7-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -2188,6 +2239,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 ```
 
 </details>
+
+<a id="step-09.7-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff that <code>rm src/wikiapp/wikipedia.py</code> makes in <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -2237,6 +2290,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 ```
 
 </details>
+
+<a id="step-09.7-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 
@@ -2332,6 +2387,8 @@ git restore --source 78ab09579fdf --staged -- :/ && git restore --source f2dd413
 - <a id="step-09.8-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's dependencies are click and wikirandom. 0 lines added, 2 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/pyproject.toml).
 - <a id="step-09.8-uv.lock-8356d8"></a>`uv.lock`: the app no longer depends on pydantic and requests by itself. 0 lines added, 4 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/uv.lock).
 
+<a id="step-09.8-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv remove requests pydantic</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -2420,6 +2477,8 @@ git fetch --quiet --tags --force origin; git restore --source step-09 --staged -
 - <a id="step-10.1-justfile-424f0b"></a>`justfile`: the recipe `build`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7744a84a4715e6edb876e1c4f3255daf524dd07d/justfile).
   - look at `build *args:`
 
+<a id="step-10.1-justfile-424f0b-diff"></a>
+
 <details open><summary>The patch to <code>justfile</code></summary>
 
 ```diff
@@ -2496,6 +2555,8 @@ git restore --source 7744a84a4715 --staged -- :/ && git restore --source 6e6d284
 
 - <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml).
   - look at `"wikirandom>=0.1.0,<0.2",`
+
+<a id="step-10.2-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff that <code>uv add "wikirandom&gt;=0.1.0,&lt;0.2"</code> makes in <code>pyproject.toml</code></summary>
 

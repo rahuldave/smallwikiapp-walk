@@ -79,6 +79,8 @@ just help setup
 - <a id="step-00-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: `main`, which prints one line. New, 4 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
 - <a id="step-00-uv.lock-8356d8"></a>`uv.lock`: the exact packages, the same on every machine. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-00-.gitignore-a5cc29-diff"></a>
+
 <details><summary>The diff of <code>.gitignore</code></summary>
 
 ```diff
@@ -117,6 +119,8 @@ just help setup
 
 </details>
 
+<a id="step-00-.python-version-7696e9-diff"></a>
+
 <details><summary>The diff of <code>.python-version</code></summary>
 
 ```diff
@@ -125,6 +129,8 @@ just help setup
 ```
 
 </details>
+
+<a id="step-00-LICENSE-0398cc-diff"></a>
 
 <details><summary>The diff of <code>LICENSE</code></summary>
 
@@ -336,6 +342,8 @@ just help setup
 
 </details>
 
+<a id="step-00-README.md-8ec9a0-diff"></a>
+
 <details><summary>The diff of <code>README.md</code></summary>
 
 ````diff
@@ -401,6 +409,8 @@ just help setup
 
 </details>
 
+<a id="step-00-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -430,6 +440,8 @@ just help setup
 
 </details>
 
+<a id="step-00-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -454,6 +466,8 @@ just help setup
 ```
 
 </details>
+
+<a id="step-00-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 

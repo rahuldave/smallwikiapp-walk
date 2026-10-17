@@ -93,6 +93,8 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 - <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `"""The language chooses the Wikipedia that is asked."""`
 
+<a id="step-08.5-tests-conftest.py-626af3-diff"></a>
+
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -117,6 +119,8 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 ```
 
 </details>
+
+<a id="step-08.5-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 
@@ -202,6 +206,8 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 ```
 
 </details>
+
+<a id="step-08.5-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 

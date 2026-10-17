@@ -34,7 +34,7 @@ A package goes to PyPI as two files, a wheel and a source archive. pip and uv in
 --all-packages` builds both for every package of the workspace, into `dist/`. `.gitignore` already lists `dist/`.
 A recipe `build`, at the end of the `justfile`, runs it.
 
-[± See the change to `justfile`](#step-10.1-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-10.1-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 The recipe `build` at the end of the `justfile` is in the group `setup`, and `just build help` explains it.
 
@@ -56,6 +56,8 @@ first.
 
 - <a id="step-10.1-justfile-424f0b"></a>`justfile`: the recipe `build`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7744a84a4715e6edb876e1c4f3255daf524dd07d/justfile){.btn .btn-sm .btn-secondary}
   - look at `build *args:`
+
+<a id="step-10.1-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

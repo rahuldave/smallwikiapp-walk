@@ -50,6 +50,8 @@ Under the tests, a table lists each file of `src/wikiapp`, with its statements a
   - look at `"pytest-cov>=7.1.0",`
 - <a id="step-02.10-uv.lock-8356d8"></a>`uv.lock`: pytest-cov, and coverage, the package that it needs. 100 lines added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-02.10-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -72,7 +74,7 @@ A person can forget to type `--cov=wikiapp`. The settings of pytest in `pyprojec
 every run. They tell pytest to look for tests in `tests`, to measure coverage, and to list the lines that no test
 ran.
 
-[± See the change to `pyproject.toml`](#step-02.11-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-02.11-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the new table `[tool.pytest.ini_options]` has `testpaths = ["tests"]`. Its line
 `addopts` gives pytest the options `--cov=wikiapp --cov-report=term-missing` for every run.
@@ -91,6 +93,8 @@ is the call to `main` at the end, which runs only when you run the file as a scr
 
 - <a id="step-02.11-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of pytest. They name the folder of the tests, and turn coverage on for every run. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7508f1d424d5f906ee4630be09b2fddf3483e9c4/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `addopts = "--cov=wikiapp --cov-report=term-missing"`
+
+<a id="step-02.11-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 

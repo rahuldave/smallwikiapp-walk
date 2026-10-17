@@ -1547,8 +1547,7 @@ In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
-lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile that does not match, until the next move resolves the lockfile again.
 
 $ uv lock --check
 
@@ -2575,8 +2574,8 @@ The tests print `7 passed, 2 deselected`, and the coverage table lists
 `packages/wikirandom/src/wikirandom/__init__.py`, and no longer `src/wikiapp/wikipedia.py`. `uv tree` shows that
 wikirandom needs pydantic and requests, and that wikiapp still lists them too, beside click and wikirandom. The
 app no longer imports them, so the next move removes them. `just docs check` still counts the app and the tests
-alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app. The front page
-names both packages, but `random_page` is not yet a link, because the settings of the site name only the app.
+alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app, because the
+settings of the site name only the app.
 
 files:
 - diff `src/wikiapp/console.py`: one import.

@@ -183,6 +183,8 @@ A recipe has up to four parts, from the top.
 - <a id="step-00-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: `main`, which prints one line. New, 4 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/src/wikiapp/console.py).
 - <a id="step-00-uv.lock-8356d8"></a>`uv.lock`: the exact packages, the same on every machine. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/uv.lock).
 
+<a id="step-00-.gitignore-a5cc29-diff"></a>
+
 <details><summary>The diff of <code>.gitignore</code></summary>
 
 ```diff
@@ -221,6 +223,8 @@ A recipe has up to four parts, from the top.
 
 </details>
 
+<a id="step-00-.python-version-7696e9-diff"></a>
+
 <details><summary>The diff of <code>.python-version</code></summary>
 
 ```diff
@@ -229,6 +233,8 @@ A recipe has up to four parts, from the top.
 ```
 
 </details>
+
+<a id="step-00-LICENSE-0398cc-diff"></a>
 
 <details><summary>The diff of <code>LICENSE</code></summary>
 
@@ -440,6 +446,8 @@ A recipe has up to four parts, from the top.
 
 </details>
 
+<a id="step-00-README.md-8ec9a0-diff"></a>
+
 <details><summary>The diff of <code>README.md</code></summary>
 
 ````diff
@@ -505,6 +513,8 @@ A recipe has up to four parts, from the top.
 
 </details>
 
+<a id="step-00-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -534,6 +544,8 @@ A recipe has up to four parts, from the top.
 
 </details>
 
+<a id="step-00-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -558,6 +570,8 @@ A recipe has up to four parts, from the top.
 ```
 
 </details>
+
+<a id="step-00-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -596,7 +610,7 @@ The command that runs the tests is `uv run pytest`, with any options for pytest 
 justfile gives it a short name, `just test`. The words after `just test` go to pytest. `"$@"` stands for those
 words, and the recipe gives each word to pytest whole. `just test help` shows the recipe.
 
-[± See the change to `justfile`](#step-02.4-justfile-424f0b)
+[± See the change to `justfile`](#step-02.4-justfile-424f0b-diff)
 
 At the end of the `justfile`, the recipe `test *args:` runs `uv run pytest "$@"`, or shows itself for
 `just test help`. The comment above it is what `just` lists for the recipe.
@@ -625,6 +639,8 @@ The line `[no-exit-message]` above the recipe tells `just` to add no message of 
 
 - <a id="step-02.4-justfile-424f0b"></a>`justfile`: the recipe `test`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/45807a0ddd9f97798c3f86a82b19782d4df45837/justfile).
   - look at `test *args:`
+
+<a id="step-02.4-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -693,6 +709,8 @@ used it yet.
   - look at `"ruff>=0.17.0",`
 - <a id="step-04.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ruff. 29 lines added. It comes from `uv add --group lint ruff`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8f7b800001ee35d8db80c47521b02777047c019d/uv.lock).
 
+<a id="step-04.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -720,9 +738,9 @@ ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 char
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
-[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7)
+[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7-diff)
 
-[± See the change to `justfile`](#step-04.2-justfile-424f0b)
+[± See the change to `justfile`](#step-04.2-justfile-424f0b-diff)
 
 At the end of `pyproject.toml`, the table `[tool.ruff]` on line 41 sets `line-length = 100`. The table
 `[tool.ruff.format]` on line 46 gives the three defaults of the formatter, each with a comment. At the end of the
@@ -746,6 +764,8 @@ runs the same command, and passes on the words after `just fmt`.
 - <a id="step-04.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of ruff. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/31445743379186b800fd4c035c8f04eed7ad7f3d/pyproject.toml).
   - look at `line-length = 100`
 
+<a id="step-04.2-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -762,6 +782,8 @@ runs the same command, and passes on the words after `just fmt`.
 ```
 
 </details>
+
+<a id="step-04.2-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -812,9 +834,9 @@ tests may use `assert`. The rest of the code may not, because Python skips every
 
 A recipe `lint` runs the linter. The words after `just lint` go to `ruff check`.
 
-[± See the change to `pyproject.toml`](#step-04.4-pyproject.toml-5d07e7)
+[± See the change to `pyproject.toml`](#step-04.4-pyproject.toml-5d07e7-diff)
 
-[± See the change to `justfile`](#step-04.4-justfile-424f0b)
+[± See the change to `justfile`](#step-04.4-justfile-424f0b-diff)
 
 At the end of `pyproject.toml`, `select = [` on line 54 lists nine families of rules. The last table lets the files
 under `tests/` break the rule `S101`, which forbids `assert`, on line 68. At the end of the `justfile`, the recipe
@@ -844,6 +866,8 @@ in the next two moves, and then ruff fixes the last one.
 - <a id="step-04.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: a family of rules on each line. 18 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/589f2f691557470eac084858d430a302c98390ce/pyproject.toml).
   - look at `"tests/**" = ["S101"]`
 
+<a id="step-04.4-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -860,6 +884,8 @@ in the next two moves, and then ruff fixes the last one.
 ```
 
 </details>
+
+<a id="step-04.4-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -938,6 +964,8 @@ It prints `validate_pyproject 0.26`. Nothing runs it yet.
   - look at `"validate-pyproject>=0.26",`
 - <a id="step-04.8-uv.lock-8356d8"></a>`uv.lock`: the exact version of validate-pyproject, and of what it needs. 26 lines added, 1 removed. It comes from `uv add --group lint validate-pyproject`. [The file](https://github.com/rahuldave/smallwikiapp/blob/4e710d50a22967ebff9502eacbdada54313ebe70/uv.lock).
 
+<a id="step-04.8-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -964,7 +992,7 @@ A recipe `lint-config` checks the configuration, with three commands. validate-p
 --unstable` checks the `justfile`. The recipe runs the three commands, one on each line, and `set -e` stops it at
 the first that fails.
 
-[± See the change to `justfile`](#step-04.9-justfile-424f0b)
+[± See the change to `justfile`](#step-04.9-justfile-424f0b-diff)
 
 At the end of the `justfile`, the recipe `lint-config *args:` on line 44 runs the three commands, one on each line.
 `set -e`, on line 46, stops it at the first that fails.
@@ -993,6 +1021,8 @@ of section 2, since `"$*"` is the words after the verb, joined by spaces.
 
 - <a id="step-04.9-justfile-424f0b"></a>`justfile`: the recipe, with its three checks. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8a9c8f71eb58893025360c20b32c9078e5b0c3c/justfile).
   - look at `uv run validate-pyproject pyproject.toml`
+
+<a id="step-04.9-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1041,7 +1071,7 @@ When `pyproject.toml` changes and the lockfile does not, `uv run` writes a new l
 any recipe can change the lockfile, and the person who runs it does not see the change. The variable `UV_LOCKED`
 makes every `uv run` refuse a lockfile that is out of date. The `justfile` exports it to every recipe.
 
-[± See the change to `justfile`](#step-04.10-justfile-424f0b)
+[± See the change to `justfile`](#step-04.10-justfile-424f0b-diff)
 
 Near the top of the `justfile`, `export UV_LOCKED := "1"` is on line 6, under `set positional-arguments`.
 
@@ -1056,6 +1086,8 @@ sees it.
 
 - <a id="step-04.10-justfile-424f0b"></a>`justfile`: one line, which exports `UV_LOCKED` to every recipe. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b7469ee81a824a46e6799d60957ea09d7cf2eade/justfile).
   - look at `export UV_LOCKED := "1"`
+
+<a id="step-04.10-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1096,7 +1128,7 @@ There are now four checks, and a person must remember to run each. A recipe `che
 stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
 the configuration.
 
-[± See the change to `justfile`](#step-04.11-justfile-424f0b)
+[± See the change to `justfile`](#step-04.11-justfile-424f0b-diff)
 
 At the end of the `justfile`, the recipe `check *args:` on line 57 runs four recipes. The tests run with
 `--cov-fail-under=90`, on line 63, so they fail if they run less than 90% of the statements.
@@ -1122,6 +1154,8 @@ From here on, "each `git commit` must pass `just check`" is the rule of the proj
 
 - <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile).
   - look at `just test -q --cov-fail-under=90`
+
+<a id="step-04.11-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1195,6 +1229,8 @@ It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
   - look at `"pre-commit>=4.7.0",`
 - <a id="step-04.12-uv.lock-8356d8"></a>`uv.lock`: the exact version of `pre-commit`, and of what it needs. 136 lines added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/uv.lock).
 
+<a id="step-04.12-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -1224,9 +1260,9 @@ A recipe `hook` installs the hook, once in each clone. `hook` is a recipe of its
 often and must not change files under `.git`. Once `just hook` installs the hook in a clone, it runs
 `just check` before each `git commit` in that clone.
 
-[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d)
+[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d-diff)
 
-[± See the change to `justfile`](#step-04.13-justfile-424f0b)
+[± See the change to `justfile`](#step-04.13-justfile-424f0b-diff)
 
 In `.pre-commit-config.yaml`, the three hooks under `repo: https://github.com/pre-commit/pre-commit-hooks`, on
 line 6, come from `pre-commit`'s collection. The hook under `repo: local` has the line `entry: just check`, on
@@ -1268,6 +1304,8 @@ its own machines, for every push to main and every pull request.
 - <a id="step-04.13-justfile-424f0b"></a>`justfile`: the recipe `hook`. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/justfile).
   - look at `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
 
+<a id="step-04.13-.pre-commit-config.yaml-e7d14d-diff"></a>
+
 <details><summary>The diff of <code>.pre-commit-config.yaml</code></summary>
 
 ```diff
@@ -1295,6 +1333,8 @@ its own machines, for every push to main and every pull request.
 ```
 
 </details>
+
+<a id="step-04.13-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1359,6 +1399,8 @@ It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs i
   - look at `"ty>=0.0.87",`
 - <a id="step-05.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ty. 27 lines added. It comes from `uv add --group lint ty`. [The file](https://github.com/rahuldave/smallwikiapp/blob/56a11f0bb31a607e6c5ff37454c7915f2eddd86d/uv.lock).
 
+<a id="step-05.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -1383,7 +1425,7 @@ It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs i
 A recipe `types` runs ty, as every other tool of the project runs through `just`. It goes after the recipe `lint`
 in the `justfile`.
 
-[± See the change to `justfile`](#step-05.2-justfile-424f0b)
+[± See the change to `justfile`](#step-05.2-justfile-424f0b-diff)
 
 In the `justfile`, the recipe `types *args:` on line 51 comes after `lint`. It runs `uv run ty check`, and passes
 on any arguments.
@@ -1402,6 +1444,8 @@ ty finds one problem, in `src/wikiapp/__init__.py`, and ends with `Found 1 diagn
 
 - <a id="step-05.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2a5904d01d950678e8364d7f6958dccaf5b69368/justfile).
   - look at `types *args:`
+
+<a id="step-05.2-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1449,7 +1493,7 @@ their types.
 change can break a type, and pass. The recipe `check` now runs `just types` after `just lint`, and its comment
 names the types too.
 
-[± See the change to `justfile`](#step-05.7-justfile-424f0b)
+[± See the change to `justfile`](#step-05.7-justfile-424f0b-diff)
 
 In the `justfile`, the recipe `check` now runs `just types` on line 74, after `just lint`. Its comment, on line 65,
 lists "types".
@@ -1467,6 +1511,8 @@ checks the types too.
 
 - <a id="step-05.7-justfile-424f0b"></a>`justfile`: the comment, and one line in check. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/701783af434e19b17e38a10898a39adc1dc5dae9/justfile).
   - look at `just types`
+
+<a id="step-05.7-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1526,7 +1572,7 @@ jobs. The job `tests` runs the tests on three systems and four versions of Pytho
 Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub never runs the
 e2e tests. A person runs them, with `just test -m e2e`.
 
-[± See the new file `.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23)
+[± See the new file `.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23-diff)
 
 The new file `.github/workflows/test.yaml` has the jobs `tests` and `check`. In `tests`, the matrix of three
 values of `os` and four of `python` makes twelve jobs.
@@ -1550,6 +1596,8 @@ No person has to install it or remember it, and `--no-verify` does not skip it. 
 
 - <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml).
   - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
+
+<a id="step-06.5-.github-workflows-test.yaml-a60e23-diff"></a>
 
 <details><summary>The diff of <code>.github/workflows/test.yaml</code></summary>
 
@@ -1654,6 +1702,8 @@ markdown-it-py, mdit-py-plugins, pygments and pyyaml.
   - look at `docs = [`
 - <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock).
 
+<a id="step-08.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -1684,7 +1734,7 @@ smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has on
 It names the package to document, the address of its source, and the files of the tests to check. The file is new,
 and comes whole, as a patch.
 
-[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48)
+[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48-diff)
 
 The new file `docs/_smalldocs.yml` has five lines. Line 3 names the package, `wikiapp`. Line 5 names the tests,
 `tests/**/*.py`, which `check` also checks.
@@ -1696,7 +1746,7 @@ that we use here:
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
   docstring. It looks in the package and in the files of `check`, here the tests.
 
-[± See the change to `justfile`](#step-08.2-justfile-424f0b)
+[± See the change to `justfile`](#step-08.2-justfile-424f0b-diff)
 
 The recipe `docs *args:` is at line 81, the end of the `justfile`. It also passes `--dir docs`, the folder of the
 settings.
@@ -1721,6 +1771,8 @@ coverage, which counts the lines that the tests run, `check` counts what has doc
 - <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile).
   - look at `docs *args:`
 
+<a id="step-08.2-docs-_smalldocs.yml-4b0b48-diff"></a>
+
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 
 ```diff
@@ -1733,6 +1785,8 @@ coverage, which counts the lines that the tests run, `check` counts what has doc
 ```
 
 </details>
+
+<a id="step-08.2-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1785,7 +1839,7 @@ The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, w
 the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
 page. The comment at the top now says that `just docs` builds the site.
 
-[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48)
+[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48-diff)
 
 In `docs/_smalldocs.yml`, the sidebar lists the front page, then the reference pages, in the line
 `contents: api/*  # the reference pages, which each build makes from the code`.
@@ -1796,12 +1850,12 @@ gives the title of the page.
 The page says what the command prints, what each module does, and what the reference pages contain. The file is
 new, and comes whole, as a patch.
 
-[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880)
+[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880-diff)
 
 `just docs` with no words now builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api`
 as before. So the recipe is now a script of several lines.
 
-[± See the change to `justfile`](#step-08.6-justfile-424f0b)
+[± See the change to `justfile`](#step-08.6-justfile-424f0b-diff)
 
 In the `justfile`, the recipe `docs` starts with `#!/usr/bin/env sh`. The line
 `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi` is the case with no words.
@@ -1826,6 +1880,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
   - look at `Each build of the site makes the pages under Reference from the code.`
 - <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile).
   - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
+
+<a id="step-08.6-docs-_smalldocs.yml-4b0b48-diff"></a>
 
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 
@@ -1855,6 +1911,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
 ```
 
 </details>
+
+<a id="step-08.6-docs-index.qmd-d6d880-diff"></a>
 
 <details><summary>The diff of <code>docs/index.qmd</code></summary>
 
@@ -1898,6 +1956,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
 ````
 
 </details>
+
+<a id="step-08.6-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1944,7 +2004,7 @@ Every function, parameter and field has documentation now, but no check fails wh
 each `git commit`, through the git hook, so `just docs check` goes in it, after the tests. The comment above
 `check` names the docs too.
 
-[± See the change to `justfile`](#step-08.8-justfile-424f0b)
+[± See the change to `justfile`](#step-08.8-justfile-424f0b-diff)
 
 In the `justfile`, `just docs check` is the line under `just test -q --cov-fail-under=90`, in `check`.
 
@@ -1960,6 +2020,8 @@ it runs the docs check too.
 
 - <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile).
   - look at `just docs check`
+
+<a id="step-08.8-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -2042,7 +2104,7 @@ changes `docs/_smalldocs.yml`, behind the verb.
 The settings of the site, `docs/_smalldocs.yml`, name only `wikiapp`, so the docs and their check leave out the
 library. The line `packages:` in the section `api` must name both.
 
-[± See the change to `docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48)
+[± See the change to `docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48-diff)
 
 In `docs/_smalldocs.yml`, line 19, `packages:` lists `wikiapp` and `wikirandom`.
 
@@ -2064,6 +2126,8 @@ docs check without a change.
 
 - <a id="step-09.10-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the list of packages. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/259e6364a52f83993c797f66148281b04eb92060/docs/_smalldocs.yml).
   - look at `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+<a id="step-09.10-docs-_smalldocs.yml-4b0b48-diff"></a>
 
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 
@@ -2103,7 +2167,7 @@ A package goes to PyPI as two files, a wheel and a source archive. pip and uv in
 --all-packages` builds both for every package of the workspace, into `dist/`. `.gitignore` already lists `dist/`.
 A recipe `build`, at the end of the `justfile`, runs it.
 
-[± See the change to `justfile`](#step-10.1-justfile-424f0b)
+[± See the change to `justfile`](#step-10.1-justfile-424f0b-diff)
 
 The recipe `build` at the end of the `justfile` is in the group `setup`, and `just build help` explains it.
 
@@ -2125,6 +2189,8 @@ first.
 
 - <a id="step-10.1-justfile-424f0b"></a>`justfile`: the recipe `build`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7744a84a4715e6edb876e1c4f3255daf524dd07d/justfile).
   - look at `build *args:`
+
+<a id="step-10.1-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -2168,7 +2234,7 @@ Since the library became a package, validate-pyproject, in `just lint-config`, h
 The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. A mistake in the
 library's file would reach a build unseen. The recipe `lint-config` now gives validate-pyproject both files.
 
-[± See the change to `justfile`](#step-10.3-justfile-424f0b)
+[± See the change to `justfile`](#step-10.3-justfile-424f0b-diff)
 
 ```bash
 just lint-config
@@ -2187,6 +2253,8 @@ repository, and the User-Agent says the installed version. The
 
 - <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+<a id="step-10.3-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

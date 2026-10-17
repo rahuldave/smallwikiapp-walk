@@ -34,7 +34,7 @@ The import goes up, under `import requests`. wikiapp's own imports are a block o
 packages, which is the order that the rule `I001` asks for. The tests `test_main_invokes_requests_get` and
 `test_main_uses_correct_url` check the mock, and not the result, so they need no `result =`.
 
-[± See the change to `tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, `from wikiapp import console` is now on line 5, under `import requests`, after a blank
 line. It is gone from below the fixture. The first line of each of the two tests, lines 19 and 24, is now
@@ -52,6 +52,8 @@ Two problems are left, `S113` and `I001`, and the linter still fails. The format
 
 - <a id="step-04.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the import goes up, and two lines lose `result =`. 4 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/2ec7932b37e21c1533f319c03e0533bc755f6da7/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `from wikiapp import console`
+
+<a id="step-04.5-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -100,7 +102,7 @@ Of the two problems left, `S113` comes from the family `S` of security rules. Th
 requests waits as long as the server keeps the connection open, and the command can wait for ever. No test had
 found it. The request in `src/wikiapp/wikipedia.py` gets `timeout=10`, a number of seconds that the author of the project chose.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, the arguments of `requests.get` on line 15 now end with `timeout=10`.
 
@@ -117,6 +119,8 @@ One problem is left, `I001`, so the linter still fails. Its `[*]` says that ruff
 
 - <a id="step-04.6-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: one more argument. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0fb4985582732edf7372a4b90659d703db138446/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `timeout=10`
+
+<a id="step-04.6-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -159,6 +163,8 @@ The linter finds no problem now. Of its five problems, ruff fixed one, and a per
 
 - <a id="step-04.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the imports, sorted. 3 lines added, 2 removed. It comes from `just lint --fix`. [The file](https://github.com/rahuldave/smallwikiapp/blob/a57134d1cef6ff24803235ace966e5870046fbd9/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `from wikiapp import __version__`
+
+<a id="step-04.7-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 

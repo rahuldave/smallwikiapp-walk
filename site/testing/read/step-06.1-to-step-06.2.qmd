@@ -39,14 +39,14 @@ depends on Wikipedia. The other tests use the mock in place of Wikipedia, so the
 the same result on every run. A marker, `e2e`, which means end to end, sets the one test apart. Its new name says
 so, `test_main_succeeds_in_production`.
 
-[± See the change to `tests/test_console.py`](#step-06.1-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-06.1-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the last test has the marker `@pytest.mark.e2e`, and its new name.
 
 pytest must know the marker, and leave the e2e tests out of every run that does not ask for them.
 `pyproject.toml` declares the marker in `markers`. The option `-m 'not e2e'` in `addopts` leaves the e2e tests out.
 
-[± See the change to `pyproject.toml`](#step-06.1-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-06.1-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 In `pyproject.toml`, `addopts` now ends with `-m 'not e2e'`, and the new line `markers` declares `e2e`.
 
@@ -63,6 +63,8 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
   - look at `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
 - <a id="step-06.1-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test, marked. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `@pytest.mark.e2e`
+
+<a id="step-06.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -84,6 +86,8 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
 ```
 
 </details>
+
+<a id="step-06.1-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -110,7 +114,7 @@ every test with a mock still passes, and the command fails. A second e2e test, f
 real Wikipedia for a page and checks the two keys. It is also a contract test. It checks that the real Wikipedia
 still returns what the mocks return.
 
-[± See the change to `tests/test_wikipedia.py`](#step-06.2-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-06.2-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 At the end of `tests/test_wikipedia.py`, `test_random_page_returns_dictionary_in_production` has the marker
 `e2e`. It checks that the page has `"title"` and `"extract"`. `import pytest` is in a block of its own.
@@ -128,6 +132,8 @@ contract.
 
 - <a id="step-06.2-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 9 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/307d4d7b36bb9dc7bc8ad601c8275d5241283e35/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert "extract" in page`
+
+<a id="step-06.2-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 

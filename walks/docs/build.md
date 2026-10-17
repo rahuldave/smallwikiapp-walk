@@ -247,6 +247,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 - <a id="step-00-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: `main`, which prints one line. New, 4 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/src/wikiapp/console.py).
 - <a id="step-00-uv.lock-8356d8"></a>`uv.lock`: the exact packages, the same on every machine. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/uv.lock).
 
+<a id="step-00-.gitignore-a5cc29-diff"></a>
+
 <details><summary>The diff of <code>.gitignore</code></summary>
 
 ```diff
@@ -285,6 +287,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-.python-version-7696e9-diff"></a>
+
 <details><summary>The diff of <code>.python-version</code></summary>
 
 ```diff
@@ -293,6 +297,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 ```
 
 </details>
+
+<a id="step-00-LICENSE-0398cc-diff"></a>
 
 <details><summary>The diff of <code>LICENSE</code></summary>
 
@@ -504,6 +510,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-README.md-8ec9a0-diff"></a>
+
 <details><summary>The diff of <code>README.md</code></summary>
 
 ````diff
@@ -569,6 +577,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -598,6 +608,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -622,6 +634,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 ```
 
 </details>
+
+<a id="step-00-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -695,6 +709,8 @@ git fetch --quiet --tags --force origin; git restore --source step-00 --staged -
 - <a id="step-01.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the dependencies of the package, which anyone who installs it gets. 4 lines added, 1 removed. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/pyproject.toml).
   - look at `"click>=8.5.0",`
 - <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock).
+
+<a id="step-01.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff that <code>uv add click requests</code> makes in <code>pyproject.toml</code></summary>
 
@@ -772,6 +788,8 @@ git restore --source 36d49582843a --staged -- :/ && git restore --source 571c82e
 - <a id="step-01.2-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: a request, and two lines printed. 17 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c/src/wikiapp/console.py).
   - look at `with requests.get(API_URL) as response:`
 
+<a id="step-01.2-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -843,6 +861,8 @@ git restore --source 571c82ebd31f --staged -- :/ && git restore --source 0ffd5df
 
 - <a id="step-01.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the header. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0ffd5df563acb876953855d86be30b6952ecfd44/src/wikiapp/console.py).
   - look at `with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:`
+
+<a id="step-01.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
@@ -919,6 +939,8 @@ git fetch --quiet --tags --force origin; git restore --source 0ffd5df563ac --sta
 - <a id="step-01.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: click's version option. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/console.py).
   - look at `@click.version_option(version=__version__)`
 
+<a id="step-01.4-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -928,6 +950,8 @@ git fetch --quiet --tags --force origin; git restore --source 0ffd5df563ac --sta
 ```
 
 </details>
+
+<a id="step-01.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
@@ -1043,6 +1067,8 @@ git fetch --quiet --tags --force origin; git restore --source step-07 --staged -
   - look at `docs = [`
 - <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock).
 
+<a id="step-08.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add --group docs smalldocs</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -1128,6 +1154,8 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 - <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile).
   - look at `docs *args:`
 
+<a id="step-08.2-docs-_smalldocs.yml-4b0b48-diff"></a>
+
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
 
 ```diff
@@ -1140,6 +1168,8 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 ```
 
 </details>
+
+<a id="step-08.2-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 
@@ -1222,6 +1252,8 @@ git restore --source 40d4293f5902 --staged -- :/ && git restore --source 66a702f
 
 - <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py).
   - look at `) -> Page:  # A page chosen at random`
+
+<a id="step-08.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -1335,6 +1367,8 @@ git restore --source 66a702fe4a01 --staged -- :/ && git restore --source bb648b9
 - <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py).
   - look at `language: str,  # The language of the Wikipedia to ask, from --language`
 
+<a id="step-08.4-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -1347,6 +1381,8 @@ git restore --source 66a702fe4a01 --staged -- :/ && git restore --source bb648b9
 ```
 
 </details>
+
+<a id="step-08.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
@@ -1472,6 +1508,8 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 - <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py).
   - look at `"""The language chooses the Wikipedia that is asked."""`
 
+<a id="step-08.5-tests-conftest.py-626af3-diff"></a>
+
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -1496,6 +1534,8 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 ```
 
 </details>
+
+<a id="step-08.5-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 
@@ -1581,6 +1621,8 @@ git restore --source bb648b91f4ab --staged -- :/ && git restore --source 7a0e509
 ```
 
 </details>
+
+<a id="step-08.5-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 
@@ -1722,6 +1764,8 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 - <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile).
   - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
 
+<a id="step-08.6-docs-_smalldocs.yml-4b0b48-diff"></a>
+
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
 
 ```diff
@@ -1750,6 +1794,8 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 ```
 
 </details>
+
+<a id="step-08.6-docs-index.qmd-d6d880-diff"></a>
 
 <details open><summary>The patch to <code>docs/index.qmd</code></summary>
 
@@ -1793,6 +1839,8 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 ````
 
 </details>
+
+<a id="step-08.6-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 
@@ -1868,6 +1916,8 @@ git restore --source e99ed4f3ab32 --staged -- :/ && git restore --source 79c8012
 - <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md).
   - look at `| The docs site. smalldocs makes its reference from the code |`
 
+<a id="step-08.7-README.md-8ec9a0-diff"></a>
+
 <details open><summary>The patch to <code>README.md</code></summary>
 
 ```diff
@@ -1941,6 +1991,8 @@ git fetch --quiet --tags --force origin; git restore --source 79c80120fc8f --sta
 
 - <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile).
   - look at `just docs check`
+
+<a id="step-08.8-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 
@@ -2091,6 +2143,8 @@ git fetch --quiet --tags --force origin; git restore --source 971e9d780fd5 --sta
 - <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml).
   - look at `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
 
+<a id="step-08b.2-.github-workflows-docs.yaml-ce7835-diff"></a>
+
 <details open><summary>The patch to <code>.github/workflows/docs.yaml</code></summary>
 
 ```diff
@@ -2216,6 +2270,8 @@ git fetch --quiet --tags --force origin; git restore --source 008e616610b0 --sta
 
 - <a id="step-09.10-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the list of packages. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/259e6364a52f83993c797f66148281b04eb92060/docs/_smalldocs.yml).
   - look at `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+<a id="step-09.10-docs-_smalldocs.yml-4b0b48-diff"></a>
 
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
 

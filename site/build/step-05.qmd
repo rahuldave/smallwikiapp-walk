@@ -60,6 +60,8 @@ git fetch --quiet --tags --force origin; git restore --source step-04 --staged -
   - look at `"ty>=0.0.87",`
 - <a id="step-05.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ty. 27 lines added. It comes from `uv add --group lint ty`. [The file](https://github.com/rahuldave/smallwikiapp/blob/56a11f0bb31a607e6c5ff37454c7915f2eddd86d/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-05.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add --group lint ty</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -117,6 +119,8 @@ git restore --source 56a11f0bb31a --staged -- :/ && git restore --source 2a5904d
 
 - <a id="step-05.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2a5904d01d950678e8364d7f6958dccaf5b69368/justfile){.btn .btn-sm .btn-secondary}
   - look at `types *args:`
+
+<a id="step-05.2-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 
@@ -176,6 +180,8 @@ git restore --source 2a5904d01d95 --staged -- :/ && git restore --source b7a3e6d
 
 - <a id="step-05.3-src-wikiapp-__init__.py-682a01"></a>`src/wikiapp/__init__.py`: a string that is never None. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b7a3e6d212b439920f62f0a023554b86d14ebd4e/src/wikiapp/__init__.py){.btn .btn-sm .btn-secondary}
   - look at `__version__ = importlib.metadata.version("wikiapp")`
+
+<a id="step-05.3-src-wikiapp-__init__.py-682a01-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/__init__.py</code></summary>
 
@@ -269,6 +275,8 @@ git restore --source b7a3e6d212b4 --staged -- :/ && git restore --source 06613b9
 - <a id="step-05.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06613b9b25a8f16c7e60cf52803b2e471161d854/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"ANN", # annotations: every parameter and every return value has a type`
 
+<a id="step-05.4-pyproject.toml-5d07e7-diff"></a>
+
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
 ```diff
@@ -337,6 +345,8 @@ git restore --source 06613b9b25a8 --staged -- :/ && git restore --source 643f653
 - <a id="step-05.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the parameter and the return. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/643f65323fd11c5c6f518c59431b13867e155952/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def random_page(language: str = "en") -> dict[str, Any]:`
 
+<a id="step-05.5-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -352,6 +362,8 @@ git restore --source 06613b9b25a8 --staged -- :/ && git restore --source 643f653
 ```
 
 </details>
+
+<a id="step-05.5-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -454,6 +466,8 @@ git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353
 - <a id="step-05.6-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the import of `Mock`, and the types of one test. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
+<a id="step-05.6-tests-conftest.py-626af3-diff"></a>
+
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -473,6 +487,8 @@ git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353
 ```
 
 </details>
+
+<a id="step-05.6-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 
@@ -537,6 +553,8 @@ git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353
 
 </details>
 
+<a id="step-05.6-tests-test_wikipedia.py-2f4413-diff"></a>
+
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 
 ```diff
@@ -593,6 +611,8 @@ git fetch --quiet --tags --force origin; git restore --source 5873353449ad --sta
 
 - <a id="step-05.7-justfile-424f0b"></a>`justfile`: the comment, and one line in check. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/701783af434e19b17e38a10898a39adc1dc5dae9/justfile){.btn .btn-sm .btn-secondary}
   - look at `just types`
+
+<a id="step-05.7-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 

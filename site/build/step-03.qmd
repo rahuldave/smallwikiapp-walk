@@ -76,6 +76,8 @@ git fetch --quiet --tags --force origin; git restore --source step-02 --staged -
 - <a id="step-03.1-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the code that talks to Wikipedia. New, 10 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/3f6d8cf59ab3fd59dc157e169a7c79aeb13aa205/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def random_page():`
 
+<a id="step-03.1-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -111,6 +113,8 @@ git fetch --quiet --tags --force origin; git restore --source step-02 --staged -
 ```
 
 </details>
+
+<a id="step-03.1-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -182,6 +186,8 @@ git restore --source 3f6d8cf59ab3 --staged -- :/ && git restore --source a65f7f1
   - look at `def mock_requests_get(mocker):`
 - <a id="step-03.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture is gone, but the tests still name it. 0 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/test_console.py){.btn .btn-sm .btn-secondary}
 
+<a id="step-03.2-tests-conftest.py-626af3-diff"></a>
+
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -199,6 +205,8 @@ git restore --source 3f6d8cf59ab3 --staged -- :/ && git restore --source a65f7f1
 ```
 
 </details>
+
+<a id="step-03.2-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 
@@ -275,6 +283,8 @@ git restore --source a65f7f11432b --staged -- :/ && git restore --source d9d02ca
 - <a id="step-03.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test uses the mock from `conftest.py`. New, 6 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert "es.wikipedia.org" in args[0]`
 
+<a id="step-03.3-src-wikiapp-wikipedia.py-258803-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
 ```diff
@@ -295,6 +305,8 @@ git restore --source a65f7f11432b --staged -- :/ && git restore --source d9d02ca
 ```
 
 </details>
+
+<a id="step-03.3-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 
@@ -351,6 +363,8 @@ git restore --source d9d02ca26fd3 --staged -- :/ && git restore --source 5705a55
 
 - <a id="step-03.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the option, which `main` gives to `random_page`. 10 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5705a559523968eeab5379a65e30bf4122ba578e/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `data = random_page(language=language)`
+
+<a id="step-03.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
@@ -422,6 +436,8 @@ git restore --source 5705a5595239 --staged -- :/ && git restore --source a6f5ae9
 
 - <a id="step-03.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the exception, and the line that raises it. 9 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a6f5ae9a475d916d4053315c9e6699f16951193f/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `raise WikipediaError(str(error)) from error`
+
+<a id="step-03.5-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -509,6 +525,8 @@ git fetch --quiet --tags --force origin; git restore --source a6f5ae9a475d --sta
 - <a id="step-03.6-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test of the message. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b6942869d5fcfffff81beb598630288fe3a67372/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert "Error" in result.output`
 
+<a id="step-03.6-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -536,6 +554,8 @@ git fetch --quiet --tags --force origin; git restore --source a6f5ae9a475d --sta
 ```
 
 </details>
+
+<a id="step-03.6-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 

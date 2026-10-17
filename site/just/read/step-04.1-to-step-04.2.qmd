@@ -55,6 +55,8 @@ used it yet.
   - look at `"ruff>=0.17.0",`
 - <a id="step-04.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ruff. 29 lines added. It comes from `uv add --group lint ruff`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8f7b800001ee35d8db80c47521b02777047c019d/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-04.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -80,9 +82,9 @@ ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 char
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
-[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `justfile`](#step-04.2-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-04.2-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the table `[tool.ruff]` on line 41 sets `line-length = 100`. The table
 `[tool.ruff.format]` on line 46 gives the three defaults of the formatter, each with a comment. At the end of the
@@ -106,6 +108,8 @@ runs the same command, and passes on the words after `just fmt`.
 - <a id="step-04.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of ruff. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/31445743379186b800fd4c035c8f04eed7ad7f3d/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `line-length = 100`
 
+<a id="step-04.2-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -122,6 +126,8 @@ runs the same command, and passes on the words after `just fmt`.
 ```
 
 </details>
+
+<a id="step-04.2-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 

@@ -62,6 +62,8 @@ markdown-it-py, mdit-py-plugins, pygments and pyyaml.
   - look at `docs = [`
 - <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-08.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -90,7 +92,7 @@ smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has on
 It names the package to document, the address of its source, and the files of the tests to check. The file is new,
 and comes whole, as a patch.
 
-[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48){.btn .btn-sm .btn-secondary}
+[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48-diff){.btn .btn-sm .btn-secondary}
 
 The new file `docs/_smalldocs.yml` has five lines. Line 3 names the package, `wikiapp`. Line 5 names the tests,
 `tests/**/*.py`, which `check` also checks.
@@ -102,7 +104,7 @@ that we use here:
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
   docstring. It looks in the package and in the files of `check`, here the tests.
 
-[± See the change to `justfile`](#step-08.2-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-08.2-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 The recipe `docs *args:` is at line 81, the end of the `justfile`. It also passes `--dir docs`, the folder of the
 settings.
@@ -127,6 +129,8 @@ coverage, which counts the lines that the tests run, `check` counts what has doc
 - <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile){.btn .btn-sm .btn-secondary}
   - look at `docs *args:`
 
+<a id="step-08.2-docs-_smalldocs.yml-4b0b48-diff"></a>
+
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 
 ```diff
@@ -139,6 +143,8 @@ coverage, which counts the lines that the tests run, `check` counts what has doc
 ```
 
 </details>
+
+<a id="step-08.2-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -169,7 +175,7 @@ docstrings. We document it in four places:
 - a docment on the parameter and on the return of `random_page`
 - a longer docstring of `random_page`, which says when it raises an error
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the docstring at the top, the comments beside the fields of `Page`, and the
 line `) -> Page:  # A page chosen at random`, the docment of the return.
@@ -189,6 +195,8 @@ The tables now have their descriptions.
 
 - <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `) -> Page:  # A page chosen at random`
+
+<a id="step-08.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -236,7 +244,7 @@ documentation too.
 
 Each of the two modules gets a docstring at the top, which says what the module is.
 
-[± See the change to `src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01-diff){.btn .btn-sm .btn-secondary}
 
 `check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class.
 Python still shows it, in `help(wikiapp)`.
@@ -245,7 +253,7 @@ The help of `--language` now says what a language is. It replaces the help of th
 page from Wikipedia in given language". `main` has one parameter to a line, with its docment, and a docstring that
 says what `main` prints. A function that returns None needs no docment for its return.
 
-[± See the change to `src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, the docment of `language` is
 `# The language of the Wikipedia to ask, from --language`. The second paragraph of the docstring of `main` gives the colour of the title and the width of the
@@ -266,6 +274,8 @@ options shows the new help of `--language`, the same help that `--help` prints.
 - <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `language: str,  # The language of the Wikipedia to ask, from --language`
 
+<a id="step-08.4-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -278,6 +288,8 @@ options shows the new help of `--language`, the same help that `--help` prints.
 ```
 
 </details>
+
+<a id="step-08.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -327,19 +339,19 @@ Tests documented this way are documentation too. A reader learns from them what 
 The fixture in `tests/conftest.py` gets a docstring for the file, a docment for its parameter and its return, and a
 docstring of its own.
 
-[± See the change to `tests/conftest.py`](#step-08.5-tests-conftest.py-626af3){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/conftest.py`](#step-08.5-tests-conftest.py-626af3-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/conftest.py`, see the docment of `mocker`, and the docment of the return after `-> Mock:`.
 
 `tests/test_console.py` has a fixture and six tests, and each gets the same pattern.
 
-[± See the change to `tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `runner` also documents its return.
 
 The three tests of `tests/test_wikipedia.py` get the same pattern.
 
-[± See the change to `tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 ```bash
 just docs check
@@ -356,6 +368,8 @@ and classes are typed and documented`.
   - look at `"""The command prints the title of the page."""`
 - <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `"""The language chooses the Wikipedia that is asked."""`
+
+<a id="step-08.5-tests-conftest.py-626af3-diff"></a>
 
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
 
@@ -381,6 +395,8 @@ and classes are typed and documented`.
 ```
 
 </details>
+
+<a id="step-08.5-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -467,6 +483,8 @@ and classes are typed and documented`.
 
 </details>
 
+<a id="step-08.5-tests-test_wikipedia.py-2f4413-diff"></a>
+
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
 ```diff
@@ -525,7 +543,7 @@ The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, w
 the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
 page. The comment at the top now says that `just docs` builds the site.
 
-[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48){.btn .btn-sm .btn-secondary}
+[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48-diff){.btn .btn-sm .btn-secondary}
 
 In `docs/_smalldocs.yml`, the sidebar lists the front page, then the reference pages, in the line
 `contents: api/*  # the reference pages, which each build makes from the code`.
@@ -536,12 +554,12 @@ gives the title of the page.
 The page says what the command prints, what each module does, and what the reference pages contain. The file is
 new, and comes whole, as a patch.
 
-[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880){.btn .btn-sm .btn-secondary}
+[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880-diff){.btn .btn-sm .btn-secondary}
 
 `just docs` with no words now builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api`
 as before. So the recipe is now a script of several lines.
 
-[± See the change to `justfile`](#step-08.6-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-08.6-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 In the `justfile`, the recipe `docs` starts with `#!/usr/bin/env sh`. The line
 `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi` is the case with no words.
@@ -566,6 +584,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
   - look at `Each build of the site makes the pages under Reference from the code.`
 - <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile){.btn .btn-sm .btn-secondary}
   - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
+
+<a id="step-08.6-docs-_smalldocs.yml-4b0b48-diff"></a>
 
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 
@@ -595,6 +615,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
 ```
 
 </details>
+
+<a id="step-08.6-docs-index.qmd-d6d880-diff"></a>
 
 <details><summary>The diff of <code>docs/index.qmd</code></summary>
 
@@ -639,6 +661,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
 
 </details>
 
+<a id="step-08.6-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -668,7 +692,7 @@ The README is the first page that a reader sees on GitHub. Its table of folders 
 project is, and it lists neither the tests nor the docs. The table gets rows for `tests/` and `docs/`. The row of
 `src/wikiapp/` also says that `wikipedia.py` is the library and `console.py` the command.
 
-[± See the change to `README.md`](#step-08.7-README.md-8ec9a0){.btn .btn-sm .btn-secondary}
+[± See the change to `README.md`](#step-08.7-README.md-8ec9a0-diff){.btn .btn-sm .btn-secondary}
 
 ```bash
 grep -n -E 'tests/|docs/' README.md
@@ -680,6 +704,8 @@ grep -n -E 'tests/|docs/' README.md
 
 - <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md){.btn .btn-sm .btn-secondary}
   - look at `| The docs site. smalldocs makes its reference from the code |`
+
+<a id="step-08.7-README.md-8ec9a0-diff"></a>
 
 <details><summary>The diff of <code>README.md</code></summary>
 
@@ -707,7 +733,7 @@ Every function, parameter and field has documentation now, but no check fails wh
 each `git commit`, through the git hook, so `just docs check` goes in it, after the tests. The comment above
 `check` names the docs too.
 
-[± See the change to `justfile`](#step-08.8-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-08.8-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 In the `justfile`, `just docs check` is the line under `just test -q --cov-fail-under=90`, in `check`.
 
@@ -723,6 +749,8 @@ it runs the docs check too.
 
 - <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile){.btn .btn-sm .btn-secondary}
   - look at `just docs check`
+
+<a id="step-08.8-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

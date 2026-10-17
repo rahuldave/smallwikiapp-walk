@@ -70,6 +70,8 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 - <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile){.btn .btn-sm .btn-secondary}
   - look at `just test -q --cov-fail-under=90`
 
+<a id="step-04.11-justfile-424f0b-diff"></a>
+
 <details open><summary>The patch to <code>justfile</code></summary>
 
 ```diff

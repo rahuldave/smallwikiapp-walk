@@ -122,6 +122,8 @@ just help setup
 - <a id="step-00-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: `main`, which prints one line. New, 4 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/src/wikiapp/console.py).
 - <a id="step-00-uv.lock-8356d8"></a>`uv.lock`: the exact packages, the same on every machine. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/uv.lock).
 
+<a id="step-00-.gitignore-a5cc29-diff"></a>
+
 <details><summary>The diff of <code>.gitignore</code></summary>
 
 ```diff
@@ -160,6 +162,8 @@ just help setup
 
 </details>
 
+<a id="step-00-.python-version-7696e9-diff"></a>
+
 <details><summary>The diff of <code>.python-version</code></summary>
 
 ```diff
@@ -168,6 +172,8 @@ just help setup
 ```
 
 </details>
+
+<a id="step-00-LICENSE-0398cc-diff"></a>
 
 <details><summary>The diff of <code>LICENSE</code></summary>
 
@@ -379,6 +385,8 @@ just help setup
 
 </details>
 
+<a id="step-00-README.md-8ec9a0-diff"></a>
+
 <details><summary>The diff of <code>README.md</code></summary>
 
 ````diff
@@ -444,6 +452,8 @@ just help setup
 
 </details>
 
+<a id="step-00-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -473,6 +483,8 @@ just help setup
 
 </details>
 
+<a id="step-00-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -497,6 +509,8 @@ just help setup
 ```
 
 </details>
+
+<a id="step-00-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -558,6 +572,8 @@ uv tree --depth 1
   - look at `"click>=8.5.0",`
 - <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock).
 
+<a id="step-01.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -599,7 +615,7 @@ original wikiapp did not have it.
 
 The patch writes `src/wikiapp/console.py` again.
 
-[± See the change to `src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67)
+[± See the change to `src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67-diff)
 
 In `src/wikiapp/console.py`, the `print` is gone. The block `with requests.get(API_URL) as response:` asks
 Wikipedia for the page, and the last two lines of the block print it.
@@ -617,6 +633,8 @@ User-Agent is the default of a library. requests sends `python-requests/` and it
 
 - <a id="step-01.2-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: a request, and two lines printed. 17 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c/src/wikiapp/console.py).
   - look at `with requests.get(API_URL) as response:`
+
+<a id="step-01.2-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -658,7 +676,7 @@ sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
-[± See the change to `src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67)
+[± See the change to `src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67-diff)
 
 In `src/wikiapp/console.py`, `USER_AGENT` is under `API_URL`. The request now passes it in
 `headers={"User-Agent": USER_AGENT}`.
@@ -673,6 +691,8 @@ It prints a title in green, and a paragraph. Each run prints another page.
 
 - <a id="step-01.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the header. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0ffd5df563acb876953855d86be30b6952ecfd44/src/wikiapp/console.py).
   - look at `with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:`
+
+<a id="step-01.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -706,9 +726,9 @@ its own version from the installed package, which has the version from `pyprojec
 `src/wikiapp/__init__.py` sets `__version__` from the metadata of the installed package. The decorator
 `@click.version_option` gives the command the option `--version`, which prints it.
 
-[± See the change to `src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01)
+[± See the change to `src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01-diff)
 
-[± See the change to `src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67)
+[± See the change to `src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67-diff)
 
 In `src/wikiapp/__init__.py`, `__version__` comes from `importlib.metadata`. In `src/wikiapp/console.py`,
 `@click.version_option(version=__version__)` is under `@click.command()`.
@@ -728,6 +748,8 @@ decorators and the docstring. So the docstring of `main` is also help text, for 
 - <a id="step-01.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: click's version option. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/console.py).
   - look at `@click.version_option(version=__version__)`
 
+<a id="step-01.4-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -737,6 +759,8 @@ decorators and the docstring. So the docstring of `main` is also help text, for 
 ```
 
 </details>
+
+<a id="step-01.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -833,6 +857,8 @@ markdown-it-py, mdit-py-plugins, pygments and pyyaml.
   - look at `docs = [`
 - <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock).
 
+<a id="step-08.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -863,7 +889,7 @@ smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has on
 It names the package to document, the address of its source, and the files of the tests to check. The file is new,
 and comes whole, as a patch.
 
-[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48)
+[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48-diff)
 
 The new file `docs/_smalldocs.yml` has five lines. Line 3 names the package, `wikiapp`. Line 5 names the tests,
 `tests/**/*.py`, which `check` also checks.
@@ -875,7 +901,7 @@ that we use here:
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
   docstring. It looks in the package and in the files of `check`, here the tests.
 
-[± See the change to `justfile`](#step-08.2-justfile-424f0b)
+[± See the change to `justfile`](#step-08.2-justfile-424f0b-diff)
 
 The recipe `docs *args:` is at line 81, the end of the `justfile`. It also passes `--dir docs`, the folder of the
 settings.
@@ -900,6 +926,8 @@ coverage, which counts the lines that the tests run, `check` counts what has doc
 - <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile).
   - look at `docs *args:`
 
+<a id="step-08.2-docs-_smalldocs.yml-4b0b48-diff"></a>
+
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 
 ```diff
@@ -912,6 +940,8 @@ coverage, which counts the lines that the tests run, `check` counts what has doc
 ```
 
 </details>
+
+<a id="step-08.2-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -958,7 +988,7 @@ docstrings. We document it in four places:
 - a docment on the parameter and on the return of `random_page`
 - a longer docstring of `random_page`, which says when it raises an error
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803)
+[± See the change to `src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803-diff)
 
 In `src/wikiapp/wikipedia.py`, see the docstring at the top, the comments beside the fields of `Page`, and the
 line `) -> Page:  # A page chosen at random`, the docment of the return.
@@ -978,6 +1008,8 @@ The tables now have their descriptions.
 
 - <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py).
   - look at `) -> Page:  # A page chosen at random`
+
+<a id="step-08.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -1040,7 +1072,7 @@ documentation too.
 
 Each of the two modules gets a docstring at the top, which says what the module is.
 
-[± See the change to `src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01)
+[± See the change to `src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01-diff)
 
 `check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class.
 Python still shows it, in `help(wikiapp)`.
@@ -1049,7 +1081,7 @@ The help of `--language` now says what a language is. It replaces the help of th
 page from Wikipedia in given language". `main` has one parameter to a line, with its docment, and a docstring that
 says what `main` prints. A function that returns None needs no docment for its return.
 
-[± See the change to `src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67)
+[± See the change to `src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67-diff)
 
 In `src/wikiapp/console.py`, the docment of `language` is
 `# The language of the Wikipedia to ask, from --language`. The second paragraph of the docstring of `main` gives the colour of the title and the width of the
@@ -1070,6 +1102,8 @@ options shows the new help of `--language`, the same help that `--help` prints.
 - <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py).
   - look at `language: str,  # The language of the Wikipedia to ask, from --language`
 
+<a id="step-08.4-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -1082,6 +1116,8 @@ options shows the new help of `--language`, the same help that `--help` prints.
 ```
 
 </details>
+
+<a id="step-08.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -1146,19 +1182,19 @@ Tests documented this way are documentation too. A reader learns from them what 
 The fixture in `tests/conftest.py` gets a docstring for the file, a docment for its parameter and its return, and a
 docstring of its own.
 
-[± See the change to `tests/conftest.py`](#step-08.5-tests-conftest.py-626af3)
+[± See the change to `tests/conftest.py`](#step-08.5-tests-conftest.py-626af3-diff)
 
 In `tests/conftest.py`, see the docment of `mocker`, and the docment of the return after `-> Mock:`.
 
 `tests/test_console.py` has a fixture and six tests, and each gets the same pattern.
 
-[± See the change to `tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee)
+[± See the change to `tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee-diff)
 
 In `tests/test_console.py`, the fixture `runner` also documents its return.
 
 The three tests of `tests/test_wikipedia.py` get the same pattern.
 
-[± See the change to `tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413)
+[± See the change to `tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413-diff)
 
 ```bash
 just docs check
@@ -1175,6 +1211,8 @@ and classes are typed and documented`.
   - look at `"""The command prints the title of the page."""`
 - <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py).
   - look at `"""The language chooses the Wikipedia that is asked."""`
+
+<a id="step-08.5-tests-conftest.py-626af3-diff"></a>
 
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
 
@@ -1200,6 +1238,8 @@ and classes are typed and documented`.
 ```
 
 </details>
+
+<a id="step-08.5-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -1286,6 +1326,8 @@ and classes are typed and documented`.
 
 </details>
 
+<a id="step-08.5-tests-test_wikipedia.py-2f4413-diff"></a>
+
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
 ```diff
@@ -1359,7 +1401,7 @@ The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, w
 the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
 page. The comment at the top now says that `just docs` builds the site.
 
-[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48)
+[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48-diff)
 
 In `docs/_smalldocs.yml`, the sidebar lists the front page, then the reference pages, in the line
 `contents: api/*  # the reference pages, which each build makes from the code`.
@@ -1370,12 +1412,12 @@ gives the title of the page.
 The page says what the command prints, what each module does, and what the reference pages contain. The file is
 new, and comes whole, as a patch.
 
-[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880)
+[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880-diff)
 
 `just docs` with no words now builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api`
 as before. So the recipe is now a script of several lines.
 
-[± See the change to `justfile`](#step-08.6-justfile-424f0b)
+[± See the change to `justfile`](#step-08.6-justfile-424f0b-diff)
 
 In the `justfile`, the recipe `docs` starts with `#!/usr/bin/env sh`. The line
 `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi` is the case with no words.
@@ -1400,6 +1442,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
   - look at `Each build of the site makes the pages under Reference from the code.`
 - <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile).
   - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
+
+<a id="step-08.6-docs-_smalldocs.yml-4b0b48-diff"></a>
 
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 
@@ -1429,6 +1473,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
 ```
 
 </details>
+
+<a id="step-08.6-docs-index.qmd-d6d880-diff"></a>
 
 <details><summary>The diff of <code>docs/index.qmd</code></summary>
 
@@ -1473,6 +1519,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
 
 </details>
 
+<a id="step-08.6-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -1516,7 +1564,7 @@ The README is the first page that a reader sees on GitHub. Its table of folders 
 project is, and it lists neither the tests nor the docs. The table gets rows for `tests/` and `docs/`. The row of
 `src/wikiapp/` also says that `wikipedia.py` is the library and `console.py` the command.
 
-[± See the change to `README.md`](#step-08.7-README.md-8ec9a0)
+[± See the change to `README.md`](#step-08.7-README.md-8ec9a0-diff)
 
 ```bash
 grep -n -E 'tests/|docs/' README.md
@@ -1528,6 +1576,8 @@ grep -n -E 'tests/|docs/' README.md
 
 - <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md).
   - look at `| The docs site. smalldocs makes its reference from the code |`
+
+<a id="step-08.7-README.md-8ec9a0-diff"></a>
 
 <details><summary>The diff of <code>README.md</code></summary>
 
@@ -1569,7 +1619,7 @@ Every function, parameter and field has documentation now, but no check fails wh
 each `git commit`, through the git hook, so `just docs check` goes in it, after the tests. The comment above
 `check` names the docs too.
 
-[± See the change to `justfile`](#step-08.8-justfile-424f0b)
+[± See the change to `justfile`](#step-08.8-justfile-424f0b-diff)
 
 In the `justfile`, `just docs check` is the line under `just test -q --cov-fail-under=90`, in `check`.
 
@@ -1585,6 +1635,8 @@ it runs the docs check too.
 
 - <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile).
   - look at `just docs check`
+
+<a id="step-08.8-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1670,7 +1722,7 @@ an older publish when a newer push starts one.
 
 The file is new, and comes whole, as a patch.
 
-[± See the new file `.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835)
+[± See the new file `.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835-diff)
 
 In the new file `.github/workflows/docs.yaml`, the line
 `- run: uv run --locked --no-default-groups --group docs smalldocs render docs` is the build of the site.
@@ -1700,6 +1752,8 @@ prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 
 - <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml).
   - look at `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
+
+<a id="step-08b.2-.github-workflows-docs.yaml-ce7835-diff"></a>
 
 <details><summary>The diff of <code>.github/workflows/docs.yaml</code></summary>
 
@@ -1779,7 +1833,7 @@ too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` agai
 The settings of the site, `docs/_smalldocs.yml`, name only `wikiapp`, so the docs and their check leave out the
 library. The line `packages:` in the section `api` must name both.
 
-[± See the change to `docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48)
+[± See the change to `docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48-diff)
 
 In `docs/_smalldocs.yml`, line 19, `packages:` lists `wikiapp` and `wikirandom`.
 
@@ -1804,6 +1858,8 @@ its User-Agent, and that name also gets the installed version. The
 
 - <a id="step-09.10-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the list of packages. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/259e6364a52f83993c797f66148281b04eb92060/docs/_smalldocs.yml).
   - look at `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+<a id="step-09.10-docs-_smalldocs.yml-4b0b48-diff"></a>
 
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 

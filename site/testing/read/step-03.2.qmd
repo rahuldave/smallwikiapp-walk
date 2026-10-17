@@ -38,9 +38,9 @@ parts of the code together, the command and the library. A test of parts togethe
 the library came out of `main`, the four tests of the command that use the mock are integration tests, and no
 longer unit tests.
 
-[± See the new file `tests/conftest.py`](#step-03.2-tests-conftest.py-626af3){.btn .btn-sm .btn-secondary}
+[± See the new file `tests/conftest.py`](#step-03.2-tests-conftest.py-626af3-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `tests/test_console.py`](#step-03.2-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-03.2-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 The new file `tests/conftest.py` has the fixture `mock_requests_get`. In `tests/test_console.py`, the fixture is
 gone, and the tests still name it as a parameter.
@@ -56,6 +56,8 @@ The result is `5 passed`. pytest finds the fixture in `conftest.py`.
 - <a id="step-03.2-tests-conftest.py-626af3"></a>`tests/conftest.py`: the fixture, for every test file. New, 10 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/conftest.py){.btn .btn-sm .btn-secondary}
   - look at `def mock_requests_get(mocker):`
 - <a id="step-03.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture is gone, but the tests still name it. 0 lines added, 9 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/a65f7f11432be0a56de38e7d4babe10bda735c2c/tests/test_console.py){.btn .btn-sm .btn-secondary}
+
+<a id="step-03.2-tests-conftest.py-626af3-diff"></a>
 
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
 
@@ -74,6 +76,8 @@ The result is `5 passed`. pytest finds the fixture in `conftest.py`.
 ```
 
 </details>
+
+<a id="step-03.2-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 

@@ -32,7 +32,7 @@ documentation too.
 
 Each of the two modules gets a docstring at the top, which says what the module is.
 
-[± See the change to `src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01-diff){.btn .btn-sm .btn-secondary}
 
 `check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class.
 Python still shows it, in `help(wikiapp)`.
@@ -41,7 +41,7 @@ The help of `--language` now says what a language is. It replaces the help of th
 page from Wikipedia in given language". `main` has one parameter to a line, with its docment, and a docstring that
 says what `main` prints. A function that returns None needs no docment for its return.
 
-[± See the change to `src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, the docment of `language` is
 `# The language of the Wikipedia to ask, from --language`. The second paragraph of the docstring of `main` gives the colour of the title and the width of the
@@ -62,6 +62,8 @@ options shows the new help of `--language`, the same help that `--help` prints.
 - <a id="step-08.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the docment, the docstring and the help. 10 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/bb648b91f4aba037eac04caa5cd7b41095e7c388/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `language: str,  # The language of the Wikipedia to ask, from --language`
 
+<a id="step-08.4-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -74,6 +76,8 @@ options shows the new help of `--language`, the same help that `--help` prints.
 ```
 
 </details>
+
+<a id="step-08.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 

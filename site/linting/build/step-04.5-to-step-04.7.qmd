@@ -65,6 +65,8 @@ git restore --source 589f2f691557 --staged -- :/ && git restore --source 2ec7932
 - <a id="step-04.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the import goes up, and two lines lose `result =`. 4 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/2ec7932b37e21c1533f319c03e0533bc755f6da7/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `from wikiapp import console`
 
+<a id="step-04.5-tests-test_console.py-9442ee-diff"></a>
+
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 
 ```diff
@@ -146,6 +148,8 @@ git restore --source 2ec7932b37e2 --staged -- :/ && git restore --source 0fb4985
 - <a id="step-04.6-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: one more argument. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0fb4985582732edf7372a4b90659d703db138446/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `timeout=10`
 
+<a id="step-04.6-src-wikiapp-wikipedia.py-258803-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
 ```diff
@@ -198,6 +202,8 @@ git restore --source 0fb498558273 --staged -- :/ && git restore --source a57134d
 
 - <a id="step-04.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the imports, sorted. 3 lines added, 2 removed. It comes from `just lint --fix`. [The file](https://github.com/rahuldave/smallwikiapp/blob/a57134d1cef6ff24803235ace966e5870046fbd9/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `from wikiapp import __version__`
+
+<a id="step-04.7-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff that <code>just lint --fix</code> makes in <code>src/wikiapp/console.py</code></summary>
 

@@ -35,7 +35,7 @@ uv installs only the group `dev` by default. The setting `default-groups = "all"
 install every group. So each later `uv add --group` needs no other change to `pyproject.toml`. A patch adds the
 table `[tool.uv]` with this setting.
 
-[± See the change to `pyproject.toml`](#step-02.1-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-02.1-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the new table `[tool.uv]` has the line `default-groups = "all"`, with a comment
 above it.
@@ -52,6 +52,8 @@ uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so
 
 - <a id="step-02.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the table `[tool.uv]`, so uv installs every dependency group. 4 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/46dc20fb9092170695699eaa052f4830563cb930/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `default-groups = "all"`
+
+<a id="step-02.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -81,7 +83,7 @@ can come from the code, from the network or from Wikipedia.
 
 The test comes in a new file, `tests/test_console.py`, as a patch. The patch also makes the folder `tests`.
 
-[± See the new file `tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the new file `tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 The new file `tests/test_console.py` has one test, `test_main_succeeds`. It runs `console.main` with a
 `CliRunner`, and checks `result.exit_code`.
@@ -99,6 +101,8 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 - <a id="step-02.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: a test that runs the command and checks its exit code. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6d7a6cfdae6008a9687f3525348ab24ea05930cc/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert result.exit_code == 0`
+
+<a id="step-02.2-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -146,6 +150,8 @@ Wikipedia, so it needs the network.
   - look at `"pytest>=9.1.1",`
 - <a id="step-02.3-uv.lock-8356d8"></a>`uv.lock`: pytest, and the packages that it needs. 69 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-02.3-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -170,7 +176,7 @@ The command that runs the tests is `uv run pytest`, with any options for pytest 
 justfile gives it a short name, `just test`. The words after `just test` go to pytest. `"$@"` stands for those
 words, and the recipe gives each word to pytest whole. `just test help` shows the recipe.
 
-[± See the change to `justfile`](#step-02.4-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-02.4-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `test *args:` runs `uv run pytest "$@"`, or shows itself for
 `just test help`. The comment above it is what `just` lists for the recipe.
@@ -190,6 +196,8 @@ result as before, `1 passed`.
 
 - <a id="step-02.4-justfile-424f0b"></a>`justfile`: the recipe `test`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/45807a0ddd9f97798c3f86a82b19782d4df45837/justfile){.btn .btn-sm .btn-secondary}
   - look at `test *args:`
+
+<a id="step-02.4-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

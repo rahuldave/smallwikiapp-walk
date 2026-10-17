@@ -130,6 +130,8 @@ git fetch --quiet --tags --force origin; git restore --source step-05 --staged -
 - <a id="step-06.1-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test, marked. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `@pytest.mark.e2e`
 
+<a id="step-06.1-pyproject.toml-5d07e7-diff"></a>
+
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
 ```diff
@@ -150,6 +152,8 @@ git fetch --quiet --tags --force origin; git restore --source step-05 --staged -
 ```
 
 </details>
+
+<a id="step-06.1-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 
@@ -210,6 +214,8 @@ git restore --source 35f4ffc8c67a --staged -- :/ && git restore --source 307d4d7
 
 - <a id="step-06.2-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 9 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/307d4d7b36bb9dc7bc8ad601c8275d5241283e35/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert "extract" in page`
+
+<a id="step-06.2-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 

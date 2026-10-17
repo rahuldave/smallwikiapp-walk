@@ -81,6 +81,8 @@ git restore --source d8a9c8f71eb5 --staged -- :/ && git restore --source b7469ee
 - <a id="step-04.10-justfile-424f0b"></a>`justfile`: one line, which exports `UV_LOCKED` to every recipe. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b7469ee81a824a46e6799d60957ea09d7cf2eade/justfile){.btn .btn-sm .btn-secondary}
   - look at `export UV_LOCKED := "1"`
 
+<a id="step-04.10-justfile-424f0b-diff"></a>
+
 <details open><summary>The patch to <code>justfile</code></summary>
 
 ```diff

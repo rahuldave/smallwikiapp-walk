@@ -30,7 +30,7 @@ There are now four checks, and a person must remember to run each. A recipe `che
 stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
 the configuration.
 
-[± See the change to `justfile`](#step-04.11-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-04.11-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `check *args:` on line 57 runs four recipes. The tests run with
 `--cov-fail-under=90`, on line 63, so they fail if they run less than 90% of the statements.
@@ -56,6 +56,8 @@ From here on, "each `git commit` must pass `just check`" is the rule of the proj
 
 - <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile){.btn .btn-sm .btn-secondary}
   - look at `just test -q --cov-fail-under=90`
+
+<a id="step-04.11-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

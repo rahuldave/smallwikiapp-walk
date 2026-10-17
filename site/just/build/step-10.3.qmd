@@ -73,6 +73,8 @@ git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb9
 - <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile){.btn .btn-sm .btn-secondary}
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
 
+<a id="step-10.3-justfile-424f0b-diff"></a>
+
 <details open><summary>The patch to <code>justfile</code></summary>
 
 ```diff

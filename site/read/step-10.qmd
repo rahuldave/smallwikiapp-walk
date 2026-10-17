@@ -33,7 +33,7 @@ A package goes to PyPI as two files, a wheel and a source archive. pip and uv in
 --all-packages` builds both for every package of the workspace, into `dist/`. `.gitignore` already lists `dist/`.
 A recipe `build`, at the end of the `justfile`, runs it.
 
-[± See the change to `justfile`](#step-10.1-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-10.1-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 The recipe `build` at the end of the `justfile` is in the group `setup`, and `just build help` explains it.
 
@@ -55,6 +55,8 @@ first.
 
 - <a id="step-10.1-justfile-424f0b"></a>`justfile`: the recipe `build`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7744a84a4715e6edb876e1c4f3255daf524dd07d/justfile){.btn .btn-sm .btn-secondary}
   - look at `build *args:`
+
+<a id="step-10.1-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -99,6 +101,8 @@ The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 - <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"wikirandom>=0.1.0,<0.2",`
 
+<a id="step-10.2-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -122,7 +126,7 @@ The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. A mistake in the
 library's file would reach a build unseen. The recipe `lint-config` now gives validate-pyproject both files.
 
-[± See the change to `justfile`](#step-10.3-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-10.3-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 ```bash
 just lint-config
@@ -134,6 +138,8 @@ just lint-config
 
 - <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile){.btn .btn-sm .btn-secondary}
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+<a id="step-10.3-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -163,9 +169,9 @@ This change came from running `cp LICENSE packages/wikirandom/LICENSE`.
 Its `pyproject.toml` gives the licence and the author in `[project]`, as the app's `pyproject.toml` does. Both
 `pyproject.toml` files name the repository, in a table `[project.urls]`.
 
-[± See the change to `packages/wikirandom/pyproject.toml`](#step-10.4-packages-wikirandom-pyproject.toml-28d6f6){.btn .btn-sm .btn-secondary}
+[± See the change to `packages/wikirandom/pyproject.toml`](#step-10.4-packages-wikirandom-pyproject.toml-28d6f6-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `pyproject.toml`](#step-10.4-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-10.4-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 In `packages/wikirandom/pyproject.toml`, see `license = "Apache-2.0"` under `readme`. The table `[project.urls]`
 is after `dependencies` there, and after `[project.scripts]` in the app's `pyproject.toml`.
@@ -186,6 +192,8 @@ The library's metadata has `License-Expression: Apache-2.0`,
   - look at `license = "Apache-2.0"`
 - <a id="step-10.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's repository. 3 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/2c03603dc72a212f1575459528b3d269bb52be0d/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `[project.urls]`
+
+<a id="step-10.4-packages-wikirandom-LICENSE-56404f-diff"></a>
 
 <details><summary>The diff of <code>packages/wikirandom/LICENSE</code></summary>
 
@@ -397,6 +405,8 @@ The library's metadata has `License-Expression: Apache-2.0`,
 
 </details>
 
+<a id="step-10.4-packages-wikirandom-pyproject.toml-28d6f6-diff"></a>
+
 <details><summary>The diff of <code>packages/wikirandom/pyproject.toml</code></summary>
 
 ```diff
@@ -423,6 +433,8 @@ The library's metadata has `License-Expression: Apache-2.0`,
 
 </details>
 
+<a id="step-10.4-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -448,7 +460,7 @@ The library's User-Agent says `0.1.0`, written by hand. After a change of the ve
 `packages/wikirandom/pyproject.toml`, it would still say `0.1.0`. So the library reads its version from the
 installed package, as `wikiapp --version` does. `VERSION` is the installed version, and `USER_AGENT` contains it.
 
-[± See the change to `packages/wikirandom/src/wikirandom/__init__.py`](#step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23){.btn .btn-sm .btn-secondary}
+[± See the change to `packages/wikirandom/src/wikirandom/__init__.py`](#step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23-diff){.btn .btn-sm .btn-secondary}
 
 In `packages/wikirandom/src/wikirandom/__init__.py`, see `VERSION = importlib.metadata.version("wikirandom")`,
 which runs once, when Python imports the package. `USER_AGENT` is an f-string with `{VERSION}` in it.
@@ -464,6 +476,8 @@ The first command prints `wikirandom/0.1.0 (https://github.com/rahuldave/smallwi
 
 - <a id="step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: the version now comes from one place, the library's `pyproject.toml`. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/73fc4e12cc7a5831163e61fc01a3699355f95d52/packages/wikirandom/src/wikirandom/__init__.py){.btn .btn-sm .btn-secondary}
   - look at `VERSION = importlib.metadata.version("wikirandom")`
+
+<a id="step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23-diff"></a>
 
 <details><summary>The diff of <code>packages/wikirandom/src/wikirandom/__init__.py</code></summary>
 

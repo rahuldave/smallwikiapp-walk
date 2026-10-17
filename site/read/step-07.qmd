@@ -55,6 +55,8 @@ pydantic yet.
   - look at `"pydantic>=2.14.1",`
 - <a id="step-07.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of pydantic, and of what it needs. 180 lines added. It comes from `uv add pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/47fc24f56c9129f7c17f1c26092a6cfaffa3bf10/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-07.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -78,7 +80,7 @@ The model `Page` is a class that inherits from pydantic's `BaseModel`. It has a 
 the two keys that the command uses. A `Page` made from a dictionary checks the two keys, and keeps only them.
 Nothing uses `Page` yet.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-07.2-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.2-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, the import of `BaseModel` is line 4, under `import requests`. The class `Page` is
 lines 14 to 18, after `WikipediaError`, with its docstring and the two fields `title` and `extract`.
@@ -95,6 +97,8 @@ The first command prints `title='A' extract='B'`. The model drops the other key.
 
 - <a id="step-07.2-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the model. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1baf0602c1d1cec79277c2faec438b76a9a8c768/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `class Page(BaseModel):`
+
+<a id="step-07.2-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -136,20 +140,20 @@ know. So `random_page` returns a `Page` made from the answer, and `main` prints 
 `random_page` passes the answer to `Page.model_validate`, which checks it against the model and makes the page.
 The code no longer uses `Any`, so its import goes.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-07.3-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.3-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the `def` line `def random_page(language: str = "en") -> Page:` and the line
 `return Page.model_validate(response.json())`.
 
 `main`, in `src/wikiapp/console.py`, prints `page.title` and `page.extract` in place of the two keys.
 
-[± See the change to `src/wikiapp/console.py`](#step-07.3-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/console.py`](#step-07.3-src-wikiapp-console.py-d9ae67-diff){.btn .btn-sm .btn-secondary}
 
 The test that asks the real Wikipedia, in `tests/test_wikipedia.py`, checked two keys of the dictionary. It now
 checks that the answer is a `Page`, and its new name, `test_random_page_returns_page_in_production`, says so. It
 keeps its marker `e2e`.
 
-[± See the change to `tests/test_wikipedia.py`](#step-07.3-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-07.3-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_wikipedia.py`, the two asserts on the keys are now one, on the type of the answer.
 
@@ -168,6 +172,8 @@ uv run wikiapp
   - look at `return Page.model_validate(response.json())`
 - <a id="step-07.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the e2e test checks for a Page. 2 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert isinstance(page, wikipedia.Page)`
+
+<a id="step-07.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -192,6 +198,8 @@ uv run wikiapp
 ```
 
 </details>
+
+<a id="step-07.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -222,6 +230,8 @@ uv run wikiapp
 
 </details>
 
+<a id="step-07.3-tests-test_wikipedia.py-2f4413-diff"></a>
+
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
 ```diff
@@ -247,7 +257,7 @@ An answer with no title is not a page. `model_validate` then raises the Validati
 would end with a traceback. `random_page` turns a failed request into a WikipediaError, and it should do the same
 with an answer that is not a page. So its `except` catches ValidationError together with the exception of requests.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-07.4-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.4-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the line `except (requests.RequestException, ValidationError) as error:`, and
 `ValidationError` in the import from pydantic.
@@ -256,7 +266,7 @@ A test from the original wikiapp, `test_random_page_handles_validation_error`, c
 `tests/test_wikipedia.py`. The mock answers with an empty dictionary, `{}`, and `pytest.raises` expects a
 WikipediaError.
 
-[± See the change to `tests/test_wikipedia.py`](#step-07.4-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-07.4-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 ```bash
 just test -k validation
@@ -270,6 +280,8 @@ The output is `1 passed, 8 deselected`.
   - look at `except (requests.RequestException, ValidationError) as error:`
 - <a id="step-07.4-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `with pytest.raises(wikipedia.WikipediaError):`
+
+<a id="step-07.4-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -291,6 +303,8 @@ The output is `1 passed, 8 deselected`.
 ```
 
 </details>
+
+<a id="step-07.4-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
@@ -321,7 +335,7 @@ code first, before the `try`, and any other language raises a WikipediaError.
 The pattern is a constant, `LANGUAGE`, made with the module `re`. No request goes out for a language that does
 not match it.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-07.5-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.5-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, `LANGUAGE` is under `API_URL`, and `import re` is at the top. The check is the
 first lines of `random_page`, from `if not LANGUAGE.fullmatch(language):`.
@@ -339,6 +353,8 @@ its line as missing. The coverage is 95% in all, which is still over the floor o
 
 - <a id="step-07.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the code checks a language before it uses it. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/be473b80441f82ce87bf800deeb432fd4212dea4/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `if not LANGUAGE.fullmatch(language):`
+
+<a id="step-07.5-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 

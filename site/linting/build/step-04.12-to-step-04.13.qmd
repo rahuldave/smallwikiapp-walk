@@ -58,6 +58,8 @@ git restore --source 1f73d6af30cc --staged -- :/ && git restore --source 29291b3
   - look at `"pre-commit>=4.7.0",`
 - <a id="step-04.12-uv.lock-8356d8"></a>`uv.lock`: the exact version of `pre-commit`, and of what it needs. 136 lines added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-04.12-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add --group lint pre-commit</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -133,6 +135,8 @@ git fetch --quiet --tags --force origin; git restore --source 29291b3575f2 --sta
 - <a id="step-04.13-justfile-424f0b"></a>`justfile`: the recipe `hook`. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/justfile){.btn .btn-sm .btn-secondary}
   - look at `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
 
+<a id="step-04.13-.pre-commit-config.yaml-e7d14d-diff"></a>
+
 <details open><summary>The patch to <code>.pre-commit-config.yaml</code></summary>
 
 ```diff
@@ -160,6 +164,8 @@ git fetch --quiet --tags --force origin; git restore --source 29291b3575f2 --sta
 ```
 
 </details>
+
+<a id="step-04.13-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 

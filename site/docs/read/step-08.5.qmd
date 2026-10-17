@@ -35,19 +35,19 @@ Tests documented this way are documentation too. A reader learns from them what 
 The fixture in `tests/conftest.py` gets a docstring for the file, a docment for its parameter and its return, and a
 docstring of its own.
 
-[± See the change to `tests/conftest.py`](#step-08.5-tests-conftest.py-626af3){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/conftest.py`](#step-08.5-tests-conftest.py-626af3-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/conftest.py`, see the docment of `mocker`, and the docment of the return after `-> Mock:`.
 
 `tests/test_console.py` has a fixture and six tests, and each gets the same pattern.
 
-[± See the change to `tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `runner` also documents its return.
 
 The three tests of `tests/test_wikipedia.py` get the same pattern.
 
-[± See the change to `tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 ```bash
 just docs check
@@ -64,6 +64,8 @@ and classes are typed and documented`.
   - look at `"""The command prints the title of the page."""`
 - <a id="step-08.5-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: three tests. 11 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/7a0e5094887304538655b706752de99408df2d97/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `"""The language chooses the Wikipedia that is asked."""`
+
+<a id="step-08.5-tests-conftest.py-626af3-diff"></a>
 
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
 
@@ -89,6 +91,8 @@ and classes are typed and documented`.
 ```
 
 </details>
+
+<a id="step-08.5-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -174,6 +178,8 @@ and classes are typed and documented`.
 ```
 
 </details>
+
+<a id="step-08.5-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 

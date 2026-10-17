@@ -29,7 +29,7 @@ The README is the first page that a reader sees on GitHub. Its table of folders 
 project is, and it lists neither the tests nor the docs. The table gets rows for `tests/` and `docs/`. The row of
 `src/wikiapp/` also says that `wikipedia.py` is the library and `console.py` the command.
 
-[± See the change to `README.md`](#step-08.7-README.md-8ec9a0){.btn .btn-sm .btn-secondary}
+[± See the change to `README.md`](#step-08.7-README.md-8ec9a0-diff){.btn .btn-sm .btn-secondary}
 
 ```bash
 grep -n -E 'tests/|docs/' README.md
@@ -41,6 +41,8 @@ grep -n -E 'tests/|docs/' README.md
 
 - <a id="step-08.7-README.md-8ec9a0"></a>`README.md`: the folders. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/79c80120fc8fc12ec7b38474294b422e86619362/README.md){.btn .btn-sm .btn-secondary}
   - look at `| The docs site. smalldocs makes its reference from the code |`
+
+<a id="step-08.7-README.md-8ec9a0-diff"></a>
 
 <details><summary>The diff of <code>README.md</code></summary>
 

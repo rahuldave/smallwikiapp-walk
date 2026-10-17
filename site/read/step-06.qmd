@@ -32,14 +32,14 @@ depends on Wikipedia. The other tests use the mock in place of Wikipedia, so the
 the same result on every run. A marker, `e2e`, which means end to end, sets the one test apart. Its new name says
 so, `test_main_succeeds_in_production`.
 
-[± See the change to `tests/test_console.py`](#step-06.1-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-06.1-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the last test has the marker `@pytest.mark.e2e`, and its new name.
 
 pytest must know the marker, and leave the e2e tests out of every run that does not ask for them.
 `pyproject.toml` declares the marker in `markers`. The option `-m 'not e2e'` in `addopts` leaves the e2e tests out.
 
-[± See the change to `pyproject.toml`](#step-06.1-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-06.1-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 In `pyproject.toml`, `addopts` now ends with `-m 'not e2e'`, and the new line `markers` declares `e2e`.
 
@@ -56,6 +56,8 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
   - look at `markers = ["e2e: end to end, against the real Wikipedia; run with -m e2e"]`
 - <a id="step-06.1-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test, marked. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/35f4ffc8c67a55ff91a9e7ec02c6de3b90179735/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `@pytest.mark.e2e`
+
+<a id="step-06.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -77,6 +79,8 @@ The first command prints `6 passed, 1 deselected`. The second command runs the e
 ```
 
 </details>
+
+<a id="step-06.1-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -103,7 +107,7 @@ every test with a mock still passes, and the command fails. A second e2e test, f
 real Wikipedia for a page and checks the two keys. It is also a contract test. It checks that the real Wikipedia
 still returns what the mocks return.
 
-[± See the change to `tests/test_wikipedia.py`](#step-06.2-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-06.2-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 At the end of `tests/test_wikipedia.py`, `test_random_page_returns_dictionary_in_production` has the marker
 `e2e`. It checks that the page has `"title"` and `"extract"`. `import pytest` is in a block of its own.
@@ -118,6 +122,8 @@ The output is `2 passed, 6 deselected`.
 
 - <a id="step-06.2-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 9 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/307d4d7b36bb9dc7bc8ad601c8275d5241283e35/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert "extract" in page`
+
+<a id="step-06.2-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
@@ -154,14 +160,13 @@ The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv in
 its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
 `pyproject.toml` now says 3.11.
 
-[± See the change to `pyproject.toml`](#step-06.3-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-06.3-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
-lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile that does not match, until the next move resolves the lockfile again.
 
 ```bash
 uv lock --check
@@ -176,6 +181,8 @@ no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
 
 - <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `requires-python = ">=3.11"`
+
+<a id="step-06.3-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -250,7 +257,7 @@ jobs. The job `tests` runs the tests on three systems and four versions of Pytho
 Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub never runs the
 e2e tests. A person runs them, with `just test -m e2e`.
 
-[± See the new file `.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23){.btn .btn-sm .btn-secondary}
+[± See the new file `.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23-diff){.btn .btn-sm .btn-secondary}
 
 The new file `.github/workflows/test.yaml` has the jobs `tests` and `check`. In `tests`, the matrix of three
 values of `os` and four of `python` makes twelve jobs.
@@ -270,6 +277,8 @@ part of the tutorial publishes the docs with GitHub Pages, and lists each settin
 
 - <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml){.btn .btn-sm .btn-secondary}
   - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
+
+<a id="step-06.5-.github-workflows-test.yaml-a60e23-diff"></a>
 
 <details><summary>The diff of <code>.github/workflows/test.yaml</code></summary>
 

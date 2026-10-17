@@ -67,6 +67,8 @@ git fetch --quiet --tags --force origin; git restore --source step-00 --staged -
   - look at `"click>=8.5.0",`
 - <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-01.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add click requests</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -141,6 +143,8 @@ git restore --source 36d49582843a --staged -- :/ && git restore --source 571c82e
 - <a id="step-01.2-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: a request, and two lines printed. 17 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `with requests.get(API_URL) as response:`
 
+<a id="step-01.2-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -210,6 +214,8 @@ git restore --source 571c82ebd31f --staged -- :/ && git restore --source 0ffd5df
 
 - <a id="step-01.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the header. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0ffd5df563acb876953855d86be30b6952ecfd44/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:`
+
+<a id="step-01.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
@@ -284,6 +290,8 @@ git fetch --quiet --tags --force origin; git restore --source 0ffd5df563ac --sta
 - <a id="step-01.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: click's version option. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `@click.version_option(version=__version__)`
 
+<a id="step-01.4-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -293,6 +301,8 @@ git fetch --quiet --tags --force origin; git restore --source 0ffd5df563ac --sta
 ```
 
 </details>
+
+<a id="step-01.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 

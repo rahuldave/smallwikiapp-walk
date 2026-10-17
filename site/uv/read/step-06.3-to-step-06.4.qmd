@@ -35,14 +35,13 @@ The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv in
 its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
 `pyproject.toml` now says 3.11.
 
-[± See the change to `pyproject.toml`](#step-06.3-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-06.3-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
 move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
-lockfile that does not match. So `just setup`, `just test` and `just check` fail until the next move resolves the
-lockfile again.
+lockfile that does not match, until the next move resolves the lockfile again.
 
 ```bash
 uv lock --check
@@ -57,6 +56,8 @@ no test. Its error names `UV_LOCKED=1` where the first error named `--check`.
 
 - <a id="step-06.3-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/b97ee4cfc59182c79e4a09ca19a7790b25f25264/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `requires-python = ">=3.11"`
+
+<a id="step-06.3-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 

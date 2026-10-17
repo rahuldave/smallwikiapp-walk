@@ -38,7 +38,7 @@ The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, w
 the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
 page. The comment at the top now says that `just docs` builds the site.
 
-[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48){.btn .btn-sm .btn-secondary}
+[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48-diff){.btn .btn-sm .btn-secondary}
 
 In `docs/_smalldocs.yml`, the sidebar lists the front page, then the reference pages, in the line
 `contents: api/*  # the reference pages, which each build makes from the code`.
@@ -49,12 +49,12 @@ gives the title of the page.
 The page says what the command prints, what each module does, and what the reference pages contain. The file is
 new, and comes whole, as a patch.
 
-[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880){.btn .btn-sm .btn-secondary}
+[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880-diff){.btn .btn-sm .btn-secondary}
 
 `just docs` with no words now builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api`
 as before. So the recipe is now a script of several lines.
 
-[± See the change to `justfile`](#step-08.6-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-08.6-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 In the `justfile`, the recipe `docs` starts with `#!/usr/bin/env sh`. The line
 `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi` is the case with no words.
@@ -79,6 +79,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
   - look at `Each build of the site makes the pages under Reference from the code.`
 - <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile){.btn .btn-sm .btn-secondary}
   - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
+
+<a id="step-08.6-docs-_smalldocs.yml-4b0b48-diff"></a>
 
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 
@@ -108,6 +110,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
 ```
 
 </details>
+
+<a id="step-08.6-docs-index.qmd-d6d880-diff"></a>
 
 <details><summary>The diff of <code>docs/index.qmd</code></summary>
 
@@ -151,6 +155,8 @@ link from `random_page` on the front page to its entry in `api/wikipedia.html`. 
 ````
 
 </details>
+
+<a id="step-08.6-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

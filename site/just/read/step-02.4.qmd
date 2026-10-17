@@ -36,7 +36,7 @@ The command that runs the tests is `uv run pytest`, with any options for pytest 
 justfile gives it a short name, `just test`. The words after `just test` go to pytest. `"$@"` stands for those
 words, and the recipe gives each word to pytest whole. `just test help` shows the recipe.
 
-[± See the change to `justfile`](#step-02.4-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-02.4-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `test *args:` runs `uv run pytest "$@"`, or shows itself for
 `just test help`. The comment above it is what `just` lists for the recipe.
@@ -65,6 +65,8 @@ The line `[no-exit-message]` above the recipe tells `just` to add no message of 
 
 - <a id="step-02.4-justfile-424f0b"></a>`justfile`: the recipe `test`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/45807a0ddd9f97798c3f86a82b19782d4df45837/justfile){.btn .btn-sm .btn-secondary}
   - look at `test *args:`
+
+<a id="step-02.4-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

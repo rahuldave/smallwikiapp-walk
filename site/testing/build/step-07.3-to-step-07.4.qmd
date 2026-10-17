@@ -99,6 +99,8 @@ git restore --source 1baf0602c1d1 --staged -- :/ && git restore --source 88fe0e2
 - <a id="step-07.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the e2e test checks for a Page. 2 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert isinstance(page, wikipedia.Page)`
 
+<a id="step-07.3-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -122,6 +124,8 @@ git restore --source 1baf0602c1d1 --staged -- :/ && git restore --source 88fe0e2
 ```
 
 </details>
+
+<a id="step-07.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -151,6 +155,8 @@ git restore --source 1baf0602c1d1 --staged -- :/ && git restore --source 88fe0e2
 ```
 
 </details>
+
+<a id="step-07.3-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 
@@ -223,6 +229,8 @@ git restore --source 88fe0e20d645 --staged -- :/ && git restore --source 06ff2ca
 - <a id="step-07.4-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `with pytest.raises(wikipedia.WikipediaError):`
 
+<a id="step-07.4-src-wikiapp-wikipedia.py-258803-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
 ```diff
@@ -243,6 +251,8 @@ git restore --source 88fe0e20d645 --staged -- :/ && git restore --source 06ff2ca
 ```
 
 </details>
+
+<a id="step-07.4-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 

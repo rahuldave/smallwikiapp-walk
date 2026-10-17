@@ -245,6 +245,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 - <a id="step-00-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: `main`, which prints one line. New, 4 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/src/wikiapp/console.py).
 - <a id="step-00-uv.lock-8356d8"></a>`uv.lock`: the exact packages, the same on every machine. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/uv.lock).
 
+<a id="step-00-.gitignore-a5cc29-diff"></a>
+
 <details><summary>The diff of <code>.gitignore</code></summary>
 
 ```diff
@@ -283,6 +285,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-.python-version-7696e9-diff"></a>
+
 <details><summary>The diff of <code>.python-version</code></summary>
 
 ```diff
@@ -291,6 +295,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 ```
 
 </details>
+
+<a id="step-00-LICENSE-0398cc-diff"></a>
 
 <details><summary>The diff of <code>LICENSE</code></summary>
 
@@ -502,6 +508,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-README.md-8ec9a0-diff"></a>
+
 <details><summary>The diff of <code>README.md</code></summary>
 
 ````diff
@@ -567,6 +575,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -596,6 +606,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 
 </details>
 
+<a id="step-00-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -620,6 +632,8 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 ```
 
 </details>
+
+<a id="step-00-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -693,6 +707,8 @@ git fetch --quiet --tags --force origin; git restore --source step-00 --staged -
 - <a id="step-01.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the dependencies of the package, which anyone who installs it gets. 4 lines added, 1 removed. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/pyproject.toml).
   - look at `"click>=8.5.0",`
 - <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock).
+
+<a id="step-01.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff that <code>uv add click requests</code> makes in <code>pyproject.toml</code></summary>
 
@@ -770,6 +786,8 @@ git restore --source 36d49582843a --staged -- :/ && git restore --source 571c82e
 - <a id="step-01.2-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: a request, and two lines printed. 17 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c/src/wikiapp/console.py).
   - look at `with requests.get(API_URL) as response:`
 
+<a id="step-01.2-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -841,6 +859,8 @@ git restore --source 571c82ebd31f --staged -- :/ && git restore --source 0ffd5df
 
 - <a id="step-01.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the header. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0ffd5df563acb876953855d86be30b6952ecfd44/src/wikiapp/console.py).
   - look at `with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:`
+
+<a id="step-01.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
@@ -917,6 +937,8 @@ git fetch --quiet --tags --force origin; git restore --source 0ffd5df563ac --sta
 - <a id="step-01.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: click's version option. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/console.py).
   - look at `@click.version_option(version=__version__)`
 
+<a id="step-01.4-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -926,6 +948,8 @@ git fetch --quiet --tags --force origin; git restore --source 0ffd5df563ac --sta
 ```
 
 </details>
+
+<a id="step-01.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
@@ -1020,6 +1044,8 @@ git fetch --quiet --tags --force origin; git restore --source step-03 --staged -
 - <a id="step-04.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the group `lint`, with ruff in it. 3 lines added. It comes from `uv add --group lint ruff`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8f7b800001ee35d8db80c47521b02777047c019d/pyproject.toml).
   - look at `"ruff>=0.17.0",`
 - <a id="step-04.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ruff. 29 lines added. It comes from `uv add --group lint ruff`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8f7b800001ee35d8db80c47521b02777047c019d/uv.lock).
+
+<a id="step-04.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff that <code>uv add --group lint ruff</code> makes in <code>pyproject.toml</code></summary>
 
@@ -1133,6 +1159,8 @@ git restore --source 8f7b800001ee --staged -- :/ && git restore --source 3144574
 - <a id="step-04.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of ruff. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/31445743379186b800fd4c035c8f04eed7ad7f3d/pyproject.toml).
   - look at `line-length = 100`
 
+<a id="step-04.2-justfile-424f0b-diff"></a>
+
 <details open><summary>The patch to <code>justfile</code></summary>
 
 ```diff
@@ -1149,6 +1177,8 @@ git restore --source 8f7b800001ee --staged -- :/ && git restore --source 3144574
 ```
 
 </details>
+
+<a id="step-04.2-pyproject.toml-5d07e7-diff"></a>
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
@@ -1216,6 +1246,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
   - look at `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
 - <a id="step-04.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: two blank lines before the test. 1 line added. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/tests/test_wikipedia.py).
 
+<a id="step-04.3-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details><summary>The diff that <code>just fmt</code> makes in <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -1226,6 +1258,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 ```
 
 </details>
+
+<a id="step-04.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff that <code>just fmt</code> makes in <code>src/wikiapp/console.py</code></summary>
 
@@ -1249,6 +1283,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 ```
 
 </details>
+
+<a id="step-04.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff that <code>just fmt</code> makes in <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -1276,6 +1312,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 
 </details>
 
+<a id="step-04.3-tests-conftest.py-626af3-diff"></a>
+
 <details><summary>The diff that <code>just fmt</code> makes in <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -1289,6 +1327,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 ```
 
 </details>
+
+<a id="step-04.3-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff that <code>just fmt</code> makes in <code>tests/test_console.py</code></summary>
 
@@ -1342,6 +1382,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 ```
 
 </details>
+
+<a id="step-04.3-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff that <code>just fmt</code> makes in <code>tests/test_wikipedia.py</code></summary>
 
@@ -1472,6 +1514,8 @@ git restore --source 6690eee9f7e1 --staged -- :/ && git restore --source 589f2f6
 - <a id="step-04.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: a family of rules on each line. 18 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/589f2f691557470eac084858d430a302c98390ce/pyproject.toml).
   - look at `"tests/**" = ["S101"]`
 
+<a id="step-04.4-justfile-424f0b-diff"></a>
+
 <details open><summary>The patch to <code>justfile</code></summary>
 
 ```diff
@@ -1488,6 +1532,8 @@ git restore --source 6690eee9f7e1 --staged -- :/ && git restore --source 589f2f6
 ```
 
 </details>
+
+<a id="step-04.4-pyproject.toml-5d07e7-diff"></a>
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
@@ -1581,6 +1627,8 @@ git restore --source 589f2f691557 --staged -- :/ && git restore --source 2ec7932
 - <a id="step-04.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the import goes up, and two lines lose `result =`. 4 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/2ec7932b37e21c1533f319c03e0533bc755f6da7/tests/test_console.py).
   - look at `from wikiapp import console`
 
+<a id="step-04.5-tests-test_console.py-9442ee-diff"></a>
+
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 
 ```diff
@@ -1664,6 +1712,8 @@ git restore --source 2ec7932b37e2 --staged -- :/ && git restore --source 0fb4985
 - <a id="step-04.6-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: one more argument. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0fb4985582732edf7372a4b90659d703db138446/src/wikiapp/wikipedia.py).
   - look at `timeout=10`
 
+<a id="step-04.6-src-wikiapp-wikipedia.py-258803-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
 ```diff
@@ -1718,6 +1768,8 @@ git restore --source 0fb498558273 --staged -- :/ && git restore --source a57134d
 
 - <a id="step-04.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the imports, sorted. 3 lines added, 2 removed. It comes from `just lint --fix`. [The file](https://github.com/rahuldave/smallwikiapp/blob/a57134d1cef6ff24803235ace966e5870046fbd9/src/wikiapp/console.py).
   - look at `from wikiapp import __version__`
+
+<a id="step-04.7-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff that <code>just lint --fix</code> makes in <code>src/wikiapp/console.py</code></summary>
 
@@ -1793,6 +1845,8 @@ git restore --source a57134d1cef6 --staged -- :/ && git restore --source 4e710d5
   - look at `"validate-pyproject>=0.26",`
 - <a id="step-04.8-uv.lock-8356d8"></a>`uv.lock`: the exact version of validate-pyproject, and of what it needs. 26 lines added, 1 removed. It comes from `uv add --group lint validate-pyproject`. [The file](https://github.com/rahuldave/smallwikiapp/blob/4e710d50a22967ebff9502eacbdada54313ebe70/uv.lock).
 
+<a id="step-04.8-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add --group lint validate-pyproject</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -1855,6 +1909,8 @@ git restore --source 4e710d50a229 --staged -- :/ && git restore --source d8a9c8f
 
 - <a id="step-04.9-justfile-424f0b"></a>`justfile`: the recipe, with its three checks. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8a9c8f71eb58893025360c20b32c9078e5b0c3c/justfile).
   - look at `uv run validate-pyproject pyproject.toml`
+
+<a id="step-04.9-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 
@@ -1944,6 +2000,8 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 - <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile).
   - look at `just test -q --cov-fail-under=90`
 
+<a id="step-04.11-justfile-424f0b-diff"></a>
+
 <details open><summary>The patch to <code>justfile</code></summary>
 
 ```diff
@@ -2023,6 +2081,8 @@ git restore --source 1f73d6af30cc --staged -- :/ && git restore --source 29291b3
   - look at `"pre-commit>=4.7.0",`
 - <a id="step-04.12-uv.lock-8356d8"></a>`uv.lock`: the exact version of `pre-commit`, and of what it needs. 136 lines added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/uv.lock).
 
+<a id="step-04.12-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add --group lint pre-commit</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -2100,6 +2160,8 @@ git fetch --quiet --tags --force origin; git restore --source 29291b3575f2 --sta
 - <a id="step-04.13-justfile-424f0b"></a>`justfile`: the recipe `hook`. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/justfile).
   - look at `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
 
+<a id="step-04.13-.pre-commit-config.yaml-e7d14d-diff"></a>
+
 <details open><summary>The patch to <code>.pre-commit-config.yaml</code></summary>
 
 ```diff
@@ -2127,6 +2189,8 @@ git fetch --quiet --tags --force origin; git restore --source 29291b3575f2 --sta
 ```
 
 </details>
+
+<a id="step-04.13-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 
@@ -2257,6 +2321,8 @@ git restore --source b7a3e6d212b4 --staged -- :/ && git restore --source 06613b9
 - <a id="step-05.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06613b9b25a8f16c7e60cf52803b2e471161d854/pyproject.toml).
   - look at `"ANN", # annotations: every parameter and every return value has a type`
 
+<a id="step-05.4-pyproject.toml-5d07e7-diff"></a>
+
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
 ```diff
@@ -2327,6 +2393,8 @@ git restore --source 06613b9b25a8 --staged -- :/ && git restore --source 643f653
 - <a id="step-05.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the parameter and the return. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/643f65323fd11c5c6f518c59431b13867e155952/src/wikiapp/wikipedia.py).
   - look at `def random_page(language: str = "en") -> dict[str, Any]:`
 
+<a id="step-05.5-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -2342,6 +2410,8 @@ git restore --source 06613b9b25a8 --staged -- :/ && git restore --source 643f653
 ```
 
 </details>
+
+<a id="step-05.5-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -2446,6 +2516,8 @@ git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353
 - <a id="step-05.6-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the import of `Mock`, and the types of one test. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/test_wikipedia.py).
   - look at `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
+<a id="step-05.6-tests-conftest.py-626af3-diff"></a>
+
 <details open><summary>The patch to <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -2465,6 +2537,8 @@ git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353
 ```
 
 </details>
+
+<a id="step-05.6-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 
@@ -2528,6 +2602,8 @@ git restore --source 643f65323fd1 --staged -- :/ && git restore --source 5873353
 ```
 
 </details>
+
+<a id="step-05.6-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 
@@ -2618,6 +2694,8 @@ git restore --source 6e6d2844bc7a --staged -- :/ && git restore --source 522bcb9
 
 - <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+<a id="step-10.3-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 

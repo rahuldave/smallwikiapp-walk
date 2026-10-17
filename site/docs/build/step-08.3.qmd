@@ -69,6 +69,8 @@ git restore --source 40d4293f5902 --staged -- :/ && git restore --source 66a702f
 - <a id="step-08.3-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the comments are the documentation. 12 lines added, 4 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/66a702fe4a01d424177085b9ef056dd8d8d11cc8/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `) -> Page:  # A page chosen at random`
 
+<a id="step-08.3-src-wikiapp-wikipedia.py-258803-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/wikipedia.py</code></summary>
 
 ```diff

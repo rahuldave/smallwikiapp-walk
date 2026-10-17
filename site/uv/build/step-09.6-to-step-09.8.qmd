@@ -70,6 +70,8 @@ git restore --source 34f1041135a7 --staged -- :/ && git restore --source 8545346
   - look at `wikirandom = { workspace = true }`
 - <a id="step-09.6-uv.lock-8356d8"></a>`uv.lock`: the app's dependencies have wikirandom. 2 lines added. It comes from `uv add wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8545346928730b73e69a52a7652ff4fbf15a333c/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-09.6-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add wikirandom</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -211,8 +213,8 @@ The tests print `7 passed, 2 deselected`, and the coverage table lists
 `packages/wikirandom/src/wikirandom/__init__.py`, and no longer `src/wikiapp/wikipedia.py`. `uv tree` shows that
 wikirandom needs pydantic and requests, and that wikiapp still lists them too, beside click and wikirandom. The
 app no longer imports them, so the next move removes them. `just docs check` still counts the app and the tests
-alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app. The front page
-names both packages, but `random_page` is not yet a link, because the settings of the site name only the app.
+alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app, because the
+settings of the site name only the app.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -242,6 +244,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 - <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `wikirandom.random_page(language="es")`
 
+<a id="step-09.7-README.md-8ec9a0-diff"></a>
+
 <details open><summary>The patch to <code>README.md</code></summary>
 
 ```diff
@@ -258,6 +262,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 ```
 
 </details>
+
+<a id="step-09.7-docs-index.qmd-d6d880-diff"></a>
 
 <details open><summary>The patch to <code>docs/index.qmd</code></summary>
 
@@ -288,6 +294,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 
 </details>
 
+<a id="step-09.7-packages-wikirandom-README.md-105646-diff"></a>
+
 <details open><summary>The patch to <code>packages/wikirandom/README.md</code></summary>
 
 ```diff
@@ -299,6 +307,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 ```
 
 </details>
+
+<a id="step-09.7-pyproject.toml-5d07e7-diff"></a>
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
@@ -320,6 +330,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 
 </details>
 
+<a id="step-09.7-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -337,6 +349,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 ```
 
 </details>
+
+<a id="step-09.7-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff that <code>rm src/wikiapp/wikipedia.py</code> makes in <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -386,6 +400,8 @@ git restore --source 854534692873 --staged -- :/ && git restore --source 78ab095
 ```
 
 </details>
+
+<a id="step-09.7-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_wikipedia.py</code></summary>
 
@@ -478,6 +494,8 @@ git restore --source 78ab09579fdf --staged -- :/ && git restore --source f2dd413
 
 - <a id="step-09.8-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's dependencies are click and wikirandom. 0 lines added, 2 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/pyproject.toml){.btn .btn-sm .btn-secondary}
 - <a id="step-09.8-uv.lock-8356d8"></a>`uv.lock`: the app no longer depends on pydantic and requests by itself. 0 lines added, 4 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/uv.lock){.btn .btn-sm .btn-secondary}
+
+<a id="step-09.8-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff that <code>uv remove requests pydantic</code> makes in <code>pyproject.toml</code></summary>
 

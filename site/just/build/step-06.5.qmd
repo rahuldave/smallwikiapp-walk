@@ -86,6 +86,8 @@ git fetch --quiet --tags --force origin; git restore --source d8af75e8fd57 --sta
 - <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml){.btn .btn-sm .btn-secondary}
   - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
 
+<a id="step-06.5-.github-workflows-test.yaml-a60e23-diff"></a>
+
 <details open><summary>The patch to <code>.github/workflows/test.yaml</code></summary>
 
 ```diff

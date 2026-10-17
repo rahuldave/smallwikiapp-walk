@@ -120,6 +120,8 @@ just help setup
 - <a id="step-00-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: `main`, which prints one line. New, 4 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/src/wikiapp/console.py).
 - <a id="step-00-uv.lock-8356d8"></a>`uv.lock`: the exact packages, the same on every machine. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/ae86cb7d116c4103832edf25ab3a7a9077583830/uv.lock).
 
+<a id="step-00-.gitignore-a5cc29-diff"></a>
+
 <details><summary>The diff of <code>.gitignore</code></summary>
 
 ```diff
@@ -158,6 +160,8 @@ just help setup
 
 </details>
 
+<a id="step-00-.python-version-7696e9-diff"></a>
+
 <details><summary>The diff of <code>.python-version</code></summary>
 
 ```diff
@@ -166,6 +170,8 @@ just help setup
 ```
 
 </details>
+
+<a id="step-00-LICENSE-0398cc-diff"></a>
 
 <details><summary>The diff of <code>LICENSE</code></summary>
 
@@ -377,6 +383,8 @@ just help setup
 
 </details>
 
+<a id="step-00-README.md-8ec9a0-diff"></a>
+
 <details><summary>The diff of <code>README.md</code></summary>
 
 ````diff
@@ -442,6 +450,8 @@ just help setup
 
 </details>
 
+<a id="step-00-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -471,6 +481,8 @@ just help setup
 
 </details>
 
+<a id="step-00-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -495,6 +507,8 @@ just help setup
 ```
 
 </details>
+
+<a id="step-00-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -556,6 +570,8 @@ uv tree --depth 1
   - look at `"click>=8.5.0",`
 - <a id="step-01.1-uv.lock-8356d8"></a>`uv.lock`: the exact versions, for every platform. 176 lines added. It comes from `uv add click requests`. [The file](https://github.com/rahuldave/smallwikiapp/blob/36d49582843a575d84ed178ad66157913be4c59c/uv.lock).
 
+<a id="step-01.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -597,7 +613,7 @@ original wikiapp did not have it.
 
 The patch writes `src/wikiapp/console.py` again.
 
-[± See the change to `src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67)
+[± See the change to `src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67-diff)
 
 In `src/wikiapp/console.py`, the `print` is gone. The block `with requests.get(API_URL) as response:` asks
 Wikipedia for the page, and the last two lines of the block print it.
@@ -615,6 +631,8 @@ User-Agent is the default of a library. requests sends `python-requests/` and it
 
 - <a id="step-01.2-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: a request, and two lines printed. 17 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/571c82ebd31fee095e56a45cf2bf77eb7bfe0c8c/src/wikiapp/console.py).
   - look at `with requests.get(API_URL) as response:`
+
+<a id="step-01.2-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -656,7 +674,7 @@ sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
-[± See the change to `src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67)
+[± See the change to `src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67-diff)
 
 In `src/wikiapp/console.py`, `USER_AGENT` is under `API_URL`. The request now passes it in
 `headers={"User-Agent": USER_AGENT}`.
@@ -671,6 +689,8 @@ It prints a title in green, and a paragraph. Each run prints another page.
 
 - <a id="step-01.3-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the header. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0ffd5df563acb876953855d86be30b6952ecfd44/src/wikiapp/console.py).
   - look at `with requests.get(API_URL, headers={"User-Agent": USER_AGENT}) as response:`
+
+<a id="step-01.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -704,9 +724,9 @@ its own version from the installed package, which has the version from `pyprojec
 `src/wikiapp/__init__.py` sets `__version__` from the metadata of the installed package. The decorator
 `@click.version_option` gives the command the option `--version`, which prints it.
 
-[± See the change to `src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01)
+[± See the change to `src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01-diff)
 
-[± See the change to `src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67)
+[± See the change to `src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67-diff)
 
 In `src/wikiapp/__init__.py`, `__version__` comes from `importlib.metadata`. In `src/wikiapp/console.py`,
 `@click.version_option(version=__version__)` is under `@click.command()`.
@@ -726,6 +746,8 @@ decorators and the docstring. So the docstring of `main` is also help text, for 
 - <a id="step-01.4-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: click's version option. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/f05d3c31be2cf640cc2aa4345658b8eebc394d60/src/wikiapp/console.py).
   - look at `@click.version_option(version=__version__)`
 
+<a id="step-01.4-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -735,6 +757,8 @@ decorators and the docstring. So the docstring of `main` is also help text, for 
 ```
 
 </details>
+
+<a id="step-01.4-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -813,6 +837,8 @@ used it yet.
   - look at `"ruff>=0.17.0",`
 - <a id="step-04.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ruff. 29 lines added. It comes from `uv add --group lint ruff`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8f7b800001ee35d8db80c47521b02777047c019d/uv.lock).
 
+<a id="step-04.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -840,9 +866,9 @@ ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 char
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
-[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7)
+[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7-diff)
 
-[± See the change to `justfile`](#step-04.2-justfile-424f0b)
+[± See the change to `justfile`](#step-04.2-justfile-424f0b-diff)
 
 At the end of `pyproject.toml`, the table `[tool.ruff]` on line 41 sets `line-length = 100`. The table
 `[tool.ruff.format]` on line 46 gives the three defaults of the formatter, each with a comment. At the end of the
@@ -866,6 +892,8 @@ runs the same command, and passes on the words after `just fmt`.
 - <a id="step-04.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of ruff. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/31445743379186b800fd4c035c8f04eed7ad7f3d/pyproject.toml).
   - look at `line-length = 100`
 
+<a id="step-04.2-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -882,6 +910,8 @@ runs the same command, and passes on the words after `just fmt`.
 ```
 
 </details>
+
+<a id="step-04.2-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -940,6 +970,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
   - look at `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
 - <a id="step-04.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: two blank lines before the test. 1 line added. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/tests/test_wikipedia.py).
 
+<a id="step-04.3-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -950,6 +982,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 ```
 
 </details>
+
+<a id="step-04.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -973,6 +1007,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 ```
 
 </details>
+
+<a id="step-04.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -1000,6 +1036,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 
 </details>
 
+<a id="step-04.3-tests-conftest.py-626af3-diff"></a>
+
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -1013,6 +1051,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 ```
 
 </details>
+
+<a id="step-04.3-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -1067,6 +1107,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 
 </details>
 
+<a id="step-04.3-tests-test_wikipedia.py-2f4413-diff"></a>
+
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
 ```diff
@@ -1105,9 +1147,9 @@ tests may use `assert`. The rest of the code may not, because Python skips every
 
 A recipe `lint` runs the linter. The words after `just lint` go to `ruff check`.
 
-[± See the change to `pyproject.toml`](#step-04.4-pyproject.toml-5d07e7)
+[± See the change to `pyproject.toml`](#step-04.4-pyproject.toml-5d07e7-diff)
 
-[± See the change to `justfile`](#step-04.4-justfile-424f0b)
+[± See the change to `justfile`](#step-04.4-justfile-424f0b-diff)
 
 At the end of `pyproject.toml`, `select = [` on line 54 lists nine families of rules. The last table lets the files
 under `tests/` break the rule `S101`, which forbids `assert`, on line 68. At the end of the `justfile`, the recipe
@@ -1137,6 +1179,8 @@ in the next two moves, and then ruff fixes the last one.
 - <a id="step-04.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: a family of rules on each line. 18 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/589f2f691557470eac084858d430a302c98390ce/pyproject.toml).
   - look at `"tests/**" = ["S101"]`
 
+<a id="step-04.4-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -1153,6 +1197,8 @@ in the next two moves, and then ruff fixes the last one.
 ```
 
 </details>
+
+<a id="step-04.4-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -1212,7 +1258,7 @@ The import goes up, under `import requests`. wikiapp's own imports are a block o
 packages, which is the order that the rule `I001` asks for. The tests `test_main_invokes_requests_get` and
 `test_main_uses_correct_url` check the mock, and not the result, so they need no `result =`.
 
-[± See the change to `tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee)
+[± See the change to `tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee-diff)
 
 In `tests/test_console.py`, `from wikiapp import console` is now on line 5, under `import requests`, after a blank
 line. It is gone from below the fixture. The first line of each of the two tests, lines 19 and 24, is now
@@ -1230,6 +1276,8 @@ Two problems are left, `S113` and `I001`, and the linter still fails. The format
 
 - <a id="step-04.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the import goes up, and two lines lose `result =`. 4 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/2ec7932b37e21c1533f319c03e0533bc755f6da7/tests/test_console.py).
   - look at `from wikiapp import console`
+
+<a id="step-04.5-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -1280,7 +1328,7 @@ Of the two problems left, `S113` comes from the family `S` of security rules. Th
 requests waits as long as the server keeps the connection open, and the command can wait for ever. No test had
 found it. The request in `src/wikiapp/wikipedia.py` gets `timeout=10`, a number of seconds that the author of the project chose.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803)
+[± See the change to `src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803-diff)
 
 In `src/wikiapp/wikipedia.py`, the arguments of `requests.get` on line 15 now end with `timeout=10`.
 
@@ -1297,6 +1345,8 @@ One problem is left, `I001`, so the linter still fails. Its `[*]` says that ruff
 
 - <a id="step-04.6-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: one more argument. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0fb4985582732edf7372a4b90659d703db138446/src/wikiapp/wikipedia.py).
   - look at `timeout=10`
+
+<a id="step-04.6-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -1341,6 +1391,8 @@ The linter finds no problem now. Of its five problems, ruff fixed one, and a per
 
 - <a id="step-04.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the imports, sorted. 3 lines added, 2 removed. It comes from `just lint --fix`. [The file](https://github.com/rahuldave/smallwikiapp/blob/a57134d1cef6ff24803235ace966e5870046fbd9/src/wikiapp/console.py).
   - look at `from wikiapp import __version__`
+
+<a id="step-04.7-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -1405,6 +1457,8 @@ It prints `validate_pyproject 0.26`. Nothing runs it yet.
   - look at `"validate-pyproject>=0.26",`
 - <a id="step-04.8-uv.lock-8356d8"></a>`uv.lock`: the exact version of validate-pyproject, and of what it needs. 26 lines added, 1 removed. It comes from `uv add --group lint validate-pyproject`. [The file](https://github.com/rahuldave/smallwikiapp/blob/4e710d50a22967ebff9502eacbdada54313ebe70/uv.lock).
 
+<a id="step-04.8-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -1431,7 +1485,7 @@ A recipe `lint-config` checks the configuration, with three commands. validate-p
 --unstable` checks the `justfile`. The recipe runs the three commands, one on each line, and `set -e` stops it at
 the first that fails.
 
-[± See the change to `justfile`](#step-04.9-justfile-424f0b)
+[± See the change to `justfile`](#step-04.9-justfile-424f0b-diff)
 
 At the end of the `justfile`, the recipe `lint-config *args:` on line 44 runs the three commands, one on each line.
 `set -e`, on line 46, stops it at the first that fails.
@@ -1452,6 +1506,8 @@ nothing, because the `justfile` is in the format of `just`.
 
 - <a id="step-04.9-justfile-424f0b"></a>`justfile`: the recipe, with its three checks. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8a9c8f71eb58893025360c20b32c9078e5b0c3c/justfile).
   - look at `uv run validate-pyproject pyproject.toml`
+
+<a id="step-04.9-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1501,7 +1557,7 @@ There are now four checks, and a person must remember to run each. A recipe `che
 stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
 the configuration.
 
-[± See the change to `justfile`](#step-04.11-justfile-424f0b)
+[± See the change to `justfile`](#step-04.11-justfile-424f0b-diff)
 
 At the end of the `justfile`, the recipe `check *args:` on line 57 runs four recipes. The tests run with
 `--cov-fail-under=90`, on line 63, so they fail if they run less than 90% of the statements.
@@ -1519,6 +1575,8 @@ Later in the whole tutorial, GitHub runs `just check` too, on every push to main
 
 - <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile).
   - look at `just test -q --cov-fail-under=90`
+
+<a id="step-04.11-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1588,6 +1646,8 @@ It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
   - look at `"pre-commit>=4.7.0",`
 - <a id="step-04.12-uv.lock-8356d8"></a>`uv.lock`: the exact version of `pre-commit`, and of what it needs. 136 lines added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/uv.lock).
 
+<a id="step-04.12-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -1617,9 +1677,9 @@ A recipe `hook` installs the hook, once in each clone. `hook` is a recipe of its
 often and must not change files under `.git`. Once `just hook` installs the hook in a clone, it runs
 `just check` before each `git commit` in that clone.
 
-[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d)
+[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d-diff)
 
-[± See the change to `justfile`](#step-04.13-justfile-424f0b)
+[± See the change to `justfile`](#step-04.13-justfile-424f0b-diff)
 
 In `.pre-commit-config.yaml`, the three hooks under `repo: https://github.com/pre-commit/pre-commit-hooks`, on
 line 6, come from `pre-commit`'s collection. The hook under `repo: local` has the line `entry: just check`, on
@@ -1646,6 +1706,8 @@ a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints
   - look at `entry: just check`
 - <a id="step-04.13-justfile-424f0b"></a>`justfile`: the recipe `hook`. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/justfile).
   - look at `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
+
+<a id="step-04.13-.pre-commit-config.yaml-e7d14d-diff"></a>
 
 <details><summary>The diff of <code>.pre-commit-config.yaml</code></summary>
 
@@ -1674,6 +1736,8 @@ a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints
 ```
 
 </details>
+
+<a id="step-04.13-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -1726,7 +1790,7 @@ ty checks the types that the code states, and the code states almost none. ruff'
 parameter and each return without a type. So the linter checks that a type is written, and the type checker
 checks that the type is right. The rules go in the list `select` in `pyproject.toml`.
 
-[± See the change to `pyproject.toml`](#step-05.4-pyproject.toml-5d07e7)
+[± See the change to `pyproject.toml`](#step-05.4-pyproject.toml-5d07e7-diff)
 
 In `pyproject.toml`, the list `select` now has `"ANN"` on line 67, after `"N"`.
 
@@ -1741,6 +1805,8 @@ returns (`ANN201`). The next two moves add them, in the code and then in the tes
 
 - <a id="step-05.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06613b9b25a8f16c7e60cf52803b2e471161d854/pyproject.toml).
   - look at `"ANN", # annotations: every parameter and every return value has a type`
+
+<a id="step-05.4-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -1768,11 +1834,11 @@ string. It returns the JSON that Wikipedia sends, which is a dictionary from str
 says that ty cannot check the values. `Any` comes from the standard library, so its import is a block of its own,
 above `import requests`.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-05.5-src-wikiapp-wikipedia.py-258803)
+[± See the change to `src/wikiapp/wikipedia.py`](#step-05.5-src-wikiapp-wikipedia.py-258803-diff)
 
 `main` takes the language as a string. Its return type, None, was already there.
 
-[± See the change to `src/wikiapp/console.py`](#step-05.5-src-wikiapp-console.py-d9ae67)
+[± See the change to `src/wikiapp/console.py`](#step-05.5-src-wikiapp-console.py-d9ae67-diff)
 
 In `src/wikiapp/wikipedia.py`, line 1 imports `Any`. On line 13, `random_page` now takes a `str`, and returns a
 `dict[str, Any]`. In `src/wikiapp/console.py`, on line 19, the parameter `language` of `main` is a `str`.
@@ -1790,6 +1856,8 @@ just lint --statistics
 - <a id="step-05.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the parameter and the return. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/643f65323fd11c5c6f518c59431b13867e155952/src/wikiapp/wikipedia.py).
   - look at `def random_page(language: str = "en") -> dict[str, Any]:`
 
+<a id="step-05.5-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -1805,6 +1873,8 @@ just lint --statistics
 ```
 
 </details>
+
+<a id="step-05.5-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -1841,7 +1911,7 @@ The mock of `requests.get` is a `Mock`. `mocker` is
 pytest-mock's `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
 `tests/conftest.py` imports `Mock` and `MockerFixture`, and its fixture states both types.
 
-[± See the change to `tests/conftest.py`](#step-05.6-tests-conftest.py-626af3)
+[± See the change to `tests/conftest.py`](#step-05.6-tests-conftest.py-626af3-diff)
 
 In `tests/conftest.py`, the fixture on line 8 now reads `def mock_requests_get(mocker: MockerFixture) -> Mock:`.
 `Mock` comes from `unittest.mock`, and `MockerFixture` from `pytest_mock`, in the imports above it.
@@ -1851,7 +1921,7 @@ in place of `import click.testing`. The fixture `runner` returns `CliRunner()`, 
 `CliRunner`. In every test, `runner` is a `CliRunner`, `mock_requests_get` is a `Mock`, and the test returns
 `None`.
 
-[± See the change to `tests/test_console.py`](#step-05.6-tests-test_console.py-9442ee)
+[± See the change to `tests/test_console.py`](#step-05.6-tests-test_console.py-9442ee-diff)
 
 In `tests/test_console.py`, `from click.testing import CliRunner` on line 5 replaces `import click.testing`. The
 fixture on line 11 reads `def runner() -> CliRunner:`, and each test names the types of its parameters and
@@ -1859,7 +1929,7 @@ returns `None`.
 
 The test of the library gets its types the same way.
 
-[± See the change to `tests/test_wikipedia.py`](#step-05.6-tests-test_wikipedia.py-2f4413)
+[± See the change to `tests/test_wikipedia.py`](#step-05.6-tests-test_wikipedia.py-2f4413-diff)
 
 In `tests/test_wikipedia.py`, `Mock` comes in on line 1, and the test on line 6 states its types.
 
@@ -1885,6 +1955,8 @@ just check
 - <a id="step-05.6-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the import of `Mock`, and the types of one test. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/test_wikipedia.py).
   - look at `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
+<a id="step-05.6-tests-conftest.py-626af3-diff"></a>
+
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -1904,6 +1976,8 @@ just check
 ```
 
 </details>
+
+<a id="step-05.6-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -1968,6 +2042,8 @@ just check
 
 </details>
 
+<a id="step-05.6-tests-test_wikipedia.py-2f4413-diff"></a>
+
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
 ```diff
@@ -2017,7 +2093,7 @@ checks the library's `pyproject.toml`.
 The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. A mistake in the
 library's file would reach a build unseen. The recipe `lint-config` now gives validate-pyproject both files.
 
-[± See the change to `justfile`](#step-10.3-justfile-424f0b)
+[± See the change to `justfile`](#step-10.3-justfile-424f0b-diff)
 
 ```bash
 just lint-config
@@ -2033,6 +2109,8 @@ repository, and the User-Agent says the installed version. The
 
 - <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile).
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+<a id="step-10.3-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

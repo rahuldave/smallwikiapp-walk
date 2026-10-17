@@ -39,7 +39,7 @@ uv installs only the group `dev` by default. The setting `default-groups = "all"
 install every group. So each later `uv add --group` needs no other change to `pyproject.toml`. A patch adds the
 table `[tool.uv]` with this setting.
 
-[± See the change to `pyproject.toml`](#step-02.1-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-02.1-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the new table `[tool.uv]` has the line `default-groups = "all"`, with a comment
 above it.
@@ -56,6 +56,8 @@ uv prints `Resolved 7 packages`, and no error. The project has no groups yet, so
 
 - <a id="step-02.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the table `[tool.uv]`, so uv installs every dependency group. 4 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/46dc20fb9092170695699eaa052f4830563cb930/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `default-groups = "all"`
+
+<a id="step-02.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -85,7 +87,7 @@ can come from the code, from the network or from Wikipedia.
 
 The test comes in a new file, `tests/test_console.py`, as a patch. The patch also makes the folder `tests`.
 
-[± See the new file `tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the new file `tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 The new file `tests/test_console.py` has one test, `test_main_succeeds`. It runs `console.main` with a
 `CliRunner`, and checks `result.exit_code`.
@@ -103,6 +105,8 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 - <a id="step-02.2-tests-test_console.py-9442ee"></a>`tests/test_console.py`: a test that runs the command and checks its exit code. New, 8 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/6d7a6cfdae6008a9687f3525348ab24ea05930cc/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert result.exit_code == 0`
+
+<a id="step-02.2-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -150,6 +154,8 @@ Wikipedia, so it needs the network.
   - look at `"pytest>=9.1.1",`
 - <a id="step-02.3-uv.lock-8356d8"></a>`uv.lock`: pytest, and the packages that it needs. 69 lines added. It comes from `uv add --group test pytest`. [The file](https://github.com/rahuldave/smallwikiapp/blob/d92e2dec921d6322e2a356af20dafef3837c1849/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-02.3-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -174,7 +180,7 @@ The command that runs the tests is `uv run pytest`, with any options for pytest 
 justfile gives it a short name, `just test`. The words after `just test` go to pytest. `"$@"` stands for those
 words, and the recipe gives each word to pytest whole. `just test help` shows the recipe.
 
-[± See the change to `justfile`](#step-02.4-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-02.4-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `test *args:` runs `uv run pytest "$@"`, or shows itself for
 `just test help`. The comment above it is what `just` lists for the recipe.
@@ -194,6 +200,8 @@ result as before, `1 passed`.
 
 - <a id="step-02.4-justfile-424f0b"></a>`justfile`: the recipe `test`. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/45807a0ddd9f97798c3f86a82b19782d4df45837/justfile){.btn .btn-sm .btn-secondary}
   - look at `test *args:`
+
+<a id="step-02.4-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -220,7 +228,7 @@ Each test of the command needs a `CliRunner`, and each would make its own. A fix
 A fixture is a function that pytest calls for each test that names it as a parameter. So a fixture `runner`
 returns a `CliRunner`, and `test_main_succeeds` takes the runner as its parameter.
 
-[± See the change to `tests/test_console.py`](#step-02.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-02.5-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `runner` is above the test, under `@pytest.fixture`. The test now reads
 `def test_main_succeeds(runner):`, and no longer makes a `CliRunner` itself.
@@ -235,6 +243,8 @@ The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 
 - <a id="step-02.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture, and the test that names it. 6 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/8435ae56cf5630c401d83760b4dffe1fe5bde109/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `def test_main_succeeds(runner):`
+
+<a id="step-02.5-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -286,6 +296,8 @@ No test uses the mock yet, so the result is the same, `1 passed`.
   - look at `"pytest-mock>=3.16.0",`
 - <a id="step-02.6-uv.lock-8356d8"></a>`uv.lock`: the exact version of pytest-mock. 17 lines added, 1 removed. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-02.6-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -313,7 +325,7 @@ A new test, `test_main_prints_title`, checks that the command prints that title.
 A test that uses the mock is a unit test of the command. It checks the command alone, without the network, so a
 failure points at the command. `test_main_succeeds` still asks the real Wikipedia.
 
-[± See the change to `tests/test_console.py`](#step-02.7-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-02.7-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `mock_requests_get` is under `runner`, with the line
 `mock = mocker.patch("requests.get")`. The new test `test_main_prints_title` names both fixtures, and looks for
@@ -330,6 +342,8 @@ pytest runs only the test whose name contains `title`. The output shows `test_ma
 
 - <a id="step-02.7-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture of the mock, and the new test. 13 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7c1911b9f0155df43da70d010b25fc1ec947fe7c/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `mock = mocker.patch("requests.get")`
+
+<a id="step-02.7-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -372,7 +386,7 @@ checks the address.
 `call_args[0]` contains the arguments that the last call gave in order, without a name. Here that is only the
 address. The call gives the header by name, as `headers=...`, so the header is in `call_args[1]`.
 
-[± See the change to `tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the two new tests are under `test_main_prints_title`. The first checks
 `mock_requests_get.called`. The second compares `call_args[0]` with the address of a random English page.
@@ -387,6 +401,8 @@ The result is `4 passed`.
 
 - <a id="step-02.8-tests-test_console.py-9442ee"></a>`tests/test_console.py`: two tests, that the command makes the request, and to the right address. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/9be013d11b88d0e40680024a8ea99d501c681252/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert mock_requests_get.called`
+
+<a id="step-02.8-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -418,7 +434,7 @@ A request can fail, and nothing checks what the command does then. A mock can ra
 a value. If `side_effect` is an exception, a call to the mock raises it. A test,
 `test_main_fails_on_request_error`, makes the mock raise, and checks that the command ends with exit code 1.
 
-[± See the change to `tests/test_console.py`](#step-02.9-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-02.9-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the new test is above `test_main_succeeds`. Its first line,
 `mock_requests_get.side_effect = Exception("Boom")`, makes the mock raise.
@@ -433,6 +449,8 @@ The result is `5 passed`.
 
 - <a id="step-02.9-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the mock raises. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bfc38e738984492a5dbf6a1a6a0b6691baad4c34/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `mock_requests_get.side_effect = Exception("Boom")`
+
+<a id="step-02.9-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -481,6 +499,8 @@ Under the tests, a table lists each file of `src/wikiapp`, with its statements a
   - look at `"pytest-cov>=7.1.0",`
 - <a id="step-02.10-uv.lock-8356d8"></a>`uv.lock`: pytest-cov, and coverage, the package that it needs. 100 lines added. It comes from `uv add --group test pytest-cov`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8409e0f2e7f68a697de1e8bf32a745658364f17f/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-02.10-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -503,7 +523,7 @@ A person can forget to type `--cov=wikiapp`. The settings of pytest in `pyprojec
 every run. They tell pytest to look for tests in `tests`, to measure coverage, and to list the lines that no test
 ran.
 
-[± See the change to `pyproject.toml`](#step-02.11-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-02.11-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the new table `[tool.pytest.ini_options]` has `testpaths = ["tests"]`. Its line
 `addopts` gives pytest the options `--cov=wikiapp --cov-report=term-missing` for every run.
@@ -522,6 +542,8 @@ is the call to `main` at the end, which runs only when you run the file as a scr
 
 - <a id="step-02.11-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of pytest. They name the folder of the tests, and turn coverage on for every run. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7508f1d424d5f906ee4630be09b2fddf3483e9c4/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `addopts = "--cov=wikiapp --cov-report=term-missing"`
+
+<a id="step-02.11-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 

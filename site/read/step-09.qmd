@@ -81,6 +81,8 @@ hint to run `uv lock`. pytest does not run.
 - <a id="step-09.1-pyproject.toml-5d07e7"></a>`pyproject.toml`: the workspace, with one member. 5 lines added. It comes from `uv init --lib --author-from none --no-pin-python --python ">=3.11" --description "A random page of Wikipedia, in any language" packages/wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/01364831243e6c4c4f2fab3756eb1c633f6903c8/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"packages/wikirandom",`
 
+<a id="step-09.1-packages-wikirandom-pyproject.toml-28d6f6-diff"></a>
+
 <details><summary>The diff of <code>packages/wikirandom/pyproject.toml</code></summary>
 
 ```diff
@@ -100,6 +102,8 @@ hint to run `uv lock`. pytest does not run.
 
 </details>
 
+<a id="step-09.1-packages-wikirandom-src-wikirandom-__init__.py-343c23-diff"></a>
+
 <details><summary>The diff of <code>packages/wikirandom/src/wikirandom/__init__.py</code></summary>
 
 ```diff
@@ -109,6 +113,8 @@ hint to run `uv lock`. pytest does not run.
 ```
 
 </details>
+
+<a id="step-09.1-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -157,6 +163,8 @@ uv tree --package wikirandom
   - look at `"pydantic>=2.14.1",`
 - <a id="step-09.2-uv.lock-8356d8"></a>`uv.lock`: the two members of the workspace, and the library with its dependencies. 21 lines added. It comes from `uv add --package wikirandom requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/c153cdfc43300110bd63502b3d53a85ab3aa79f1/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-09.2-packages-wikirandom-pyproject.toml-28d6f6-diff"></a>
+
 <details><summary>The diff of <code>packages/wikirandom/pyproject.toml</code></summary>
 
 ```diff
@@ -183,7 +191,7 @@ uv tree --package wikirandom
 uv wrote an empty `README.md` for the library. It gets a heading, and a line that says what the library is. The
 line also says that the command `wikiapp` will use it.
 
-[± See the change to `packages/wikirandom/README.md`](#step-09.3-packages-wikirandom-README.md-105646){.btn .btn-sm .btn-secondary}
+[± See the change to `packages/wikirandom/README.md`](#step-09.3-packages-wikirandom-README.md-105646-diff){.btn .btn-sm .btn-secondary}
 
 ```bash
 cat packages/wikirandom/README.md
@@ -196,6 +204,8 @@ The command prints the heading, and
 
 - <a id="step-09.3-packages-wikirandom-README.md-105646"></a>`packages/wikirandom/README.md`: a heading, and what the library is. 3 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/dab89136e205c1102c10ce98dd9b4bd9c3814543/packages/wikirandom/README.md){.btn .btn-sm .btn-secondary}
   - look at ``A random page of Wikipedia, in any language. The command `wikiapp` will use this library.``
+
+<a id="step-09.3-packages-wikirandom-README.md-105646-diff"></a>
 
 <details><summary>The diff of <code>packages/wikirandom/README.md</code></summary>
 
@@ -233,6 +243,8 @@ does not depend on the library yet, so a plain `uv run` would not install it.
 
 - <a id="step-09.4-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: the code of `wikipedia.py`, in place of `hello`. 41 lines added, 2 removed. It comes from `cp src/wikiapp/wikipedia.py packages/wikirandom/src/wikirandom/__init__.py`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8e526cfa908bef1fff32429f795882eb734a103b/packages/wikirandom/src/wikirandom/__init__.py){.btn .btn-sm .btn-secondary}
   - look at `def random_page(`
+
+<a id="step-09.4-packages-wikirandom-src-wikirandom-__init__.py-343c23-diff"></a>
 
 <details><summary>The diff of <code>packages/wikirandom/src/wikirandom/__init__.py</code></summary>
 
@@ -293,7 +305,7 @@ The copy still describes the app. Its docstring says only "Wikipedia's REST API"
 `wikiapp`. The docstring now says what the package is, and the User-Agent names `wikirandom`, the program that now
 makes the request.
 
-[± See the change to `packages/wikirandom/src/wikirandom/__init__.py`](#step-09.5-packages-wikirandom-src-wikirandom-__init__.py-343c23){.btn .btn-sm .btn-secondary}
+[± See the change to `packages/wikirandom/src/wikirandom/__init__.py`](#step-09.5-packages-wikirandom-src-wikirandom-__init__.py-343c23-diff){.btn .btn-sm .btn-secondary}
 
 In `packages/wikirandom/src/wikirandom/__init__.py`, see the docstring in line 1, and `USER_AGENT` in line 10.
 The rest is `src/wikiapp/wikipedia.py`.
@@ -310,6 +322,8 @@ real Wikipedia, and prints the title of a French page, another one on each run.
 
 - <a id="step-09.5-packages-wikirandom-src-wikirandom-__init__.py-343c23"></a>`packages/wikirandom/src/wikirandom/__init__.py`: the docstring, and the User-Agent. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/34f1041135a78b1015d73e8fcb2529102c5ccf9e/packages/wikirandom/src/wikirandom/__init__.py){.btn .btn-sm .btn-secondary}
   - look at `USER_AGENT = "wikirandom/0.1.0 (https://github.com/rahuldave/smallwikiapp)"`
+
+<a id="step-09.5-packages-wikirandom-src-wikirandom-__init__.py-343c23-diff"></a>
 
 <details><summary>The diff of <code>packages/wikirandom/src/wikirandom/__init__.py</code></summary>
 
@@ -364,6 +378,8 @@ command prints a path that ends with
   - look at `wikirandom = { workspace = true }`
 - <a id="step-09.6-uv.lock-8356d8"></a>`uv.lock`: the app's dependencies have wikirandom. 2 lines added. It comes from `uv add wikirandom`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8545346928730b73e69a52a7652ff4fbf15a333c/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-09.6-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -408,17 +424,17 @@ Coverage measured `wikiapp` alone, and must measure both packages. Last, three f
 packages, and that the app uses the library. They are the README, the front page of the docs and the library's
 README.
 
-[± See the change to `src/wikiapp/console.py`](#step-09.7-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/console.py`](#step-09.7-src-wikiapp-console.py-d9ae67-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `tests/test_wikipedia.py`](#step-09.7-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-09.7-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `pyproject.toml`](#step-09.7-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-09.7-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `README.md`](#step-09.7-README.md-8ec9a0){.btn .btn-sm .btn-secondary}
+[± See the change to `README.md`](#step-09.7-README.md-8ec9a0-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `docs/index.qmd`](#step-09.7-docs-index.qmd-d6d880){.btn .btn-sm .btn-secondary}
+[± See the change to `docs/index.qmd`](#step-09.7-docs-index.qmd-d6d880-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `packages/wikirandom/README.md`](#step-09.7-packages-wikirandom-README.md-105646){.btn .btn-sm .btn-secondary}
+[± See the change to `packages/wikirandom/README.md`](#step-09.7-packages-wikirandom-README.md-105646-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, the import of line 6 now comes from `wikirandom`. In `tests/test_wikipedia.py`,
 every call starts with `wikirandom.`. In `pyproject.toml`, see `--cov=wikirandom` in line 57. `README.md` has a
@@ -437,8 +453,8 @@ The tests print `7 passed, 2 deselected`, and the coverage table lists
 `packages/wikirandom/src/wikirandom/__init__.py`, and no longer `src/wikiapp/wikipedia.py`. `uv tree` shows that
 wikirandom needs pydantic and requests, and that wikiapp still lists them too, beside click and wikirandom. The
 app no longer imports them, so the next move removes them. `just docs check` still counts the app and the tests
-alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app. The front page
-names both packages, but `random_page` is not yet a link, because the settings of the site name only the app.
+alone, 12 of 12. `just docs` writes 2 pages, the front page and the reference page of the app, because the
+settings of the site name only the app.
 
 ### What changed {#step-09.7-what-changed-182c57}
 
@@ -456,6 +472,8 @@ names both packages, but `random_page` is not yet a link, because the settings o
 - <a id="step-09.7-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the same three tests, of the library. 7 lines added, 8 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/78ab09579fdffcb2db04e83807817e2edba27ebe/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `wikirandom.random_page(language="es")`
 
+<a id="step-09.7-README.md-8ec9a0-diff"></a>
+
 <details><summary>The diff of <code>README.md</code></summary>
 
 ```diff
@@ -472,6 +490,8 @@ names both packages, but `random_page` is not yet a link, because the settings o
 ```
 
 </details>
+
+<a id="step-09.7-docs-index.qmd-d6d880-diff"></a>
 
 <details><summary>The diff of <code>docs/index.qmd</code></summary>
 
@@ -502,6 +522,8 @@ names both packages, but `random_page` is not yet a link, because the settings o
 
 </details>
 
+<a id="step-09.7-packages-wikirandom-README.md-105646-diff"></a>
+
 <details><summary>The diff of <code>packages/wikirandom/README.md</code></summary>
 
 ```diff
@@ -513,6 +535,8 @@ names both packages, but `random_page` is not yet a link, because the settings o
 ```
 
 </details>
+
+<a id="step-09.7-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -534,6 +558,8 @@ names both packages, but `random_page` is not yet a link, because the settings o
 
 </details>
 
+<a id="step-09.7-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -551,6 +577,8 @@ names both packages, but `random_page` is not yet a link, because the settings o
 ```
 
 </details>
+
+<a id="step-09.7-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -600,6 +628,8 @@ names both packages, but `random_page` is not yet a link, because the settings o
 ```
 
 </details>
+
+<a id="step-09.7-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
@@ -674,6 +704,8 @@ under it, and `wikiapp v0.1.0` under that. The app gets requests only through th
 - <a id="step-09.8-pyproject.toml-5d07e7"></a>`pyproject.toml`: the app's dependencies are click and wikirandom. 0 lines added, 2 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/pyproject.toml){.btn .btn-sm .btn-secondary}
 - <a id="step-09.8-uv.lock-8356d8"></a>`uv.lock`: the app no longer depends on pydantic and requests by itself. 0 lines added, 4 removed. It comes from `uv remove requests pydantic`. [The file](https://github.com/rahuldave/smallwikiapp/blob/f2dd413c02c731553f8c103b0e6c892dac0fa2dc/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-09.8-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -716,7 +748,7 @@ The docs check lists the file under its new name, `tests/test_wikirandom.py   3 
 The settings of the site, `docs/_smalldocs.yml`, name only `wikiapp`, so the docs and their check leave out the
 library. The line `packages:` in the section `api` must name both.
 
-[± See the change to `docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48){.btn .btn-sm .btn-secondary}
+[± See the change to `docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48-diff){.btn .btn-sm .btn-secondary}
 
 In `docs/_smalldocs.yml`, line 19, `packages:` lists `wikiapp` and `wikirandom`.
 
@@ -735,6 +767,8 @@ pages, and grep finds the link from `random_page` on the front page to its entry
 
 - <a id="step-09.10-docs-_smalldocs.yml-4b0b48"></a>`docs/_smalldocs.yml`: the list of packages. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/259e6364a52f83993c797f66148281b04eb92060/docs/_smalldocs.yml){.btn .btn-sm .btn-secondary}
   - look at `packages: [wikiapp, wikirandom]  # the app, and the library in packages/wikirandom`
+
+<a id="step-09.10-docs-_smalldocs.yml-4b0b48-diff"></a>
 
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 

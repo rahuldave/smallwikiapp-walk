@@ -102,6 +102,8 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 - <a id="step-08.6-justfile-424f0b"></a>`justfile`: with no words, `docs` builds the site. 5 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/e99ed4f3ab32aec60ae0e2329f4779673a5955d0/justfile){.btn .btn-sm .btn-secondary}
   - look at `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi`
 
+<a id="step-08.6-docs-_smalldocs.yml-4b0b48-diff"></a>
+
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
 
 ```diff
@@ -130,6 +132,8 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 ```
 
 </details>
+
+<a id="step-08.6-docs-index.qmd-d6d880-diff"></a>
 
 <details open><summary>The patch to <code>docs/index.qmd</code></summary>
 
@@ -173,6 +177,8 @@ git restore --source 7a0e50948873 --staged -- :/ && git restore --source e99ed4f
 ````
 
 </details>
+
+<a id="step-08.6-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 

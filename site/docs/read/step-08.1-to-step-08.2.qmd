@@ -79,6 +79,8 @@ markdown-it-py, mdit-py-plugins, pygments and pyyaml.
   - look at `docs = [`
 - <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-08.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -107,7 +109,7 @@ smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has on
 It names the package to document, the address of its source, and the files of the tests to check. The file is new,
 and comes whole, as a patch.
 
-[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48){.btn .btn-sm .btn-secondary}
+[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48-diff){.btn .btn-sm .btn-secondary}
 
 The new file `docs/_smalldocs.yml` has five lines. Line 3 names the package, `wikiapp`. Line 5 names the tests,
 `tests/**/*.py`, which `check` also checks.
@@ -119,7 +121,7 @@ that we use here:
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
   docstring. It looks in the package and in the files of `check`, here the tests.
 
-[± See the change to `justfile`](#step-08.2-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-08.2-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 The recipe `docs *args:` is at line 81, the end of the `justfile`. It also passes `--dir docs`, the folder of the
 settings.
@@ -144,6 +146,8 @@ coverage, which counts the lines that the tests run, `check` counts what has doc
 - <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile){.btn .btn-sm .btn-secondary}
   - look at `docs *args:`
 
+<a id="step-08.2-docs-_smalldocs.yml-4b0b48-diff"></a>
+
 <details><summary>The diff of <code>docs/_smalldocs.yml</code></summary>
 
 ```diff
@@ -156,6 +160,8 @@ coverage, which counts the lines that the tests run, `check` counts what has doc
 ```
 
 </details>
+
+<a id="step-08.2-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

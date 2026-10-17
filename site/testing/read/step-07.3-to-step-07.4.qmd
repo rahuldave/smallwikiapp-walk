@@ -37,20 +37,20 @@ know. So `random_page` returns a `Page` made from the answer, and `main` prints 
 `random_page` passes the answer to `Page.model_validate`, which checks it against the model and makes the page.
 The code no longer uses `Any`, so its import goes.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-07.3-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.3-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the `def` line `def random_page(language: str = "en") -> Page:` and the line
 `return Page.model_validate(response.json())`.
 
 `main`, in `src/wikiapp/console.py`, prints `page.title` and `page.extract` in place of the two keys.
 
-[± See the change to `src/wikiapp/console.py`](#step-07.3-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/console.py`](#step-07.3-src-wikiapp-console.py-d9ae67-diff){.btn .btn-sm .btn-secondary}
 
 The test that asks the real Wikipedia, in `tests/test_wikipedia.py`, checked two keys of the dictionary. It now
 checks that the answer is a `Page`, and its new name, `test_random_page_returns_page_in_production`, says so. It
 keeps its marker `e2e`.
 
-[± See the change to `tests/test_wikipedia.py`](#step-07.3-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-07.3-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_wikipedia.py`, the two asserts on the keys are now one, on the type of the answer.
 
@@ -69,6 +69,8 @@ uv run wikiapp
   - look at `return Page.model_validate(response.json())`
 - <a id="step-07.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the e2e test checks for a Page. 2 lines added, 3 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/88fe0e20d645b581ff1e3ab4bb9679978bc3d38d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert isinstance(page, wikipedia.Page)`
+
+<a id="step-07.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -93,6 +95,8 @@ uv run wikiapp
 ```
 
 </details>
+
+<a id="step-07.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -123,6 +127,8 @@ uv run wikiapp
 
 </details>
 
+<a id="step-07.3-tests-test_wikipedia.py-2f4413-diff"></a>
+
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
 ```diff
@@ -148,7 +154,7 @@ An answer with no title is not a page. `model_validate` then raises the Validati
 would end with a traceback. `random_page` turns a failed request into a WikipediaError, and it should do the same
 with an answer that is not a page. So its `except` catches ValidationError together with the exception of requests.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-07.4-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.4-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the line `except (requests.RequestException, ValidationError) as error:`, and
 `ValidationError` in the import from pydantic.
@@ -157,7 +163,7 @@ A test from the original wikiapp, `test_random_page_handles_validation_error`, c
 `tests/test_wikipedia.py`. The mock answers with an empty dictionary, `{}`, and `pytest.raises` expects a
 WikipediaError.
 
-[± See the change to `tests/test_wikipedia.py`](#step-07.4-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-07.4-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 ```bash
 just test -k validation
@@ -171,6 +177,8 @@ The output is `1 passed, 8 deselected`.
   - look at `except (requests.RequestException, ValidationError) as error:`
 - <a id="step-07.4-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06ff2caa1958318b960fa9b9c84b32b3a23ae18d/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `with pytest.raises(wikipedia.WikipediaError):`
+
+<a id="step-07.4-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -192,6 +200,8 @@ The output is `1 passed, 8 deselected`.
 ```
 
 </details>
+
+<a id="step-07.4-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 

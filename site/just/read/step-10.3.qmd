@@ -32,7 +32,7 @@ Since the library became a package, validate-pyproject, in `just lint-config`, h
 The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. A mistake in the
 library's file would reach a build unseen. The recipe `lint-config` now gives validate-pyproject both files.
 
-[± See the change to `justfile`](#step-10.3-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-10.3-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 ```bash
 just lint-config
@@ -51,6 +51,8 @@ repository, and the User-Agent says the installed version. The
 
 - <a id="step-10.3-justfile-424f0b"></a>`justfile`: two files. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/522bcb94133654c1e72a9592c852681e0b5e2055/justfile){.btn .btn-sm .btn-secondary}
   - look at `uv run validate-pyproject pyproject.toml packages/wikirandom/pyproject.toml`
+
+<a id="step-10.3-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

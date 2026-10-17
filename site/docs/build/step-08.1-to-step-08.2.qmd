@@ -95,6 +95,8 @@ git fetch --quiet --tags --force origin; git restore --source step-07 --staged -
   - look at `docs = [`
 - <a id="step-08.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of smalldocs, and of the packages that it needs. 62 lines added. It comes from `uv add --group docs smalldocs`. [The file](https://github.com/rahuldave/smallwikiapp/blob/71726f393670206ea480aaa2edc03ddeeeebc1fe/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-08.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add --group docs smalldocs</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -178,6 +180,8 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 - <a id="step-08.2-justfile-424f0b"></a>`justfile`: the recipe. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/40d4293f5902e4a5ee51c9240e0eab4b59de797f/justfile){.btn .btn-sm .btn-secondary}
   - look at `docs *args:`
 
+<a id="step-08.2-docs-_smalldocs.yml-4b0b48-diff"></a>
+
 <details open><summary>The patch to <code>docs/_smalldocs.yml</code></summary>
 
 ```diff
@@ -190,6 +194,8 @@ git restore --source 71726f393670 --staged -- :/ && git restore --source 40d4293
 ```
 
 </details>
+
+<a id="step-08.2-justfile-424f0b-diff"></a>
 
 <details open><summary>The patch to <code>justfile</code></summary>
 

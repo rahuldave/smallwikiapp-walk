@@ -37,7 +37,7 @@ Each test of the command needs a `CliRunner`, and each would make its own. A fix
 A fixture is a function that pytest calls for each test that names it as a parameter. So a fixture `runner`
 returns a `CliRunner`, and `test_main_succeeds` takes the runner as its parameter.
 
-[± See the change to `tests/test_console.py`](#step-02.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-02.5-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `runner` is above the test, under `@pytest.fixture`. The test now reads
 `def test_main_succeeds(runner):`, and no longer makes a `CliRunner` itself.
@@ -52,6 +52,8 @@ The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 
 - <a id="step-02.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture, and the test that names it. 6 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/8435ae56cf5630c401d83760b4dffe1fe5bde109/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `def test_main_succeeds(runner):`
+
+<a id="step-02.5-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -103,6 +105,8 @@ No test uses the mock yet, so the result is the same, `1 passed`.
   - look at `"pytest-mock>=3.16.0",`
 - <a id="step-02.6-uv.lock-8356d8"></a>`uv.lock`: the exact version of pytest-mock. 17 lines added, 1 removed. It comes from `uv add --group test pytest-mock`. [The file](https://github.com/rahuldave/smallwikiapp/blob/55b7b55dffa30e6eb91a88c882201f955271e28d/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-02.6-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -130,7 +134,7 @@ A new test, `test_main_prints_title`, checks that the command prints that title.
 A test that uses the mock is a unit test of the command. It checks the command alone, without the network, so a
 failure points at the command. `test_main_succeeds` still asks the real Wikipedia.
 
-[± See the change to `tests/test_console.py`](#step-02.7-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-02.7-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `mock_requests_get` is under `runner`, with the line
 `mock = mocker.patch("requests.get")`. The new test `test_main_prints_title` names both fixtures, and looks for
@@ -147,6 +151,8 @@ pytest runs only the test whose name contains `title`. The output shows `test_ma
 
 - <a id="step-02.7-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the fixture of the mock, and the new test. 13 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/7c1911b9f0155df43da70d010b25fc1ec947fe7c/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `mock = mocker.patch("requests.get")`
+
+<a id="step-02.7-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -189,7 +195,7 @@ checks the address.
 `call_args[0]` contains the arguments that the last call gave in order, without a name. Here that is only the
 address. The call gives the header by name, as `headers=...`, so the header is in `call_args[1]`.
 
-[± See the change to `tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the two new tests are under `test_main_prints_title`. The first checks
 `mock_requests_get.called`. The second compares `call_args[0]` with the address of a random English page.
@@ -204,6 +210,8 @@ The result is `4 passed`.
 
 - <a id="step-02.8-tests-test_console.py-9442ee"></a>`tests/test_console.py`: two tests, that the command makes the request, and to the right address. 8 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/9be013d11b88d0e40680024a8ea99d501c681252/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert mock_requests_get.called`
+
+<a id="step-02.8-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -235,7 +243,7 @@ A request can fail, and nothing checks what the command does then. A mock can ra
 a value. If `side_effect` is an exception, a call to the mock raises it. A test,
 `test_main_fails_on_request_error`, makes the mock raise, and checks that the command ends with exit code 1.
 
-[± See the change to `tests/test_console.py`](#step-02.9-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-02.9-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the new test is above `test_main_succeeds`. Its first line,
 `mock_requests_get.side_effect = Exception("Boom")`, makes the mock raise.
@@ -252,6 +260,8 @@ The command now has four tests that use the mock, and one that asks the real Wik
 
 - <a id="step-02.9-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the mock raises. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/bfc38e738984492a5dbf6a1a6a0b6691baad4c34/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `mock_requests_get.side_effect = Exception("Boom")`
+
+<a id="step-02.9-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 

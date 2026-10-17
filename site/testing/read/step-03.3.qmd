@@ -28,7 +28,7 @@ just setup
 `random_page` asks only the English Wikipedia. Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. So
 the address gets a placeholder for the language, and `random_page` fills it, with English as the default.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-03.3-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-03.3-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, `API_URL` starts with `https://{language}.`. `random_page` takes `language="en"`,
 and the request fills the placeholder with `API_URL.format(language=language)`.
@@ -36,7 +36,7 @@ and the request fills the placeholder with `API_URL.format(language=language)`.
 The first test of the library asks for a page in Spanish, and checks that the address of the request contains
 `es.wikipedia.org`. It calls `random_page` alone, with the mock, so it is a unit test of the library.
 
-[± See the new file `tests/test_wikipedia.py`](#step-03.3-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the new file `tests/test_wikipedia.py`](#step-03.3-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 The new file `tests/test_wikipedia.py` has one test. It calls `wikipedia.random_page(language="es")`, and reads
 the address from `mock_requests_get.call_args`.
@@ -53,6 +53,8 @@ The result is `6 passed`.
   - look at `def random_page(language="en"):`
 - <a id="step-03.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the test uses the mock from `conftest.py`. New, 6 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `assert "es.wikipedia.org" in args[0]`
+
+<a id="step-03.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -74,6 +76,8 @@ The result is `6 passed`.
 ```
 
 </details>
+
+<a id="step-03.3-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 

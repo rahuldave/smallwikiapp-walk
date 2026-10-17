@@ -57,6 +57,8 @@ used it yet.
   - look at `"ruff>=0.17.0",`
 - <a id="step-04.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ruff. 29 lines added. It comes from `uv add --group lint ruff`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8f7b800001ee35d8db80c47521b02777047c019d/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-04.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -82,9 +84,9 @@ ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 char
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
-[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `justfile`](#step-04.2-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-04.2-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the table `[tool.ruff]` on line 41 sets `line-length = 100`. The table
 `[tool.ruff.format]` on line 46 gives the three defaults of the formatter, each with a comment. At the end of the
@@ -108,6 +110,8 @@ runs the same command, and passes on the words after `just fmt`.
 - <a id="step-04.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of ruff. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/31445743379186b800fd4c035c8f04eed7ad7f3d/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `line-length = 100`
 
+<a id="step-04.2-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -124,6 +128,8 @@ runs the same command, and passes on the words after `just fmt`.
 ```
 
 </details>
+
+<a id="step-04.2-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -180,6 +186,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
   - look at `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
 - <a id="step-04.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: two blank lines before the test. 1 line added. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
 
+<a id="step-04.3-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -190,6 +198,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 ```
 
 </details>
+
+<a id="step-04.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -213,6 +223,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 ```
 
 </details>
+
+<a id="step-04.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -240,6 +252,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 
 </details>
 
+<a id="step-04.3-tests-conftest.py-626af3-diff"></a>
+
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -253,6 +267,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 ```
 
 </details>
+
+<a id="step-04.3-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -307,6 +323,8 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 
 </details>
 
+<a id="step-04.3-tests-test_wikipedia.py-2f4413-diff"></a>
+
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 
 ```diff
@@ -331,9 +349,9 @@ tests may use `assert`. The rest of the code may not, because Python skips every
 
 A recipe `lint` runs the linter. The words after `just lint` go to `ruff check`.
 
-[± See the change to `pyproject.toml`](#step-04.4-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-04.4-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `justfile`](#step-04.4-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-04.4-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, `select = [` on line 54 lists nine families of rules. The last table lets the files
 under `tests/` break the rule `S101`, which forbids `assert`, on line 68. At the end of the `justfile`, the recipe
@@ -363,6 +381,8 @@ in the next two moves, and then ruff fixes the last one.
 - <a id="step-04.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: a family of rules on each line. 18 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/589f2f691557470eac084858d430a302c98390ce/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"tests/**" = ["S101"]`
 
+<a id="step-04.4-justfile-424f0b-diff"></a>
+
 <details><summary>The diff of <code>justfile</code></summary>
 
 ```diff
@@ -379,6 +399,8 @@ in the next two moves, and then ruff fixes the last one.
 ```
 
 </details>
+
+<a id="step-04.4-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -421,7 +443,7 @@ The import goes up, under `import requests`. wikiapp's own imports are a block o
 packages, which is the order that the rule `I001` asks for. The tests `test_main_invokes_requests_get` and
 `test_main_uses_correct_url` check the mock, and not the result, so they need no `result =`.
 
-[± See the change to `tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, `from wikiapp import console` is now on line 5, under `import requests`, after a blank
 line. It is gone from below the fixture. The first line of each of the two tests, lines 19 and 24, is now
@@ -439,6 +461,8 @@ Two problems are left, `S113` and `I001`, and the linter still fails. The format
 
 - <a id="step-04.5-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the import goes up, and two lines lose `result =`. 4 lines added, 5 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/2ec7932b37e21c1533f319c03e0533bc755f6da7/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `from wikiapp import console`
+
+<a id="step-04.5-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -487,7 +511,7 @@ Of the two problems left, `S113` comes from the family `S` of security rules. Th
 requests waits as long as the server keeps the connection open, and the command can wait for ever. No test had
 found it. The request in `src/wikiapp/wikipedia.py` gets `timeout=10`, a number of seconds that the author of the project chose.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, the arguments of `requests.get` on line 15 now end with `timeout=10`.
 
@@ -504,6 +528,8 @@ One problem is left, `I001`, so the linter still fails. Its `[*]` says that ruff
 
 - <a id="step-04.6-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: one more argument. 1 line added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/0fb4985582732edf7372a4b90659d703db138446/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `timeout=10`
+
+<a id="step-04.6-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -544,6 +570,8 @@ just lint
 
 - <a id="step-04.7-src-wikiapp-console.py-d9ae67"></a>`src/wikiapp/console.py`: the imports, sorted. 3 lines added, 2 removed. It comes from `just lint --fix`. [The file](https://github.com/rahuldave/smallwikiapp/blob/a57134d1cef6ff24803235ace966e5870046fbd9/src/wikiapp/console.py){.btn .btn-sm .btn-secondary}
   - look at `from wikiapp import __version__`
+
+<a id="step-04.7-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
@@ -591,6 +619,8 @@ It prints `validate_pyproject 0.26`. Nothing runs it yet.
   - look at `"validate-pyproject>=0.26",`
 - <a id="step-04.8-uv.lock-8356d8"></a>`uv.lock`: the exact version of validate-pyproject, and of what it needs. 26 lines added, 1 removed. It comes from `uv add --group lint validate-pyproject`. [The file](https://github.com/rahuldave/smallwikiapp/blob/4e710d50a22967ebff9502eacbdada54313ebe70/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-04.8-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -615,7 +645,7 @@ A recipe `lint-config` checks the configuration, with three commands. validate-p
 --unstable` checks the `justfile`. The recipe runs the three commands, one on each line, and `set -e` stops it at
 the first that fails.
 
-[± See the change to `justfile`](#step-04.9-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-04.9-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `lint-config *args:` on line 44 runs the three commands, one on each line.
 `set -e`, on line 46, stops it at the first that fails.
@@ -636,6 +666,8 @@ nothing, because the `justfile` is in the format of `just`.
 
 - <a id="step-04.9-justfile-424f0b"></a>`justfile`: the recipe, with its three checks. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/d8a9c8f71eb58893025360c20b32c9078e5b0c3c/justfile){.btn .btn-sm .btn-secondary}
   - look at `uv run validate-pyproject pyproject.toml`
+
+<a id="step-04.9-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -667,7 +699,7 @@ When `pyproject.toml` changes and the lockfile does not, `uv run` writes a new l
 any recipe can change the lockfile, and the person who runs it does not see the change. The variable `UV_LOCKED`
 makes every `uv run` refuse a lockfile that is out of date. The `justfile` exports it to every recipe.
 
-[± See the change to `justfile`](#step-04.10-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-04.10-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 Near the top of the `justfile`, `export UV_LOCKED := "1"` is on line 6, under `set positional-arguments`.
 
@@ -682,6 +714,8 @@ sees it.
 
 - <a id="step-04.10-justfile-424f0b"></a>`justfile`: one line, which exports `UV_LOCKED` to every recipe. 2 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b7469ee81a824a46e6799d60957ea09d7cf2eade/justfile){.btn .btn-sm .btn-secondary}
   - look at `export UV_LOCKED := "1"`
+
+<a id="step-04.10-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -707,7 +741,7 @@ There are now four checks, and a person must remember to run each. A recipe `che
 stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
 the configuration.
 
-[± See the change to `justfile`](#step-04.11-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-04.11-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `check *args:` on line 57 runs four recipes. The tests run with
 `--cov-fail-under=90`, on line 63, so they fail if they run less than 90% of the statements.
@@ -723,6 +757,8 @@ just check
 
 - <a id="step-04.11-justfile-424f0b"></a>`justfile`: the recipe, with its four checks. 12 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543/justfile){.btn .btn-sm .btn-secondary}
   - look at `just test -q --cov-fail-under=90`
+
+<a id="step-04.11-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
@@ -775,6 +811,8 @@ It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
   - look at `"pre-commit>=4.7.0",`
 - <a id="step-04.12-uv.lock-8356d8"></a>`uv.lock`: the exact version of `pre-commit`, and of what it needs. 136 lines added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-04.12-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -802,9 +840,9 @@ A recipe `hook` installs the hook, once in each clone. `hook` is a recipe of its
 often and must not change files under `.git`. Once `just hook` installs the hook in a clone, it runs
 `just check` before each `git commit` in that clone.
 
-[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d){.btn .btn-sm .btn-secondary}
+[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `justfile`](#step-04.13-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-04.13-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 In `.pre-commit-config.yaml`, the three hooks under `repo: https://github.com/pre-commit/pre-commit-hooks`, on
 line 6, come from `pre-commit`'s collection. The hook under `repo: local` has the line `entry: just check`, on
@@ -831,6 +869,8 @@ a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints
   - look at `entry: just check`
 - <a id="step-04.13-justfile-424f0b"></a>`justfile`: the recipe `hook`. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/justfile){.btn .btn-sm .btn-secondary}
   - look at `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
+
+<a id="step-04.13-.pre-commit-config.yaml-e7d14d-diff"></a>
 
 <details><summary>The diff of <code>.pre-commit-config.yaml</code></summary>
 
@@ -859,6 +899,8 @@ a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints
 ```
 
 </details>
+
+<a id="step-04.13-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 

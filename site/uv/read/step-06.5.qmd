@@ -39,7 +39,7 @@ jobs. The job `tests` runs the tests on three systems and four versions of Pytho
 Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub never runs the
 e2e tests. A person runs them, with `just test -m e2e`.
 
-[± See the new file `.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23){.btn .btn-sm .btn-secondary}
+[± See the new file `.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23-diff){.btn .btn-sm .btn-secondary}
 
 The new file `.github/workflows/test.yaml` has the jobs `tests` and `check`. In `tests`, the matrix of three
 values of `os` and four of `python` makes twelve jobs.
@@ -69,6 +69,8 @@ change in the next section.
 
 - <a id="step-06.5-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the matrix of systems and versions of Python. New, 37 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/20cf458261edc55b725da39a99c9b37ef5d24657/.github/workflows/test.yaml){.btn .btn-sm .btn-secondary}
   - look at `python: ["3.11", "3.12", "3.13", "3.14"]`
+
+<a id="step-06.5-.github-workflows-test.yaml-a60e23-diff"></a>
 
 <details><summary>The diff of <code>.github/workflows/test.yaml</code></summary>
 

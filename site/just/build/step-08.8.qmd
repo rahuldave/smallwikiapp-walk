@@ -68,6 +68,8 @@ git fetch --quiet --tags --force origin; git restore --source 79c80120fc8f --sta
 - <a id="step-08.8-justfile-424f0b"></a>`justfile`: the comment, and one line in `check`. 2 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/ce0734f1272cf16f4aadeaa6712e589010ccd69f/justfile){.btn .btn-sm .btn-secondary}
   - look at `just docs check`
 
+<a id="step-08.8-justfile-424f0b-diff"></a>
+
 <details open><summary>The patch to <code>justfile</code></summary>
 
 ```diff

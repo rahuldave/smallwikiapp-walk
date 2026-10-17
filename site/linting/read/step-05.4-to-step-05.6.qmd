@@ -37,7 +37,7 @@ ty checks the types that the code states, and the code states almost none. ruff'
 parameter and each return without a type. So the linter checks that a type is written, and the type checker
 checks that the type is right. The rules go in the list `select` in `pyproject.toml`.
 
-[± See the change to `pyproject.toml`](#step-05.4-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
+[± See the change to `pyproject.toml`](#step-05.4-pyproject.toml-5d07e7-diff){.btn .btn-sm .btn-secondary}
 
 In `pyproject.toml`, the list `select` now has `"ANN"` on line 67, after `"N"`.
 
@@ -52,6 +52,8 @@ returns (`ANN201`). The next two moves add them, in the code and then in the tes
 
 - <a id="step-05.4-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line. 1 line added. [The file](https://github.com/rahuldave/smallwikiapp/blob/06613b9b25a8f16c7e60cf52803b2e471161d854/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"ANN", # annotations: every parameter and every return value has a type`
+
+<a id="step-05.4-pyproject.toml-5d07e7-diff"></a>
 
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
@@ -77,11 +79,11 @@ string. It returns the JSON that Wikipedia sends, which is a dictionary from str
 says that ty cannot check the values. `Any` comes from the standard library, so its import is a block of its own,
 above `import requests`.
 
-[± See the change to `src/wikiapp/wikipedia.py`](#step-05.5-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/wikipedia.py`](#step-05.5-src-wikiapp-wikipedia.py-258803-diff){.btn .btn-sm .btn-secondary}
 
 `main` takes the language as a string. Its return type, None, was already there.
 
-[± See the change to `src/wikiapp/console.py`](#step-05.5-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
+[± See the change to `src/wikiapp/console.py`](#step-05.5-src-wikiapp-console.py-d9ae67-diff){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, line 1 imports `Any`. On line 13, `random_page` now takes a `str`, and returns a
 `dict[str, Any]`. In `src/wikiapp/console.py`, on line 19, the parameter `language` of `main` is a `str`.
@@ -99,6 +101,8 @@ just lint --statistics
 - <a id="step-05.5-src-wikiapp-wikipedia.py-258803"></a>`src/wikiapp/wikipedia.py`: the parameter and the return. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/643f65323fd11c5c6f518c59431b13867e155952/src/wikiapp/wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def random_page(language: str = "en") -> dict[str, Any]:`
 
+<a id="step-05.5-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details><summary>The diff of <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -114,6 +118,8 @@ just lint --statistics
 ```
 
 </details>
+
+<a id="step-05.5-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff of <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -148,7 +154,7 @@ The mock of `requests.get` is a `Mock`. `mocker` is
 pytest-mock's `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
 `tests/conftest.py` imports `Mock` and `MockerFixture`, and its fixture states both types.
 
-[± See the change to `tests/conftest.py`](#step-05.6-tests-conftest.py-626af3){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/conftest.py`](#step-05.6-tests-conftest.py-626af3-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/conftest.py`, the fixture on line 8 now reads `def mock_requests_get(mocker: MockerFixture) -> Mock:`.
 `Mock` comes from `unittest.mock`, and `MockerFixture` from `pytest_mock`, in the imports above it.
@@ -158,7 +164,7 @@ in place of `import click.testing`. The fixture `runner` returns `CliRunner()`, 
 `CliRunner`. In every test, `runner` is a `CliRunner`, `mock_requests_get` is a `Mock`, and the test returns
 `None`.
 
-[± See the change to `tests/test_console.py`](#step-05.6-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_console.py`](#step-05.6-tests-test_console.py-9442ee-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, `from click.testing import CliRunner` on line 5 replaces `import click.testing`. The
 fixture on line 11 reads `def runner() -> CliRunner:`, and each test names the types of its parameters and
@@ -166,7 +172,7 @@ returns `None`.
 
 The test of the library gets its types the same way.
 
-[± See the change to `tests/test_wikipedia.py`](#step-05.6-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
+[± See the change to `tests/test_wikipedia.py`](#step-05.6-tests-test_wikipedia.py-2f4413-diff){.btn .btn-sm .btn-secondary}
 
 In `tests/test_wikipedia.py`, `Mock` comes in on line 1, and the test on line 6 states its types.
 
@@ -192,6 +198,8 @@ just check
 - <a id="step-05.6-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: the import of `Mock`, and the types of one test. 3 lines added, 1 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/5873353449adaf1734a9cb14d13262486b1fb5d5/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
   - look at `def test_random_page_uses_given_language(mock_requests_get: Mock) -> None:`
 
+<a id="step-05.6-tests-conftest.py-626af3-diff"></a>
+
 <details><summary>The diff of <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -211,6 +219,8 @@ just check
 ```
 
 </details>
+
+<a id="step-05.6-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff of <code>tests/test_console.py</code></summary>
 
@@ -274,6 +284,8 @@ just check
 ```
 
 </details>
+
+<a id="step-05.6-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff of <code>tests/test_wikipedia.py</code></summary>
 

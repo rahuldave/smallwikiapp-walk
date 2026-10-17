@@ -36,7 +36,7 @@ to install none of them, and `--group test` then names the one group to install.
 of `.github/workflows/test.yaml`, still runs `just setup`, which installs every group. It needs every tool, since
 `just check` runs them all.
 
-[± See the change to `.github/workflows/test.yaml`](#step-08b.1-.github-workflows-test.yaml-a60e23){.btn .btn-sm .btn-secondary}
+[± See the change to `.github/workflows/test.yaml`](#step-08b.1-.github-workflows-test.yaml-a60e23-diff){.btn .btn-sm .btn-secondary}
 
 The last line of the job `tests` now adds `--no-default-groups --group test`. The comment line `# tests:` at the top of
 the file now ends with "each with the group test alone".
@@ -53,6 +53,8 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 - <a id="step-08b.1-.github-workflows-test.yaml-a60e23"></a>`.github/workflows/test.yaml`: the comment, and the command of the job `tests`. 2 lines added, 2 removed. [The file](https://github.com/rahuldave/smallwikiapp/blob/971e9d780fd539d13f49af3fbb00c1145fd22aa0/.github/workflows/test.yaml){.btn .btn-sm .btn-secondary}
   - look at `- run: uv run --locked --no-default-groups --group test pytest  # the package and its tests, no more`
+
+<a id="step-08b.1-.github-workflows-test.yaml-a60e23-diff"></a>
 
 <details><summary>The diff of <code>.github/workflows/test.yaml</code></summary>
 
@@ -98,7 +100,7 @@ an older publish when a newer push starts one.
 
 The file is new, and comes whole, as a patch.
 
-[± See the new file `.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835){.btn .btn-sm .btn-secondary}
+[± See the new file `.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835-diff){.btn .btn-sm .btn-secondary}
 
 In the new file `.github/workflows/docs.yaml`, the line
 `- run: uv run --locked --no-default-groups --group docs smalldocs render docs` is the build of the site.
@@ -128,6 +130,8 @@ prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 
 - <a id="step-08b.2-.github-workflows-docs.yaml-ce7835"></a>`.github/workflows/docs.yaml`: the site, built with the group `docs` alone, then published. New, 40 lines. [The file](https://github.com/rahuldave/smallwikiapp/blob/39a4b09f85638bbe8424b243c4ba4477070f2740/.github/workflows/docs.yaml){.btn .btn-sm .btn-secondary}
   - look at `- run: uv run --locked --no-default-groups --group docs smalldocs render docs`
+
+<a id="step-08b.2-.github-workflows-docs.yaml-ce7835-diff"></a>
 
 <details><summary>The diff of <code>.github/workflows/docs.yaml</code></summary>
 

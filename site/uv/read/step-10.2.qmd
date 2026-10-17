@@ -53,6 +53,8 @@ author. Both packages get a link to the repository. The User-Agent says the inst
 - <a id="step-10.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: one line, the range of versions. 1 line added, 1 removed. It comes from `uv add "wikirandom>=0.1.0,<0.2"`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6e6d2844bc7a5b34605ad76b9e03e6631fa236be/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `"wikirandom>=0.1.0,<0.2",`
 
+<a id="step-10.2-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff

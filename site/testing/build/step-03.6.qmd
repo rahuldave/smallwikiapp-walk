@@ -91,6 +91,8 @@ git fetch --quiet --tags --force origin; git restore --source a6f5ae9a475d --sta
 - <a id="step-03.6-tests-test_console.py-9442ee"></a>`tests/test_console.py`: the test of the message. 6 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/b6942869d5fcfffff81beb598630288fe3a67372/tests/test_console.py){.btn .btn-sm .btn-secondary}
   - look at `assert "Error" in result.output`
 
+<a id="step-03.6-src-wikiapp-console.py-d9ae67-diff"></a>
+
 <details open><summary>The patch to <code>src/wikiapp/console.py</code></summary>
 
 ```diff
@@ -118,6 +120,8 @@ git fetch --quiet --tags --force origin; git restore --source a6f5ae9a475d --sta
 ```
 
 </details>
+
+<a id="step-03.6-tests-test_console.py-9442ee-diff"></a>
 
 <details open><summary>The patch to <code>tests/test_console.py</code></summary>
 

@@ -75,6 +75,8 @@ git fetch --quiet --tags --force origin; git restore --source step-03 --staged -
   - look at `"ruff>=0.17.0",`
 - <a id="step-04.1-uv.lock-8356d8"></a>`uv.lock`: the exact version of ruff. 29 lines added. It comes from `uv add --group lint ruff`. [The file](https://github.com/rahuldave/smallwikiapp/blob/8f7b800001ee35d8db80c47521b02777047c019d/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-04.1-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff that <code>uv add --group lint ruff</code> makes in <code>pyproject.toml</code></summary>
 
 ```diff
@@ -185,6 +187,8 @@ git restore --source 8f7b800001ee --staged -- :/ && git restore --source 3144574
 - <a id="step-04.2-pyproject.toml-5d07e7"></a>`pyproject.toml`: the settings of ruff. 11 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/31445743379186b800fd4c035c8f04eed7ad7f3d/pyproject.toml){.btn .btn-sm .btn-secondary}
   - look at `line-length = 100`
 
+<a id="step-04.2-justfile-424f0b-diff"></a>
+
 <details open><summary>The patch to <code>justfile</code></summary>
 
 ```diff
@@ -201,6 +205,8 @@ git restore --source 8f7b800001ee --staged -- :/ && git restore --source 3144574
 ```
 
 </details>
+
+<a id="step-04.2-pyproject.toml-5d07e7-diff"></a>
 
 <details open><summary>The patch to <code>pyproject.toml</code></summary>
 
@@ -266,6 +272,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
   - look at `"https://en.wikipedia.org/api/rest_v1/page/random/summary",`
 - <a id="step-04.3-tests-test_wikipedia.py-2f4413"></a>`tests/test_wikipedia.py`: two blank lines before the test. 1 line added. It comes from `just fmt`. [The file](https://github.com/rahuldave/smallwikiapp/blob/6690eee9f7e177a6df2ea5e1821b8f581948bc85/tests/test_wikipedia.py){.btn .btn-sm .btn-secondary}
 
+<a id="step-04.3-src-wikiapp-__init__.py-682a01-diff"></a>
+
 <details><summary>The diff that <code>just fmt</code> makes in <code>src/wikiapp/__init__.py</code></summary>
 
 ```diff
@@ -276,6 +284,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 ```
 
 </details>
+
+<a id="step-04.3-src-wikiapp-console.py-d9ae67-diff"></a>
 
 <details><summary>The diff that <code>just fmt</code> makes in <code>src/wikiapp/console.py</code></summary>
 
@@ -299,6 +309,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 ```
 
 </details>
+
+<a id="step-04.3-src-wikiapp-wikipedia.py-258803-diff"></a>
 
 <details><summary>The diff that <code>just fmt</code> makes in <code>src/wikiapp/wikipedia.py</code></summary>
 
@@ -326,6 +338,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 
 </details>
 
+<a id="step-04.3-tests-conftest.py-626af3-diff"></a>
+
 <details><summary>The diff that <code>just fmt</code> makes in <code>tests/conftest.py</code></summary>
 
 ```diff
@@ -339,6 +353,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 ```
 
 </details>
+
+<a id="step-04.3-tests-test_console.py-9442ee-diff"></a>
 
 <details><summary>The diff that <code>just fmt</code> makes in <code>tests/test_console.py</code></summary>
 
@@ -392,6 +408,8 @@ git restore --source 314457433791 --staged -- :/ && git restore --source 6690eee
 ```
 
 </details>
+
+<a id="step-04.3-tests-test_wikipedia.py-2f4413-diff"></a>
 
 <details><summary>The diff that <code>just fmt</code> makes in <code>tests/test_wikipedia.py</code></summary>
 

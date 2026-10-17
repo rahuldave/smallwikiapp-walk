@@ -54,6 +54,8 @@ It prints `pre-commit 4.7.0`, or a newer version. No hook is installed yet.
   - look at `"pre-commit>=4.7.0",`
 - <a id="step-04.12-uv.lock-8356d8"></a>`uv.lock`: the exact version of `pre-commit`, and of what it needs. 136 lines added. It comes from `uv add --group lint pre-commit`. [The file](https://github.com/rahuldave/smallwikiapp/blob/29291b3575f2efd8f6062e3d04bbea648ae1fc11/uv.lock){.btn .btn-sm .btn-secondary}
 
+<a id="step-04.12-pyproject.toml-5d07e7-diff"></a>
+
 <details><summary>The diff of <code>pyproject.toml</code></summary>
 
 ```diff
@@ -81,9 +83,9 @@ A recipe `hook` installs the hook, once in each clone. `hook` is a recipe of its
 often and must not change files under `.git`. Once `just hook` installs the hook in a clone, it runs
 `just check` before each `git commit` in that clone.
 
-[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d){.btn .btn-sm .btn-secondary}
+[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d-diff){.btn .btn-sm .btn-secondary}
 
-[± See the change to `justfile`](#step-04.13-justfile-424f0b){.btn .btn-sm .btn-secondary}
+[± See the change to `justfile`](#step-04.13-justfile-424f0b-diff){.btn .btn-sm .btn-secondary}
 
 In `.pre-commit-config.yaml`, the three hooks under `repo: https://github.com/pre-commit/pre-commit-hooks`, on
 line 6, come from `pre-commit`'s collection. The hook under `repo: local` has the line `entry: just check`, on
@@ -125,6 +127,8 @@ its own machines, for every push to main and every pull request.
 - <a id="step-04.13-justfile-424f0b"></a>`justfile`: the recipe `hook`. 5 lines added. [The file](https://github.com/rahuldave/smallwikiapp/blob/6860da13f0fdf9595f32390f2fa70fe0976159b1/justfile){.btn .btn-sm .btn-secondary}
   - look at `@{{ if args == "help" { "just help hook" } else { "uv run pre-commit install" } }}`
 
+<a id="step-04.13-.pre-commit-config.yaml-e7d14d-diff"></a>
+
 <details><summary>The diff of <code>.pre-commit-config.yaml</code></summary>
 
 ```diff
@@ -152,6 +156,8 @@ its own machines, for every push to main and every pull request.
 ```
 
 </details>
+
+<a id="step-04.13-justfile-424f0b-diff"></a>
 
 <details><summary>The diff of <code>justfile</code></summary>
 
