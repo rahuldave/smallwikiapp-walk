@@ -109,7 +109,8 @@ uv run pre-commit run check-yaml --files .github/workflows/docs.yaml
 uv run --isolated --locked --no-default-groups --group docs smalldocs render docs
 ```
 
-The file is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
+The first command runs one check of [`pre-commit`](https://pre-commit.com/), `check-yaml`, on the new file. The file
+is valid YAML. The second command builds the site as the job does, with the group `docs` alone, and
 prints `wrote 3 page(s) to docs/_site`. git ignores `docs/_site`.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
