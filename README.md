@@ -14,106 +14,123 @@ tutorial has three forms, with the same text:
 
 - **[The website](https://rahuldave.com/smallwikiapp-walk/)**, a page for each step in each mode, with a list
   of the steps beside it and a search box.
-- **To read on GitHub**, [walks/tutorial/TUTORIAL-watch.md](walks/tutorial/TUTORIAL-watch.md) explains each move,
-  and [walks/tutorial/TUTORIAL-do.md](walks/tutorial/TUTORIAL-do.md) gives every line to type. Both have the
-  commands in code blocks, and a link to the code at every step and to the commit of every move.
-- [walks/tutorial/notes.md](walks/tutorial/notes.md), **the notes that timewalk reads**. timewalk-tutorial makes
-  the website and the two Markdown files from these notes, in `just walk-update` of the class material.
+- **To read on GitHub**, [walks/show/read.md](walks/show/read.md) explains each move, and
+  [walks/show/build.md](walks/show/build.md) gives every command to run. Both have the commands in code blocks,
+  and a link to the code at every step and to the commit of every move.
+- [walks/tutorial/notes.md](walks/tutorial/notes.md), **the notes that timewalk reads**. The teacher's
+  `just walk-update` makes the website and the pages to read on GitHub from these notes.
 
 The slides are in [smallwikiapp.pdf](smallwikiapp.pdf), one page each, and as Markdown in
 [walks/tutorial/slides/](walks/tutorial/slides/). Every walk uses these slides.
 
 ## Five small walks
 
-Each small walk has notes of its own, in `walks/ID/notes.md`. Each of its stops takes some steps or moves of the
-whole tutorial, with their notes and their commits. A stop starts from the code before its first move, and
-starts with `just setup`. Where the walk leaves out moves, the next stop says what they did.
+Each small walk has notes of its own, in `walks/ID/notes.md`. Each of its parts takes some steps or moves of the
+whole tutorial, with their notes and their commits. A part starts from the code before its first move, and
+starts with `just setup`. Where the walk leaves out moves, the next part says what they did.
 
 | Walk | What it takes | Website | On GitHub |
 |---|---|---|---|
-| `testing` | the project and its command, then pytest, fixtures and mocks, coverage, end-to-end tests, the tests on GitHub, and their own group there: 14 stops with titles, from step-00 to the move 08b.1 | [testing](https://rahuldave.com/smallwikiapp-walk/testing/) | [watch](walks/testing/TUTORIAL-watch.md), [do](walks/testing/TUTORIAL-do.md) |
-| `linting` | the project and its command, then a formatter, a linter and its fixes, the check of the configuration, the gate and the hook, and the types the linter asks for: 10 stops with titles, from step-00 to the move 10.3 | [linting](https://rahuldave.com/smallwikiapp-walk/linting/) | [watch](walks/linting/TUTORIAL-watch.md), [do](walks/linting/TUTORIAL-do.md) |
-| `docs` | the project and its command, then smalldocs, docstrings and docments, a site, the README, the check of the docs, and the site on GitHub Pages: 11 stops with titles, from step-00 to the move 09.4 | [docs](https://rahuldave.com/smallwikiapp-walk/docs/) | [watch](walks/docs/TUTORIAL-watch.md), [do](walks/docs/TUTORIAL-do.md) |
-| `just` | the project and its first justfile, then each verb as it comes in, and `just check`, which a person, the git hook and GitHub run: 17 stops with titles, from step-00 to the move 10.3 | [just](https://rahuldave.com/smallwikiapp-walk/just/) | [watch](walks/just/TUTORIAL-watch.md), [do](walks/just/TUTORIAL-do.md) |
-| `uv` | the project and its `.venv`, then the lockfile, dependency groups, when uv syncs, Python versions, environments, a group for each job on GitHub, a workspace of two packages, and a build: 12 stops with titles, from step-00 to the move 10.2 | [uv](https://rahuldave.com/smallwikiapp-walk/uv/) | [watch](walks/uv/TUTORIAL-watch.md), [do](walks/uv/TUTORIAL-do.md) |
+| `testing` | the project and its command, then pytest, fixtures and mocks, coverage, end-to-end tests, the tests on GitHub, and their own group there: 14 parts, from step-00 to the move 08b.1 | [testing](https://rahuldave.com/smallwikiapp-walk/testing/) | [read](walks/testing/read.md), [build](walks/testing/build.md) |
+| `linting` | the project and its command, then a formatter, a linter and its fixes, the check of the configuration, the gate and the hook, and the types the linter asks for: 10 parts, from step-00 to the move 10.3 | [linting](https://rahuldave.com/smallwikiapp-walk/linting/) | [read](walks/linting/read.md), [build](walks/linting/build.md) |
+| `docs` | the project and its command, then smalldocs, docstrings and docments, a site, the README, the check of the docs, and the site on GitHub Pages: 11 parts, from step-00 to the move 09.10 | [docs](https://rahuldave.com/smallwikiapp-walk/docs/) | [read](walks/docs/read.md), [build](walks/docs/build.md) |
+| `just` | the project and its first justfile, then each verb as it comes in, and `just check`, which a person, the git hook and GitHub run: 17 parts, from step-00 to the move 10.3 | [just](https://rahuldave.com/smallwikiapp-walk/just/) | [read](walks/just/read.md), [build](walks/just/build.md) |
+| `uv` | the project and its `.venv`, then the lockfile, dependency groups, when uv syncs, Python versions, environments, a group for each job on GitHub, a workspace of two packages, and a build: 11 parts, from step-00 to the move 10.2 | [uv](https://rahuldave.com/smallwikiapp-walk/uv/) | [read](walks/uv/read.md), [build](walks/uv/build.md) |
 
 `just present testing` opens a small walk in timewalk.
 
 ## The steps and moves
 
-Each link opens its section of TUTORIAL-watch.md.
+Each link opens its section of [walks/show/read.md](walks/show/read.md).
 
-- [step-00](walks/tutorial/TUTORIAL-watch.md#step-00-the-project) **The project**
-- [step-01](walks/tutorial/TUTORIAL-watch.md#step-01-a-random-page) **A random page**
-  - [step-01.1](walks/tutorial/TUTORIAL-watch.md#step-011-click-and-requests) click and requests
-  - [step-01.2](walks/tutorial/TUTORIAL-watch.md#step-012-ask-wikipedia-for-a-page) Ask Wikipedia for a page
-  - [step-01.3](walks/tutorial/TUTORIAL-watch.md#step-013-a-user-agent) A User-Agent
-  - [step-01.4](walks/tutorial/TUTORIAL-watch.md#step-014---version) --version
-- [step-02](walks/tutorial/TUTORIAL-watch.md#step-02-tests-with-mocks) **Tests, with mocks**
-  - [step-02.1](walks/tutorial/TUTORIAL-watch.md#step-021-pytest-and-the-first-test) pytest and the first test
-  - [step-02.2](walks/tutorial/TUTORIAL-watch.md#step-022-the-recipe-just-test) The recipe `just test`
-  - [step-02.3](walks/tutorial/TUTORIAL-watch.md#step-023-the-runner-as-a-fixture) The runner as a fixture
-  - [step-02.4](walks/tutorial/TUTORIAL-watch.md#step-024-a-mock-in-place-of-wikipedia) A mock in place of Wikipedia
-  - [step-02.5](walks/tutorial/TUTORIAL-watch.md#step-025-tests-of-the-request) Tests of the request
-  - [step-02.6](walks/tutorial/TUTORIAL-watch.md#step-026-a-test-of-a-failed-request) A test of a failed request
-  - [step-02.7](walks/tutorial/TUTORIAL-watch.md#step-027-coverage) Coverage
-- [step-03](walks/tutorial/TUTORIAL-watch.md#step-03-a-library-and-an-app) **A library and an app**
-  - [step-03.1](walks/tutorial/TUTORIAL-watch.md#step-031-random_page-moves-to-wikipediapy) random_page moves to wikipedia.py
-  - [step-03.2](walks/tutorial/TUTORIAL-watch.md#step-032-the-mock-moves-to-conftestpy) The mock moves to conftest.py
-  - [step-03.3](walks/tutorial/TUTORIAL-watch.md#step-033-a-language) A language
-  - [step-03.4](walks/tutorial/TUTORIAL-watch.md#step-034-wikiapp---language) wikiapp --language
-  - [step-03.5](walks/tutorial/TUTORIAL-watch.md#step-035-wikipediaerror) WikipediaError
-  - [step-03.6](walks/tutorial/TUTORIAL-watch.md#step-036-the-command-prints-the-error) The command prints the error
-- [step-04](walks/tutorial/TUTORIAL-watch.md#step-04-format-lint-a-hook) **Format, lint, a hook**
-  - [step-04.1](walks/tutorial/TUTORIAL-watch.md#step-041-ruff-and-the-recipe-fmt) ruff, and the recipe fmt
-  - [step-04.2](walks/tutorial/TUTORIAL-watch.md#step-042-the-code-formatted) The code, formatted
-  - [step-04.3](walks/tutorial/TUTORIAL-watch.md#step-043-the-linters-rules-and-the-recipe-lint) The linter's rules, and the recipe lint
-  - [step-04.4](walks/tutorial/TUTORIAL-watch.md#step-044-the-linter-sorts-the-imports) The linter sorts the imports
-  - [step-04.5](walks/tutorial/TUTORIAL-watch.md#step-045-the-tests-imports-at-the-top-and-no-unused-variables) The tests' imports at the top, and no unused variables
-  - [step-04.6](walks/tutorial/TUTORIAL-watch.md#step-046-a-timeout) A timeout
-  - [step-04.7](walks/tutorial/TUTORIAL-watch.md#step-047-the-recipe-lint-config) The recipe lint-config
-  - [step-04.8](walks/tutorial/TUTORIAL-watch.md#step-048-a-locked-lockfile) A locked lockfile
-  - [step-04.9](walks/tutorial/TUTORIAL-watch.md#step-049-the-recipe-check) The recipe check
-  - [step-04.10](walks/tutorial/TUTORIAL-watch.md#step-0410-a-git-hook) A git hook
-- [step-05](walks/tutorial/TUTORIAL-watch.md#step-05-types) **Types**
-  - [step-05.1](walks/tutorial/TUTORIAL-watch.md#step-051-ty-and-the-recipe-types) ty, and the recipe types
-  - [step-05.2](walks/tutorial/TUTORIAL-watch.md#step-052-the-version-of-wikiapp-by-name) The version of "wikiapp", by name
-  - [step-05.3](walks/tutorial/TUTORIAL-watch.md#step-053-a-type-on-every-parameter-and-return) A type on every parameter and return
-  - [step-05.4](walks/tutorial/TUTORIAL-watch.md#step-054-types-in-the-code) Types in the code
-  - [step-05.5](walks/tutorial/TUTORIAL-watch.md#step-055-types-in-the-tests) Types in the tests
-  - [step-05.6](walks/tutorial/TUTORIAL-watch.md#step-056-the-recipe-check-runs-the-type-checker) The recipe check runs the type checker
-- [step-06](walks/tutorial/TUTORIAL-watch.md#step-06-end-to-end-and-ci) **End to end, and CI**
-  - [step-06.1](walks/tutorial/TUTORIAL-watch.md#step-061-the-end-to-end-test-runs-only-on-request) The end-to-end test runs only on request
-  - [step-06.2](walks/tutorial/TUTORIAL-watch.md#step-062-an-end-to-end-test-of-the-library) An end-to-end test of the library
-  - [step-06.3](walks/tutorial/TUTORIAL-watch.md#step-063-any-python-from-311-on) Any Python from 3.11 on
-  - [step-06.4](walks/tutorial/TUTORIAL-watch.md#step-064-github-runs-the-tests) GitHub runs the tests
-- [step-07](walks/tutorial/TUTORIAL-watch.md#step-07-a-page-with-a-shape) **A page with a shape**
-  - [step-07.1](walks/tutorial/TUTORIAL-watch.md#step-071-the-model-page) The model Page
-  - [step-07.2](walks/tutorial/TUTORIAL-watch.md#step-072-random_page-returns-a-page) random_page returns a Page
-  - [step-07.3](walks/tutorial/TUTORIAL-watch.md#step-073-an-answer-that-is-not-a-page) An answer that is not a page
-  - [step-07.4](walks/tutorial/TUTORIAL-watch.md#step-074-only-a-language-code-goes-into-the-address) Only a language code goes into the address
-- [step-08](walks/tutorial/TUTORIAL-watch.md#step-08-docs-from-the-code) **Docs from the code**
-  - [step-08.1](walks/tutorial/TUTORIAL-watch.md#step-081-smalldocs) smalldocs
-  - [step-08.2](walks/tutorial/TUTORIAL-watch.md#step-082-the-library-documented) The library documented
-  - [step-08.3](walks/tutorial/TUTORIAL-watch.md#step-083-the-command-documented) The command documented
-  - [step-08.4](walks/tutorial/TUTORIAL-watch.md#step-084-the-tests-documented) The tests documented
-  - [step-08.5](walks/tutorial/TUTORIAL-watch.md#step-085-a-site) A site
-  - [step-08.6](walks/tutorial/TUTORIAL-watch.md#step-086-the-readme-names-the-tests-and-the-docs) The README names the tests and the docs
-  - [step-08.7](walks/tutorial/TUTORIAL-watch.md#step-087-the-docs-check-in-just-check) The docs check in `just check`
-- [step-08b](walks/tutorial/TUTORIAL-watch.md#step-08b-the-docs-on-github-pages) **The docs on GitHub Pages**
-  - [step-08b.1](walks/tutorial/TUTORIAL-watch.md#step-08b1-the-tests-install-the-group-test-alone) The tests install the group test alone
-  - [step-08b.2](walks/tutorial/TUTORIAL-watch.md#step-08b2-a-workflow-that-publishes-the-docs) A workflow that publishes the docs
-- [step-09](walks/tutorial/TUTORIAL-watch.md#step-09-the-library-as-a-package) **The library as a package**
-  - [step-09.1](walks/tutorial/TUTORIAL-watch.md#step-091-an-empty-library-wikirandom) An empty library, wikirandom
-  - [step-09.2](walks/tutorial/TUTORIAL-watch.md#step-092-the-code-goes-into-wikirandom) The code goes into wikirandom
-  - [step-09.3](walks/tutorial/TUTORIAL-watch.md#step-093-the-app-uses-wikirandom) The app uses wikirandom
-  - [step-09.4](walks/tutorial/TUTORIAL-watch.md#step-094-the-docs-check-counts-the-library) The docs check counts the library
-- [step-10](walks/tutorial/TUTORIAL-watch.md#step-10-build) **Build**
-  - [step-10.1](walks/tutorial/TUTORIAL-watch.md#step-101-the-recipe-build) The recipe `build`
-  - [step-10.2](walks/tutorial/TUTORIAL-watch.md#step-102-the-app-needs-wikirandom-01) The app needs wikirandom 0.1
-  - [step-10.3](walks/tutorial/TUTORIAL-watch.md#step-103-lint-config-checks-both-pyprojecttoml-files) lint-config checks both pyproject.toml files
-  - [step-10.4](walks/tutorial/TUTORIAL-watch.md#step-104-a-licence-and-a-repository-link-for-both) A licence and a repository link for both
-  - [step-10.5](walks/tutorial/TUTORIAL-watch.md#step-105-the-user-agent-says-the-installed-version) The User-Agent says the installed version
+- [step-00](walks/show/read.md#step-00) **The project**
+- [step-01](walks/show/read.md#step-01) **A random page**
+  - [step-01.1](walks/show/read.md#step-01.1) click and requests
+  - [step-01.2](walks/show/read.md#step-01.2) Ask Wikipedia for a page
+  - [step-01.3](walks/show/read.md#step-01.3) A User-Agent
+  - [step-01.4](walks/show/read.md#step-01.4) --version
+- [step-02](walks/show/read.md#step-02) **Tests, with mocks**
+  - [step-02.1](walks/show/read.md#step-02.1) uv installs every dependency group
+  - [step-02.2](walks/show/read.md#step-02.2) The first test
+  - [step-02.3](walks/show/read.md#step-02.3) pytest, in the group test
+  - [step-02.4](walks/show/read.md#step-02.4) The recipe `just test`
+  - [step-02.5](walks/show/read.md#step-02.5) The runner as a fixture
+  - [step-02.6](walks/show/read.md#step-02.6) pytest-mock, in the group test
+  - [step-02.7](walks/show/read.md#step-02.7) A mock in place of Wikipedia
+  - [step-02.8](walks/show/read.md#step-02.8) Tests of the request
+  - [step-02.9](walks/show/read.md#step-02.9) A test of a failed request
+  - [step-02.10](walks/show/read.md#step-02.10) pytest-cov, in the group test
+  - [step-02.11](walks/show/read.md#step-02.11) Coverage on every run
+- [step-03](walks/show/read.md#step-03) **A library and an app**
+  - [step-03.1](walks/show/read.md#step-03.1) random_page goes to wikipedia.py
+  - [step-03.2](walks/show/read.md#step-03.2) The mock goes to conftest.py
+  - [step-03.3](walks/show/read.md#step-03.3) A language
+  - [step-03.4](walks/show/read.md#step-03.4) wikiapp --language
+  - [step-03.5](walks/show/read.md#step-03.5) WikipediaError
+  - [step-03.6](walks/show/read.md#step-03.6) The command prints the error
+- [step-04](walks/show/read.md#step-04) **Format, lint, a hook**
+  - [step-04.1](walks/show/read.md#step-04.1) ruff, in the group lint
+  - [step-04.2](walks/show/read.md#step-04.2) The settings of ruff, and the recipe fmt
+  - [step-04.3](walks/show/read.md#step-04.3) The code, formatted
+  - [step-04.4](walks/show/read.md#step-04.4) The linter's rules, and the recipe lint
+  - [step-04.5](walks/show/read.md#step-04.5) The tests' imports at the top, and no unused variables
+  - [step-04.6](walks/show/read.md#step-04.6) A timeout
+  - [step-04.7](walks/show/read.md#step-04.7) The linter sorts the imports
+  - [step-04.8](walks/show/read.md#step-04.8) validate-pyproject, in the group lint
+  - [step-04.9](walks/show/read.md#step-04.9) The recipe lint-config
+  - [step-04.10](walks/show/read.md#step-04.10) Recipes refuse an old lockfile
+  - [step-04.11](walks/show/read.md#step-04.11) The recipe check
+  - [step-04.12](walks/show/read.md#step-04.12) `pre-commit`, in the group lint
+  - [step-04.13](walks/show/read.md#step-04.13) A git hook
+- [step-05](walks/show/read.md#step-05) **Types**
+  - [step-05.1](walks/show/read.md#step-05.1) ty, in the group lint
+  - [step-05.2](walks/show/read.md#step-05.2) The recipe types
+  - [step-05.3](walks/show/read.md#step-05.3) The version of "wikiapp", by name
+  - [step-05.4](walks/show/read.md#step-05.4) A type on every parameter and return
+  - [step-05.5](walks/show/read.md#step-05.5) Types in the code
+  - [step-05.6](walks/show/read.md#step-05.6) Types in the tests
+  - [step-05.7](walks/show/read.md#step-05.7) The recipe check runs the type checker
+- [step-06](walks/show/read.md#step-06) **End to end, and CI**
+  - [step-06.1](walks/show/read.md#step-06.1) The end-to-end test runs only on request
+  - [step-06.2](walks/show/read.md#step-06.2) An end-to-end test of the library
+  - [step-06.3](walks/show/read.md#step-06.3) Any Python from 3.11 on
+  - [step-06.4](walks/show/read.md#step-06.4) The lockfile, for every Python from 3.11 on
+  - [step-06.5](walks/show/read.md#step-06.5) GitHub runs the tests
+- [step-07](walks/show/read.md#step-07) **A page with a shape**
+  - [step-07.1](walks/show/read.md#step-07.1) pydantic
+  - [step-07.2](walks/show/read.md#step-07.2) The model Page
+  - [step-07.3](walks/show/read.md#step-07.3) random_page returns a Page
+  - [step-07.4](walks/show/read.md#step-07.4) An answer that is not a page
+  - [step-07.5](walks/show/read.md#step-07.5) Only a language code goes into the address
+- [step-08](walks/show/read.md#step-08) **Docs from the code**
+  - [step-08.1](walks/show/read.md#step-08.1) smalldocs
+  - [step-08.2](walks/show/read.md#step-08.2) What is not documented
+  - [step-08.3](walks/show/read.md#step-08.3) The library documented
+  - [step-08.4](walks/show/read.md#step-08.4) The command documented
+  - [step-08.5](walks/show/read.md#step-08.5) The tests documented
+  - [step-08.6](walks/show/read.md#step-08.6) A site
+  - [step-08.7](walks/show/read.md#step-08.7) The README names the tests and the docs
+  - [step-08.8](walks/show/read.md#step-08.8) The docs check in `just check`
+- [step-08b](walks/show/read.md#step-08b) **The docs on GitHub Pages**
+  - [step-08b.1](walks/show/read.md#step-08b.1) The tests install the group test alone
+  - [step-08b.2](walks/show/read.md#step-08b.2) A workflow that publishes the docs
+- [step-09](walks/show/read.md#step-09) **The library as a package**
+  - [step-09.1](walks/show/read.md#step-09.1) An empty library, wikirandom
+  - [step-09.2](walks/show/read.md#step-09.2) requests and pydantic, for the library
+  - [step-09.3](walks/show/read.md#step-09.3) The library's README
+  - [step-09.4](walks/show/read.md#step-09.4) The library gets a copy of wikipedia.py
+  - [step-09.5](walks/show/read.md#step-09.5) The library's docstring and User-Agent
+  - [step-09.6](walks/show/read.md#step-09.6) The app depends on wikirandom
+  - [step-09.7](walks/show/read.md#step-09.7) The app uses wikirandom
+  - [step-09.8](walks/show/read.md#step-09.8) The app no longer needs requests and pydantic
+  - [step-09.9](walks/show/read.md#step-09.9) The tests of the library are named for it
+  - [step-09.10](walks/show/read.md#step-09.10) The docs check counts the library
+- [step-10](walks/show/read.md#step-10) **Build**
+  - [step-10.1](walks/show/read.md#step-10.1) The recipe `build`
+  - [step-10.2](walks/show/read.md#step-10.2) The app needs wikirandom 0.1
+  - [step-10.3](walks/show/read.md#step-10.3) lint-config checks both pyproject.toml files
+  - [step-10.4](walks/show/read.md#step-10.4) A licence for the library, and a repository link for both
+  - [step-10.5](walks/show/read.md#step-10.5) The User-Agent says the installed version
 
 ## Two ways to take it
 
@@ -129,7 +146,7 @@ The switch **Do / Watch** beside the name of the walk changes the mode at any ti
 of the step before, so every step starts with `just setup`. The moves of a step go in order. To go back, press
 **Restart step**, and then run `just setup`.
 
-In the move 04.10, `just hook` installs a git hook. Before each commit you make, it runs pre-commit's checks, and
+In the move 04.13, `just hook` installs a git hook. Before each commit you make, it runs pre-commit's checks, and
 `just check` among them. If you start at a later step, run `just hook` once.
 
 **A move keeps your work.** Before a move, timewalk puts your edits and commits in `worktree/` on a branch
@@ -164,7 +181,8 @@ timewalk then puts its replay copy in `worktree/`. The replay copy is a clone of
 `timewalk/replay`, and timewalk moves it from step to step and from move to move. timewalk never writes to
 `repo/`. Git ignores both folders.
 
-`just check` checks the notes against the steps. `just pdf` makes `build/walk.pdf`, the slides.
+`just check` checks the notes against the steps. `just pdf` makes `build/walk.pdf`, the slides. `just site` builds the
+website and serves it on your machine.
 
 ## The folders
 
@@ -172,12 +190,11 @@ timewalk then puts its replay copy in `worktree/`. The replay copy is a clone of
 smallwikiapp-walk/
 ├── toc.toml                    the walks: show and do, and the small walks, over the same commits
 ├── walks/tutorial/notes.md     the notes of every step and move, for timewalk
-├── walks/tutorial/TUTORIAL-*.md  the tutorial to read on GitHub, in watch mode and in do mode
+├── walks/ID/read.md, build.md  the tutorial to read on GitHub: walks/show for the whole tutorial
 ├── walks/tutorial/slides/      the slides, and slides.toml, which step shows which
 ├── smallwikiapp.pdf            the slides, one page each
-├── walks/testing/              a small walk's own notes, and its TUTORIAL-*.md; linting, docs, just and uv too
-├── site/                       the website, made from notes.md; GitHub publishes it on every push
-├── sites/                      the website of each small walk, published under the website's address
+├── walks/testing/              a small walk's own notes, and its pages; linting, docs, just and uv too
+├── site/                       the website of every walk, made from the notes; GitHub publishes it on every push
 ├── justfile                    present, setup, check, pdf, site
 ├── repo/                       ignored: your clone of smallwikiapp
 └── worktree/                   ignored: the replay copy, at the step on show
