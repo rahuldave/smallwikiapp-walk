@@ -32,7 +32,7 @@ When `pyproject.toml` changes and the lockfile does not, `uv run` writes a new l
 any recipe can change the lockfile, and the person who runs it does not see the change. The variable `UV_LOCKED`
 makes every `uv run` refuse a lockfile that is out of date. The `justfile` exports it to every recipe.
 
-A patch to [`justfile`](#step-04.10-justfile-424f0b).
+[± See the change to `justfile`](#step-04.10-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 Near the top of the `justfile`, `export UV_LOCKED := "1"` is on line 6, under `set positional-arguments`.
 

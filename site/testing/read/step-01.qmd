@@ -34,6 +34,11 @@ requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
+[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
+the function. [requests](https://requests.readthedocs.io/)
+is a widely used library for HTTP. One call, `requests.get`, fetches a page.
+
 This change came from running `uv add click requests`.
 
 In `pyproject.toml`, the list `dependencies` was empty. Now it has `"click>=8.5.0",` and `"requests>=2.34.2",`,
@@ -91,7 +96,7 @@ original wikiapp did not have it.
 
 The patch writes `src/wikiapp/console.py` again.
 
-A patch to [`src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, the `print` is gone. The block `with requests.get(API_URL) as response:` asks
 Wikipedia for the page, and the last two lines of the block print it.
@@ -148,7 +153,7 @@ sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
-A patch to [`src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, `USER_AGENT` is under `API_URL`. The request now passes it in
 `headers={"User-Agent": USER_AGENT}`.
@@ -194,9 +199,9 @@ its own version from the installed package, which has the version from `pyprojec
 `src/wikiapp/__init__.py` sets `__version__` from the metadata of the installed package. The decorator
 `@click.version_option` gives the command the option `--version`, which prints it.
 
-A patch to [`src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01).
+[± See the change to `src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01){.btn .btn-sm .btn-secondary}
 
-A patch to [`src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/__init__.py`, `__version__` comes from `importlib.metadata`. In `src/wikiapp/console.py`,
 `@click.version_option(version=__version__)` is under `@click.command()`.

@@ -31,6 +31,9 @@ check of the Python code is `just check`.
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
+[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+an environment of its own, and runs them on the files of a change.
+
 ```bash
 uv add --group lint pre-commit
 ```
@@ -114,9 +117,6 @@ the tutorial.
 
 `pre-commit run` now runs every hook on the file named, as git does before it records a change. The first time on
 a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
-
-With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
-it.
 
 The hook makes sure that `just check` runs on this machine before each `git commit`. It has limits.
 

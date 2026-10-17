@@ -34,14 +34,14 @@ The request is inside `main`, so only the command can ask Wikipedia for a page. 
 `random_page` returns the answer from inside the `with` block. The original wikiapp set `data` there, and returned it
 after the block. The result is the same.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-03.1-src-wikiapp-wikipedia.py-258803).
+[± See the new file `src/wikiapp/wikipedia.py`](#step-03.1-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 The new file `src/wikiapp/wikipedia.py` has the two constants, and `random_page`, which makes the request and
 returns `response.json()`.
 
 The command keeps only what belongs to the command line, so it asks the library for the page.
 
-A patch to [`src/wikiapp/console.py`](#step-03.1-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-03.1-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, `import requests` and the two constants are gone. `main` gets the page with
 `data = random_page()`, and prints it as before.
@@ -127,9 +127,9 @@ parts of the code together, the command and the library. A test of parts togethe
 the library came out of `main`, the four tests of the command that use the mock are integration tests, and no
 longer unit tests.
 
-A patch to [`tests/conftest.py`](#step-03.2-tests-conftest.py-626af3).
+[± See the new file `tests/conftest.py`](#step-03.2-tests-conftest.py-626af3){.btn .btn-sm .btn-secondary}
 
-A patch to [`tests/test_console.py`](#step-03.2-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-03.2-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 The new file `tests/conftest.py` has the fixture `mock_requests_get`. In `tests/test_console.py`, the fixture is
 gone, and the tests still name it as a parameter.
@@ -194,7 +194,7 @@ The result is `5 passed`. pytest finds the fixture in `conftest.py`.
 `random_page` asks only the English Wikipedia. Each language has its own Wikipedia, at LANGUAGE.wikipedia.org. So
 the address gets a placeholder for the language, and `random_page` fills it, with English as the default.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-03.3-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-03.3-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, `API_URL` starts with `https://{language}.`. `random_page` takes `language="en"`,
 and the request fills the placeholder with `API_URL.format(language=language)`.
@@ -202,7 +202,7 @@ and the request fills the placeholder with `API_URL.format(language=language)`.
 The first test of the library asks for a page in Spanish, and checks that the address of the request contains
 `es.wikipedia.org`. It calls `random_page` alone, with the mock, so it is a unit test of the library.
 
-A patch to [`tests/test_wikipedia.py`](#step-03.3-tests-test_wikipedia.py-2f4413).
+[± See the new file `tests/test_wikipedia.py`](#step-03.3-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
 
 The new file `tests/test_wikipedia.py` has one test. It calls `wikipedia.random_page(language="es")`, and reads
 the address from `mock_requests_get.call_args`.
@@ -263,7 +263,7 @@ The library takes a language, but a person who runs the command cannot choose on
 `-l`, gives the language to `main`, and `main` passes it on to `random_page`. click gives the value of the option
 to the parameter with the same name.
 
-A patch to [`src/wikiapp/console.py`](#step-03.4-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-03.4-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, `@click.option(` and its six arguments are under `@click.command()`. `main` now takes
 `language`, and calls `random_page(language=language)`.
@@ -316,7 +316,7 @@ If a request fails for any reason, requests raises a `RequestException`. Code th
 need to know the exceptions of requests. So the library raises an exception of its own, `WikipediaError`. The
 request goes in a `try` block, and a `RequestException` becomes a `WikipediaError`.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-03.5-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-03.5-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, the class `WikipediaError` is above `random_page`. The request is inside `try:`,
 and the block `except requests.RequestException as error:` raises a `WikipediaError` in its place.
@@ -373,7 +373,7 @@ In the original wikiapp, the library raised the exception of click itself, with 
 one day. Here the exception of click is in `console.py`. `wikipedia.py` imports requests, and only
 `console.py` imports click.
 
-A patch to [`src/wikiapp/console.py`](#step-03.6-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-03.6-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, the import names `WikipediaError` too. In `main`, the call to `random_page` is in a
 `try` block, and `except WikipediaError as error:` raises `click.ClickException(str(error))`.
@@ -381,7 +381,7 @@ In `src/wikiapp/console.py`, the import names `WikipediaError` too. In `main`, t
 A test makes the mock raise a `RequestException`, and checks that the output contains `Error`. The test needs the
 module `requests`, to name the exception.
 
-A patch to [`tests/test_console.py`](#step-03.6-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-03.6-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, `import requests` is under `import pytest`. The new test
 `test_main_prints_message_on_request_error` sets `mock_requests_get.side_effect = requests.RequestException`, and

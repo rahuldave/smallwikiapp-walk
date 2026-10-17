@@ -37,20 +37,20 @@ know. So `random_page` returns a `Page` made from the answer, and `main` prints 
 `random_page` passes the answer to `Page.model_validate`, which checks it against the model and makes the page.
 The code no longer uses `Any`, so its import goes.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-07.3-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.3-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the `def` line `def random_page(language: str = "en") -> Page:` and the line
 `return Page.model_validate(response.json())`.
 
 `main`, in `src/wikiapp/console.py`, prints `page.title` and `page.extract` in place of the two keys.
 
-A patch to [`src/wikiapp/console.py`](#step-07.3-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-07.3-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 The test that asks the real Wikipedia, in `tests/test_wikipedia.py`, checked two keys of the dictionary. It now
 checks that the answer is a `Page`, and its new name, `test_random_page_returns_page_in_production`, says so. It
 keeps its marker `e2e`.
 
-A patch to [`tests/test_wikipedia.py`](#step-07.3-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-07.3-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
 
 In `tests/test_wikipedia.py`, the two asserts on the keys are now one, on the type of the answer.
 
@@ -148,7 +148,7 @@ An answer with no title is not a page. `model_validate` then raises the Validati
 would end with a traceback. `random_page` turns a failed request into a WikipediaError, and it should do the same
 with an answer that is not a page. So its `except` catches ValidationError together with the exception of requests.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-07.4-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.4-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the line `except (requests.RequestException, ValidationError) as error:`, and
 `ValidationError` in the import from pydantic.
@@ -157,7 +157,7 @@ A test from the original wikiapp, `test_random_page_handles_validation_error`, c
 `tests/test_wikipedia.py`. The mock answers with an empty dictionary, `{}`, and `pytest.raises` expects a
 WikipediaError.
 
-A patch to [`tests/test_wikipedia.py`](#step-07.4-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-07.4-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
 
 ```bash
 just test -k validation

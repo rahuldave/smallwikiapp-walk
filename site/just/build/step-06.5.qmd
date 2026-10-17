@@ -35,6 +35,9 @@ a fresh machine.
 The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
 on its own machines after each push.
 
+[GitHub Actions](https://docs.github.com/en/actions) is GitHub's service that runs jobs, such as tests, on GitHub's
+machines. It is free for a public repository.
+
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
 names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
 jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.

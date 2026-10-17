@@ -179,6 +179,11 @@ A project needs a name, a Python and a command before it has code to run. It als
 on every machine. `uv init --package --python 3.13 --name wikiapp` made `pyproject.toml`, a package in
 `src/wikiapp/`, and `.python-version`.
 
+[uv](https://docs.astral.sh/uv/) comes from Astral, and is written in Rust. It installs Python, makes the folder
+`.venv` with the project's packages, and runs commands in `.venv`. It also writes the lockfile, a file that lists
+the exact version of each package. One tool does the work of
+pip, venv and pip-tools.
+
 Then the author changed the project by hand. `main` went to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
 lockfile, `uv.lock`. The author also wrote the justfile, `LICENSE`, the README and `.gitignore`.
@@ -198,8 +203,9 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
-has a name, and the commands that it runs. `just` alone lists the tasks, and
+The program [`just`](https://just.systems/) is a command runner. It runs the tasks of the project, and the justfile contains them.
+
+A task is called a recipe. It has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -648,6 +654,11 @@ The command needs two packages that Python does not have. click makes command li
 requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
+
+[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
+the function. [requests](https://requests.readthedocs.io/)
+is a widely used library for HTTP. One call, `requests.get`, fetches a page.
 
 ```bash
 uv add click requests
@@ -1126,6 +1137,10 @@ git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cf
 The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
 
+[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
+values on both sides.
+
 ```bash
 uv add --group test pytest
 ```
@@ -1329,6 +1344,9 @@ git restore --source 45807a0ddd9f --staged -- :/ && git restore --source 8435ae5
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page. A mock
 solves both. pytest-mock replaces a function with a mock for the length of one test. Its fixture `mocker` does
 this, and puts the function back after the test. pytest-mock goes in the group `test`.
+
+[pytest-mock](https://pytest-mock.readthedocs.io/) is a plugin of pytest. Python's standard library already has
+mocks, in `unittest.mock`. pytest-mock gives them to a test through a fixture, so each mock ends with its test.
 
 ```bash
 uv add --group test pytest-mock
@@ -1601,6 +1619,9 @@ the coverage, the share of the lines that the tests run.
 
 The tests pass, but we do not know which lines of the code they run. pytest-cov measures that, when pytest gets the
 option `--cov`. It goes in the group `test`.
+
+[pytest-cov](https://pytest-cov.readthedocs.io/) is a plugin of pytest. It runs the tests under coverage.py, which
+records each line that runs, and it prints the report at the end.
 
 ```bash
 uv add --group test pytest-cov
@@ -2609,6 +2630,9 @@ git restore --source b97ee4cfc591 --staged -- :/ && git restore --source d8af75e
 
 The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
 on its own machines after each push.
+
+[GitHub Actions](https://docs.github.com/en/actions) is GitHub's service that runs jobs, such as tests, on GitHub's
+machines. It is free for a public repository.
 
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
 names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two

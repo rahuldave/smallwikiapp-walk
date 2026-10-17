@@ -71,6 +71,11 @@ A project needs a name, a Python and a command before it has code to run. It als
 on every machine. `uv init --package --python 3.13 --name wikiapp` made `pyproject.toml`, a package in
 `src/wikiapp/`, and `.python-version`.
 
+[uv](https://docs.astral.sh/uv/) comes from Astral, and is written in Rust. It installs Python, makes the folder
+`.venv` with the project's packages, and runs commands in `.venv`. It also writes the lockfile, a file that lists
+the exact version of each package. One tool does the work of
+pip, venv and pip-tools.
+
 Then the author changed the project by hand. `main` went to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
 lockfile, `uv.lock`. The author also wrote the justfile, `LICENSE`, the README and `.gitignore`.
@@ -90,8 +95,9 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
-has a name, and the commands that it runs. `just` alone lists the tasks, and
+The program [`just`](https://just.systems/) is a command runner. It runs the tasks of the project, and the justfile contains them.
+
+A task is called a recipe. It has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -529,6 +535,11 @@ requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
+[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
+the function. [requests](https://requests.readthedocs.io/)
+is a widely used library for HTTP. One call, `requests.get`, fetches a page.
+
 This change came from running `uv add click requests`.
 
 In `pyproject.toml`, the list `dependencies` was empty. Now it has `"click>=8.5.0",` and `"requests>=2.34.2",`,
@@ -604,7 +615,7 @@ uv installs only the group `dev` by default. The setting `default-groups = "all"
 install every group. So each later `uv add --group` needs no other change to `pyproject.toml`. A patch adds the
 table `[tool.uv]` with this setting.
 
-A patch to [`pyproject.toml`](#step-02.1-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-02.1-pyproject.toml-5d07e7)
 
 At the end of `pyproject.toml`, the new table `[tool.uv]` has the line `default-groups = "all"`, with a comment
 above it.
@@ -652,7 +663,7 @@ can come from the code, from the network or from Wikipedia.
 
 The test comes in a new file, `tests/test_console.py`, as a patch. The patch also makes the folder `tests`.
 
-A patch to [`tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee).
+[± See the new file `tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee)
 
 The new file `tests/test_console.py` has one test, `test_main_succeeds`. It runs `console.main` with a
 `CliRunner`, and checks `result.exit_code`.
@@ -695,6 +706,10 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
+
+[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
+values on both sides.
 
 This change came from running `uv add --group test pytest`.
 
@@ -785,7 +800,7 @@ When `pyproject.toml` changes and the lockfile does not, `uv run` writes a new l
 any recipe can change the lockfile, and the person who runs it does not see the change. The variable `UV_LOCKED`
 makes every `uv run` refuse a lockfile that is out of date. The `justfile` exports it to every recipe.
 
-A patch to [`justfile`](#step-04.10-justfile-424f0b).
+[± See the change to `justfile`](#step-04.10-justfile-424f0b)
 
 Near the top of the `justfile`, `export UV_LOCKED := "1"` is on line 6, under `set positional-arguments`.
 
@@ -855,7 +870,7 @@ The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv in
 its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
 `pyproject.toml` now says 3.11.
 
-A patch to [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-06.3-pyproject.toml-5d07e7)
 
 In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 
@@ -974,6 +989,9 @@ jobs install.
 The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
 on its own machines after each push.
 
+[GitHub Actions](https://docs.github.com/en/actions) is GitHub's service that runs jobs, such as tests, on GitHub's
+machines. It is free for a public repository.
+
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
 names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
 jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.
@@ -981,7 +999,7 @@ jobs. The job `tests` runs the tests on three systems and four versions of Pytho
 Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub never runs the
 e2e tests. A person runs them, with `just test -m e2e`.
 
-A patch to [`.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23).
+[± See the new file `.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23)
 
 The new file `.github/workflows/test.yaml` has the jobs `tests` and `check`. In `tests`, the matrix of three
 values of `os` and four of `python` makes twelve jobs.
@@ -1093,7 +1111,7 @@ to install none of them, and `--group test` then names the one group to install.
 of `.github/workflows/test.yaml`, still runs `just setup`, which installs every group. It needs every tool, since
 `just check` runs them all.
 
-A patch to [`.github/workflows/test.yaml`](#step-08b.1-.github-workflows-test.yaml-a60e23).
+[± See the change to `.github/workflows/test.yaml`](#step-08b.1-.github-workflows-test.yaml-a60e23)
 
 The last line of the job `tests` now adds `--no-default-groups --group test`. The comment line `# tests:` at the top of
 the file now ends with "each with the group test alone".
@@ -1144,6 +1162,9 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 `just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
 `.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
 
+[GitHub Pages](https://docs.github.com/en/pages) publishes a website from a repository, free for a public one. A
+workflow can build the site and give it to Pages.
+
 The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
 `smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at
 line 85, runs `uv run` with no option, which installs every group. The job then gives the folder
@@ -1154,7 +1175,7 @@ an older publish when a newer push starts one.
 
 The file is new, and comes whole, as a patch.
 
-A patch to [`.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835).
+[± See the new file `.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835)
 
 In the new file `.github/workflows/docs.yaml`, the line
 `- run: uv run --locked --no-default-groups --group docs smalldocs render docs` is the build of the site.
@@ -1284,9 +1305,7 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 `"packages/wikirandom",` in line 29.
 
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
-sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
-`just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+sets `UV_LOCKED`, so after this move each recipe that runs uv refuses the lockfile, on purpose. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -1294,6 +1313,13 @@ uv lock --check
 
 The command prints `Resolved 42 packages`, then an error that names `uv.lock`, and a hint to run `uv lock`. Its
 exit code is 1. Before this move, the lockfile had 41 packages. The 42nd is `wikirandom`.
+
+```bash
+just test
+```
+
+`just test` prints its command, `uv run pytest`, then an error of uv that names `uv.lock` and `UV_LOCKED`, and the
+hint to run `uv lock`. pytest does not run.
 
 #### What changed
 
@@ -1376,8 +1402,7 @@ uv lock --check
 uv tree --package wikirandom
 ```
 
-`uv lock --check` prints `Resolved 42 packages`, with no error, so `just setup`, `just test` and `just check`
-pass again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
+`uv lock --check` prints `Resolved 42 packages`, with no error, so the lockfile matches the project again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
 
 A workspace member is a package that the root `pyproject.toml` names under `[tool.uv.workspace]`. With no
 workspace, the app could name the library by its folder. In section 9, it would write the line below under
@@ -1520,17 +1545,17 @@ Coverage measured `wikiapp` alone, and must measure both packages. Last, three f
 packages, and that the app uses the library. They are the README, the front page of the docs and the library's
 README.
 
-A patch to [`src/wikiapp/console.py`](#step-09.7-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-09.7-src-wikiapp-console.py-d9ae67)
 
-A patch to [`tests/test_wikipedia.py`](#step-09.7-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-09.7-tests-test_wikipedia.py-2f4413)
 
-A patch to [`pyproject.toml`](#step-09.7-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-09.7-pyproject.toml-5d07e7)
 
-A patch to [`README.md`](#step-09.7-README.md-8ec9a0).
+[± See the change to `README.md`](#step-09.7-README.md-8ec9a0)
 
-A patch to [`docs/index.qmd`](#step-09.7-docs-index.qmd-d6d880).
+[± See the change to `docs/index.qmd`](#step-09.7-docs-index.qmd-d6d880)
 
-A patch to [`packages/wikirandom/README.md`](#step-09.7-packages-wikirandom-README.md-105646).
+[± See the change to `packages/wikirandom/README.md`](#step-09.7-packages-wikirandom-README.md-105646)
 
 In `src/wikiapp/console.py`, the import of line 6 now comes from `wikirandom`. In `tests/test_wikipedia.py`,
 every call starts with `wikirandom.`. In `pyproject.toml`, see `--cov=wikirandom` in line 57. `README.md` has a
@@ -1838,7 +1863,7 @@ A package goes to PyPI as two files, a wheel and a source archive. pip and uv in
 --all-packages` builds both for every package of the workspace, into `dist/`. `.gitignore` already lists `dist/`.
 A recipe `build`, at the end of the `justfile`, runs it.
 
-A patch to [`justfile`](#step-10.1-justfile-424f0b).
+[± See the change to `justfile`](#step-10.1-justfile-424f0b)
 
 The recipe `build` at the end of the `justfile` is in the group `setup`, and `just build help` explains it.
 

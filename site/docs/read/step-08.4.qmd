@@ -32,7 +32,7 @@ documentation too.
 
 Each of the two modules gets a docstring at the top, which says what the module is.
 
-A patch to [`src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01).
+[± See the change to `src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01){.btn .btn-sm .btn-secondary}
 
 `check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class.
 Python still shows it, in `help(wikiapp)`.
@@ -41,7 +41,7 @@ The help of `--language` now says what a language is. It replaces the help of th
 page from Wikipedia in given language". `main` has one parameter to a line, with its docment, and a docstring that
 says what `main` prints. A function that returns None needs no docment for its return.
 
-A patch to [`src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, the docment of `language` is
 `# The language of the Wikipedia to ask, from --language`. The second paragraph of the docstring of `main` gives the colour of the title and the width of the

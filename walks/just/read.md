@@ -116,6 +116,11 @@ A project needs a name, a Python and a command before it has code to run. It als
 on every machine. `uv init --package --python 3.13 --name wikiapp` made `pyproject.toml`, a package in
 `src/wikiapp/`, and `.python-version`.
 
+[uv](https://docs.astral.sh/uv/) comes from Astral, and is written in Rust. It installs Python, makes the folder
+`.venv` with the project's packages, and runs commands in `.venv`. It also writes the lockfile, a file that lists
+the exact version of each package. One tool does the work of
+pip, venv and pip-tools.
+
 Then the author changed the project by hand. `main` went to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
 lockfile, `uv.lock`. The author also wrote the justfile, `LICENSE`, the README and `.gitignore`.
@@ -135,8 +140,9 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
-has a name, and the commands that it runs. `just` alone lists the tasks, and
+The program [`just`](https://just.systems/) is a command runner. It runs the tasks of the project, and the justfile contains them.
+
+A task is called a recipe. It has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -590,7 +596,7 @@ The command that runs the tests is `uv run pytest`, with any options for pytest 
 justfile gives it a short name, `just test`. The words after `just test` go to pytest. `"$@"` stands for those
 words, and the recipe gives each word to pytest whole. `just test help` shows the recipe.
 
-A patch to [`justfile`](#step-02.4-justfile-424f0b).
+[± See the change to `justfile`](#step-02.4-justfile-424f0b)
 
 At the end of the `justfile`, the recipe `test *args:` runs `uv run pytest "$@"`, or shows itself for
 `just test help`. The comment above it is what `just` lists for the recipe.
@@ -613,8 +619,7 @@ The body of `test` is one line, `{{ if args == "help" { "just help test" } else 
 Each later recipe of one line has this form. The longer recipes test the word in the shell, from section 5. So
 `just VERB help` explains each verb.
 
-`[no-exit-message]` changes what a failed test prints. Without it, `just` adds a line of its own, which begins
-"error: Recipe `test` failed". With it, the report of pytest is the last thing that the recipe prints.
+The line `[no-exit-message]` above the recipe tells `just` to add no message of its own when the recipe fails.
 
 #### What changed
 
@@ -667,6 +672,9 @@ changes how the code looks, and never what it does. A linter finds problems in t
 is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
+[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
+
 This change came from running `uv add --group lint ruff`.
 
 In `pyproject.toml`, the new group `lint` starts at line 27, above `test`, with the line `"ruff>=0.17.0",`.
@@ -712,9 +720,9 @@ ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 char
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
-A patch to [`pyproject.toml`](#step-04.2-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7)
 
-A patch to [`justfile`](#step-04.2-justfile-424f0b).
+[± See the change to `justfile`](#step-04.2-justfile-424f0b)
 
 At the end of `pyproject.toml`, the table `[tool.ruff]` on line 41 sets `line-length = 100`. The table
 `[tool.ruff.format]` on line 46 gives the three defaults of the formatter, each with a comment. At the end of the
@@ -804,9 +812,9 @@ tests may use `assert`. The rest of the code may not, because Python skips every
 
 A recipe `lint` runs the linter. The words after `just lint` go to `ruff check`.
 
-A patch to [`pyproject.toml`](#step-04.4-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-04.4-pyproject.toml-5d07e7)
 
-A patch to [`justfile`](#step-04.4-justfile-424f0b).
+[± See the change to `justfile`](#step-04.4-justfile-424f0b)
 
 At the end of `pyproject.toml`, `select = [` on line 54 lists nine families of rules. The last table lets the files
 under `tests/` break the rule `S101`, which forbids `assert`, on line 68. At the end of the `justfile`, the recipe
@@ -824,8 +832,6 @@ The linter finds five problems, and fails. Each problem has its code.
 - `E402`: an import in `tests/test_console.py` comes below code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
-
-Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
 
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
@@ -912,6 +918,9 @@ The tests and the linter check the code, and not the configuration. So an error 
 lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
+[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+the standards that define the file.
+
 This change came from running `uv add --group lint validate-pyproject`.
 
 In `pyproject.toml`, the group `lint` now has `"validate-pyproject>=0.26",` on line 29, under ruff. `uv.lock` has
@@ -955,7 +964,7 @@ A recipe `lint-config` checks the configuration, with three commands. validate-p
 --unstable` checks the `justfile`. The recipe runs the three commands, one on each line, and `set -e` stops it at
 the first that fails.
 
-A patch to [`justfile`](#step-04.9-justfile-424f0b).
+[± See the change to `justfile`](#step-04.9-justfile-424f0b)
 
 At the end of the `justfile`, the recipe `lint-config *args:` on line 44 runs the three commands, one on each line.
 `set -e`, on line 46, stops it at the first that fails.
@@ -1032,7 +1041,7 @@ When `pyproject.toml` changes and the lockfile does not, `uv run` writes a new l
 any recipe can change the lockfile, and the person who runs it does not see the change. The variable `UV_LOCKED`
 makes every `uv run` refuse a lockfile that is out of date. The `justfile` exports it to every recipe.
 
-A patch to [`justfile`](#step-04.10-justfile-424f0b).
+[± See the change to `justfile`](#step-04.10-justfile-424f0b)
 
 Near the top of the `justfile`, `export UV_LOCKED := "1"` is on line 6, under `set positional-arguments`.
 
@@ -1087,7 +1096,7 @@ There are now four checks, and a person must remember to run each. A recipe `che
 stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
 the configuration.
 
-A patch to [`justfile`](#step-04.11-justfile-424f0b).
+[± See the change to `justfile`](#step-04.11-justfile-424f0b)
 
 At the end of the `justfile`, the recipe `check *args:` on line 57 runs four recipes. The tests run with
 `--cov-fail-under=90`, on line 63, so they fail if they run less than 90% of the statements.
@@ -1166,6 +1175,9 @@ check of the Python code is `just check`.
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
+[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+an environment of its own, and runs them on the files of a change.
+
 This change came from running `uv add --group lint pre-commit`.
 
 In `pyproject.toml`, the group `lint` now starts with `"pre-commit>=4.7.0",`, on line 28. `uv.lock` has its exact
@@ -1212,9 +1224,9 @@ A recipe `hook` installs the hook, once in each clone. `hook` is a recipe of its
 often and must not change files under `.git`. Once `just hook` installs the hook in a clone, it runs
 `just check` before each `git commit` in that clone.
 
-A patch to [`.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d).
+[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d)
 
-A patch to [`justfile`](#step-04.13-justfile-424f0b).
+[± See the change to `justfile`](#step-04.13-justfile-424f0b)
 
 In `.pre-commit-config.yaml`, the three hooks under `repo: https://github.com/pre-commit/pre-commit-hooks`, on
 line 6, come from `pre-commit`'s collection. The hook under `repo: local` has the line `entry: just check`, on
@@ -1234,9 +1246,6 @@ the tutorial.
 
 `pre-commit run` now runs every hook on the file named, as git does before it records a change. The first time on
 a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
-
-With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
-it.
 
 The hook makes sure that `just check` runs on this machine before each `git commit`. It has limits.
 
@@ -1330,6 +1339,9 @@ Nothing checks the types of the code yet. ty is a type checker. It reads the cod
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
 
+[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+the work of older checkers such as mypy and pyright.
+
 This change came from running `uv add --group lint ty`.
 
 In `pyproject.toml`, the group `lint` now has the line `"ty>=0.0.87",`, on line 30. `uv.lock` has the exact
@@ -1371,7 +1383,7 @@ It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs i
 A recipe `types` runs ty, as every other tool of the project runs through `just`. It goes after the recipe `lint`
 in the `justfile`.
 
-A patch to [`justfile`](#step-05.2-justfile-424f0b).
+[± See the change to `justfile`](#step-05.2-justfile-424f0b)
 
 In the `justfile`, the recipe `types *args:` on line 51 comes after `lint`. It runs `uv run ty check`, and passes
 on any arguments.
@@ -1437,7 +1449,7 @@ their types.
 change can break a type, and pass. The recipe `check` now runs `just types` after `just lint`, and its comment
 names the types too.
 
-A patch to [`justfile`](#step-05.7-justfile-424f0b).
+[± See the change to `justfile`](#step-05.7-justfile-424f0b)
 
 In the `justfile`, the recipe `check` now runs `just types` on line 74, after `just lint`. Its comment, on line 65,
 lists "types".
@@ -1504,6 +1516,9 @@ a fresh machine.
 The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
 on its own machines after each push.
 
+[GitHub Actions](https://docs.github.com/en/actions) is GitHub's service that runs jobs, such as tests, on GitHub's
+machines. It is free for a public repository.
+
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
 names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
 jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.
@@ -1511,7 +1526,7 @@ jobs. The job `tests` runs the tests on three systems and four versions of Pytho
 Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub never runs the
 e2e tests. A person runs them, with `just test -m e2e`.
 
-A patch to [`.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23).
+[± See the new file `.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23)
 
 The new file `.github/workflows/test.yaml` has the jobs `tests` and `check`. In `tests`, the matrix of three
 values of `os` and four of `python` makes twelve jobs.
@@ -1610,8 +1625,8 @@ types are in the code. The docstring says what the function does. A docment is t
 or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
 docment can follow it on that line.
 
-A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
-what has no documentation.
+A reference that a tool writes from the code changes when the code changes. [smalldocs](https://docs.smallish.dev/) is that tool. It is a Python program that writes the reference, and builds a
+website from it. It also lists what has no documentation.
 
 smalldocs reads the signature, the docstring and the docments, and writes Markdown. It is a Python package, so uv
 installs it like any other. It goes in a third dependency group, `docs`. uv sorts the groups by name, so `docs` comes before
@@ -1669,7 +1684,7 @@ smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has on
 It names the package to document, the address of its source, and the files of the tests to check. The file is new,
 and comes whole, as a patch.
 
-A patch to [`docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48).
+[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48)
 
 The new file `docs/_smalldocs.yml` has five lines. Line 3 names the package, `wikiapp`. Line 5 names the tests,
 `tests/**/*.py`, which `check` also checks.
@@ -1681,7 +1696,7 @@ that we use here:
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
   docstring. It looks in the package and in the files of `check`, here the tests.
 
-A patch to [`justfile`](#step-08.2-justfile-424f0b).
+[± See the change to `justfile`](#step-08.2-justfile-424f0b)
 
 The recipe `docs *args:` is at line 81, the end of the `justfile`. It also passes `--dir docs`, the folder of the
 settings.
@@ -1770,7 +1785,7 @@ The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, w
 the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
 page. The comment at the top now says that `just docs` builds the site.
 
-A patch to [`docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48).
+[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48)
 
 In `docs/_smalldocs.yml`, the sidebar lists the front page, then the reference pages, in the line
 `contents: api/*  # the reference pages, which each build makes from the code`.
@@ -1781,12 +1796,12 @@ gives the title of the page.
 The page says what the command prints, what each module does, and what the reference pages contain. The file is
 new, and comes whole, as a patch.
 
-A patch to [`docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880).
+[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880)
 
 `just docs` with no words now builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api`
 as before. So the recipe is now a script of several lines.
 
-A patch to [`justfile`](#step-08.6-justfile-424f0b).
+[± See the change to `justfile`](#step-08.6-justfile-424f0b)
 
 In the `justfile`, the recipe `docs` starts with `#!/usr/bin/env sh`. The line
 `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi` is the case with no words.
@@ -1795,11 +1810,13 @@ In the `justfile`, the recipe `docs` starts with `#!/usr/bin/env sh`. The line
 uv run smalldocs render docs
 just --show docs
 just docs
+grep -o 'href="api/wikipedia.html#random_page"' docs/_site/index.html | head -n 1
 ```
 
 smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is `docs/_site/index.html`, for a
-browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
-pages, and git ignores them.
+browser. grep searches a file for a piece of text, and `-o` prints only the text that it finds. Here it finds the
+link from `random_page` on the front page to its entry in `api/wikipedia.html`. The `|` passes what grep prints to
+`head -n 1`, which keeps the first line, so the link prints once. Each build makes the site and the reference pages, and git ignores them.
 
 #### What changed
 
@@ -1927,7 +1944,7 @@ Every function, parameter and field has documentation now, but no check fails wh
 each `git commit`, through the git hook, so `just docs check` goes in it, after the tests. The comment above
 `check` names the docs too.
 
-A patch to [`justfile`](#step-08.8-justfile-424f0b).
+[± See the change to `justfile`](#step-08.8-justfile-424f0b)
 
 In the `justfile`, `just docs check` is the line under `just test -q --cov-fail-under=90`, in `check`.
 
@@ -2022,22 +2039,23 @@ changes `docs/_smalldocs.yml`, behind the verb.
 
 ### 9.10 The docs check counts the library
 
-The front page names `random_page`, but it is not a link, and the docs check counts only the app. The settings of
-the site, `docs/_smalldocs.yml`, name only `wikiapp`. The line `packages:` in the section `api` must name both.
+The settings of the site, `docs/_smalldocs.yml`, name only `wikiapp`, so the docs and their check leave out the
+library. The line `packages:` in the section `api` must name both.
 
-A patch to [`docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48).
+[± See the change to `docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48)
 
 In `docs/_smalldocs.yml`, line 19, `packages:` lists `wikiapp` and `wikirandom`.
 
 ```bash
 just docs check
 just docs
+grep -o 'href="api/wikirandom.html#random_page"' docs/_site/index.html | head -n 1
 just check
 ```
 
 The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
-pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
-passes.
+pages, and grep finds the link from `random_page` on the front page to its entry in `api/wikirandom.html`.
+`just check` passes.
 
 The justfile did not change, and `just docs check` checks more. The hook and GitHub's job `check` run the new
 docs check without a change.
@@ -2085,7 +2103,7 @@ A package goes to PyPI as two files, a wheel and a source archive. pip and uv in
 --all-packages` builds both for every package of the workspace, into `dist/`. `.gitignore` already lists `dist/`.
 A recipe `build`, at the end of the `justfile`, runs it.
 
-A patch to [`justfile`](#step-10.1-justfile-424f0b).
+[± See the change to `justfile`](#step-10.1-justfile-424f0b)
 
 The recipe `build` at the end of the `justfile` is in the group `setup`, and `just build help` explains it.
 
@@ -2150,7 +2168,7 @@ Since the library became a package, validate-pyproject, in `just lint-config`, h
 The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. A mistake in the
 library's file would reach a build unseen. The recipe `lint-config` now gives validate-pyproject both files.
 
-A patch to [`justfile`](#step-10.3-justfile-424f0b).
+[± See the change to `justfile`](#step-10.3-justfile-424f0b)
 
 ```bash
 just lint-config

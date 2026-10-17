@@ -71,6 +71,11 @@ A project needs a name, a Python and a command before it has code to run. It als
 on every machine. `uv init --package --python 3.13 --name wikiapp` made `pyproject.toml`, a package in
 `src/wikiapp/`, and `.python-version`.
 
+[uv](https://docs.astral.sh/uv/) comes from Astral, and is written in Rust. It installs Python, makes the folder
+`.venv` with the project's packages, and runs commands in `.venv`. It also writes the lockfile, a file that lists
+the exact version of each package. One tool does the work of
+pip, venv and pip-tools.
+
 Then the author changed the project by hand. `main` went to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
 lockfile, `uv.lock`. The author also wrote the justfile, `LICENSE`, the README and `.gitignore`.
@@ -90,8 +95,9 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
-has a name, and the commands that it runs. `just` alone lists the tasks, and
+The program [`just`](https://just.systems/) is a command runner. It runs the tasks of the project, and the justfile contains them.
+
+A task is called a recipe. It has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -529,6 +535,11 @@ requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
+[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
+the function. [requests](https://requests.readthedocs.io/)
+is a widely used library for HTTP. One call, `requests.get`, fetches a page.
+
 This change came from running `uv add click requests`.
 
 In `pyproject.toml`, the list `dependencies` was empty. Now it has `"click>=8.5.0",` and `"requests>=2.34.2",`,
@@ -588,7 +599,7 @@ original wikiapp did not have it.
 
 The patch writes `src/wikiapp/console.py` again.
 
-A patch to [`src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67)
 
 In `src/wikiapp/console.py`, the `print` is gone. The block `with requests.get(API_URL) as response:` asks
 Wikipedia for the page, and the last two lines of the block print it.
@@ -647,7 +658,7 @@ sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
-A patch to [`src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67)
 
 In `src/wikiapp/console.py`, `USER_AGENT` is under `API_URL`. The request now passes it in
 `headers={"User-Agent": USER_AGENT}`.
@@ -695,9 +706,9 @@ its own version from the installed package, which has the version from `pyprojec
 `src/wikiapp/__init__.py` sets `__version__` from the metadata of the installed package. The decorator
 `@click.version_option` gives the command the option `--version`, which prints it.
 
-A patch to [`src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01).
+[± See the change to `src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01)
 
-A patch to [`src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67)
 
 In `src/wikiapp/__init__.py`, `__version__` comes from `importlib.metadata`. In `src/wikiapp/console.py`,
 `@click.version_option(version=__version__)` is under `@click.command()`.
@@ -793,8 +804,8 @@ types are in the code. The docstring says what the function does. A docment is t
 or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
 docment can follow it on that line.
 
-A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
-what has no documentation.
+A reference that a tool writes from the code changes when the code changes. [smalldocs](https://docs.smallish.dev/) is that tool. It is a Python program that writes the reference, and builds a
+website from it. It also lists what has no documentation.
 
 smalldocs reads the signature, the docstring and the docments, and writes Markdown. It is a Python package, so uv
 installs it like any other. It goes in a third dependency group, `docs`. uv sorts the groups by name, so `docs` comes before
@@ -852,7 +863,7 @@ smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has on
 It names the package to document, the address of its source, and the files of the tests to check. The file is new,
 and comes whole, as a patch.
 
-A patch to [`docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48).
+[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48)
 
 The new file `docs/_smalldocs.yml` has five lines. Line 3 names the package, `wikiapp`. Line 5 names the tests,
 `tests/**/*.py`, which `check` also checks.
@@ -864,7 +875,7 @@ that we use here:
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
   docstring. It looks in the package and in the files of `check`, here the tests.
 
-A patch to [`justfile`](#step-08.2-justfile-424f0b).
+[± See the change to `justfile`](#step-08.2-justfile-424f0b)
 
 The recipe `docs *args:` is at line 81, the end of the `justfile`. It also passes `--dir docs`, the folder of the
 settings.
@@ -947,7 +958,7 @@ docstrings. We document it in four places:
 - a docment on the parameter and on the return of `random_page`
 - a longer docstring of `random_page`, which says when it raises an error
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803)
 
 In `src/wikiapp/wikipedia.py`, see the docstring at the top, the comments beside the fields of `Page`, and the
 line `) -> Page:  # A page chosen at random`, the docment of the return.
@@ -1029,7 +1040,7 @@ documentation too.
 
 Each of the two modules gets a docstring at the top, which says what the module is.
 
-A patch to [`src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01).
+[± See the change to `src/wikiapp/__init__.py`](#step-08.4-src-wikiapp-__init__.py-682a01)
 
 `check` does not ask for the docstring of `__init__.py`, because that file defines no public function or class.
 Python still shows it, in `help(wikiapp)`.
@@ -1038,7 +1049,7 @@ The help of `--language` now says what a language is. It replaces the help of th
 page from Wikipedia in given language". `main` has one parameter to a line, with its docment, and a docstring that
 says what `main` prints. A function that returns None needs no docment for its return.
 
-A patch to [`src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-08.4-src-wikiapp-console.py-d9ae67)
 
 In `src/wikiapp/console.py`, the docment of `language` is
 `# The language of the Wikipedia to ask, from --language`. The second paragraph of the docstring of `main` gives the colour of the title and the width of the
@@ -1135,19 +1146,19 @@ Tests documented this way are documentation too. A reader learns from them what 
 The fixture in `tests/conftest.py` gets a docstring for the file, a docment for its parameter and its return, and a
 docstring of its own.
 
-A patch to [`tests/conftest.py`](#step-08.5-tests-conftest.py-626af3).
+[± See the change to `tests/conftest.py`](#step-08.5-tests-conftest.py-626af3)
 
 In `tests/conftest.py`, see the docment of `mocker`, and the docment of the return after `-> Mock:`.
 
 `tests/test_console.py` has a fixture and six tests, and each gets the same pattern.
 
-A patch to [`tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee)
 
 In `tests/test_console.py`, the fixture `runner` also documents its return.
 
 The three tests of `tests/test_wikipedia.py` get the same pattern.
 
-A patch to [`tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413)
 
 ```bash
 just docs check
@@ -1348,7 +1359,7 @@ The settings of the site go in `docs/_smalldocs.yml`, above the section `api`, w
 the type of the project, its output folder, the title, the sidebar, the theme and a table of contents on each
 page. The comment at the top now says that `just docs` builds the site.
 
-A patch to [`docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48).
+[± See the change to `docs/_smalldocs.yml`](#step-08.6-docs-_smalldocs.yml-4b0b48)
 
 In `docs/_smalldocs.yml`, the sidebar lists the front page, then the reference pages, in the line
 `contents: api/*  # the reference pages, which each build makes from the code`.
@@ -1359,12 +1370,12 @@ gives the title of the page.
 The page says what the command prints, what each module does, and what the reference pages contain. The file is
 new, and comes whole, as a patch.
 
-A patch to [`docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880).
+[± See the new file `docs/index.qmd`](#step-08.6-docs-index.qmd-d6d880)
 
 `just docs` with no words now builds the site, with `smalldocs render docs`. With words, it runs `smalldocs api`
 as before. So the recipe is now a script of several lines.
 
-A patch to [`justfile`](#step-08.6-justfile-424f0b).
+[± See the change to `justfile`](#step-08.6-justfile-424f0b)
 
 In the `justfile`, the recipe `docs` starts with `#!/usr/bin/env sh`. The line
 `if [ "$#" -eq 0 ]; then exec uv run smalldocs render docs; fi` is the case with no words.
@@ -1373,11 +1384,13 @@ In the `justfile`, the recipe `docs` starts with `#!/usr/bin/env sh`. The line
 uv run smalldocs render docs
 just --show docs
 just docs
+grep -o 'href="api/wikipedia.html#random_page"' docs/_site/index.html | head -n 1
 ```
 
 smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is `docs/_site/index.html`, for a
-browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
-pages, and git ignores them.
+browser. grep searches a file for a piece of text, and `-o` prints only the text that it finds. Here it finds the
+link from `random_page` on the front page to its entry in `api/wikipedia.html`. The `|` passes what grep prints to
+`head -n 1`, which keeps the first line, so the link prints once. Each build makes the site and the reference pages, and git ignores them.
 
 #### What changed
 
@@ -1503,7 +1516,7 @@ The README is the first page that a reader sees on GitHub. Its table of folders 
 project is, and it lists neither the tests nor the docs. The table gets rows for `tests/` and `docs/`. The row of
 `src/wikiapp/` also says that `wikipedia.py` is the library and `console.py` the command.
 
-A patch to [`README.md`](#step-08.7-README.md-8ec9a0).
+[± See the change to `README.md`](#step-08.7-README.md-8ec9a0)
 
 ```bash
 grep -n -E 'tests/|docs/' README.md
@@ -1556,7 +1569,7 @@ Every function, parameter and field has documentation now, but no check fails wh
 each `git commit`, through the git hook, so `just docs check` goes in it, after the tests. The comment above
 `check` names the docs too.
 
-A patch to [`justfile`](#step-08.8-justfile-424f0b).
+[± See the change to `justfile`](#step-08.8-justfile-424f0b)
 
 In the `justfile`, `just docs check` is the line under `just test -q --cov-fail-under=90`, in `check`.
 
@@ -1644,6 +1657,9 @@ But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your ma
 `just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
 `.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
 
+[GitHub Pages](https://docs.github.com/en/pages) publishes a website from a repository, free for a public one. A
+workflow can build the site and give it to Pages.
+
 The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
 `smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at
 line 85, runs `uv run` with no option, which installs every group. The job then gives the folder
@@ -1654,7 +1670,7 @@ an older publish when a newer push starts one.
 
 The file is new, and comes whole, as a patch.
 
-A patch to [`.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835).
+[± See the new file `.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835)
 
 In the new file `.github/workflows/docs.yaml`, the line
 `- run: uv run --locked --no-default-groups --group docs smalldocs render docs` is the build of the site.
@@ -1760,22 +1776,23 @@ too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` agai
 
 ### 9.10 The docs check counts the library
 
-The front page names `random_page`, but it is not a link, and the docs check counts only the app. The settings of
-the site, `docs/_smalldocs.yml`, name only `wikiapp`. The line `packages:` in the section `api` must name both.
+The settings of the site, `docs/_smalldocs.yml`, name only `wikiapp`, so the docs and their check leave out the
+library. The line `packages:` in the section `api` must name both.
 
-A patch to [`docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48).
+[± See the change to `docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48)
 
 In `docs/_smalldocs.yml`, line 19, `packages:` lists `wikiapp` and `wikirandom`.
 
 ```bash
 just docs check
 just docs
+grep -o 'href="api/wikirandom.html#random_page"' docs/_site/index.html | head -n 1
 just check
 ```
 
 The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
-pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
-passes.
+pages, and grep finds the link from `random_page` on the front page to its entry in `api/wikirandom.html`.
+`just check` passes.
 
 This tutorial ends here. Later, `just build` builds both packages, and the app needs a 0.1 version of
 wikirandom. `just lint-config` checks the library's `pyproject.toml` too, and the library gets a licence and an

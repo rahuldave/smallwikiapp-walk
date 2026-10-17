@@ -34,8 +34,8 @@ types are in the code. The docstring says what the function does. A docment is t
 or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
 docment can follow it on that line.
 
-A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
-what has no documentation.
+A reference that a tool writes from the code changes when the code changes. [smalldocs](https://docs.smallish.dev/) is that tool. It is a Python program that writes the reference, and builds a
+website from it. It also lists what has no documentation.
 
 smalldocs reads the signature, the docstring and the docments, and writes Markdown. It is a Python package, so uv
 installs it like any other. It goes in a third dependency group, `docs`. uv sorts the groups by name, so `docs` comes before
@@ -91,7 +91,7 @@ smalldocs reads its settings from `docs/_smalldocs.yml`. For now the file has on
 It names the package to document, the address of its source, and the files of the tests to check. The file is new,
 and comes whole, as a patch.
 
-A patch to [`docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48).
+[± See the new file `docs/_smalldocs.yml`](#step-08.2-docs-_smalldocs.yml-4b0b48){.btn .btn-sm .btn-secondary}
 
 The new file `docs/_smalldocs.yml` has five lines. Line 3 names the package, `wikiapp`. Line 5 names the tests,
 `tests/**/*.py`, which `check` also checks.
@@ -103,7 +103,7 @@ that we use here:
 - `check` lists each function and class without a docstring, a type or a docment, and each module without a
   docstring. It looks in the package and in the files of `check`, here the tests.
 
-A patch to [`justfile`](#step-08.2-justfile-424f0b).
+[± See the change to `justfile`](#step-08.2-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 The recipe `docs *args:` is at line 81, the end of the `justfile`. It also passes `--dir docs`, the folder of the
 settings.

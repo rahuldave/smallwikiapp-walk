@@ -39,7 +39,7 @@ uv installs only the group `dev` by default. The setting `default-groups = "all"
 install every group. So each later `uv add --group` needs no other change to `pyproject.toml`. A patch adds the
 table `[tool.uv]` with this setting.
 
-A patch to [`pyproject.toml`](#step-02.1-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-02.1-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the new table `[tool.uv]` has the line `default-groups = "all"`, with a comment
 above it.
@@ -85,7 +85,7 @@ can come from the code, from the network or from Wikipedia.
 
 The test comes in a new file, `tests/test_console.py`, as a patch. The patch also makes the folder `tests`.
 
-A patch to [`tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee).
+[± See the new file `tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 The new file `tests/test_console.py` has one test, `test_main_succeeds`. It runs `console.main` with a
 `CliRunner`, and checks `result.exit_code`.
@@ -126,6 +126,10 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
+
+[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
+values on both sides.
 
 This change came from running `uv add --group test pytest`.
 
@@ -170,7 +174,7 @@ The command that runs the tests is `uv run pytest`, with any options for pytest 
 justfile gives it a short name, `just test`. The words after `just test` go to pytest. `"$@"` stands for those
 words, and the recipe gives each word to pytest whole. `just test help` shows the recipe.
 
-A patch to [`justfile`](#step-02.4-justfile-424f0b).
+[± See the change to `justfile`](#step-02.4-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `test *args:` runs `uv run pytest "$@"`, or shows itself for
 `just test help`. The comment above it is what `just` lists for the recipe.
@@ -216,7 +220,7 @@ Each test of the command needs a `CliRunner`, and each would make its own. A fix
 A fixture is a function that pytest calls for each test that names it as a parameter. So a fixture `runner`
 returns a `CliRunner`, and `test_main_succeeds` takes the runner as its parameter.
 
-A patch to [`tests/test_console.py`](#step-02.5-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-02.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `runner` is above the test, under `@pytest.fixture`. The test now reads
 `def test_main_succeeds(runner):`, and no longer makes a `CliRunner` itself.
@@ -262,6 +266,9 @@ A test that needs the network fails on a train. Also, a test cannot check the ti
 solves both. pytest-mock replaces a function with a mock for the length of one test. Its fixture `mocker` does
 this, and puts the function back after the test. pytest-mock goes in the group `test`.
 
+[pytest-mock](https://pytest-mock.readthedocs.io/) is a plugin of pytest. Python's standard library already has
+mocks, in `unittest.mock`. pytest-mock gives them to a test through a fixture, so each mock ends with its test.
+
 This change came from running `uv add --group test pytest-mock`.
 
 In `pyproject.toml`, the group `test` now has `"pytest-mock>=3.16.0",` under pytest. `uv.lock` has pytest-mock
@@ -306,7 +313,7 @@ A new test, `test_main_prints_title`, checks that the command prints that title.
 A test that uses the mock is a unit test of the command. It checks the command alone, without the network, so a
 failure points at the command. `test_main_succeeds` still asks the real Wikipedia.
 
-A patch to [`tests/test_console.py`](#step-02.7-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-02.7-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `mock_requests_get` is under `runner`, with the line
 `mock = mocker.patch("requests.get")`. The new test `test_main_prints_title` names both fixtures, and looks for
@@ -365,7 +372,7 @@ checks the address.
 `call_args[0]` contains the arguments that the last call gave in order, without a name. Here that is only the
 address. The call gives the header by name, as `headers=...`, so the header is in `call_args[1]`.
 
-A patch to [`tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the two new tests are under `test_main_prints_title`. The first checks
 `mock_requests_get.called`. The second compares `call_args[0]` with the address of a random English page.
@@ -411,7 +418,7 @@ A request can fail, and nothing checks what the command does then. A mock can ra
 a value. If `side_effect` is an exception, a call to the mock raises it. A test,
 `test_main_fails_on_request_error`, makes the mock raise, and checks that the command ends with exit code 1.
 
-A patch to [`tests/test_console.py`](#step-02.9-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-02.9-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the new test is above `test_main_succeeds`. Its first line,
 `mock_requests_get.side_effect = Exception("Boom")`, makes the mock raise.
@@ -453,6 +460,9 @@ The result is `5 passed`.
 The tests pass, but we do not know which lines of the code they run. pytest-cov measures that, when pytest gets the
 option `--cov`. It goes in the group `test`.
 
+[pytest-cov](https://pytest-cov.readthedocs.io/) is a plugin of pytest. It runs the tests under coverage.py, which
+records each line that runs, and it prints the report at the end.
+
 This change came from running `uv add --group test pytest-cov`.
 
 In `pyproject.toml`, the group `test` has `"pytest-cov>=7.1.0",` between pytest and pytest-mock. `uv.lock` has
@@ -493,7 +503,7 @@ A person can forget to type `--cov=wikiapp`. The settings of pytest in `pyprojec
 every run. They tell pytest to look for tests in `tests`, to measure coverage, and to list the lines that no test
 ran.
 
-A patch to [`pyproject.toml`](#step-02.11-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-02.11-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the new table `[tool.pytest.ini_options]` has `testpaths = ["tests"]`. Its line
 `addopts` gives pytest the options `--cov=wikiapp --cov-report=term-missing` for every run.

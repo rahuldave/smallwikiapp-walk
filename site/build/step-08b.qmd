@@ -98,6 +98,9 @@ git fetch --quiet --tags --force origin; git restore --source step-08 --staged -
 `just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
 `.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
 
+[GitHub Pages](https://docs.github.com/en/pages) publishes a website from a repository, free for a public one. A
+workflow can build the site and give it to Pages.
+
 The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
 `smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at
 line 85, runs `uv run` with no option, which installs every group. The job then gives the folder

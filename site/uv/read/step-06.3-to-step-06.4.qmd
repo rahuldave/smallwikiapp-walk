@@ -35,7 +35,7 @@ The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv in
 its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
 `pyproject.toml` now says 3.11.
 
-A patch to [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-06.3-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
 In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 

@@ -185,6 +185,11 @@ A project needs a name, a Python and a command before it has code to run. It als
 on every machine. `uv init --package --python 3.13 --name wikiapp` made `pyproject.toml`, a package in
 `src/wikiapp/`, and `.python-version`.
 
+[uv](https://docs.astral.sh/uv/) comes from Astral, and is written in Rust. It installs Python, makes the folder
+`.venv` with the project's packages, and runs commands in `.venv`. It also writes the lockfile, a file that lists
+the exact version of each package. One tool does the work of
+pip, venv and pip-tools.
+
 Then the author changed the project by hand. `main` went to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
 lockfile, `uv.lock`. The author also wrote the justfile, `LICENSE`, the README and `.gitignore`.
@@ -204,8 +209,9 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
-has a name, and the commands that it runs. `just` alone lists the tasks, and
+The program [`just`](https://just.systems/) is a command runner. It runs the tasks of the project, and the justfile contains them.
+
+A task is called a recipe. It has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -655,6 +661,11 @@ requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
+[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
+the function. [requests](https://requests.readthedocs.io/)
+is a widely used library for HTTP. One call, `requests.get`, fetches a page.
+
 ```bash
 uv add click requests
 ```
@@ -910,6 +921,10 @@ git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cf
 
 The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
+
+[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
+values on both sides.
 
 ```bash
 uv add --group test pytest
@@ -1287,6 +1302,9 @@ jobs install.
 The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
 on its own machines after each push.
 
+[GitHub Actions](https://docs.github.com/en/actions) is GitHub's service that runs jobs, such as tests, on GitHub's
+machines. It is free for a public repository.
+
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
 names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
 jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.
@@ -1495,6 +1513,9 @@ git fetch --quiet --tags --force origin; git restore --source step-08 --staged -
 `just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
 `.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
 
+[GitHub Pages](https://docs.github.com/en/pages) publishes a website from a repository, free for a public one. A
+workflow can build the site and give it to Pages.
+
 The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
 `smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at
 line 85, runs `uv run` with no option, which installs every group. The job then gives the folder
@@ -1665,9 +1686,7 @@ line can differ from the one here. If the line differs, the check of your files 
 version numbers.
 
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
-sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
-`just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+sets `UV_LOCKED`, so after this move each recipe that runs uv refuses the lockfile, on purpose. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -1675,6 +1694,13 @@ uv lock --check
 
 The command prints `Resolved 42 packages`, then an error that names `uv.lock`, and a hint to run `uv lock`. Its
 exit code is 1. Before this move, the lockfile had 41 packages. The 42nd is `wikirandom`.
+
+```bash
+just test
+```
+
+`just test` prints its command, `uv run pytest`, then an error of uv that names `uv.lock` and `UV_LOCKED`, and the
+hint to run `uv lock`. pytest does not run.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -1767,8 +1793,7 @@ uv lock --check
 uv tree --package wikirandom
 ```
 
-`uv lock --check` prints `Resolved 42 packages`, with no error, so `just setup`, `just test` and `just check`
-pass again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
+`uv lock --check` prints `Resolved 42 packages`, with no error, so the lockfile matches the project again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
 
 A workspace member is a package that the root `pyproject.toml` names under `[tool.uv.workspace]`. With no
 workspace, the app could name the library by its folder. In section 9, it would write the line below under

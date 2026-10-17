@@ -37,6 +37,9 @@ changes how the code looks, and never what it does. A linter finds problems in t
 is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
+[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
+
 ```bash
 uv add --group lint ruff
 ```

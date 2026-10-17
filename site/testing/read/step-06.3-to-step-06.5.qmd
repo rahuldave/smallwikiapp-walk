@@ -32,7 +32,7 @@ The project asks for Python 3.13, and nothing in it needs more than 3.11. `uv in
 its end of life on 1 October 2026, so 3.11 is now the oldest Python that still gets security fixes. The line in
 `pyproject.toml` now says 3.11.
 
-A patch to [`pyproject.toml`](#step-06.3-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-06.3-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
 In `pyproject.toml`, line 9 now says `requires-python = ">=3.11"`.
 
@@ -118,6 +118,9 @@ change. The third command prints
 The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
 on its own machines after each push.
 
+[GitHub Actions](https://docs.github.com/en/actions) is GitHub's service that runs jobs, such as tests, on GitHub's
+machines. It is free for a public repository.
+
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
 names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
 jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.
@@ -125,7 +128,7 @@ jobs. The job `tests` runs the tests on three systems and four versions of Pytho
 Both jobs run pytest with the options in `pyproject.toml`, so they leave out the e2e tests. GitHub never runs the
 e2e tests. A person runs them, with `just test -m e2e`.
 
-A patch to [`.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23).
+[± See the new file `.github/workflows/test.yaml`](#step-06.5-.github-workflows-test.yaml-a60e23){.btn .btn-sm .btn-secondary}
 
 The new file `.github/workflows/test.yaml` has the jobs `tests` and `check`. In `tests`, the matrix of three
 values of `os` and four of `python` makes twelve jobs.

@@ -30,7 +30,7 @@ There are now four checks, and a person must remember to run each. A recipe `che
 stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
 the configuration.
 
-A patch to [`justfile`](#step-04.11-justfile-424f0b).
+[± See the change to `justfile`](#step-04.11-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `check *args:` on line 57 runs four recipes. The tests run with
 `--cov-fail-under=90`, on line 63, so they fail if they run less than 90% of the statements.

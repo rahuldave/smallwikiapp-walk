@@ -53,9 +53,7 @@ line can differ from the one here. If the line differs, the check of your files 
 version numbers.
 
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
-sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
-`just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+sets `UV_LOCKED`, so after this move each recipe that runs uv refuses the lockfile, on purpose. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -63,6 +61,13 @@ uv lock --check
 
 The command prints `Resolved 42 packages`, then an error that names `uv.lock`, and a hint to run `uv lock`. Its
 exit code is 1. Before this move, the lockfile had 41 packages. The 42nd is `wikirandom`.
+
+```bash
+just test
+```
+
+`just test` prints its command, `uv run pytest`, then an error of uv that names `uv.lock` and `UV_LOCKED`, and the
+hint to run `uv lock`. pytest does not run.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -153,8 +158,7 @@ uv lock --check
 uv tree --package wikirandom
 ```
 
-`uv lock --check` prints `Resolved 42 packages`, with no error, so `just setup`, `just test` and `just check`
-pass again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
+`uv lock --check` prints `Resolved 42 packages`, with no error, so the lockfile matches the project again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -893,8 +897,8 @@ git restore --source f2dd413c02c7 --staged -- :/ && git restore --source 008e616
 
 ## 9.10 The docs check counts the library {#step-09.10}
 
-The front page names `random_page`, but it is not a link, and the docs check counts only the app. The settings of
-the site, `docs/_smalldocs.yml`, name only `wikiapp`. The line `packages:` in the section `api` must name both.
+The settings of the site, `docs/_smalldocs.yml`, name only `wikiapp`, so the docs and their check leave out the
+library. The line `packages:` in the section `api` must name both.
 
 Apply the patch to [`docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48), from the top of the project:
 
@@ -907,12 +911,13 @@ The patch changes one line, `packages:` in the section `api`, in line 19.
 ```bash
 just docs check
 just docs
+grep -o 'href="api/wikirandom.html#random_page"' docs/_site/index.html | head -n 1
 just check
 ```
 
 The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
-pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
-passes.
+pages, and grep finds the link from `random_page` on the front page to its entry in `api/wikirandom.html`.
+`just check` passes.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 

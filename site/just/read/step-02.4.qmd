@@ -36,7 +36,7 @@ The command that runs the tests is `uv run pytest`, with any options for pytest 
 justfile gives it a short name, `just test`. The words after `just test` go to pytest. `"$@"` stands for those
 words, and the recipe gives each word to pytest whole. `just test help` shows the recipe.
 
-A patch to [`justfile`](#step-02.4-justfile-424f0b).
+[± See the change to `justfile`](#step-02.4-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `test *args:` runs `uv run pytest "$@"`, or shows itself for
 `just test help`. The comment above it is what `just` lists for the recipe.
@@ -59,8 +59,7 @@ The body of `test` is one line, `{{ if args == "help" { "just help test" } else 
 Each later recipe of one line has this form. The longer recipes test the word in the shell, from section 5. So
 `just VERB help` explains each verb.
 
-`[no-exit-message]` changes what a failed test prints. Without it, `just` adds a line of its own, which begins
-"error: Recipe `test` failed". With it, the report of pytest is the last thing that the recipe prints.
+The line `[no-exit-message]` above the recipe tells `just` to add no message of its own when the recipe fails.
 
 ### What changed {#step-02.4-what-changed-182c57}
 

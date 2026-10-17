@@ -29,6 +29,9 @@ Nothing checks the types of the code yet. ty is a type checker. It reads the cod
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
 
+[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+the work of older checkers such as mypy and pyright.
+
 ```bash
 uv add --group lint ty
 ```
@@ -247,8 +250,7 @@ just lint --statistics
 ```
 
 The linter finds 25 missing types, in the code and in the tests. They are 15 parameters (`ANN001`) and 10
-returns (`ANN201`). `just check` fails now, and passes again two moves on, once the tests have their types too.
-Until then, the git hook fails, so git records no change.
+returns (`ANN201`). The next two moves add them, in the code and then in the tests.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -314,8 +316,7 @@ The patch changes one line of `src/wikiapp/console.py`, the `def` line of `main`
 just lint --statistics
 ```
 
-The 22 problems that are left are all in the tests. They are 13 parameters and 9 returns. `just check` still
-fails.
+22 problems are left, 13 parameters and 9 returns. The next move gives the tests their types.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -425,6 +426,12 @@ just types
 ```
 
 Both commands print `All checks passed!`.
+
+```bash
+just check
+```
+
+`just check` passes. pytest prints `7 passed`, and a coverage of 96.88%, above the floor of 90%.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 

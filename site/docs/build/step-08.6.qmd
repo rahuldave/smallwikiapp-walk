@@ -73,11 +73,13 @@ one line for `help`, one for no words, and one for words.
 uv run smalldocs render docs
 just --show docs
 just docs
+grep -o 'href="api/wikipedia.html#random_page"' docs/_site/index.html | head -n 1
 ```
 
 smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is `docs/_site/index.html`, for a
-browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
-pages, and git ignores them.
+browser. grep searches a file for a piece of text, and `-o` prints only the text that it finds. Here it finds the
+link from `random_page` on the front page to its entry in `api/wikipedia.html`. The `|` passes what grep prints to
+`head -n 1`, which keeps the first line, so the link prints once. Each build makes the site and the reference pages, and git ignores them.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 

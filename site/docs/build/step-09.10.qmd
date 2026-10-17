@@ -37,8 +37,8 @@ too. The line for `wikirandom` prints `3 of 3`, and the total is `15 of 15` agai
 
 ## 9.10 The docs check counts the library {#step-09.10}
 
-The front page names `random_page`, but it is not a link, and the docs check counts only the app. The settings of
-the site, `docs/_smalldocs.yml`, name only `wikiapp`. The line `packages:` in the section `api` must name both.
+The settings of the site, `docs/_smalldocs.yml`, name only `wikiapp`, so the docs and their check leave out the
+library. The line `packages:` in the section `api` must name both.
 
 Apply the patch to [`docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48), from the top of the project:
 
@@ -51,12 +51,13 @@ The patch changes one line, `packages:` in the section `api`, in line 19.
 ```bash
 just docs check
 just docs
+grep -o 'href="api/wikirandom.html#random_page"' docs/_site/index.html | head -n 1
 just check
 ```
 
 The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
-pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
-passes.
+pages, and grep finds the link from `random_page` on the front page to its entry in `api/wikirandom.html`.
+`just check` passes.
 
 This tutorial ends here. Later, `just build` builds both packages, and the app needs a 0.1 version of
 wikirandom. `just lint-config` checks the library's `pyproject.toml` too, and the library gets a licence and an

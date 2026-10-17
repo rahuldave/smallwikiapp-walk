@@ -26,6 +26,9 @@ Nothing checks the types of the code yet. ty is a type checker. It reads the cod
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
 
+[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+the work of older checkers such as mypy and pyright.
+
 ```bash
 uv add --group lint ty
 ```

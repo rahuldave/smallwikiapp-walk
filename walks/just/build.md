@@ -229,6 +229,11 @@ A project needs a name, a Python and a command before it has code to run. It als
 on every machine. `uv init --package --python 3.13 --name wikiapp` made `pyproject.toml`, a package in
 `src/wikiapp/`, and `.python-version`.
 
+[uv](https://docs.astral.sh/uv/) comes from Astral, and is written in Rust. It installs Python, makes the folder
+`.venv` with the project's packages, and runs commands in `.venv`. It also writes the lockfile, a file that lists
+the exact version of each package. One tool does the work of
+pip, venv and pip-tools.
+
 Then the author changed the project by hand. `main` went to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
 lockfile, `uv.lock`. The author also wrote the justfile, `LICENSE`, the README and `.gitignore`.
@@ -248,8 +253,9 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
-has a name, and the commands that it runs. `just` alone lists the tasks, and
+The program [`just`](https://just.systems/) is a command runner. It runs the tasks of the project, and the justfile contains them.
+
+A task is called a recipe. It has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -747,8 +753,7 @@ The body of `test` is one line, `{{ if args == "help" { "just help test" } else 
 Each later recipe of one line has this form. The longer recipes test the word in the shell, from section 5. So
 `just VERB help` explains each verb.
 
-`[no-exit-message]` changes what a failed test prints. Without it, `just` adds a line of its own, which begins
-"error: Recipe `test` failed". With it, the report of pytest is the last thing that the recipe prints.
+The line `[no-exit-message]` above the recipe tells `just` to add no message of its own when the recipe fails.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -818,6 +823,9 @@ The code has no one style, so a later change can mix a fix with a change of blan
 changes how the code looks, and never what it does. A linter finds problems in the code, such as a variable that
 is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
+
+[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
 
 ```bash
 uv add --group lint ruff
@@ -1100,8 +1108,6 @@ The linter finds five problems, and fails. Each problem has its code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
-Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
-
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
 in the next two moves, and then ruff fixes the last one.
@@ -1204,6 +1210,9 @@ small shell script, which runs three commands and ends at the first that fails.
 The tests and the linter check the code, and not the configuration. So an error in `pyproject.toml`, in the
 lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
+
+[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+the standards that define the file.
 
 ```bash
 uv add --group lint validate-pyproject
@@ -1517,6 +1526,9 @@ check of the Python code is `just check`.
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
+[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+an environment of its own, and runs them on the files of a change.
+
 ```bash
 uv add --group lint pre-commit
 ```
@@ -1602,9 +1614,6 @@ the tutorial.
 
 `pre-commit run` now runs every hook on the file named, as git does before it records a change. The first time on
 a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
-
-With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
-it.
 
 The hook makes sure that `just check` runs on this machine before each `git commit`. It has limits.
 
@@ -1709,6 +1718,9 @@ The linter does not check types. The next verb runs a type checker, and `check` 
 Nothing checks the types of the code yet. ty is a type checker. It reads the code without running it, and finds
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
+
+[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+the work of older checkers such as mypy and pyright.
 
 ```bash
 uv add --group lint ty
@@ -1938,6 +1950,9 @@ a fresh machine.
 The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
 on its own machines after each push.
 
+[GitHub Actions](https://docs.github.com/en/actions) is GitHub's service that runs jobs, such as tests, on GitHub's
+machines. It is free for a public repository.
+
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
 names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
 jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.
@@ -2066,8 +2081,8 @@ types are in the code. The docstring says what the function does. A docment is t
 or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
 docment can follow it on that line.
 
-A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
-what has no documentation.
+A reference that a tool writes from the code changes when the code changes. [smalldocs](https://docs.smallish.dev/) is that tool. It is a Python program that writes the reference, and builds a
+website from it. It also lists what has no documentation.
 
 smalldocs reads the signature, the docstring and the docments, and writes Markdown. It is a Python package, so uv
 installs it like any other. It goes in a third dependency group, `docs`. uv sorts the groups by name, so `docs` comes before
@@ -2301,11 +2316,13 @@ one line for `help`, one for no words, and one for words.
 uv run smalldocs render docs
 just --show docs
 just docs
+grep -o 'href="api/wikipedia.html#random_page"' docs/_site/index.html | head -n 1
 ```
 
 smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is `docs/_site/index.html`, for a
-browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
-pages, and git ignores them.
+browser. grep searches a file for a piece of text, and `-o` prints only the text that it finds. Here it finds the
+link from `random_page` on the front page to its entry in `api/wikipedia.html`. The `|` passes what grep prints to
+`head -n 1`, which keeps the first line, so the link prints once. Each build makes the site and the reference pages, and git ignores them.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -2569,8 +2586,8 @@ changes `docs/_smalldocs.yml`, behind the verb.
 
 ### 9.10 The docs check counts the library
 
-The front page names `random_page`, but it is not a link, and the docs check counts only the app. The settings of
-the site, `docs/_smalldocs.yml`, name only `wikiapp`. The line `packages:` in the section `api` must name both.
+The settings of the site, `docs/_smalldocs.yml`, name only `wikiapp`, so the docs and their check leave out the
+library. The line `packages:` in the section `api` must name both.
 
 Apply the patch to [`docs/_smalldocs.yml`](#step-09.10-docs-_smalldocs.yml-4b0b48), from the top of the project:
 
@@ -2583,12 +2600,13 @@ The patch changes one line, `packages:` in the section `api`, in line 19.
 ```bash
 just docs check
 just docs
+grep -o 'href="api/wikirandom.html#random_page"' docs/_site/index.html | head -n 1
 just check
 ```
 
 The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
-pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
-passes.
+pages, and grep finds the link from `random_page` on the front page to its entry in `api/wikirandom.html`.
+`just check` passes.
 
 The justfile did not change, and `just docs check` checks more. The hook and GitHub's job `check` run the new
 docs check without a change.

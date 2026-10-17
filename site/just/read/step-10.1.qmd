@@ -30,7 +30,7 @@ A package goes to PyPI as two files, a wheel and a source archive. pip and uv in
 --all-packages` builds both for every package of the workspace, into `dist/`. `.gitignore` already lists `dist/`.
 A recipe `build`, at the end of the `justfile`, runs it.
 
-A patch to [`justfile`](#step-10.1-justfile-424f0b).
+[± See the change to `justfile`](#step-10.1-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 The recipe `build` at the end of the `justfile` is in the group `setup`, and `just build help` explains it.
 

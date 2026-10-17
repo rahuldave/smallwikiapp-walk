@@ -36,6 +36,9 @@ changes how the code looks, and never what it does. A linter finds problems in t
 is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
+[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
+
 This change came from running `uv add --group lint ruff`.
 
 In `pyproject.toml`, the new group `lint` starts at line 27, above `test`, with the line `"ruff>=0.17.0",`.
@@ -79,9 +82,9 @@ ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 char
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
-A patch to [`pyproject.toml`](#step-04.2-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
-A patch to [`justfile`](#step-04.2-justfile-424f0b).
+[± See the change to `justfile`](#step-04.2-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the table `[tool.ruff]` on line 41 sets `line-length = 100`. The table
 `[tool.ruff.format]` on line 46 gives the three defaults of the formatter, each with a comment. At the end of the
@@ -328,9 +331,9 @@ tests may use `assert`. The rest of the code may not, because Python skips every
 
 A recipe `lint` runs the linter. The words after `just lint` go to `ruff check`.
 
-A patch to [`pyproject.toml`](#step-04.4-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-04.4-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
-A patch to [`justfile`](#step-04.4-justfile-424f0b).
+[± See the change to `justfile`](#step-04.4-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, `select = [` on line 54 lists nine families of rules. The last table lets the files
 under `tests/` break the rule `S101`, which forbids `assert`, on line 68. At the end of the `justfile`, the recipe
@@ -348,8 +351,6 @@ The linter finds five problems, and fails. Each problem has its code.
 - `E402`: an import in `tests/test_console.py` comes below code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
-
-Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
 
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
@@ -420,7 +421,7 @@ The import goes up, under `import requests`. wikiapp's own imports are a block o
 packages, which is the order that the rule `I001` asks for. The tests `test_main_invokes_requests_get` and
 `test_main_uses_correct_url` check the mock, and not the result, so they need no `result =`.
 
-A patch to [`tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, `from wikiapp import console` is now on line 5, under `import requests`, after a blank
 line. It is gone from below the fixture. The first line of each of the two tests, lines 19 and 24, is now
@@ -486,7 +487,7 @@ Of the two problems left, `S113` comes from the family `S` of security rules. Th
 requests waits as long as the server keeps the connection open, and the command can wait for ever. No test had
 found it. The request in `src/wikiapp/wikipedia.py` gets `timeout=10`, a number of seconds that the author of the project chose.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, the arguments of `requests.get` on line 15 now end with `timeout=10`.
 
@@ -570,6 +571,9 @@ The tests and the linter check the code, and not the configuration. So an error 
 lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
+[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+the standards that define the file.
+
 This change came from running `uv add --group lint validate-pyproject`.
 
 In `pyproject.toml`, the group `lint` now has `"validate-pyproject>=0.26",` on line 29, under ruff. `uv.lock` has
@@ -611,7 +615,7 @@ A recipe `lint-config` checks the configuration, with three commands. validate-p
 --unstable` checks the `justfile`. The recipe runs the three commands, one on each line, and `set -e` stops it at
 the first that fails.
 
-A patch to [`justfile`](#step-04.9-justfile-424f0b).
+[± See the change to `justfile`](#step-04.9-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `lint-config *args:` on line 44 runs the three commands, one on each line.
 `set -e`, on line 46, stops it at the first that fails.
@@ -663,7 +667,7 @@ When `pyproject.toml` changes and the lockfile does not, `uv run` writes a new l
 any recipe can change the lockfile, and the person who runs it does not see the change. The variable `UV_LOCKED`
 makes every `uv run` refuse a lockfile that is out of date. The `justfile` exports it to every recipe.
 
-A patch to [`justfile`](#step-04.10-justfile-424f0b).
+[± See the change to `justfile`](#step-04.10-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 Near the top of the `justfile`, `export UV_LOCKED := "1"` is on line 6, under `set positional-arguments`.
 
@@ -703,7 +707,7 @@ There are now four checks, and a person must remember to run each. A recipe `che
 stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
 the configuration.
 
-A patch to [`justfile`](#step-04.11-justfile-424f0b).
+[± See the change to `justfile`](#step-04.11-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 At the end of the `justfile`, the recipe `check *args:` on line 57 runs four recipes. The tests run with
 `--cov-fail-under=90`, on line 63, so they fail if they run less than 90% of the statements.
@@ -751,6 +755,9 @@ just check
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
+[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+an environment of its own, and runs them on the files of a change.
+
 This change came from running `uv add --group lint pre-commit`.
 
 In `pyproject.toml`, the group `lint` now starts with `"pre-commit>=4.7.0",`, on line 28. `uv.lock` has its exact
@@ -795,9 +802,9 @@ A recipe `hook` installs the hook, once in each clone. `hook` is a recipe of its
 often and must not change files under `.git`. Once `just hook` installs the hook in a clone, it runs
 `just check` before each `git commit` in that clone.
 
-A patch to [`.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d).
+[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d){.btn .btn-sm .btn-secondary}
 
-A patch to [`justfile`](#step-04.13-justfile-424f0b).
+[± See the change to `justfile`](#step-04.13-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 In `.pre-commit-config.yaml`, the three hooks under `repo: https://github.com/pre-commit/pre-commit-hooks`, on
 line 6, come from `pre-commit`'s collection. The hook under `repo: local` has the line `entry: just check`, on
@@ -817,9 +824,6 @@ the tutorial.
 
 `pre-commit run` now runs every hook on the file named, as git does before it records a change. The first time on
 a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
-
-With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
-it.
 
 ### What changed {#step-04.13-what-changed-182c57}
 

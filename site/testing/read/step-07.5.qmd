@@ -35,7 +35,7 @@ code first, before the `try`, and any other language raises a WikipediaError.
 The pattern is a constant, `LANGUAGE`, made with the module `re`. No request goes out for a language that does
 not match it.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-07.5-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.5-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, `LANGUAGE` is under `API_URL`, and `import re` is at the top. The check is the
 first lines of `random_page`, from `if not LANGUAGE.fullmatch(language):`.

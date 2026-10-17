@@ -53,9 +53,7 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 `"packages/wikirandom",` in line 29.
 
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
-sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
-`just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+sets `UV_LOCKED`, so after this move each recipe that runs uv refuses the lockfile, on purpose. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 ```bash
 uv lock --check
@@ -63,6 +61,13 @@ uv lock --check
 
 The command prints `Resolved 42 packages`, then an error that names `uv.lock`, and a hint to run `uv lock`. Its
 exit code is 1. Before this move, the lockfile had 41 packages. The 42nd is `wikirandom`.
+
+```bash
+just test
+```
+
+`just test` prints its command, `uv run pytest`, then an error of uv that names `uv.lock` and `UV_LOCKED`, and the
+hint to run `uv lock`. pytest does not run.
 
 ### What changed {#step-09.1-what-changed-182c57}
 
@@ -143,8 +148,7 @@ uv lock --check
 uv tree --package wikirandom
 ```
 
-`uv lock --check` prints `Resolved 42 packages`, with no error, so `just setup`, `just test` and `just check`
-pass again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
+`uv lock --check` prints `Resolved 42 packages`, with no error, so the lockfile matches the project again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
 
 A workspace member is a package that the root `pyproject.toml` names under `[tool.uv.workspace]`. With no
 workspace, the app could name the library by its folder. In section 9, it would write the line below under

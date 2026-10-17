@@ -35,7 +35,7 @@ docstrings. We document it in four places:
 - a docment on the parameter and on the return of `random_page`
 - a longer docstring of `random_page`, which says when it raises an error
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-08.3-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the docstring at the top, the comments beside the fields of `Page`, and the
 line `) -> Page:  # A page chosen at random`, the docment of the return.

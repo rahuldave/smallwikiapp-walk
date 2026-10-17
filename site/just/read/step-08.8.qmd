@@ -31,7 +31,7 @@ Every function, parameter and field has documentation now, but no check fails wh
 each `git commit`, through the git hook, so `just docs check` goes in it, after the tests. The comment above
 `check` names the docs too.
 
-A patch to [`justfile`](#step-08.8-justfile-424f0b).
+[± See the change to `justfile`](#step-08.8-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 In the `justfile`, `just docs check` is the line under `just test -q --cov-fail-under=90`, in `check`.
 

@@ -40,7 +40,7 @@ uv installs only the group `dev` by default. The setting `default-groups = "all"
 install every group. So each later `uv add --group` needs no other change to `pyproject.toml`. A patch adds the
 table `[tool.uv]` with this setting.
 
-A patch to [`pyproject.toml`](#step-02.1-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-02.1-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
 At the end of `pyproject.toml`, the new table `[tool.uv]` has the line `default-groups = "all"`, with a comment
 above it.
@@ -86,7 +86,7 @@ can come from the code, from the network or from Wikipedia.
 
 The test comes in a new file, `tests/test_console.py`, as a patch. The patch also makes the folder `tests`.
 
-A patch to [`tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee).
+[± See the new file `tests/test_console.py`](#step-02.2-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 The new file `tests/test_console.py` has one test, `test_main_succeeds`. It runs `console.main` with a
 `CliRunner`, and checks `result.exit_code`.
@@ -127,6 +127,10 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
+
+[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
+values on both sides.
 
 This change came from running `uv add --group test pytest`.
 

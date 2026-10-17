@@ -100,17 +100,17 @@ Coverage measured `wikiapp` alone, and must measure both packages. Last, three f
 packages, and that the app uses the library. They are the README, the front page of the docs and the library's
 README.
 
-A patch to [`src/wikiapp/console.py`](#step-09.7-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-09.7-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
-A patch to [`tests/test_wikipedia.py`](#step-09.7-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-09.7-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
 
-A patch to [`pyproject.toml`](#step-09.7-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-09.7-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
-A patch to [`README.md`](#step-09.7-README.md-8ec9a0).
+[± See the change to `README.md`](#step-09.7-README.md-8ec9a0){.btn .btn-sm .btn-secondary}
 
-A patch to [`docs/index.qmd`](#step-09.7-docs-index.qmd-d6d880).
+[± See the change to `docs/index.qmd`](#step-09.7-docs-index.qmd-d6d880){.btn .btn-sm .btn-secondary}
 
-A patch to [`packages/wikirandom/README.md`](#step-09.7-packages-wikirandom-README.md-105646).
+[± See the change to `packages/wikirandom/README.md`](#step-09.7-packages-wikirandom-README.md-105646){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, the import of line 6 now comes from `wikirandom`. In `tests/test_wikipedia.py`,
 every call starts with `wikirandom.`. In `pyproject.toml`, see `--cov=wikirandom` in line 57. `README.md` has a

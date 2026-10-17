@@ -41,7 +41,7 @@ to install none of them, and `--group test` then names the one group to install.
 of `.github/workflows/test.yaml`, still runs `just setup`, which installs every group. It needs every tool, since
 `just check` runs them all.
 
-A patch to [`.github/workflows/test.yaml`](#step-08b.1-.github-workflows-test.yaml-a60e23).
+[± See the change to `.github/workflows/test.yaml`](#step-08b.1-.github-workflows-test.yaml-a60e23){.btn .btn-sm .btn-secondary}
 
 The last line of the job `tests` now adds `--no-default-groups --group test`. The comment line `# tests:` at the top of
 the file now ends with "each with the group test alone".
@@ -90,6 +90,9 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 `just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
 `.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
 
+[GitHub Pages](https://docs.github.com/en/pages) publishes a website from a repository, free for a public one. A
+workflow can build the site and give it to Pages.
+
 The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
 `smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at
 line 85, runs `uv run` with no option, which installs every group. The job then gives the folder
@@ -100,7 +103,7 @@ an older publish when a newer push starts one.
 
 The file is new, and comes whole, as a patch.
 
-A patch to [`.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835).
+[± See the new file `.github/workflows/docs.yaml`](#step-08b.2-.github-workflows-docs.yaml-ce7835){.btn .btn-sm .btn-secondary}
 
 In the new file `.github/workflows/docs.yaml`, the line
 `- run: uv run --locked --no-default-groups --group docs smalldocs render docs` is the build of the site.

@@ -40,7 +40,7 @@ In the original wikiapp, the library raised the exception of click itself, with 
 one day. Here the exception of click is in `console.py`. `wikipedia.py` imports requests, and only
 `console.py` imports click.
 
-A patch to [`src/wikiapp/console.py`](#step-03.6-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-03.6-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/console.py`, the import names `WikipediaError` too. In `main`, the call to `random_page` is in a
 `try` block, and `except WikipediaError as error:` raises `click.ClickException(str(error))`.
@@ -48,7 +48,7 @@ In `src/wikiapp/console.py`, the import names `WikipediaError` too. In `main`, t
 A test makes the mock raise a `RequestException`, and checks that the output contains `Error`. The test needs the
 module `requests`, to name the exception.
 
-A patch to [`tests/test_console.py`](#step-03.6-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-03.6-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, `import requests` is under `import pytest`. The new test
 `test_main_prints_message_on_request_error` sets `mock_requests_get.side_effect = requests.RequestException`, and

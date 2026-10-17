@@ -69,6 +69,11 @@ A project needs a name, a Python and a command before it has code to run. It als
 on every machine. `uv init --package --python 3.13 --name wikiapp` made `pyproject.toml`, a package in
 `src/wikiapp/`, and `.python-version`.
 
+[uv](https://docs.astral.sh/uv/) comes from Astral, and is written in Rust. It installs Python, makes the folder
+`.venv` with the project's packages, and runs commands in `.venv`. It also writes the lockfile, a file that lists
+the exact version of each package. One tool does the work of
+pip, venv and pip-tools.
+
 Then the author changed the project by hand. `main` went to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
 lockfile, `uv.lock`. The author also wrote the justfile, `LICENSE`, the README and `.gitignore`.
@@ -88,8 +93,9 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
-has a name, and the commands that it runs. `just` alone lists the tasks, and
+The program [`just`](https://just.systems/) is a command runner. It runs the tasks of the project, and the justfile contains them.
+
+A task is called a recipe. It has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -527,6 +533,11 @@ requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
+[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
+the function. [requests](https://requests.readthedocs.io/)
+is a widely used library for HTTP. One call, `requests.get`, fetches a page.
+
 This change came from running `uv add click requests`.
 
 In `pyproject.toml`, the list `dependencies` was empty. Now it has `"click>=8.5.0",` and `"requests>=2.34.2",`,
@@ -586,7 +597,7 @@ original wikiapp did not have it.
 
 The patch writes `src/wikiapp/console.py` again.
 
-A patch to [`src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-01.2-src-wikiapp-console.py-d9ae67)
 
 In `src/wikiapp/console.py`, the `print` is gone. The block `with requests.get(API_URL) as response:` asks
 Wikipedia for the page, and the last two lines of the block print it.
@@ -645,7 +656,7 @@ sent it. The policy of
 Wikimedia asks for the name of the program, its version, and a way to reach the person who runs it. A constant
 `USER_AGENT` gives these three things, and the request sends it as a header.
 
-A patch to [`src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-01.3-src-wikiapp-console.py-d9ae67)
 
 In `src/wikiapp/console.py`, `USER_AGENT` is under `API_URL`. The request now passes it in
 `headers={"User-Agent": USER_AGENT}`.
@@ -693,9 +704,9 @@ its own version from the installed package, which has the version from `pyprojec
 `src/wikiapp/__init__.py` sets `__version__` from the metadata of the installed package. The decorator
 `@click.version_option` gives the command the option `--version`, which prints it.
 
-A patch to [`src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01).
+[± See the change to `src/wikiapp/__init__.py`](#step-01.4-src-wikiapp-__init__.py-682a01)
 
-A patch to [`src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-01.4-src-wikiapp-console.py-d9ae67)
 
 In `src/wikiapp/__init__.py`, `__version__` comes from `importlib.metadata`. In `src/wikiapp/console.py`,
 `@click.version_option(version=__version__)` is under `@click.command()`.
@@ -781,6 +792,9 @@ changes how the code looks, and never what it does. A linter finds problems in t
 is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
+[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
+
 This change came from running `uv add --group lint ruff`.
 
 In `pyproject.toml`, the new group `lint` starts at line 27, above `test`, with the line `"ruff>=0.17.0",`.
@@ -826,9 +840,9 @@ ruff needs its settings, in `pyproject.toml`. They allow lines of up to 100 char
 the defaults of the formatter, so that a reader sees them. A recipe `fmt` runs the formatter. The words after
 `just fmt` go to `ruff format`.
 
-A patch to [`pyproject.toml`](#step-04.2-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-04.2-pyproject.toml-5d07e7)
 
-A patch to [`justfile`](#step-04.2-justfile-424f0b).
+[± See the change to `justfile`](#step-04.2-justfile-424f0b)
 
 At the end of `pyproject.toml`, the table `[tool.ruff]` on line 41 sets `line-length = 100`. The table
 `[tool.ruff.format]` on line 46 gives the three defaults of the formatter, each with a comment. At the end of the
@@ -1091,9 +1105,9 @@ tests may use `assert`. The rest of the code may not, because Python skips every
 
 A recipe `lint` runs the linter. The words after `just lint` go to `ruff check`.
 
-A patch to [`pyproject.toml`](#step-04.4-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-04.4-pyproject.toml-5d07e7)
 
-A patch to [`justfile`](#step-04.4-justfile-424f0b).
+[± See the change to `justfile`](#step-04.4-justfile-424f0b)
 
 At the end of `pyproject.toml`, `select = [` on line 54 lists nine families of rules. The last table lets the files
 under `tests/` break the rule `S101`, which forbids `assert`, on line 68. At the end of the `justfile`, the recipe
@@ -1111,8 +1125,6 @@ The linter finds five problems, and fails. Each problem has its code.
 - `E402`: an import in `tests/test_console.py` comes below code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
-
-Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
 
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
@@ -1200,7 +1212,7 @@ The import goes up, under `import requests`. wikiapp's own imports are a block o
 packages, which is the order that the rule `I001` asks for. The tests `test_main_invokes_requests_get` and
 `test_main_uses_correct_url` check the mock, and not the result, so they need no `result =`.
 
-A patch to [`tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-04.5-tests-test_console.py-9442ee)
 
 In `tests/test_console.py`, `from wikiapp import console` is now on line 5, under `import requests`, after a blank
 line. It is gone from below the fixture. The first line of each of the two tests, lines 19 and 24, is now
@@ -1268,7 +1280,7 @@ Of the two problems left, `S113` comes from the family `S` of security rules. Th
 requests waits as long as the server keeps the connection open, and the command can wait for ever. No test had
 found it. The request in `src/wikiapp/wikipedia.py` gets `timeout=10`, a number of seconds that the author of the project chose.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-04.6-src-wikiapp-wikipedia.py-258803)
 
 In `src/wikiapp/wikipedia.py`, the arguments of `requests.get` on line 15 now end with `timeout=10`.
 
@@ -1373,6 +1385,9 @@ The tests and the linter check the code, and not the configuration. So an error 
 lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
+[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+the standards that define the file.
+
 This change came from running `uv add --group lint validate-pyproject`.
 
 In `pyproject.toml`, the group `lint` now has `"validate-pyproject>=0.26",` on line 29, under ruff. `uv.lock` has
@@ -1416,7 +1431,7 @@ A recipe `lint-config` checks the configuration, with three commands. validate-p
 --unstable` checks the `justfile`. The recipe runs the three commands, one on each line, and `set -e` stops it at
 the first that fails.
 
-A patch to [`justfile`](#step-04.9-justfile-424f0b).
+[± See the change to `justfile`](#step-04.9-justfile-424f0b)
 
 At the end of the `justfile`, the recipe `lint-config *args:` on line 44 runs the three commands, one on each line.
 `set -e`, on line 46, stops it at the first that fails.
@@ -1486,7 +1501,7 @@ There are now four checks, and a person must remember to run each. A recipe `che
 stops at the first that fails. The order is the format, the linter, the tests with a floor on the coverage, and
 the configuration.
 
-A patch to [`justfile`](#step-04.11-justfile-424f0b).
+[± See the change to `justfile`](#step-04.11-justfile-424f0b)
 
 At the end of the `justfile`, the recipe `check *args:` on line 57 runs four recipes. The tests run with
 `--cov-fail-under=90`, on line 63, so they fail if they run less than 90% of the statements.
@@ -1553,6 +1568,9 @@ before each `git commit`.
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
+[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+an environment of its own, and runs them on the files of a change.
+
 This change came from running `uv add --group lint pre-commit`.
 
 In `pyproject.toml`, the group `lint` now starts with `"pre-commit>=4.7.0",`, on line 28. `uv.lock` has its exact
@@ -1599,9 +1617,9 @@ A recipe `hook` installs the hook, once in each clone. `hook` is a recipe of its
 often and must not change files under `.git`. Once `just hook` installs the hook in a clone, it runs
 `just check` before each `git commit` in that clone.
 
-A patch to [`.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d).
+[± See the new file `.pre-commit-config.yaml`](#step-04.13-.pre-commit-config.yaml-e7d14d)
 
-A patch to [`justfile`](#step-04.13-justfile-424f0b).
+[± See the change to `justfile`](#step-04.13-justfile-424f0b)
 
 In `.pre-commit-config.yaml`, the three hooks under `repo: https://github.com/pre-commit/pre-commit-hooks`, on
 line 6, come from `pre-commit`'s collection. The hook under `repo: local` has the line `entry: just check`, on
@@ -1621,9 +1639,6 @@ the tutorial.
 
 `pre-commit run` now runs every hook on the file named, as git does before it records a change. The first time on
 a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
-
-With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
-it.
 
 #### What changed
 
@@ -1711,7 +1726,7 @@ ty checks the types that the code states, and the code states almost none. ruff'
 parameter and each return without a type. So the linter checks that a type is written, and the type checker
 checks that the type is right. The rules go in the list `select` in `pyproject.toml`.
 
-A patch to [`pyproject.toml`](#step-05.4-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-05.4-pyproject.toml-5d07e7)
 
 In `pyproject.toml`, the list `select` now has `"ANN"` on line 67, after `"N"`.
 
@@ -1720,8 +1735,7 @@ just lint --statistics
 ```
 
 The linter finds 25 missing types, in the code and in the tests. They are 15 parameters (`ANN001`) and 10
-returns (`ANN201`). `just check` fails now, and passes again two moves on, once the tests have their types too.
-Until then, the git hook fails, so git records no change.
+returns (`ANN201`). The next two moves add them, in the code and then in the tests.
 
 #### What changed
 
@@ -1754,11 +1768,11 @@ string. It returns the JSON that Wikipedia sends, which is a dictionary from str
 says that ty cannot check the values. `Any` comes from the standard library, so its import is a block of its own,
 above `import requests`.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-05.5-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-05.5-src-wikiapp-wikipedia.py-258803)
 
 `main` takes the language as a string. Its return type, None, was already there.
 
-A patch to [`src/wikiapp/console.py`](#step-05.5-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-05.5-src-wikiapp-console.py-d9ae67)
 
 In `src/wikiapp/wikipedia.py`, line 1 imports `Any`. On line 13, `random_page` now takes a `str`, and returns a
 `dict[str, Any]`. In `src/wikiapp/console.py`, on line 19, the parameter `language` of `main` is a `str`.
@@ -1767,8 +1781,7 @@ In `src/wikiapp/wikipedia.py`, line 1 imports `Any`. On line 13, `random_page` n
 just lint --statistics
 ```
 
-The 22 problems that are left are all in the tests. They are 13 parameters and 9 returns. `just check` still
-fails.
+22 problems are left, 13 parameters and 9 returns. The next move gives the tests their types.
 
 #### What changed
 
@@ -1828,7 +1841,7 @@ The mock of `requests.get` is a `Mock`. `mocker` is
 pytest-mock's `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
 `tests/conftest.py` imports `Mock` and `MockerFixture`, and its fixture states both types.
 
-A patch to [`tests/conftest.py`](#step-05.6-tests-conftest.py-626af3).
+[± See the change to `tests/conftest.py`](#step-05.6-tests-conftest.py-626af3)
 
 In `tests/conftest.py`, the fixture on line 8 now reads `def mock_requests_get(mocker: MockerFixture) -> Mock:`.
 `Mock` comes from `unittest.mock`, and `MockerFixture` from `pytest_mock`, in the imports above it.
@@ -1838,7 +1851,7 @@ in place of `import click.testing`. The fixture `runner` returns `CliRunner()`, 
 `CliRunner`. In every test, `runner` is a `CliRunner`, `mock_requests_get` is a `Mock`, and the test returns
 `None`.
 
-A patch to [`tests/test_console.py`](#step-05.6-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-05.6-tests-test_console.py-9442ee)
 
 In `tests/test_console.py`, `from click.testing import CliRunner` on line 5 replaces `import click.testing`. The
 fixture on line 11 reads `def runner() -> CliRunner:`, and each test names the types of its parameters and
@@ -1846,7 +1859,7 @@ returns `None`.
 
 The test of the library gets its types the same way.
 
-A patch to [`tests/test_wikipedia.py`](#step-05.6-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-05.6-tests-test_wikipedia.py-2f4413)
 
 In `tests/test_wikipedia.py`, `Mock` comes in on line 1, and the test on line 6 states its types.
 
@@ -1856,6 +1869,12 @@ just types
 ```
 
 Both commands print `All checks passed!`.
+
+```bash
+just check
+```
+
+`just check` passes. pytest prints `7 passed`, and a coverage of 96.88%, above the floor of 90%.
 
 #### What changed
 
@@ -1998,7 +2017,7 @@ checks the library's `pyproject.toml`.
 The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. A mistake in the
 library's file would reach a build unseen. The recipe `lint-config` now gives validate-pyproject both files.
 
-A patch to [`justfile`](#step-10.3-justfile-424f0b).
+[± See the change to `justfile`](#step-10.3-justfile-424f0b)
 
 ```bash
 just lint-config

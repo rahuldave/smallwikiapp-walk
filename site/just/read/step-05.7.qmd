@@ -33,7 +33,7 @@ their types.
 change can break a type, and pass. The recipe `check` now runs `just types` after `just lint`, and its comment
 names the types too.
 
-A patch to [`justfile`](#step-05.7-justfile-424f0b).
+[± See the change to `justfile`](#step-05.7-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 In the `justfile`, the recipe `check` now runs `just types` on line 74, after `just lint`. Its comment, on line 65,
 lists "types".

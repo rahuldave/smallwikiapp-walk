@@ -30,6 +30,9 @@ values, but nothing checks it. pydantic is a library that checks data against a 
 keys and their types in code. pydantic is a dependency of the package, as click and requests are, so `uv add` puts
 it in `dependencies`.
 
+[pydantic](https://docs.pydantic.dev/) is a widely used Python library. When the code makes a page from the data,
+pydantic checks each value against the type that the model gives it. A value that does not fit raises an error.
+
 ```bash
 uv add pydantic
 ```

@@ -33,6 +33,9 @@ changes how the code looks, and never what it does. A linter finds problems in t
 is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
+[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
+
 ```bash
 uv add --group lint ruff
 ```
@@ -472,8 +475,6 @@ The linter finds five problems, and fails. Each problem has its code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
-Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
-
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
 in the next two moves, and then ruff fixes the last one.
@@ -747,6 +748,9 @@ The tests and the linter check the code, and not the configuration. So an error 
 lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
+[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+the standards that define the file.
+
 ```bash
 uv add --group lint validate-pyproject
 ```
@@ -986,6 +990,9 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
+[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+an environment of its own, and runs them on the files of a change.
+
 ```bash
 uv add --group lint pre-commit
 ```
@@ -1069,9 +1076,6 @@ the tutorial.
 
 `pre-commit run` now runs every hook on the file named, as git does before it records a change. The first time on
 a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
-
-With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
-it.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 

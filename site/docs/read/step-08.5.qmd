@@ -35,19 +35,19 @@ Tests documented this way are documentation too. A reader learns from them what 
 The fixture in `tests/conftest.py` gets a docstring for the file, a docment for its parameter and its return, and a
 docstring of its own.
 
-A patch to [`tests/conftest.py`](#step-08.5-tests-conftest.py-626af3).
+[± See the change to `tests/conftest.py`](#step-08.5-tests-conftest.py-626af3){.btn .btn-sm .btn-secondary}
 
 In `tests/conftest.py`, see the docment of `mocker`, and the docment of the return after `-> Mock:`.
 
 `tests/test_console.py` has a fixture and six tests, and each gets the same pattern.
 
-A patch to [`tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-08.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `runner` also documents its return.
 
 The three tests of `tests/test_wikipedia.py` get the same pattern.
 
-A patch to [`tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-08.5-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
 
 ```bash
 just docs check

@@ -29,7 +29,7 @@ The README is the first page that a reader sees on GitHub. Its table of folders 
 project is, and it lists neither the tests nor the docs. The table gets rows for `tests/` and `docs/`. The row of
 `src/wikiapp/` also says that `wikipedia.py` is the library and `console.py` the command.
 
-A patch to [`README.md`](#step-08.7-README.md-8ec9a0).
+[± See the change to `README.md`](#step-08.7-README.md-8ec9a0){.btn .btn-sm .btn-secondary}
 
 ```bash
 grep -n -E 'tests/|docs/' README.md

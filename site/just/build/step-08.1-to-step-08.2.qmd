@@ -37,8 +37,8 @@ types are in the code. The docstring says what the function does. A docment is t
 or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
 docment can follow it on that line.
 
-A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
-what has no documentation.
+A reference that a tool writes from the code changes when the code changes. [smalldocs](https://docs.smallish.dev/) is that tool. It is a Python program that writes the reference, and builds a
+website from it. It also lists what has no documentation.
 
 smalldocs reads the signature, the docstring and the docments, and writes Markdown. It is a Python package, so uv
 installs it like any other. It goes in a third dependency group, `docs`. uv sorts the groups by name, so `docs` comes before

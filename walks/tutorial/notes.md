@@ -24,6 +24,11 @@ A project needs a name, a Python and a command before it has code to run. It als
 on every machine. `uv init --package --python 3.13 --name wikiapp` made `pyproject.toml`, a package in
 `src/wikiapp/`, and `.python-version`.
 
+[uv](https://docs.astral.sh/uv/) comes from Astral, and is written in Rust. It installs Python, makes the folder
+`.venv` with the project's packages, and runs commands in `.venv`. It also writes the lockfile, a file that lists
+the exact version of each package. One tool does the work of
+pip, venv and pip-tools.
+
 Then the author changed the project by hand. `main` went to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
 lockfile, `uv.lock`. The author also wrote the justfile, `LICENSE`, the README and `.gitignore`.
@@ -40,8 +45,9 @@ $ uv run wikiapp
 
 $ cat src/wikiapp/console.py
 
-The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
-has a name, and the commands that it runs. `just` alone lists the tasks, and
+The program [`just`](https://just.systems/) is a command runner. It runs the tasks of the project, and the justfile contains them.
+
+A task is called a recipe. It has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -79,6 +85,11 @@ The command needs two packages that Python does not have. click makes command li
 requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
+
+[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
+the function. [requests](https://requests.readthedocs.io/)
+is a widely used library for HTTP. One call, `requests.get`, fetches a page.
 
 do$ uv add click requests
 
@@ -286,6 +297,10 @@ files:
 The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
 
+[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
+values on both sides.
+
 do$ uv add --group test pytest
 
 ::: watch
@@ -366,6 +381,9 @@ files:
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page. A mock
 solves both. pytest-mock replaces a function with a mock for the length of one test. Its fixture `mocker` does
 this, and puts the function back after the test. pytest-mock goes in the group `test`.
+
+[pytest-mock](https://pytest-mock.readthedocs.io/) is a plugin of pytest. Python's standard library already has
+mocks, in `unittest.mock`. pytest-mock gives them to a test through a fixture, so each mock ends with its test.
 
 do$ uv add --group test pytest-mock
 
@@ -475,6 +493,9 @@ files:
 
 The tests pass, but we do not know which lines of the code they run. pytest-cov measures that, when pytest gets the
 option `--cov`. It goes in the group `test`.
+
+[pytest-cov](https://pytest-cov.readthedocs.io/) is a plugin of pytest. It runs the tests under coverage.py, which
+records each line that runs, and it prints the report at the end.
 
 do$ uv add --group test pytest-cov
 
@@ -779,6 +800,9 @@ changes how the code looks, and never what it does. A linter finds problems in t
 is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
+[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
+
 do$ uv add --group lint ruff
 
 ::: watch
@@ -901,8 +925,6 @@ The linter finds five problems, and fails. Each problem has its code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
-Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
-
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
 in the next two moves, and then ruff fixes the last one.
@@ -1000,6 +1022,9 @@ files:
 The tests and the linter check the code, and not the configuration. So an error in `pyproject.toml`, in the
 lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
+
+[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+the standards that define the file.
 
 do$ uv add --group lint validate-pyproject
 
@@ -1112,6 +1137,9 @@ files:
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
+[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+an environment of its own, and runs them on the files of a change.
+
 do$ uv add --group lint pre-commit
 
 ::: watch
@@ -1169,9 +1197,6 @@ the tutorial.
 `pre-commit run` now runs every hook on the file named, as git does before it records a change. The first time on
 a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
 
-With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
-it.
-
 files:
 - file `.pre-commit-config.yaml`: three hooks from `pre-commit`'s collection, then `just check`.
   show: `entry: just check`
@@ -1192,6 +1217,9 @@ so that it has something to check.
 Nothing checks the types of the code yet. ty is a type checker. It reads the code without running it, and finds
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
+
+[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+the work of older checkers such as mypy and pyright.
 
 do$ uv add --group lint ty
 
@@ -1283,8 +1311,7 @@ In `pyproject.toml`, the list `select` now has `"ANN"` on line 67, after `"N"`.
 $ just lint --statistics
 
 The linter finds 25 missing types, in the code and in the tests. They are 15 parameters (`ANN001`) and 10
-returns (`ANN201`). `just check` fails now, and passes again two moves on, once the tests have their types too.
-Until then, the git hook fails, so git records no change.
+returns (`ANN201`). The next two moves add them, in the code and then in the tests.
 
 files:
 - diff `pyproject.toml`: one line.
@@ -1319,8 +1346,7 @@ In `src/wikiapp/wikipedia.py`, line 1 imports `Any`. On line 13, `random_page` n
 
 $ just lint --statistics
 
-The 22 problems that are left are all in the tests. They are 13 parameters and 9 returns. `just check` still
-fails.
+22 problems are left, 13 parameters and 9 returns. The next move gives the tests their types.
 
 files:
 - diff `src/wikiapp/wikipedia.py`: the parameter and the return.
@@ -1385,6 +1411,10 @@ $ just lint
 $ just types
 
 Both commands print `All checks passed!`.
+
+$ just check
+
+`just check` passes. pytest prints `7 passed`, and a coverage of 96.88%, above the floor of 90%.
 
 files:
 - diff `tests/conftest.py`: the fixture returns a Mock.
@@ -1581,6 +1611,9 @@ files:
 The tests run only on the machine of the person who runs them, on one system and one version of Python. GitHub can run them
 on its own machines after each push.
 
+[GitHub Actions](https://docs.github.com/en/actions) is GitHub's service that runs jobs, such as tests, on GitHub's
+machines. It is free for a public repository.
+
 A GitHub Actions workflow is a file in `.github/workflows/`. GitHub runs its jobs on the events that its `on:`
 names. The workflow `.github/workflows/test.yaml` names every push to main and every pull request, and has two
 jobs. The job `tests` runs the tests on three systems and four versions of Python. The job `check` runs `just check` once.
@@ -1628,6 +1661,9 @@ The command uses two of the many keys that Wikipedia sends. The code expects the
 values, but nothing checks it. pydantic is a library that checks data against a model, and a model states the two
 keys and their types in code. pydantic is a dependency of the package, as click and requests are, so `uv add` puts
 it in `dependencies`.
+
+[pydantic](https://docs.pydantic.dev/) is a widely used Python library. When the code makes a page from the data,
+pydantic checks each value against the type that the model gives it. A value that does not fit raises an error.
 
 do$ uv add pydantic
 
@@ -1829,8 +1865,8 @@ types are in the code. The docstring says what the function does. A docment is t
 or a return type, and says what that thing is. Later moves put each parameter on a line of its own, so that its
 docment can follow it on that line.
 
-A reference that a tool writes from the code changes when the code changes. smalldocs is that tool. It also lists
-what has no documentation.
+A reference that a tool writes from the code changes when the code changes. [smalldocs](https://docs.smallish.dev/) is that tool. It is a Python program that writes the reference, and builds a
+website from it. It also lists what has no documentation.
 
 smalldocs reads the signature, the docstring and the docments, and writes Markdown. It is a Python package, so uv
 installs it like any other. It goes in a third dependency group, `docs`. uv sorts the groups by name, so `docs` comes before
@@ -2117,9 +2153,12 @@ $ just --show docs
 
 $ just docs
 
+$ grep -o 'href="api/wikipedia.html#random_page"' docs/_site/index.html | head -n 1
+
 smalldocs prints `wrote 3 page(s) to docs/_site`. The front page of the site is `docs/_site/index.html`, for a
-browser. On the front page, `random_page` is a link to its entry. Each build makes the site and the reference
-pages, and git ignores them.
+browser. grep searches a file for a piece of text, and `-o` prints only the text that it finds. Here it finds the
+link from `random_page` on the front page to its entry in `api/wikipedia.html`. The `|` passes what grep prints to
+`head -n 1`, which keeps the first line, so the link prints once. Each build makes the site and the reference pages, and git ignores them.
 
 files:
 - diff `docs/_smalldocs.yml`: the site. The sidebar lists the front page, then the reference pages.
@@ -2222,6 +2261,9 @@ files:
 
 `just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
 `.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
+
+[GitHub Pages](https://docs.github.com/en/pages) publishes a website from a repository, free for a public one. A
+workflow can build the site and give it to Pages.
 
 The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
 `smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at
@@ -2328,14 +2370,17 @@ See `description` and `requires-python` in lines 4 and 6 of `packages/wikirandom
 :::
 
 `uv init` does not change `uv.lock`, so the lockfile does not list the new member yet. Line 6 of the `justfile`
-sets `UV_LOCKED`, so every recipe refuses a lockfile that is out of date. After this move, `just setup`,
-`just test` and `just check` fail on purpose. Each prints an error that names `uv.lock`, and a hint to run
-`uv lock`. The next move, `uv add`, resolves the lockfile again for the workspace.
+sets `UV_LOCKED`, so after this move each recipe that runs uv refuses the lockfile, on purpose. The next move, `uv add`, resolves the lockfile again for the workspace.
 
 $ uv lock --check
 
 The command prints `Resolved 42 packages`, then an error that names `uv.lock`, and a hint to run `uv lock`. Its
 exit code is 1. Before this move, the lockfile had 41 packages. The 42nd is `wikirandom`.
+
+$ just test
+
+`just test` prints its command, `uv run pytest`, then an error of uv that names `uv.lock` and `UV_LOCKED`, and the
+hint to run `uv lock`. pytest does not run.
 
 files:
 - file `packages/wikirandom/pyproject.toml`: a package of its own, with its name, version, description, the
@@ -2368,8 +2413,7 @@ $ uv lock --check
 
 $ uv tree --package wikirandom
 
-`uv lock --check` prints `Resolved 42 packages`, with no error, so `just setup`, `just test` and `just check`
-pass again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
+`uv lock --check` prints `Resolved 42 packages`, with no error, so the lockfile matches the project again. `uv tree` shows `wikirandom v0.1.0`, with `pydantic v2.14.1` and `requests v2.34.2` under it.
 
 files:
 - diff `packages/wikirandom/pyproject.toml`: its dependencies.
@@ -2589,8 +2633,8 @@ files:
 
 ### step-09.10 The docs check counts the library
 
-The front page names `random_page`, but it is not a link, and the docs check counts only the app. The settings of
-the site, `docs/_smalldocs.yml`, name only `wikiapp`. The line `packages:` in the section `api` must name both.
+The settings of the site, `docs/_smalldocs.yml`, name only `wikiapp`, so the docs and their check leave out the
+library. The line `packages:` in the section `api` must name both.
 
 patch$ docs/_smalldocs.yml
 
@@ -2606,11 +2650,13 @@ $ just docs check
 
 $ just docs
 
+$ grep -o 'href="api/wikirandom.html#random_page"' docs/_site/index.html | head -n 1
+
 $ just check
 
 The docs check has a line for `wikirandom`, `3 of 3`, and prints `15 of 15` in all. `just docs` writes 3
-pages, and on the front page, `random_page` is now a link to its entry in `api/wikirandom.html`. `just check`
-passes.
+pages, and grep finds the link from `random_page` on the front page to its entry in `api/wikirandom.html`.
+`just check` passes.
 
 files:
 - diff `docs/_smalldocs.yml`: the list of packages.

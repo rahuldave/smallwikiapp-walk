@@ -136,8 +136,7 @@ The body of `test` is one line, `{{ if args == "help" { "just help test" } else 
 Each later recipe of one line has this form. The longer recipes test the word in the shell, from section 5. So
 `just VERB help` explains each verb.
 
-`[no-exit-message]` changes what a failed test prints. Without it, `just` adds a line of its own, which begins
-"error: Recipe `test` failed". With it, the report of pytest is the last thing that the recipe prints.
+The line `[no-exit-message]` above the recipe tells `just` to add no message of its own when the recipe fails.
 
 ## `just fmt`
 

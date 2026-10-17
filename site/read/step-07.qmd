@@ -33,6 +33,9 @@ values, but nothing checks it. pydantic is a library that checks data against a 
 keys and their types in code. pydantic is a dependency of the package, as click and requests are, so `uv add` puts
 it in `dependencies`.
 
+[pydantic](https://docs.pydantic.dev/) is a widely used Python library. When the code makes a page from the data,
+pydantic checks each value against the type that the model gives it. A value that does not fit raises an error.
+
 This change came from running `uv add pydantic`.
 
 In `pyproject.toml`, the list `dependencies` now has `"pydantic>=2.14.1",` at line 12, between click and
@@ -75,7 +78,7 @@ The model `Page` is a class that inherits from pydantic's `BaseModel`. It has a 
 the two keys that the command uses. A `Page` made from a dictionary checks the two keys, and keeps only them.
 Nothing uses `Page` yet.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-07.2-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.2-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, the import of `BaseModel` is line 4, under `import requests`. The class `Page` is
 lines 14 to 18, after `WikipediaError`, with its docstring and the two fields `title` and `extract`.
@@ -133,20 +136,20 @@ know. So `random_page` returns a `Page` made from the answer, and `main` prints 
 `random_page` passes the answer to `Page.model_validate`, which checks it against the model and makes the page.
 The code no longer uses `Any`, so its import goes.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-07.3-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.3-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the `def` line `def random_page(language: str = "en") -> Page:` and the line
 `return Page.model_validate(response.json())`.
 
 `main`, in `src/wikiapp/console.py`, prints `page.title` and `page.extract` in place of the two keys.
 
-A patch to [`src/wikiapp/console.py`](#step-07.3-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-07.3-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 The test that asks the real Wikipedia, in `tests/test_wikipedia.py`, checked two keys of the dictionary. It now
 checks that the answer is a `Page`, and its new name, `test_random_page_returns_page_in_production`, says so. It
 keeps its marker `e2e`.
 
-A patch to [`tests/test_wikipedia.py`](#step-07.3-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-07.3-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
 
 In `tests/test_wikipedia.py`, the two asserts on the keys are now one, on the type of the answer.
 
@@ -244,7 +247,7 @@ An answer with no title is not a page. `model_validate` then raises the Validati
 would end with a traceback. `random_page` turns a failed request into a WikipediaError, and it should do the same
 with an answer that is not a page. So its `except` catches ValidationError together with the exception of requests.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-07.4-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.4-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, see the line `except (requests.RequestException, ValidationError) as error:`, and
 `ValidationError` in the import from pydantic.
@@ -253,7 +256,7 @@ A test from the original wikiapp, `test_random_page_handles_validation_error`, c
 `tests/test_wikipedia.py`. The mock answers with an empty dictionary, `{}`, and `pytest.raises` expects a
 WikipediaError.
 
-A patch to [`tests/test_wikipedia.py`](#step-07.4-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-07.4-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
 
 ```bash
 just test -k validation
@@ -318,7 +321,7 @@ code first, before the `try`, and any other language raises a WikipediaError.
 The pattern is a constant, `LANGUAGE`, made with the module `re`. No request goes out for a language that does
 not match it.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-07.5-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-07.5-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, `LANGUAGE` is under `API_URL`, and `import re` is at the top. The check is the
 first lines of `random_page`, from `if not LANGUAGE.fullmatch(language):`.

@@ -38,9 +38,9 @@ parts of the code together, the command and the library. A test of parts togethe
 the library came out of `main`, the four tests of the command that use the mock are integration tests, and no
 longer unit tests.
 
-A patch to [`tests/conftest.py`](#step-03.2-tests-conftest.py-626af3).
+[± See the new file `tests/conftest.py`](#step-03.2-tests-conftest.py-626af3){.btn .btn-sm .btn-secondary}
 
-A patch to [`tests/test_console.py`](#step-03.2-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-03.2-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 The new file `tests/conftest.py` has the fixture `mock_requests_get`. In `tests/test_console.py`, the fixture is
 gone, and the tests still name it as a parameter.

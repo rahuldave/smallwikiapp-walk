@@ -29,6 +29,9 @@ Nothing checks the types of the code yet. ty is a type checker. It reads the cod
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
 
+[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+the work of older checkers such as mypy and pyright.
+
 This change came from running `uv add --group lint ty`.
 
 In `pyproject.toml`, the group `lint` now has the line `"ty>=0.0.87",`, on line 30. `uv.lock` has the exact
@@ -68,7 +71,7 @@ It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs i
 A recipe `types` runs ty, as every other tool of the project runs through `just`. It goes after the recipe `lint`
 in the `justfile`.
 
-A patch to [`justfile`](#step-05.2-justfile-424f0b).
+[± See the change to `justfile`](#step-05.2-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 In the `justfile`, the recipe `types *args:` on line 51 comes after `lint`. It runs `uv run ty check`, and passes
 on any arguments.

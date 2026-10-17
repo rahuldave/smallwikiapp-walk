@@ -37,7 +37,7 @@ Each test of the command needs a `CliRunner`, and each would make its own. A fix
 A fixture is a function that pytest calls for each test that names it as a parameter. So a fixture `runner`
 returns a `CliRunner`, and `test_main_succeeds` takes the runner as its parameter.
 
-A patch to [`tests/test_console.py`](#step-02.5-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-02.5-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `runner` is above the test, under `@pytest.fixture`. The test now reads
 `def test_main_succeeds(runner):`, and no longer makes a `CliRunner` itself.
@@ -83,6 +83,9 @@ A test that needs the network fails on a train. Also, a test cannot check the ti
 solves both. pytest-mock replaces a function with a mock for the length of one test. Its fixture `mocker` does
 this, and puts the function back after the test. pytest-mock goes in the group `test`.
 
+[pytest-mock](https://pytest-mock.readthedocs.io/) is a plugin of pytest. Python's standard library already has
+mocks, in `unittest.mock`. pytest-mock gives them to a test through a fixture, so each mock ends with its test.
+
 This change came from running `uv add --group test pytest-mock`.
 
 In `pyproject.toml`, the group `test` now has `"pytest-mock>=3.16.0",` under pytest. `uv.lock` has pytest-mock
@@ -127,7 +130,7 @@ A new test, `test_main_prints_title`, checks that the command prints that title.
 A test that uses the mock is a unit test of the command. It checks the command alone, without the network, so a
 failure points at the command. `test_main_succeeds` still asks the real Wikipedia.
 
-A patch to [`tests/test_console.py`](#step-02.7-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-02.7-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the fixture `mock_requests_get` is under `runner`, with the line
 `mock = mocker.patch("requests.get")`. The new test `test_main_prints_title` names both fixtures, and looks for
@@ -186,7 +189,7 @@ checks the address.
 `call_args[0]` contains the arguments that the last call gave in order, without a name. Here that is only the
 address. The call gives the header by name, as `headers=...`, so the header is in `call_args[1]`.
 
-A patch to [`tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-02.8-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the two new tests are under `test_main_prints_title`. The first checks
 `mock_requests_get.called`. The second compares `call_args[0]` with the address of a random English page.
@@ -232,7 +235,7 @@ A request can fail, and nothing checks what the command does then. A mock can ra
 a value. If `side_effect` is an exception, a call to the mock raises it. A test,
 `test_main_fails_on_request_error`, makes the mock raise, and checks that the command ends with exit code 1.
 
-A patch to [`tests/test_console.py`](#step-02.9-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-02.9-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, the new test is above `test_main_succeeds`. Its first line,
 `mock_requests_get.side_effect = Exception("Boom")`, makes the mock raise.

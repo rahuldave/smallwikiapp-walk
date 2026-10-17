@@ -194,6 +194,10 @@ git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cf
 The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
 
+[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
+values on both sides.
+
 ```bash
 uv add --group test pytest
 ```
@@ -369,6 +373,9 @@ git restore --source 45807a0ddd9f --staged -- :/ && git restore --source 8435ae5
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page. A mock
 solves both. pytest-mock replaces a function with a mock for the length of one test. Its fixture `mocker` does
 this, and puts the function back after the test. pytest-mock goes in the group `test`.
+
+[pytest-mock](https://pytest-mock.readthedocs.io/) is a plugin of pytest. Python's standard library already has
+mocks, in `unittest.mock`. pytest-mock gives them to a test through a fixture, so each mock ends with its test.
 
 ```bash
 uv add --group test pytest-mock
@@ -616,6 +623,9 @@ git restore --source 9be013d11b88 --staged -- :/ && git restore --source bfc38e7
 
 The tests pass, but we do not know which lines of the code they run. pytest-cov measures that, when pytest gets the
 option `--cov`. It goes in the group `test`.
+
+[pytest-cov](https://pytest-cov.readthedocs.io/) is a plugin of pytest. It runs the tests under coverage.py, which
+records each line that runs, and it prints the report at the end.
 
 ```bash
 uv add --group test pytest-cov

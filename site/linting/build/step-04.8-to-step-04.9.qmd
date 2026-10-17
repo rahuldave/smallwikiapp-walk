@@ -27,6 +27,9 @@ The tests and the linter check the code, and not the configuration. So an error 
 lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
+[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+the standards that define the file.
+
 ```bash
 uv add --group lint validate-pyproject
 ```

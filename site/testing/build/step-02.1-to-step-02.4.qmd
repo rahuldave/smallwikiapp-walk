@@ -190,6 +190,10 @@ git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cf
 The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
 
+[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
+values on both sides.
+
 ```bash
 uv add --group test pytest
 ```

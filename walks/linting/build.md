@@ -182,6 +182,11 @@ A project needs a name, a Python and a command before it has code to run. It als
 on every machine. `uv init --package --python 3.13 --name wikiapp` made `pyproject.toml`, a package in
 `src/wikiapp/`, and `.python-version`.
 
+[uv](https://docs.astral.sh/uv/) comes from Astral, and is written in Rust. It installs Python, makes the folder
+`.venv` with the project's packages, and runs commands in `.venv`. It also writes the lockfile, a file that lists
+the exact version of each package. One tool does the work of
+pip, venv and pip-tools.
+
 Then the author changed the project by hand. `main` went to `src/wikiapp/console.py`. `pyproject.toml` got a
 description, an author and a licence, and names `wikiapp.console:main` as the command. `uv lock` wrote the
 lockfile, `uv.lock`. The author also wrote the justfile, `LICENSE`, the README and `.gitignore`.
@@ -201,8 +206,9 @@ uv run wikiapp
 cat src/wikiapp/console.py
 ```
 
-The program `just` runs the tasks of the project, and the justfile contains them. A task is called a recipe. It
-has a name, and the commands that it runs. `just` alone lists the tasks, and
+The program [`just`](https://just.systems/) is a command runner. It runs the tasks of the project, and the justfile contains them.
+
+A task is called a recipe. It has a name, and the commands that it runs. `just` alone lists the tasks, and
 `just --show setup` shows the recipe behind one task. `just help setup` shows the same recipe. Later sections add
 recipes to the justfile.
 
@@ -652,6 +658,11 @@ requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
+[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
+the function. [requests](https://requests.readthedocs.io/)
+is a widely used library for HTTP. One call, `requests.get`, fetches a page.
+
 ```bash
 uv add click requests
 ```
@@ -977,6 +988,9 @@ The code has no one style, so a later change can mix a fix with a change of blan
 changes how the code looks, and never what it does. A linter finds problems in the code, such as a variable that
 is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
+
+[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
 
 ```bash
 uv add --group lint ruff
@@ -1435,8 +1449,6 @@ The linter finds five problems, and fails. Each problem has its code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
-Without `--statistics`, `just lint` prints each problem with its lines. `uv run ruff rule S113` explains a code.
-
 A `[*]` marks the one problem that ruff can fix by itself, `I001`. ruff also has a fix for the two unused variables, and marks it unsafe,
 because it may delete a comment on the line. It has no fix for the other two problems. So a person fixes those four
 in the next two moves, and then ruff fixes the last one.
@@ -1750,6 +1762,9 @@ The tests and the linter check the code, and not the configuration. So an error 
 lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
+[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+the standards that define the file.
+
 ```bash
 uv add --group lint validate-pyproject
 ```
@@ -1977,6 +1992,9 @@ before each `git commit`.
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
+[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+an environment of its own, and runs them on the files of a change.
+
 ```bash
 uv add --group lint pre-commit
 ```
@@ -2062,9 +2080,6 @@ the tutorial.
 
 `pre-commit run` now runs every hook on the file named, as git does before it records a change. The first time on
 a machine, it prints `[INFO]` lines while it downloads the hooks. Then it prints four lines, each `Passed`.
-
-With `--all-files`, `pre-commit` would check every file that git tracks. It would skip a new file until git tracks
-it.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -2223,8 +2238,7 @@ just lint --statistics
 ```
 
 The linter finds 25 missing types, in the code and in the tests. They are 15 parameters (`ANN001`) and 10
-returns (`ANN201`). `just check` fails now, and passes again two moves on, once the tests have their types too.
-Until then, the git hook fails, so git records no change.
+returns (`ANN201`). The next two moves add them, in the code and then in the tests.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -2292,8 +2306,7 @@ The patch changes one line of `src/wikiapp/console.py`, the `def` line of `main`
 just lint --statistics
 ```
 
-The 22 problems that are left are all in the tests. They are 13 parameters and 9 returns. `just check` still
-fails.
+22 problems are left, 13 parameters and 9 returns. The next move gives the tests their types.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -2405,6 +2418,12 @@ just types
 ```
 
 Both commands print `All checks passed!`.
+
+```bash
+just check
+```
+
+`just check` passes. pytest prints `7 passed`, and a coverage of 96.88%, above the floor of 90%.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 

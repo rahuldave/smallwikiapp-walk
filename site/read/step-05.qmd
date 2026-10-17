@@ -32,6 +32,9 @@ Nothing checks the types of the code yet. ty is a type checker. It reads the cod
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
 
+[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+the work of older checkers such as mypy and pyright.
+
 This change came from running `uv add --group lint ty`.
 
 In `pyproject.toml`, the group `lint` now has the line `"ty>=0.0.87",`, on line 30. `uv.lock` has the exact
@@ -71,7 +74,7 @@ It prints `ty 0.0.87 (ea4c3d273 2026-10-13)`, or a newer version. Nothing runs i
 A recipe `types` runs ty, as every other tool of the project runs through `just`. It goes after the recipe `lint`
 in the `justfile`.
 
-A patch to [`justfile`](#step-05.2-justfile-424f0b).
+[± See the change to `justfile`](#step-05.2-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 In the `justfile`, the recipe `types *args:` on line 51 comes after `lint`. It runs `uv run ty check`, and passes
 on any arguments.
@@ -118,7 +121,7 @@ ty finds one problem, in `src/wikiapp/__init__.py`, and ends with `Found 1 diagn
 The name of the installed package is `wikiapp`, from `pyproject.toml`. The string `"wikiapp"` is never None, so
 it can replace `__name__ or __package__`.
 
-A patch to [`src/wikiapp/__init__.py`](#step-05.3-src-wikiapp-__init__.py-682a01).
+[± See the change to `src/wikiapp/__init__.py`](#step-05.3-src-wikiapp-__init__.py-682a01){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/__init__.py`, the last line now gives `importlib.metadata.version` the string `"wikiapp"`.
 
@@ -153,7 +156,7 @@ ty checks the types that the code states, and the code states almost none. ruff'
 parameter and each return without a type. So the linter checks that a type is written, and the type checker
 checks that the type is right. The rules go in the list `select` in `pyproject.toml`.
 
-A patch to [`pyproject.toml`](#step-05.4-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-05.4-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
 In `pyproject.toml`, the list `select` now has `"ANN"` on line 67, after `"N"`.
 
@@ -162,8 +165,7 @@ just lint --statistics
 ```
 
 The linter finds 25 missing types, in the code and in the tests. They are 15 parameters (`ANN001`) and 10
-returns (`ANN201`). `just check` fails now, and passes again two moves on, once the tests have their types too.
-Until then, the git hook fails, so git records no change.
+returns (`ANN201`). The next two moves add them, in the code and then in the tests.
 
 ### What changed {#step-05.4-what-changed-182c57}
 
@@ -194,11 +196,11 @@ string. It returns the JSON that Wikipedia sends, which is a dictionary from str
 says that ty cannot check the values. `Any` comes from the standard library, so its import is a block of its own,
 above `import requests`.
 
-A patch to [`src/wikiapp/wikipedia.py`](#step-05.5-src-wikiapp-wikipedia.py-258803).
+[± See the change to `src/wikiapp/wikipedia.py`](#step-05.5-src-wikiapp-wikipedia.py-258803){.btn .btn-sm .btn-secondary}
 
 `main` takes the language as a string. Its return type, None, was already there.
 
-A patch to [`src/wikiapp/console.py`](#step-05.5-src-wikiapp-console.py-d9ae67).
+[± See the change to `src/wikiapp/console.py`](#step-05.5-src-wikiapp-console.py-d9ae67){.btn .btn-sm .btn-secondary}
 
 In `src/wikiapp/wikipedia.py`, line 1 imports `Any`. On line 13, `random_page` now takes a `str`, and returns a
 `dict[str, Any]`. In `src/wikiapp/console.py`, on line 19, the parameter `language` of `main` is a `str`.
@@ -207,8 +209,7 @@ In `src/wikiapp/wikipedia.py`, line 1 imports `Any`. On line 13, `random_page` n
 just lint --statistics
 ```
 
-The 22 problems that are left are all in the tests. They are 13 parameters and 9 returns. `just check` still
-fails.
+22 problems are left, 13 parameters and 9 returns. The next move gives the tests their types.
 
 ### What changed {#step-05.5-what-changed-182c57}
 
@@ -266,7 +267,7 @@ The mock of `requests.get` is a `Mock`. `mocker` is
 pytest-mock's `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
 `tests/conftest.py` imports `Mock` and `MockerFixture`, and its fixture states both types.
 
-A patch to [`tests/conftest.py`](#step-05.6-tests-conftest.py-626af3).
+[± See the change to `tests/conftest.py`](#step-05.6-tests-conftest.py-626af3){.btn .btn-sm .btn-secondary}
 
 In `tests/conftest.py`, the fixture on line 8 now reads `def mock_requests_get(mocker: MockerFixture) -> Mock:`.
 `Mock` comes from `unittest.mock`, and `MockerFixture` from `pytest_mock`, in the imports above it.
@@ -276,7 +277,7 @@ in place of `import click.testing`. The fixture `runner` returns `CliRunner()`, 
 `CliRunner`. In every test, `runner` is a `CliRunner`, `mock_requests_get` is a `Mock`, and the test returns
 `None`.
 
-A patch to [`tests/test_console.py`](#step-05.6-tests-test_console.py-9442ee).
+[± See the change to `tests/test_console.py`](#step-05.6-tests-test_console.py-9442ee){.btn .btn-sm .btn-secondary}
 
 In `tests/test_console.py`, `from click.testing import CliRunner` on line 5 replaces `import click.testing`. The
 fixture on line 11 reads `def runner() -> CliRunner:`, and each test names the types of its parameters and
@@ -284,7 +285,7 @@ returns `None`.
 
 The test of the library gets its types the same way.
 
-A patch to [`tests/test_wikipedia.py`](#step-05.6-tests-test_wikipedia.py-2f4413).
+[± See the change to `tests/test_wikipedia.py`](#step-05.6-tests-test_wikipedia.py-2f4413){.btn .btn-sm .btn-secondary}
 
 In `tests/test_wikipedia.py`, `Mock` comes in on line 1, and the test on line 6 states its types.
 
@@ -294,6 +295,12 @@ just types
 ```
 
 Both commands print `All checks passed!`.
+
+```bash
+just check
+```
+
+`just check` passes. pytest prints `7 passed`, and a coverage of 96.88%, above the floor of 90%.
 
 ### What changed {#step-05.6-what-changed-182c57}
 
@@ -413,7 +420,7 @@ Both commands print `All checks passed!`.
 change can break a type, and pass. The recipe `check` now runs `just types` after `just lint`, and its comment
 names the types too.
 
-A patch to [`justfile`](#step-05.7-justfile-424f0b).
+[± See the change to `justfile`](#step-05.7-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 In the `justfile`, the recipe `check` now runs `just types` on line 74, after `just lint`. Its comment, on line 65,
 lists "types".

@@ -33,7 +33,7 @@ A package goes to PyPI as two files, a wheel and a source archive. pip and uv in
 --all-packages` builds both for every package of the workspace, into `dist/`. `.gitignore` already lists `dist/`.
 A recipe `build`, at the end of the `justfile`, runs it.
 
-A patch to [`justfile`](#step-10.1-justfile-424f0b).
+[± See the change to `justfile`](#step-10.1-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 The recipe `build` at the end of the `justfile` is in the group `setup`, and `just build help` explains it.
 
@@ -122,7 +122,7 @@ The metadata says `Requires-Dist: wikirandom>=0.1.0,<0.2`.
 The repository has two `pyproject.toml` files, and `just lint-config` checks only the app's. A mistake in the
 library's file would reach a build unseen. The recipe `lint-config` now gives validate-pyproject both files.
 
-A patch to [`justfile`](#step-10.3-justfile-424f0b).
+[± See the change to `justfile`](#step-10.3-justfile-424f0b){.btn .btn-sm .btn-secondary}
 
 ```bash
 just lint-config
@@ -163,9 +163,9 @@ This change came from running `cp LICENSE packages/wikirandom/LICENSE`.
 Its `pyproject.toml` gives the licence and the author in `[project]`, as the app's `pyproject.toml` does. Both
 `pyproject.toml` files name the repository, in a table `[project.urls]`.
 
-A patch to [`packages/wikirandom/pyproject.toml`](#step-10.4-packages-wikirandom-pyproject.toml-28d6f6).
+[± See the change to `packages/wikirandom/pyproject.toml`](#step-10.4-packages-wikirandom-pyproject.toml-28d6f6){.btn .btn-sm .btn-secondary}
 
-A patch to [`pyproject.toml`](#step-10.4-pyproject.toml-5d07e7).
+[± See the change to `pyproject.toml`](#step-10.4-pyproject.toml-5d07e7){.btn .btn-sm .btn-secondary}
 
 In `packages/wikirandom/pyproject.toml`, see `license = "Apache-2.0"` under `readme`. The table `[project.urls]`
 is after `dependencies` there, and after `[project.scripts]` in the app's `pyproject.toml`.
@@ -448,7 +448,7 @@ The library's User-Agent says `0.1.0`, written by hand. After a change of the ve
 `packages/wikirandom/pyproject.toml`, it would still say `0.1.0`. So the library reads its version from the
 installed package, as `wikiapp --version` does. `VERSION` is the installed version, and `USER_AGENT` contains it.
 
-A patch to [`packages/wikirandom/src/wikirandom/__init__.py`](#step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23).
+[± See the change to `packages/wikirandom/src/wikirandom/__init__.py`](#step-10.5-packages-wikirandom-src-wikirandom-__init__.py-343c23){.btn .btn-sm .btn-secondary}
 
 In `packages/wikirandom/src/wikirandom/__init__.py`, see `VERSION = importlib.metadata.version("wikirandom")`,
 which runs once, when Python imports the package. `USER_AGENT` is an f-string with `{VERSION}` in it.
