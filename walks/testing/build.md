@@ -219,7 +219,7 @@ git check ae86cb7d116c
 If you are stuck, this command puts the files of this part in place of yours. A file that you made yourself stays:
 
 ```bash
-git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch -- :/ && git restore --source step-00 --staged --worktree -- :/
 ```
 
 ### What changed
@@ -624,8 +624,6 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source ae86cb7d116c 
 
 </details>
 
-This part ends at the code at `step-00`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-00)
-
 <a id="step-01"></a>
 
 ## 1 The command under test
@@ -673,7 +671,7 @@ git check 36d49582843a
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source ae86cb7d116c --staged -- :/ && git restore --source 36d49582843a --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-00 --staged -- :/ && git restore --source 36d49582843a --staged --worktree -- :/
 ```
 
 #### What changed
@@ -895,7 +893,7 @@ git check f05d3c31be2c
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c31be2c --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source 0ffd5df563ac --staged -- :/ && git restore --source step-01 --staged --worktree -- :/
 ```
 
 #### What changed
@@ -936,7 +934,7 @@ git restore --source 0ffd5df563ac --staged -- :/ && git restore --source f05d3c3
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-01).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f05d3c31be2cf640cc2aa4345658b8eebc394d60).
 
 This part ends at the code at `step-01`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-01)
 
@@ -1015,7 +1013,7 @@ git check 46dc20fb9092
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source f05d3c31be2c --staged -- :/ && git restore --source 46dc20fb9092 --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-01 --staged -- :/ && git restore --source 46dc20fb9092 --staged --worktree -- :/
 ```
 
 #### What changed
@@ -1220,7 +1218,7 @@ git restore --source d92e2dec921d --staged -- :/ && git restore --source 45807a0
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/45807a0ddd9f97798c3f86a82b19782d4df45837). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/45807a0ddd9f97798c3f86a82b19782d4df45837).
 
 This part ends at the code at `45807a0ddd9f`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/45807a0ddd9f97798c3f86a82b19782d4df45837)
 
@@ -1564,7 +1562,7 @@ git restore --source 9be013d11b88 --staged -- :/ && git restore --source bfc38e7
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bfc38e738984492a5dbf6a1a6a0b6691baad4c34). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bfc38e738984492a5dbf6a1a6a0b6691baad4c34).
 
 This part ends at the code at `bfc38e738984`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34)
 
@@ -1693,7 +1691,7 @@ git check 7508f1d424d5
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d424d5 --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source step-02 --staged --worktree -- :/
 ```
 
 #### What changed
@@ -1717,7 +1715,7 @@ git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-02).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4).
 
 This part ends at the code at `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-02)
 
@@ -1730,7 +1728,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
-git restore --source 7508f1d424d5 --staged -- :/ && git restore --source 3f6d8cf59ab3 --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-02 --staged -- :/ && git restore --source 3f6d8cf59ab3 --staged --worktree -- :/
 ```
 
 ```bash
@@ -1834,7 +1832,7 @@ git restore --source 3f6d8cf59ab3 --staged -- :/ && git restore --source a65f7f1
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a65f7f11432be0a56de38e7d4babe10bda735c2c). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a65f7f11432be0a56de38e7d4babe10bda735c2c).
 
 This part ends at the code at `a65f7f11432b`, partway through `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/a65f7f11432be0a56de38e7d4babe10bda735c2c)
 
@@ -1935,7 +1933,7 @@ git restore --source a65f7f11432b --staged -- :/ && git restore --source d9d02ca
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520).
 
 This part ends at the code at `d9d02ca26fd3`, partway through `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d9d02ca26fd3c3633e5ce22b18ecb2198e28a520)
 
@@ -2012,7 +2010,7 @@ git check b6942869d5fc
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source a6f5ae9a475d --staged -- :/ && git restore --source b6942869d5fc --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source a6f5ae9a475d --staged -- :/ && git restore --source step-03 --staged --worktree -- :/
 ```
 
 #### What changed
@@ -2076,7 +2074,7 @@ git restore --source a6f5ae9a475d --staged -- :/ && git restore --source b694286
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-03).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/b6942869d5fcfffff81beb598630288fe3a67372).
 
 This part ends at the code at `step-03`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-03)
 
@@ -2089,7 +2087,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
-git restore --source b6942869d5fc --staged -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-03 --staged -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
 ```
 
 ```bash
@@ -2168,7 +2166,7 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543).
 
 This part ends at the code at `1f73d6af30cc`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543)
 
@@ -2181,7 +2179,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
-git restore --source 1f73d6af30cc --staged -- :/ && git restore --source 701783af434e --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source 1f73d6af30cc --staged -- :/ && git restore --source step-05 --staged --worktree -- :/
 ```
 
 ```bash
@@ -2270,7 +2268,7 @@ git check 35f4ffc8c67a
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 701783af434e --staged -- :/ && git restore --source 35f4ffc8c67a --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-05 --staged -- :/ && git restore --source 35f4ffc8c67a --staged --worktree -- :/
 ```
 
 #### What changed
@@ -2389,7 +2387,7 @@ git restore --source 35f4ffc8c67a --staged -- :/ && git restore --source 307d4d7
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/307d4d7b36bb9dc7bc8ad601c8275d5241283e35). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/307d4d7b36bb9dc7bc8ad601c8275d5241283e35).
 
 This part ends at the code at `307d4d7b36bb`, partway through `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/307d4d7b36bb9dc7bc8ad601c8275d5241283e35)
 
@@ -2584,7 +2582,7 @@ git check 20cf458261ed
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458261ed --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source d8af75e8fd57 --staged -- :/ && git restore --source step-06 --staged --worktree -- :/
 ```
 
 #### What changed
@@ -2637,7 +2635,7 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-06).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657).
 
 This part ends at the code at `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-06)
 
@@ -2650,7 +2648,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
-git restore --source 20cf458261ed --staged -- :/ && git restore --source 1baf0602c1d1 --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-06 --staged -- :/ && git restore --source 1baf0602c1d1 --staged --worktree -- :/
 ```
 
 ```bash
@@ -2898,7 +2896,7 @@ git restore --source 88fe0e20d645 --staged -- :/ && git restore --source 06ff2ca
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06ff2caa1958318b960fa9b9c84b32b3a23ae18d). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/06ff2caa1958318b960fa9b9c84b32b3a23ae18d).
 
 This part ends at the code at `06ff2caa1958`, partway through `step-07`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/06ff2caa1958318b960fa9b9c84b32b3a23ae18d)
 
@@ -2954,7 +2952,7 @@ git check be473b80441f
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 06ff2caa1958 --staged -- :/ && git restore --source be473b80441f --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source 06ff2caa1958 --staged -- :/ && git restore --source step-07 --staged --worktree -- :/
 ```
 
 #### What changed
@@ -2989,7 +2987,7 @@ git restore --source 06ff2caa1958 --staged -- :/ && git restore --source be473b8
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-07).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/be473b80441f82ce87bf800deeb432fd4212dea4).
 
 This part ends at the code at `step-07`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-07)
 
@@ -3002,7 +3000,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
-git restore --source be473b80441f --staged -- :/ && git restore --source ce0734f1272c --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-07 --staged -- :/ && git restore --source step-08 --staged --worktree -- :/
 ```
 
 ```bash
@@ -3056,7 +3054,7 @@ git check 971e9d780fd5
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-08 --staged -- :/ && git restore --source 971e9d780fd5 --staged --worktree -- :/
 ```
 
 #### What changed
@@ -3088,6 +3086,6 @@ git restore --source ce0734f1272c --staged -- :/ && git restore --source 971e9d7
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0). [The code after it](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/971e9d780fd539d13f49af3fbb00c1145fd22aa0).
 
 This part ends at the code at `971e9d780fd5`, partway through `step-08b`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/971e9d780fd539d13f49af3fbb00c1145fd22aa0)

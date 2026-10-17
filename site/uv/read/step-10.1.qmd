@@ -74,6 +74,6 @@ first.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `7744a84a4715`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/7744a84a4715e6edb876e1c4f3255daf524dd07d){.btn .btn-sm .btn-primary}

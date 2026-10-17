@@ -11,7 +11,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
-git restore --source b6942869d5fc --staged -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-03 --staged -- :/ && git restore --source b7469ee81a82 --staged --worktree -- :/
 ```
 
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
@@ -96,6 +96,6 @@ git restore --source b7469ee81a82 --staged -- :/ && git restore --source 1f73d6a
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `1f73d6af30cc`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/1f73d6af30cce37adbe58a2ebfd6e80c00e4c543){.btn .btn-sm .btn-primary}

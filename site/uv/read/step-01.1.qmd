@@ -72,6 +72,6 @@ versions of every package that click and requests need. Two people with the same
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/36d49582843a575d84ed178ad66157913be4c59c){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/36d49582843a575d84ed178ad66157913be4c59c){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `36d49582843a`, partway through `step-01`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/36d49582843a575d84ed178ad66157913be4c59c){.btn .btn-sm .btn-primary}

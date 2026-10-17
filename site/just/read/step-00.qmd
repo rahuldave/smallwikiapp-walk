@@ -477,5 +477,3 @@ A recipe has up to four parts, from the top.
 ```
 
 </details>
-
-This part ends at the code at `step-00`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-00){.btn .btn-sm .btn-primary}

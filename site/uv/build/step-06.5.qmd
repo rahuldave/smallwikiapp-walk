@@ -72,7 +72,7 @@ git check 20cf458261ed
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458261ed --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source d8af75e8fd57 --staged -- :/ && git restore --source step-06 --staged --worktree -- :/
 ```
 
 ### What changed {#step-06.5-what-changed-182c57}
@@ -125,6 +125,6 @@ git restore --source d8af75e8fd57 --staged -- :/ && git restore --source 20cf458
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-06){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/20cf458261edc55b725da39a99c9b37ef5d24657){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `step-06`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-06){.btn .btn-sm .btn-primary}

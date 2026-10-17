@@ -464,5 +464,3 @@ first activates `.venv`, with a command that makes the shell use the Python of `
 ```
 
 </details>
-
-This part ends at the code at `step-00`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-00){.btn .btn-sm .btn-primary}

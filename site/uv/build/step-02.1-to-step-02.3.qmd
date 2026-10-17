@@ -11,13 +11,13 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 This part does not start where the part before it ends, because the walk skips some changes. This command puts the files that this part starts from in place of yours. Run it, and then go on:
 
 ```bash
-git restore --source 36d49582843a --staged -- :/ && git restore --source f05d3c31be2c --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source 36d49582843a --staged -- :/ && git restore --source step-01 --staged --worktree -- :/
 ```
 
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
-git rm -rq --cached --ignore-unmatch -- :/ && git restore --source f05d3c31be2c --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch -- :/ && git restore --source step-01 --staged --worktree -- :/
 ```
 
 ```bash
@@ -92,7 +92,7 @@ git check 46dc20fb9092
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source f05d3c31be2c --staged -- :/ && git restore --source 46dc20fb9092 --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-01 --staged -- :/ && git restore --source 46dc20fb9092 --staged --worktree -- :/
 ```
 
 ### What changed {#step-02.1-what-changed-182c57}
@@ -254,6 +254,6 @@ git restore --source 6d7a6cfdae60 --staged -- :/ && git restore --source d92e2de
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d92e2dec921d6322e2a356af20dafef3837c1849){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/d92e2dec921d6322e2a356af20dafef3837c1849){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `d92e2dec921d`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/d92e2dec921d6322e2a356af20dafef3837c1849){.btn .btn-sm .btn-primary}

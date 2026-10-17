@@ -129,7 +129,7 @@ git check 7508f1d424d5
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d424d5 --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source step-02 --staged --worktree -- :/
 ```
 
 ### What changed {#step-02.11-what-changed-182c57}
@@ -153,6 +153,6 @@ git restore --source 8409e0f2e7f6 --staged -- :/ && git restore --source 7508f1d
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-02){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/7508f1d424d5f906ee4630be09b2fddf3483e9c4){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-02){.btn .btn-sm .btn-primary}

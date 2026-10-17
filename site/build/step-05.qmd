@@ -11,7 +11,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 If you start at this part, make your clone as **Get the project** says, and then run this command. It puts in your clone the files that this part starts from. A file that the project deleted before this part stays, so delete it if `git check` lists it:
 
 ```bash
-git rm -rq --cached --ignore-unmatch -- :/ && git restore --source 6860da13f0fd --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch -- :/ && git restore --source step-04 --staged --worktree -- :/
 ```
 
 ```bash
@@ -48,7 +48,7 @@ git check 56a11f0bb31a
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 6860da13f0fd --staged -- :/ && git restore --source 56a11f0bb31a --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source step-04 --staged -- :/ && git restore --source 56a11f0bb31a --staged --worktree -- :/
 ```
 
 ### What changed {#step-05.1-what-changed-182c57}
@@ -562,7 +562,7 @@ git check 701783af434e
 If you are stuck, this command puts the files of this move in place of yours. A file that you made yourself stays:
 
 ```bash
-git restore --source 5873353449ad --staged -- :/ && git restore --source 701783af434e --staged --worktree -- :/
+git fetch --quiet --tags --force origin; git restore --source 5873353449ad --staged -- :/ && git restore --source step-05 --staged --worktree -- :/
 ```
 
 ### What changed {#step-05.7-what-changed-182c57}
@@ -593,6 +593,6 @@ git restore --source 5873353449ad --staged -- :/ && git restore --source 701783a
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/701783af434e19b17e38a10898a39adc1dc5dae9){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/step-05){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/701783af434e19b17e38a10898a39adc1dc5dae9){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `step-05`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/step-05){.btn .btn-sm .btn-primary}

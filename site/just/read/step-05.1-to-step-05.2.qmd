@@ -108,6 +108,6 @@ ty finds one problem, in `src/wikiapp/__init__.py`, and ends with `Found 1 diagn
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2a5904d01d950678e8364d7f6958dccaf5b69368){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/2a5904d01d950678e8364d7f6958dccaf5b69368){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `2a5904d01d95`, partway through `step-05`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/2a5904d01d950678e8364d7f6958dccaf5b69368){.btn .btn-sm .btn-primary}

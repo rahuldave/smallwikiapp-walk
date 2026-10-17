@@ -269,6 +269,6 @@ The command now has four tests that use the mock, and one that asks the real Wik
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `bfc38e738984`, partway through `step-02`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/bfc38e738984492a5dbf6a1a6a0b6691baad4c34){.btn .btn-sm .btn-primary}

@@ -69,6 +69,6 @@ author. Both packages get a link to the repository. The User-Agent says the inst
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `6e6d2844bc7a`, partway through `step-10`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/6e6d2844bc7a5b34605ad76b9e03e6631fa236be){.btn .btn-sm .btn-primary}

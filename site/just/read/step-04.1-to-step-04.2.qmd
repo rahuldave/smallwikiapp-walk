@@ -142,6 +142,6 @@ runs the same command, and passes on the words after `just fmt`.
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/31445743379186b800fd4c035c8f04eed7ad7f3d){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/31445743379186b800fd4c035c8f04eed7ad7f3d){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/31445743379186b800fd4c035c8f04eed7ad7f3d){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `314457433791`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/31445743379186b800fd4c035c8f04eed7ad7f3d){.btn .btn-sm .btn-primary}

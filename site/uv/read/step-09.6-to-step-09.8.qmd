@@ -389,6 +389,6 @@ The library's folder has its `pyproject.toml`, and no `uv.lock` or `.venv`. The 
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f2dd413c02c731553f8c103b0e6c892dac0fa2dc){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/f2dd413c02c731553f8c103b0e6c892dac0fa2dc){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/f2dd413c02c731553f8c103b0e6c892dac0fa2dc){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `f2dd413c02c7`, partway through `step-09`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/f2dd413c02c731553f8c103b0e6c892dac0fa2dc){.btn .btn-sm .btn-primary}

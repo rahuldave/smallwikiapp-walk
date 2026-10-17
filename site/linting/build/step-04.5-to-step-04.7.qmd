@@ -217,6 +217,6 @@ git restore --source 0fb498558273 --staged -- :/ && git restore --source a57134d
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a57134d1cef6ff24803235ace966e5870046fbd9){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/a57134d1cef6ff24803235ace966e5870046fbd9){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `a57134d1cef6`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/a57134d1cef6ff24803235ace966e5870046fbd9){.btn .btn-sm .btn-primary}

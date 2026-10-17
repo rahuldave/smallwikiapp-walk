@@ -322,6 +322,6 @@ The check prints `7 files already formatted`, and the tests pass as before, `7 p
 
 </details>
 
-[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6690eee9f7e177a6df2ea5e1821b8f581948bc85){.btn .btn-sm .btn-secondary} [The code after it](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85){.btn .btn-sm .btn-primary}
+[This change on GitHub](https://github.com/rahuldave/smallwikiapp/commit/6690eee9f7e177a6df2ea5e1821b8f581948bc85){.btn .btn-sm .btn-secondary}
 
 This part ends at the code at `6690eee9f7e1`, partway through `step-04`. [The code after this part](https://github.com/rahuldave/smallwikiapp/tree/6690eee9f7e177a6df2ea5e1821b8f581948bc85){.btn .btn-sm .btn-primary}
