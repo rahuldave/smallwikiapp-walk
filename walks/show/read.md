@@ -2178,8 +2178,8 @@ just lint --statistics
 
 The linter finds five problems, and fails. Each problem has its code.
 
-- `I001`: the imports of `src/wikiapp/console.py` are out of order.
-- `E402`: an import in `tests/test_console.py` comes below code.
+- `I001`: imports are out of order.
+- `E402`: an import comes below code.
 - `F841`, twice: a variable is assigned and never used.
 - `S113`: a request has no timeout.
 
