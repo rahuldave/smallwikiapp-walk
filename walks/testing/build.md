@@ -2597,8 +2597,8 @@ PY
 The patch changes one line of `pyproject.toml`, line 9, `requires-python`.
 
 The lockfile, `uv.lock`, was resolved for Python 3.13 and newer. It no longer matches `pyproject.toml`, and this
-move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe, so uv refuses a
-lockfile that does not match, until the next move resolves the lockfile again.
+move leaves it so on purpose. Line 6 of the `justfile` sets `UV_LOCKED` to 1 for every recipe. So uv refuses a
+lockfile that does not match, until the next move resolves it again.
 
 ```bash
 uv lock --check
