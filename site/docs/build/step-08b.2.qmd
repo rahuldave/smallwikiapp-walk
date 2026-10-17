@@ -55,10 +55,10 @@ But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your ma
 ## 8b.2 A workflow that publishes the docs {#step-08b.2}
 
 `just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
-`.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
+`.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and [GitHub Pages](https://docs.github.com/en/pages) publishes it.
 
-[GitHub Pages](https://docs.github.com/en/pages) publishes a website from a repository, free for a public one. A
-workflow can build the site and give it to Pages.
+GitHub Pages publishes a website from a repository, free for a public one. A
+workflow of [GitHub Actions](https://docs.github.com/en/actions) can build the site and give it to Pages.
 
 The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
 `smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at

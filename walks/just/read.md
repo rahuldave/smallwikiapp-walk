@@ -7,13 +7,16 @@
 Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change.
 
 We give `wikiapp` one way to run every task, a justfile. A justfile is a file of named tasks, and the program
-`just` runs them, as in `just test`. `wikiapp` is a small command that prints the title and the summary of a
+[`just`](https://just.systems/) runs them, as in `just test`. `wikiapp` is a small command that prints the title and the summary of a
 random Wikipedia page. Its project has many tools, each with its own options. A person, a git hook and GitHub
 must all run them the same way.
 
 The project is called smallwikiapp, and a longer tutorial builds all of it. This tutorial takes only the parts
 about the justfile out of that longer tutorial. It starts from the project that `uv init` made, for Python 3.13, and has a justfile
 from the start.
+
+`uv init` is a command of [uv](https://docs.astral.sh/uv/), the tool that installs Python and the project's packages,
+and runs commands with them.
 
 The justfile is the interface of the project. Each task is a verb, such as `just test`, and the recipe behind the
 verb names the tool that does the work. A person, a git hook and GitHub each run `just check`, and `check` runs
@@ -25,6 +28,21 @@ the recipe, and then the verb runs. The sections of `test` and `check` skip the 
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the text says "the original wikiapp", it means that project.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end of the whole tutorial, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
 
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
 file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
@@ -67,7 +85,7 @@ from their code.
 
 Some changes that this tutorial leaves out change what `just check` runs too. They change `pyproject.toml`, not
 the justfile. Before section 10, the rules `ANN` come into the linter. Before section 11, the end-to-end tests come in. They ask the
-real Wikipedia, and pytest leaves them out of each run that does not ask for them, `just check` included. Before section 15, the floor on the coverage counts both
+real Wikipedia, and [pytest](https://docs.pytest.org/) leaves them out of each run that does not ask for them, `just check` included. Before section 15, the floor on the coverage counts both
 packages.
 
 **Who runs `just check`**
@@ -595,7 +613,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 just setup
 ```
 
-The command now asks Wikipedia for a random page, and prints its title and summary, with click and requests. It
+The command now asks Wikipedia for a random page, and prints its title and summary, with [click](https://click.palletsprojects.com/) and [requests](https://requests.readthedocs.io/). It
 sends a User-Agent, and has an option `--version`. A dependency group is a named list of packages in `pyproject.toml`.
 `default-groups = "all"` in `pyproject.toml` makes uv install every group. pytest is in the group `test`, and
 the project has its first test.
@@ -677,7 +695,7 @@ The code now also has tests with a mock in place of Wikipedia, and every run mea
 split into a library, `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`. The
 library raises its own error, `WikipediaError`, and the command turns it into a message.
 
-The code mixes styles. ruff comes in, and `just fmt` formats the code and the tests.
+The code mixes styles. [ruff](https://docs.astral.sh/ruff/) comes in, and `just fmt` formats the code and the tests.
 
 <a id="step-04.1"></a>
 
@@ -685,10 +703,10 @@ The code mixes styles. ruff comes in, and `just fmt` formats the code and the te
 
 The code has no one style, so a later change can mix a fix with a change of blank lines and quotes. A formatter
 changes how the code looks, and never what it does. A linter finds problems in the code, such as a variable that
-is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
+is never used, and changes nothing unless it is asked to. [ruff](https://docs.astral.sh/ruff/) is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
-[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+ruff comes from Astral, as uv does, and is written in Rust. It does the work of
 older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
 
 This change came from running `uv add --group lint ruff`.
@@ -941,10 +959,10 @@ small shell script, which runs three commands and ends at the first that fails.
 ### 4.8 validate-pyproject, in the group lint
 
 The tests and the linter check the code, and not the configuration. So an error in `pyproject.toml`, in the
-lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
+lockfile or in the `justfile` passes them all. [validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
-[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+validate-pyproject checks `pyproject.toml` against JSON schemas of
 the standards that define the file.
 
 This change came from running `uv add --group lint validate-pyproject`.
@@ -1205,11 +1223,11 @@ check of the Python code is `just check`.
 
 ### 4.12 `pre-commit`, in the group lint
 
-`just check` runs every check, but a person must remember to run it. A `pre-commit` hook is a program that git runs
+`just check` runs every check, but a person must remember to run it. A [`pre-commit`](https://pre-commit.com/) hook is a program that git runs
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
-[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+pre-commit manages git hooks. A file lists the hooks, and `pre-commit` installs each in
 an environment of its own, and runs them on the files of a change.
 
 This change came from running `uv add --group lint pre-commit`.
@@ -1375,11 +1393,11 @@ The linter does not check types. The next verb runs a type checker, and `check` 
 
 ### 5.1 ty, in the group lint
 
-Nothing checks the types of the code yet. ty is a type checker. It reads the code without running it, and finds
+Nothing checks the types of the code yet. [ty](https://docs.astral.sh/ty/) is a type checker. It reads the code without running it, and finds
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
 
-[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+ty is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
 the work of older checkers such as mypy and pyright.
 
 This change came from running `uv add --group lint ty`.
@@ -1482,7 +1500,7 @@ just setup
 ```
 
 In the code now, `__init__.py` asks for the version of `"wikiapp"` by name, which fixes the one problem that
-ty found. A family of rules, `ANN`, asks for a type on every parameter and return. The code and the tests have
+[ty](https://docs.astral.sh/ty/), the type checker, found. A family of rules, `ANN`, asks for a type on every parameter and return. The code and the tests have
 their types.
 
 `just check` does not run the type checker yet. One line in `check` runs it.
@@ -1586,7 +1604,7 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
 thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
-part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
+part of the tutorial publishes the docs with [GitHub Pages](https://docs.github.com/en/pages), and lists each setting that a fork needs.
 
 The job `check` is the third caller of `just check`, after a person and the git hook. It runs from a fresh clone.
 No person has to install it or remember it, and `--no-verify` does not skip it. The job `tests` runs
@@ -1658,10 +1676,11 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 just setup
 ```
 
-In the code now, `random_page` returns a `Page`, a pydantic model with a title and an extract. An answer that
+In the code now, `random_page` returns a `Page`, a [pydantic](https://docs.pydantic.dev/) model with a title and an extract. An answer that
 is not a page, or a language that is not a language code, raises `WikipediaError`.
 
-Nothing says which parts of the code have documentation. smalldocs comes in, and `just docs check` counts what has
+Nothing says which parts of the code have documentation. [smalldocs](https://docs.smallish.dev/) makes documentation from the code. It comes in, and
+`just docs check` counts what has
 documentation. The words after `docs` go to `smalldocs api`.
 
 <a id="step-08.1"></a>
@@ -2072,7 +2091,7 @@ all three.
 GitHub reads the jobs of the project from files in `.github/workflows`. Each of these files is a workflow. The jobs
 `tests` and `check` are in one workflow, `.github/workflows/test.yaml`. A second workflow,
 `.github/workflows/docs.yaml`, has two jobs. The job `build` builds the docs site. Then the job `deploy` puts the site
-on GitHub Pages, the part of GitHub that serves websites.
+on [GitHub Pages](https://docs.github.com/en/pages), the part of GitHub that serves websites.
 
 The job `tests` runs only the tests, and needs only the group `test`. It runs `uv run --locked
 --no-default-groups --group test pytest`. `--no-default-groups` tells uv to install none of the groups that

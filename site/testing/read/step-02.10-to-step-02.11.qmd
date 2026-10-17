@@ -26,10 +26,10 @@ the coverage, the share of the lines that the tests run.
 
 ## 2.10 pytest-cov, in the group test {#step-02.10}
 
-The tests pass, but we do not know which lines of the code they run. pytest-cov measures that, when pytest gets the
+The tests pass, but we do not know which lines of the code they run. [pytest-cov](https://pytest-cov.readthedocs.io/) measures that, when pytest gets the
 option `--cov`. It goes in the group `test`.
 
-[pytest-cov](https://pytest-cov.readthedocs.io/) is a plugin of pytest. It runs the tests under coverage.py, which
+pytest-cov is a plugin of pytest. It runs the tests under coverage.py, which
 records each line that runs, and it prints the report at the end.
 
 This change came from running `uv add --group test pytest-cov`.

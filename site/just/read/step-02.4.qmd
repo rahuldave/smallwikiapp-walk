@@ -21,7 +21,7 @@ git switch --detach d92e2dec921d
 just setup
 ```
 
-The command now asks Wikipedia for a random page, and prints its title and summary, with click and requests. It
+The command now asks Wikipedia for a random page, and prints its title and summary, with [click](https://click.palletsprojects.com/) and [requests](https://requests.readthedocs.io/). It
 sends a User-Agent, and has an option `--version`. A dependency group is a named list of packages in `pyproject.toml`.
 `default-groups = "all"` in `pyproject.toml` makes uv install every group. pytest is in the group `test`, and
 the project has its first test.

@@ -32,7 +32,7 @@ all three.
 GitHub reads the jobs of the project from files in `.github/workflows`. Each of these files is a workflow. The jobs
 `tests` and `check` are in one workflow, `.github/workflows/test.yaml`. A second workflow,
 `.github/workflows/docs.yaml`, has two jobs. The job `build` builds the docs site. Then the job `deploy` puts the site
-on GitHub Pages, the part of GitHub that serves websites.
+on [GitHub Pages](https://docs.github.com/en/pages), the part of GitHub that serves websites.
 
 The job `tests` runs only the tests, and needs only the group `test`. It runs `uv run --locked
 --no-default-groups --group test pytest`. `--no-default-groups` tells uv to install none of the groups that

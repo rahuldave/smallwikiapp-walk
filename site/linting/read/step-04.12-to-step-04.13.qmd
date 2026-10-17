@@ -21,16 +21,16 @@ git switch --detach 1f73d6af30cc
 just setup
 ```
 
-A person can forget to run `just check`. `pre-commit` runs three small checks of the files, then `just check`,
+A person can forget to run `just check`. [`pre-commit`](https://pre-commit.com/) runs three small checks of the files, then `just check`,
 before each `git commit`.
 
 ## 4.12 `pre-commit`, in the group lint {#step-04.12}
 
-`just check` runs every check, but a person must remember to run it. A `pre-commit` hook is a program that git runs
+`just check` runs every check, but a person must remember to run it. A [`pre-commit`](https://pre-commit.com/) hook is a program that git runs
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
-[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+pre-commit manages git hooks. A file lists the hooks, and `pre-commit` installs each in
 an environment of its own, and runs them on the files of a change.
 
 This change came from running `uv add --group lint pre-commit`.

@@ -25,11 +25,11 @@ The linter does not check types. The next verb runs a type checker, and `check` 
 
 ## 5.1 ty, in the group lint {#step-05.1}
 
-Nothing checks the types of the code yet. ty is a type checker. It reads the code without running it, and finds
+Nothing checks the types of the code yet. [ty](https://docs.astral.sh/ty/) is a type checker. It reads the code without running it, and finds
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
 
-[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+ty is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
 the work of older checkers such as mypy and pyright.
 
 This change came from running `uv add --group lint ty`.

@@ -6,13 +6,31 @@ title: "uv in smallwikiapp"
 
 This walk is one of several through the project. The website of the first, [smallwikiapp, one change at a time](../), lists them all.
 
-We manage the packages of `wikiapp` with uv. `wikiapp` is a small command that prints the title and the summary of
+We manage the packages of `wikiapp` with [uv](https://docs.astral.sh/uv/). `wikiapp` is a small command that prints the title and the summary of
 a random Wikipedia page. A project must install the same packages on every machine, and keep the tools of its
 authors apart from what its users get. uv makes the project, installs its packages, runs its tools, and builds it.
 This tutorial takes the parts about uv out of the whole tutorial of smallwikiapp.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the text says "the original wikiapp", it means that project.
+
+[`just`](https://just.systems/) runs the tasks that the file `justfile` lists. For example, `just setup` has uv install the
+packages that the project needs. A package is code that other people wrote.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end of the whole tutorial, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
 
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
 file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files

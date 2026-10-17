@@ -22,7 +22,7 @@ just setup
 ```
 
 We cannot tell whether `wikiapp` still works after a change, unless we run it by hand and read what it prints.
-Tests run it for us. pytest finds the tests and runs them, and a recipe `just test` runs pytest.
+Tests run it for us. [pytest](https://docs.pytest.org/) finds the tests and runs them, and a recipe `just test` runs pytest.
 
 The command asks the real Wikipedia, and a test cannot know which page comes back. So a mock takes the place of
 `requests.get`, and returns a page that the tests know. Last, coverage shows which lines of the code the tests run.
@@ -128,10 +128,10 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 ## 2.3 pytest, in the group test {#step-02.3}
 
-The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
+The test needs [pytest](https://docs.pytest.org/). `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
 
-[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+pytest is the test runner of most Python projects. It finds each function whose name
 starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
 values on both sides.
 
@@ -273,10 +273,10 @@ The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 ## 2.6 pytest-mock, in the group test {#step-02.6}
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page. A mock
-solves both. pytest-mock replaces a function with a mock for the length of one test. Its fixture `mocker` does
+solves both. [pytest-mock](https://pytest-mock.readthedocs.io/) replaces a function with a mock for the length of one test. Its fixture `mocker` does
 this, and puts the function back after the test. pytest-mock goes in the group `test`.
 
-[pytest-mock](https://pytest-mock.readthedocs.io/) is a plugin of pytest. Python's standard library already has
+pytest-mock is a plugin of pytest. Python's standard library already has
 mocks, in `unittest.mock`. pytest-mock gives them to a test through a fixture, so each mock ends with its test.
 
 This change came from running `uv add --group test pytest-mock`.
@@ -475,10 +475,10 @@ The result is `5 passed`.
 
 ## 2.10 pytest-cov, in the group test {#step-02.10}
 
-The tests pass, but we do not know which lines of the code they run. pytest-cov measures that, when pytest gets the
+The tests pass, but we do not know which lines of the code they run. [pytest-cov](https://pytest-cov.readthedocs.io/) measures that, when pytest gets the
 option `--cov`. It goes in the group `test`.
 
-[pytest-cov](https://pytest-cov.readthedocs.io/) is a plugin of pytest. It runs the tests under coverage.py, which
+pytest-cov is a plugin of pytest. It runs the tests under coverage.py, which
 records each line that runs, and it prints the report at the end.
 
 This change came from running `uv add --group test pytest-cov`.

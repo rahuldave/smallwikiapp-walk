@@ -17,6 +17,25 @@ then gets its code, and the format and the lint check that code and its tests.
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote
 in 2024 with pixi. Where the text says "the original wikiapp", it means that project.
 
+The project uses [uv](https://docs.astral.sh/uv/) and [`just`](https://just.systems/). uv installs Python and the project's packages, which are
+code that other people wrote. It also runs commands with them. `uv init` is the command of uv that made the project. `just` runs the tasks that the file
+`justfile` lists. For example, `just setup` has uv install the packages that the project needs.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end of the whole tutorial, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
+
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
 file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
 against it.
@@ -45,7 +64,7 @@ Each kind of check comes in at the section in the table.
 |---|---|---|
 | Formatter | Changes how the code looks, never what it does | Section 3 |
 | Linter | Finds problems in the code, against rules | Section 4 |
-| A fix by the tool | A fix that ruff counts as safe, such as the order of imports | Section 5 |
+| A fix by the tool | A fix that [ruff](https://docs.astral.sh/ruff/) counts as safe, such as the order of imports | Section 5 |
 | A fix by a person | The rest. ruff has no fix for some problems, and marks others unsafe | Section 5 |
 | A check of the configuration | Finds errors in `pyproject.toml`, the lockfile and the justfile | Sections 6 and 10 |
 | One recipe for every check | `just check` runs every check, one after the other | Section 7 |
@@ -542,14 +561,14 @@ that, then the request, then a header that Wikipedia asks for, and last an optio
 
 ### 1.1 click and requests
 
-The command needs two packages that Python does not have. click makes command lines, with options and help.
-requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
+The command needs two packages that Python does not have. [click](https://click.palletsprojects.com/) makes command lines, with options and help.
+[requests](https://requests.readthedocs.io/) gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
-[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+click comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
 function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
-the function. [requests](https://requests.readthedocs.io/)
+the function. requests
 is a widely used library for HTTP. One call, `requests.get`, fetches a page.
 
 This change came from running `uv add click requests`.
@@ -795,7 +814,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 just setup
 ```
 
-The code now also has tests, and pytest runs them. pytest is in a dependency group `test`, a named list of
+The code now also has tests, and [pytest](https://docs.pytest.org/) runs them. pytest is in a dependency group `test`, a named list of
 packages in `pyproject.toml`, and uv installs every group. In the tests, a mock takes the place of Wikipedia, so
 the tests never ask the real site. Each run of the tests also measures the coverage, the share of the lines of
 code that the tests run.
@@ -804,7 +823,7 @@ The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`. The library takes a language
 and raises its own error, `WikipediaError`, and the command prints it as a message.
 
-The code mixes styles, and nothing keeps one style. ruff comes in, in a new group `lint`, and `just fmt` formats
+The code mixes styles, and nothing keeps one style. [ruff](https://docs.astral.sh/ruff/) comes in, in a new group `lint`, and `just fmt` formats
 the code and the tests.
 
 <a id="step-04.1"></a>
@@ -813,10 +832,10 @@ the code and the tests.
 
 The code has no one style, so a later change can mix a fix with a change of blank lines and quotes. A formatter
 changes how the code looks, and never what it does. A linter finds problems in the code, such as a variable that
-is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
+is never used, and changes nothing unless it is asked to. [ruff](https://docs.astral.sh/ruff/) is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
-[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+ruff comes from Astral, as uv does, and is written in Rust. It does the work of
 older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
 
 This change came from running `uv add --group lint ruff`.
@@ -1434,10 +1453,10 @@ The linter reads the Python code, and nothing checks the files that set up the p
 ### 4.8 validate-pyproject, in the group lint
 
 The tests and the linter check the code, and not the configuration. So an error in `pyproject.toml`, in the
-lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
+lockfile or in the `justfile` passes them all. [validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
-[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+validate-pyproject checks `pyproject.toml` against JSON schemas of
 the standards that define the file.
 
 This change came from running `uv add --group lint validate-pyproject`.
@@ -1615,18 +1634,18 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 just setup
 ```
 
-A person can forget to run `just check`. `pre-commit` runs three small checks of the files, then `just check`,
+A person can forget to run `just check`. [`pre-commit`](https://pre-commit.com/) runs three small checks of the files, then `just check`,
 before each `git commit`.
 
 <a id="step-04.12"></a>
 
 ### 4.12 `pre-commit`, in the group lint
 
-`just check` runs every check, but a person must remember to run it. A `pre-commit` hook is a program that git runs
+`just check` runs every check, but a person must remember to run it. A [`pre-commit`](https://pre-commit.com/) hook is a program that git runs
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
-[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+pre-commit manages git hooks. A file lists the hooks, and `pre-commit` installs each in
 an environment of its own, and runs them on the files of a change.
 
 This change came from running `uv add --group lint pre-commit`.
@@ -1772,7 +1791,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 just setup
 ```
 
-The code now also has ty, a type checker, which `just types` runs. A type says what kind of value a name has, for
+The code now also has [ty](https://docs.astral.sh/ty/), a type checker, which `just types` runs. A type says what kind of value a name has, for
 example a string or a number. The code found the name of its package with
 `__name__ or __package__`. It gave that name to `importlib.metadata.version`, which looks up the version of a
 package. ty found that the name could be None, the value Python uses for no value at all, but
@@ -1908,7 +1927,7 @@ The code has its types, and `just lint` still finds 22 missing in the tests. A t
 of a fixture is the type of what a test receives.
 
 The mock of `requests.get` is a `Mock`. `mocker` is
-pytest-mock's `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
+[pytest-mock](https://pytest-mock.readthedocs.io/)'s `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
 `tests/conftest.py` imports `Mock` and `MockerFixture`, and its fixture states both types.
 
 [± See the change to `tests/conftest.py`](#step-05.6-tests-conftest.py-626af3-diff)
@@ -2080,8 +2099,8 @@ The code now also has the type checker in `just check`. The project accepts any 
 to main, GitHub runs the tests and `just check`, and it publishes a site with the docs.
 
 `random_page`, the function of the library that asks Wikipedia for a random page, returns a `Page`. A `Page`
-has a title and a summary, and pydantic, a library that checks data, checks that the answer of Wikipedia has
-both. smalldocs documents the code, and `just check` runs the check of
+has a title and a summary, and [pydantic](https://docs.pydantic.dev/), a library that checks data, checks that the answer of Wikipedia has
+both. [smalldocs](https://docs.smallish.dev/) documents the code, and `just check` runs the check of
 the docs. The library is a package of its own, `packages/wikirandom`, with its own `pyproject.toml`. `just build`
 builds both packages. The app is the package `wikiapp`, and it needs a 0.1 version of wikirandom.
 

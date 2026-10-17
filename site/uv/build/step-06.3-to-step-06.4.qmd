@@ -25,7 +25,8 @@ just setup
 ```
 
 The code now also has `just check`, which runs every check, and a git hook runs it before each `git commit`.
-`pre-commit` and ty, a type checker, are in the group `lint`, and `just check` runs ty. The tests that ask the real
+[`pre-commit`](https://pre-commit.com/) installs that hook, and [ty](https://docs.astral.sh/ty/) is a type checker. Both are in
+the group `lint`, and `just check` runs ty. The tests that ask the real
 Wikipedia run only on request.
 
 The project runs on one Python, and its users may have an older one. `.python-version` says which Python `.venv`

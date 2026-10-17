@@ -21,7 +21,7 @@ git switch --detach step-01
 just setup
 ```
 
-We can check the command only by running it and reading what it prints. pytest runs tests for us, and `just test`
+We can check the command only by running it and reading what it prints. [pytest](https://docs.pytest.org/) runs tests for us, and `just test`
 runs them all.
 
 ## 2.1 uv installs every dependency group {#step-02.1}
@@ -124,10 +124,10 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 ## 2.3 pytest, in the group test {#step-02.3}
 
-The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
+The test needs [pytest](https://docs.pytest.org/). `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
 
-[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+pytest is the test runner of most Python projects. It finds each function whose name
 starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
 values on both sides.
 

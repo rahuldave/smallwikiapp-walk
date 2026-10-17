@@ -21,10 +21,10 @@ git switch --detach step-05
 just setup
 ```
 
-The code now also has a git hook, which `just hook` installs. Before each `git commit`, `pre-commit` runs three
+The code now also has a git hook, which `just hook` installs. Before each `git commit`, [`pre-commit`](https://pre-commit.com/) runs three
 small checks of the files, then `just check`.
 
-The code also has ty, a type checker. A type says what kind of value a name has, for example a string or a
+The code also has [ty](https://docs.astral.sh/ty/), a type checker. A type says what kind of value a name has, for example a string or a
 number. Each function of the code and the tests now names the types of its arguments and of the value it returns.
 `random_page` returns `dict[str, Any]`, a dictionary whose keys are strings, and `just check` runs ty too. The
 command also looks up its version by the fixed name of its package, `wikiapp`.

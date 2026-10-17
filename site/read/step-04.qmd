@@ -27,16 +27,16 @@ reports mistakes that the tests do not find. Each tool first shows what it would
 change. Then a recipe checks the configuration, another runs every check, and a git hook runs them all before git
 records a change.
 
-The tests still need the network. `pre-commit` downloads its hooks from GitHub the first time it runs.
+The tests still need the network. [`pre-commit`](https://pre-commit.com/) downloads its hooks from GitHub the first time it runs.
 
 ## 4.1 ruff, in the group lint {#step-04.1}
 
 The code has no one style, so a later change can mix a fix with a change of blank lines and quotes. A formatter
 changes how the code looks, and never what it does. A linter finds problems in the code, such as a variable that
-is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
+is never used, and changes nothing unless it is asked to. [ruff](https://docs.astral.sh/ruff/) is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
-[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+ruff comes from Astral, as uv does, and is written in Rust. It does the work of
 older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
 
 This change came from running `uv add --group lint ruff`.
@@ -596,10 +596,10 @@ just lint
 ## 4.8 validate-pyproject, in the group lint {#step-04.8}
 
 The tests and the linter check the code, and not the configuration. So an error in `pyproject.toml`, in the
-lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
+lockfile or in the `justfile` passes them all. [validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
-[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+validate-pyproject checks `pyproject.toml` against JSON schemas of
 the standards that define the file.
 
 This change came from running `uv add --group lint validate-pyproject`.
@@ -787,11 +787,11 @@ just check
 
 ## 4.12 `pre-commit`, in the group lint {#step-04.12}
 
-`just check` runs every check, but a person must remember to run it. A `pre-commit` hook is a program that git runs
+`just check` runs every check, but a person must remember to run it. A [`pre-commit`](https://pre-commit.com/) hook is a program that git runs
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
-[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+pre-commit manages git hooks. A file lists the hooks, and `pre-commit` installs each in
 an environment of its own, and runs them on the files of a change.
 
 This change came from running `uv add --group lint pre-commit`.

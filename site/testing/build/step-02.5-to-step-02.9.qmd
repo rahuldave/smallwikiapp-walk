@@ -95,10 +95,10 @@ git restore --source 45807a0ddd9f --staged -- :/ && git restore --source 8435ae5
 ## 2.6 pytest-mock, in the group test {#step-02.6}
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page. A mock
-solves both. pytest-mock replaces a function with a mock for the length of one test. Its fixture `mocker` does
+solves both. [pytest-mock](https://pytest-mock.readthedocs.io/) replaces a function with a mock for the length of one test. Its fixture `mocker` does
 this, and puts the function back after the test. pytest-mock goes in the group `test`.
 
-[pytest-mock](https://pytest-mock.readthedocs.io/) is a plugin of pytest. Python's standard library already has
+pytest-mock is a plugin of pytest. Python's standard library already has
 mocks, in `unittest.mock`. pytest-mock gives them to a test through a fixture, so each mock ends with its test.
 
 ```bash

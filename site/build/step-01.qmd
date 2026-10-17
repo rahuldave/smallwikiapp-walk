@@ -23,14 +23,14 @@ that, then the request, then a header that Wikipedia asks for, and last an optio
 
 ## 1.1 click and requests {#step-01.1}
 
-The command needs two packages that Python does not have. click makes command lines, with options and help.
-requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
+The command needs two packages that Python does not have. [click](https://click.palletsprojects.com/) makes command lines, with options and help.
+[requests](https://requests.readthedocs.io/) gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
-[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+click comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
 function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
-the function. [requests](https://requests.readthedocs.io/)
+the function. requests
 is a widely used library for HTTP. One call, `requests.get`, fetches a page.
 
 ```bash

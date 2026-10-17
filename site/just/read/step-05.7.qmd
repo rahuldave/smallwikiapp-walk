@@ -22,7 +22,7 @@ just setup
 ```
 
 In the code now, `__init__.py` asks for the version of `"wikiapp"` by name, which fixes the one problem that
-ty found. A family of rules, `ANN`, asks for a type on every parameter and return. The code and the tests have
+[ty](https://docs.astral.sh/ty/), the type checker, found. A family of rules, `ANN`, asks for a type on every parameter and return. The code and the tests have
 their types.
 
 `just check` does not run the type checker yet. One line in `check` runs it.

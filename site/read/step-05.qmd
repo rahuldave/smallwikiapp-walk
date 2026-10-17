@@ -28,11 +28,11 @@ so that it has something to check.
 
 ## 5.1 ty, in the group lint {#step-05.1}
 
-Nothing checks the types of the code yet. ty is a type checker. It reads the code without running it, and finds
+Nothing checks the types of the code yet. [ty](https://docs.astral.sh/ty/) is a type checker. It reads the code without running it, and finds
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
 
-[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+ty is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
 the work of older checkers such as mypy and pyright.
 
 This change came from running `uv add --group lint ty`.
@@ -276,7 +276,7 @@ The code has its types, and `just lint` still finds 22 missing in the tests. A t
 of a fixture is the type of what a test receives.
 
 The mock of `requests.get` is a `Mock`. `mocker` is
-pytest-mock's `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
+[pytest-mock](https://pytest-mock.readthedocs.io/)'s `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
 `tests/conftest.py` imports `Mock` and `MockerFixture`, and its fixture states both types.
 
 [± See the change to `tests/conftest.py`](#step-05.6-tests-conftest.py-626af3-diff){.btn .btn-sm .btn-secondary}

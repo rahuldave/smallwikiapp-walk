@@ -21,7 +21,7 @@ git switch --detach 1baf0602c1d1
 just setup
 ```
 
-The code now also has pydantic, a library that checks data. In `wikipedia.py`, `Page` is a pydantic model, a
+The code now also has [pydantic](https://docs.pydantic.dev/), a library that checks data. In `wikipedia.py`, `Page` is a pydantic model, a
 class with two fields, `title` and `extract`, the summary. pydantic checks that the answer of Wikipedia has both,
 as strings.
 

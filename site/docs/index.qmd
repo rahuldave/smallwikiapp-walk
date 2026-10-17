@@ -8,7 +8,7 @@ This walk is one of several through the project. The website of the first, [smal
 
 We document `wikiapp`, a small command that prints the title and the summary of a random Wikipedia page. A person
 who calls the code needs to know what each part does. A person who reads the project on GitHub needs to know where
-each part is. smalldocs makes a reference from the docstrings of the code, and counts what has none.
+each part is. [smalldocs](https://docs.smallish.dev/) makes a reference from the docstrings of the code, and counts what has none.
 
 This tutorial takes the parts about documentation out of the whole tutorial of smallwikiapp. It starts from the
 project that `uv init` made, for Python 3.13. The command then gets its code. The documentation comes after,
@@ -16,6 +16,25 @@ when the code has tests, lint and types.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the text says "the original wikiapp", it means that project.
+
+The project uses [uv](https://docs.astral.sh/uv/) and [`just`](https://just.systems/). uv installs Python and the project's packages, which are
+code that other people wrote. It also runs commands with them. `uv init` is the command of uv that made the project. `just` runs the tasks that the file
+`justfile` lists. For example, `just setup` has uv install the packages that the project needs.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end of the whole tutorial, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
 
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
 file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
@@ -45,7 +64,7 @@ The table gives each kind of documentation, and the sections where it appears.
 | Kind | Who reads it, and what it says | Where |
 |---|---|---|
 | README | A reader on GitHub. What the project is, and where each part is | Sections 1 and 8 |
-| Help text | A person who runs the command. click, the library that the command is built on, writes it from the docstring and the options | Sections 2 and 5 |
+| Help text | A person who runs the command. [click](https://click.palletsprojects.com/), the library that the command is built on, writes it from the docstring and the options | Sections 2 and 5 |
 | Reference | A person who calls the code. smalldocs makes it from the code | Sections 3, 7 and 11 |
 | Docstring | What a module, a class or a function does | Sections 1 to 6 |
 | Docment | What each parameter, field and return is | Sections 3 to 6 |

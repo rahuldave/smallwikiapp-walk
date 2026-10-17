@@ -16,6 +16,25 @@ project that `uv init` made, for Python 3.13. Then the command gets its code, an
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote
 in 2024 with pixi. Where the text says "the original wikiapp", it means that project.
 
+The project uses [uv](https://docs.astral.sh/uv/) and [`just`](https://just.systems/). uv installs Python and the project's packages, which are
+code that other people wrote. It also runs commands with them. `uv init` is the command of uv that made the project. `just` runs the tasks that the file
+`justfile` lists. For example, `just setup` has uv install the packages that the project needs.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end of the whole tutorial, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
+
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
 file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
 against it.
@@ -664,14 +683,14 @@ that, then the request, then a header that Wikipedia asks for, and last an optio
 
 ### 1.1 click and requests
 
-The command needs two packages that Python does not have. click makes command lines, with options and help.
-requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
+The command needs two packages that Python does not have. [click](https://click.palletsprojects.com/) makes command lines, with options and help.
+[requests](https://requests.readthedocs.io/) gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
-[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+click comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
 function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
-the function. [requests](https://requests.readthedocs.io/)
+the function. requests
 is a widely used library for HTTP. One call, `requests.get`, fetches a page.
 
 ```bash
@@ -983,7 +1002,7 @@ This walk goes through [rahuldave/smallwikiapp](https://github.com/rahuldave/sma
 just setup
 ```
 
-We can check the command only by running it and reading what it prints. pytest runs tests for us, and `just test`
+We can check the command only by running it and reading what it prints. [pytest](https://docs.pytest.org/) runs tests for us, and `just test`
 runs them all.
 
 <a id="step-02.1"></a>
@@ -1162,10 +1181,10 @@ git restore --source 46dc20fb9092 --staged -- :/ && git restore --source 6d7a6cf
 
 ### 2.3 pytest, in the group test
 
-The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
+The test needs [pytest](https://docs.pytest.org/). `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
 
-[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+pytest is the test runner of most Python projects. It finds each function whose name
 starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
 values on both sides.
 
@@ -1376,10 +1395,10 @@ git restore --source 45807a0ddd9f --staged -- :/ && git restore --source 8435ae5
 ### 2.6 pytest-mock, in the group test
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page. A mock
-solves both. pytest-mock replaces a function with a mock for the length of one test. Its fixture `mocker` does
+solves both. [pytest-mock](https://pytest-mock.readthedocs.io/) replaces a function with a mock for the length of one test. Its fixture `mocker` does
 this, and puts the function back after the test. pytest-mock goes in the group `test`.
 
-[pytest-mock](https://pytest-mock.readthedocs.io/) is a plugin of pytest. Python's standard library already has
+pytest-mock is a plugin of pytest. Python's standard library already has
 mocks, in `unittest.mock`. pytest-mock gives them to a test through a fixture, so each mock ends with its test.
 
 ```bash
@@ -1659,10 +1678,10 @@ the coverage, the share of the lines that the tests run.
 
 ### 2.10 pytest-cov, in the group test
 
-The tests pass, but we do not know which lines of the code they run. pytest-cov measures that, when pytest gets the
+The tests pass, but we do not know which lines of the code they run. [pytest-cov](https://pytest-cov.readthedocs.io/) measures that, when pytest gets the
 option `--cov`. It goes in the group `test`.
 
-[pytest-cov](https://pytest-cov.readthedocs.io/) is a plugin of pytest. It runs the tests under coverage.py, which
+pytest-cov is a plugin of pytest. It runs the tests under coverage.py, which
 records each line that runs, and it prints the report at the end.
 
 ```bash
@@ -2204,7 +2223,7 @@ git fetch --quiet --tags --force origin; git restore --source step-03 --staged -
 just setup
 ```
 
-The code now also has ruff, a tool that checks Python code. A recipe is a named task of the justfile, such as `fmt`
+The code now also has [ruff](https://docs.astral.sh/ruff/), a tool that checks Python code. A recipe is a named task of the justfile, such as `fmt`
 or `lint`. `just fmt` makes ruff lay out the code and the tests
 in one fixed way. `just lint` makes ruff check them against a list of rules. `just lint-config` checks the
 settings in `pyproject.toml`, the lockfile and the justfile.
@@ -2298,10 +2317,10 @@ git fetch --quiet --tags --force origin; git restore --source 1f73d6af30cc --sta
 just setup
 ```
 
-The code now also has a git hook, which `just hook` installs. Before each `git commit`, `pre-commit` runs three
+The code now also has a git hook, which `just hook` installs. Before each `git commit`, [`pre-commit`](https://pre-commit.com/) runs three
 small checks of the files, then `just check`.
 
-The code also has ty, a type checker. A type says what kind of value a name has, for example a string or a
+The code also has [ty](https://docs.astral.sh/ty/), a type checker. A type says what kind of value a name has, for example a string or a
 number. Each function of the code and the tests now names the types of its arguments and of the value it returns.
 `random_page` returns `dict[str, Any]`, a dictionary whose keys are strings, and `just check` runs ty too. The
 command also looks up its version by the fixed name of its package, `wikiapp`.
@@ -2726,7 +2745,7 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
 thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
-part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
+part of the tutorial publishes the docs with [GitHub Pages](https://docs.github.com/en/pages), and lists each setting that a fork needs.
 
 Check your files against this move. The command prints nothing when they match, and otherwise shows what differs:
 
@@ -2812,7 +2831,7 @@ git fetch --quiet --tags --force origin; git restore --source step-06 --staged -
 just setup
 ```
 
-The code now also has pydantic, a library that checks data. In `wikipedia.py`, `Page` is a pydantic model, a
+The code now also has [pydantic](https://docs.pydantic.dev/), a library that checks data. In `wikipedia.py`, `Page` is a pydantic model, a
 class with two fields, `title` and `extract`, the summary. pydantic checks that the answer of Wikipedia has both,
 as strings.
 
@@ -3176,7 +3195,8 @@ git fetch --quiet --tags --force origin; git restore --source step-07 --staged -
 just setup
 ```
 
-The code now also has smalldocs, in a group `docs`. The code and the tests have docstrings, and `just check` runs
+The code now also has [smalldocs](https://docs.smallish.dev/), which makes documentation from the code. It is in a
+dependency group `docs`, a named list of packages in `pyproject.toml`. The code and the tests have docstrings, and `just check` runs
 a check of the docs. `just docs` builds a site, and the README names the tests and the docs.
 
 GitHub installs every tool of the project to run the tests, and the tests need only pytest and its plugins. This

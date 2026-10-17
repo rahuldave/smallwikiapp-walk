@@ -7,13 +7,16 @@ title: "just, the interface of smallwikiapp"
 This walk is one of several through the project. The website of the first, [smallwikiapp, one change at a time](../), lists them all.
 
 We give `wikiapp` one way to run every task, a justfile. A justfile is a file of named tasks, and the program
-`just` runs them, as in `just test`. `wikiapp` is a small command that prints the title and the summary of a
+[`just`](https://just.systems/) runs them, as in `just test`. `wikiapp` is a small command that prints the title and the summary of a
 random Wikipedia page. Its project has many tools, each with its own options. A person, a git hook and GitHub
 must all run them the same way.
 
 The project is called smallwikiapp, and a longer tutorial builds all of it. This tutorial takes only the parts
 about the justfile out of that longer tutorial. It starts from the project that `uv init` made, for Python 3.13, and has a justfile
 from the start.
+
+`uv init` is a command of [uv](https://docs.astral.sh/uv/), the tool that installs Python and the project's packages,
+and runs commands with them.
 
 The justfile is the interface of the project. Each task is a verb, such as `just test`, and the recipe behind the
 verb names the tool that does the work. A person, a git hook and GitHub each run `just check`, and `check` runs
@@ -25,6 +28,21 @@ the recipe, and then the verb runs. The sections of `test` and `check` skip the 
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the text says "the original wikiapp", it means that project.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end of the whole tutorial, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
 
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
 file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
@@ -67,7 +85,7 @@ from their code.
 
 Some changes that this tutorial leaves out change what `just check` runs too. They change `pyproject.toml`, not
 the justfile. Before section 10, the rules `ANN` come into the linter. Before section 11, the end-to-end tests come in. They ask the
-real Wikipedia, and pytest leaves them out of each run that does not ask for them, `just check` included. Before section 15, the floor on the coverage counts both
+real Wikipedia, and [pytest](https://docs.pytest.org/) leaves them out of each run that does not ask for them, `just check` included. Before section 15, the floor on the coverage counts both
 packages.
 
 **Who runs `just check`**

@@ -21,7 +21,8 @@ git switch --detach step-08
 just setup
 ```
 
-The code now also has smalldocs, in a group `docs`. The code and the tests have docstrings, and `just check` runs
+The code now also has [smalldocs](https://docs.smallish.dev/), which makes documentation from the code. It is in a
+dependency group `docs`, a named list of packages in `pyproject.toml`. The code and the tests have docstrings, and `just check` runs
 a check of the docs. `just docs` builds a site, and the README names the tests and the docs.
 
 GitHub installs every tool of the project to run the tests, and the tests need only pytest and its plugins. This

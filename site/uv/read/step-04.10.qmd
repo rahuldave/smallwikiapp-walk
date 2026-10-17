@@ -21,10 +21,14 @@ git switch --detach d8a9c8f71eb5
 just setup
 ```
 
-The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
+The code now also has [pytest-mock](https://pytest-mock.readthedocs.io/) and [pytest-cov](https://pytest-cov.readthedocs.io/), in the
+group `test`. Each adds to pytest. pytest-mock gives a test its mocks, and pytest-cov measures which lines the tests
+run. The project now has tests that use a
 mock, a stand-in that answers in place of Wikipedia with no network. It also has recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
-of its own, `src/wikiapp/wikipedia.py`. ruff and
-validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
+of its own, `src/wikiapp/wikipedia.py`.
+
+[ruff](https://docs.astral.sh/ruff/) formats the code and checks
+it for common mistakes. [validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml`. Both are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.
 
 A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. But with no option, `uv run` resolves

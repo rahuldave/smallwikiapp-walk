@@ -19,18 +19,18 @@ just setup
 ```
 
 `random_page` returns the dictionary that Wikipedia sends, and the code uses its title and its extract.
-Nothing checks that the dictionary has them. We give a page a shape, with a pydantic model. `random_page` returns a page of that shape, and an
+Nothing checks that the dictionary has them. We give a page a shape, with a [pydantic](https://docs.pydantic.dev/) model. `random_page` returns a page of that shape, and an
 answer that is not a page becomes an error like any other. Last, the code checks that the language is a language
 code before it puts it into the address.
 
 ## 7.1 pydantic {#step-07.1}
 
 The command uses two of the many keys that Wikipedia sends. The code expects them to be there, with strings as
-values, but nothing checks it. pydantic is a library that checks data against a model, and a model states the two
+values, but nothing checks it. [pydantic](https://docs.pydantic.dev/) is a library that checks data against a model, and a model states the two
 keys and their types in code. pydantic is a dependency of the package, as click and requests are, so `uv add` puts
 it in `dependencies`.
 
-[pydantic](https://docs.pydantic.dev/) is a widely used Python library. When the code makes a page from the data,
+pydantic is a widely used Python library. When the code makes a page from the data,
 pydantic checks each value against the type that the model gives it. A value that does not fit raises an error.
 
 ```bash

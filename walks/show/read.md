@@ -7,7 +7,7 @@
 Each part ends with a section called **What changed**. It lists every file that the part changes, with a link to the file, and then the whole diff of each file, folded. A lockfile and a binary file have a link alone. The text above it explains the change.
 
 We build `wikiapp`, a small command that prints the title and the summary of a random Wikipedia page. Around the
-command we build the project. A tool called uv installs the project's packages, which are code that other people wrote and
+command we build the project. A tool called [uv](https://docs.astral.sh/uv/) installs the project's packages, which are code that other people wrote and
 that the project uses. The project also gets tests, a library, a formatter for the layout of the code, and a linter
 for likely mistakes. It gets a check that each value in the code is the kind of value that the code expects. It also gets checks on
 GitHub, documentation made from the code, and a build.
@@ -18,12 +18,27 @@ with no patch. In **Build it yourself**, you make each move by hand, and then a 
 tutorial**, each move is already made, and the text explains what changed.
 
 Each move first says what problem it solves. Then it gives the change, piece by piece, and a command that checks
-the result. Each larger part of the tutorial starts with the command `just setup`. The tool `just` runs
+the result. Each larger part of the tutorial starts with the command `just setup`. The tool [`just`](https://just.systems/) runs
 short commands that the project names. `just setup` asks uv to install the packages that the code needs at that
 point.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi, another tool that installs a project's packages. Where the text says "the original wikiapp", it means that project.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
 
 Five shorter tutorials take parts of this one. Each has its own site, for
 [testing](https://rahuldave.com/smallwikiapp-walk/testing/),
@@ -516,14 +531,14 @@ that, then the request, then a header that Wikipedia asks for, and last an optio
 
 ### 1.1 click and requests
 
-The command needs two packages that Python does not have. click makes command lines, with options and help.
-requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
+The command needs two packages that Python does not have. [click](https://click.palletsprojects.com/) makes command lines, with options and help.
+[requests](https://requests.readthedocs.io/) gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
-[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+click comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
 function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
-the function. [requests](https://requests.readthedocs.io/)
+the function. requests
 is a widely used library for HTTP. One call, `requests.get`, fetches a page.
 
 This change came from running `uv add click requests`.
@@ -770,7 +785,7 @@ just setup
 ```
 
 We cannot tell whether `wikiapp` still works after a change, unless we run it by hand and read what it prints.
-Tests run it for us. pytest finds the tests and runs them, and a recipe `just test` runs pytest.
+Tests run it for us. [pytest](https://docs.pytest.org/) finds the tests and runs them, and a recipe `just test` runs pytest.
 
 The command asks the real Wikipedia, and a test cannot know which page comes back. So a mock takes the place of
 `requests.get`, and returns a page that the tests know. Last, coverage shows which lines of the code the tests run.
@@ -882,10 +897,10 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 ### 2.3 pytest, in the group test
 
-The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
+The test needs [pytest](https://docs.pytest.org/). `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
 
-[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+pytest is the test runner of most Python projects. It finds each function whose name
 starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
 values on both sides.
 
@@ -1033,10 +1048,10 @@ The test passes as before, with `1 passed`. It still asks the real Wikipedia.
 ### 2.6 pytest-mock, in the group test
 
 A test that needs the network fails on a train. Also, a test cannot check the title of a random page. A mock
-solves both. pytest-mock replaces a function with a mock for the length of one test. Its fixture `mocker` does
+solves both. [pytest-mock](https://pytest-mock.readthedocs.io/) replaces a function with a mock for the length of one test. Its fixture `mocker` does
 this, and puts the function back after the test. pytest-mock goes in the group `test`.
 
-[pytest-mock](https://pytest-mock.readthedocs.io/) is a plugin of pytest. Python's standard library already has
+pytest-mock is a plugin of pytest. Python's standard library already has
 mocks, in `unittest.mock`. pytest-mock gives them to a test through a fixture, so each mock ends with its test.
 
 This change came from running `uv add --group test pytest-mock`.
@@ -1243,10 +1258,10 @@ The result is `5 passed`.
 
 ### 2.10 pytest-cov, in the group test
 
-The tests pass, but we do not know which lines of the code they run. pytest-cov measures that, when pytest gets the
+The tests pass, but we do not know which lines of the code they run. [pytest-cov](https://pytest-cov.readthedocs.io/) measures that, when pytest gets the
 option `--cov`. It goes in the group `test`.
 
-[pytest-cov](https://pytest-cov.readthedocs.io/) is a plugin of pytest. It runs the tests under coverage.py, which
+pytest-cov is a plugin of pytest. It runs the tests under coverage.py, which
 records each line that runs, and it prints the report at the end.
 
 This change came from running `uv add --group test pytest-cov`.
@@ -1832,7 +1847,7 @@ reports mistakes that the tests do not find. Each tool first shows what it would
 change. Then a recipe checks the configuration, another runs every check, and a git hook runs them all before git
 records a change.
 
-The tests still need the network. `pre-commit` downloads its hooks from GitHub the first time it runs.
+The tests still need the network. [`pre-commit`](https://pre-commit.com/) downloads its hooks from GitHub the first time it runs.
 
 <a id="step-04.1"></a>
 
@@ -1840,10 +1855,10 @@ The tests still need the network. `pre-commit` downloads its hooks from GitHub t
 
 The code has no one style, so a later change can mix a fix with a change of blank lines and quotes. A formatter
 changes how the code looks, and never what it does. A linter finds problems in the code, such as a variable that
-is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
+is never used, and changes nothing unless it is asked to. [ruff](https://docs.astral.sh/ruff/) is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
-[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+ruff comes from Astral, as uv does, and is written in Rust. It does the work of
 older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
 
 This change came from running `uv add --group lint ruff`.
@@ -2417,10 +2432,10 @@ just lint
 ### 4.8 validate-pyproject, in the group lint
 
 The tests and the linter check the code, and not the configuration. So an error in `pyproject.toml`, in the
-lockfile or in the `justfile` passes them all. validate-pyproject checks `pyproject.toml` against the standard for
+lockfile or in the `justfile` passes them all. [validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against the standard for
 it. It goes in the group `lint`.
 
-[validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml` against JSON schemas of
+validate-pyproject checks `pyproject.toml` against JSON schemas of
 the standards that define the file.
 
 This change came from running `uv add --group lint validate-pyproject`.
@@ -2616,11 +2631,11 @@ just check
 
 ### 4.12 `pre-commit`, in the group lint
 
-`just check` runs every check, but a person must remember to run it. A `pre-commit` hook is a program that git runs
+`just check` runs every check, but a person must remember to run it. A [`pre-commit`](https://pre-commit.com/) hook is a program that git runs
 before it records a change. If the program fails, git does not record the change. `pre-commit` installs such a hook, and
 runs the checks that the file `.pre-commit-config.yaml` names. It goes in the group `lint`.
 
-[pre-commit](https://pre-commit.com/) manages git hooks. A file lists the hooks, and `pre-commit` installs each in
+pre-commit manages git hooks. A file lists the hooks, and `pre-commit` installs each in
 an environment of its own, and runs them on the files of a change.
 
 This change came from running `uv add --group lint pre-commit`.
@@ -2775,11 +2790,11 @@ so that it has something to check.
 
 ### 5.1 ty, in the group lint
 
-Nothing checks the types of the code yet. ty is a type checker. It reads the code without running it, and finds
+Nothing checks the types of the code yet. [ty](https://docs.astral.sh/ty/) is a type checker. It reads the code without running it, and finds
 calls whose arguments cannot have the types that the function asks for.
 `uv add` puts ty in the group `lint`, with the other tools that check the code.
 
-[ty](https://docs.astral.sh/ty/) is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
+ty is Astral's type checker, written in Rust, like uv and ruff. It is new, and does
 the work of older checkers such as mypy and pyright.
 
 This change came from running `uv add --group lint ty`.
@@ -3033,7 +3048,7 @@ The code has its types, and `just lint` still finds 22 missing in the tests. A t
 of a fixture is the type of what a test receives.
 
 The mock of `requests.get` is a `Mock`. `mocker` is
-pytest-mock's `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
+[pytest-mock](https://pytest-mock.readthedocs.io/)'s `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
 `tests/conftest.py` imports `Mock` and `MockerFixture`, and its fixture states both types.
 
 [± See the change to `tests/conftest.py`](#step-05.6-tests-conftest.py-626af3-diff)
@@ -3512,7 +3527,7 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
 thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
-part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
+part of the tutorial publishes the docs with [GitHub Pages](https://docs.github.com/en/pages), and lists each setting that a fork needs.
 
 #### What changed
 
@@ -3581,7 +3596,7 @@ just setup
 ```
 
 `random_page` returns the dictionary that Wikipedia sends, and the code uses its title and its extract.
-Nothing checks that the dictionary has them. We give a page a shape, with a pydantic model. `random_page` returns a page of that shape, and an
+Nothing checks that the dictionary has them. We give a page a shape, with a [pydantic](https://docs.pydantic.dev/) model. `random_page` returns a page of that shape, and an
 answer that is not a page becomes an error like any other. Last, the code checks that the language is a language
 code before it puts it into the address.
 
@@ -3590,11 +3605,11 @@ code before it puts it into the address.
 ### 7.1 pydantic
 
 The command uses two of the many keys that Wikipedia sends. The code expects them to be there, with strings as
-values, but nothing checks it. pydantic is a library that checks data against a model, and a model states the two
+values, but nothing checks it. [pydantic](https://docs.pydantic.dev/) is a library that checks data against a model, and a model states the two
 keys and their types in code. pydantic is a dependency of the package, as click and requests are, so `uv add` puts
 it in `dependencies`.
 
-[pydantic](https://docs.pydantic.dev/) is a widely used Python library. When the code makes a page from the data,
+pydantic is a widely used Python library. When the code makes a page from the data,
 pydantic checks each value against the type that the model gives it. A value that does not fit raises an error.
 
 This change came from running `uv add pydantic`.
@@ -3967,7 +3982,7 @@ just setup
 ```
 
 A person who calls `random_page` must read its code to learn what it takes, what it returns and when it fails. We
-document the code, and let a tool, smalldocs, write the reference from it. smalldocs also lists what has no
+document the code, and let a tool, [smalldocs](https://docs.smallish.dev/), write the reference from it. smalldocs also lists what has no
 documentation, so `just check` can fail when a function has none. We document the library, the command and the tests. Then we
 build a site with a front page, and name the tests and the docs in the README.
 
@@ -4753,7 +4768,7 @@ just setup
 
 Every job on GitHub installs every dependency group, with every tool of the project, though most jobs need only a
 few. Also, the docs site exists only on the machine that builds it. So we make the job `tests` install the group `test`
-alone. Then a new workflow builds the docs site with the group `docs` alone, and GitHub Pages publishes it.
+alone. Then a new workflow builds the docs site with the group `docs` alone, and [GitHub Pages](https://docs.github.com/en/pages) publishes it.
 
 <a id="step-08b.1"></a>
 
@@ -4819,10 +4834,10 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 ### 8b.2 A workflow that publishes the docs
 
 `just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
-`.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
+`.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and [GitHub Pages](https://docs.github.com/en/pages) publishes it.
 
-[GitHub Pages](https://docs.github.com/en/pages) publishes a website from a repository, free for a public one. A
-workflow can build the site and give it to Pages.
+GitHub Pages publishes a website from a repository, free for a public one. A
+workflow of [GitHub Actions](https://docs.github.com/en/actions) can build the site and give it to Pages.
 
 The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
 `smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at

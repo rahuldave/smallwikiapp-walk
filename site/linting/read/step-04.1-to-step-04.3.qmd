@@ -21,7 +21,7 @@ git switch --detach step-03
 just setup
 ```
 
-The code now also has tests, and pytest runs them. pytest is in a dependency group `test`, a named list of
+The code now also has tests, and [pytest](https://docs.pytest.org/) runs them. pytest is in a dependency group `test`, a named list of
 packages in `pyproject.toml`, and uv installs every group. In the tests, a mock takes the place of Wikipedia, so
 the tests never ask the real site. Each run of the tests also measures the coverage, the share of the lines of
 code that the tests run.
@@ -30,17 +30,17 @@ The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`. The library takes a language
 and raises its own error, `WikipediaError`, and the command prints it as a message.
 
-The code mixes styles, and nothing keeps one style. ruff comes in, in a new group `lint`, and `just fmt` formats
+The code mixes styles, and nothing keeps one style. [ruff](https://docs.astral.sh/ruff/) comes in, in a new group `lint`, and `just fmt` formats
 the code and the tests.
 
 ## 4.1 ruff, in the group lint {#step-04.1}
 
 The code has no one style, so a later change can mix a fix with a change of blank lines and quotes. A formatter
 changes how the code looks, and never what it does. A linter finds problems in the code, such as a variable that
-is never used, and changes nothing unless it is asked to. ruff is both, in one program. It goes in a second group
+is never used, and changes nothing unless it is asked to. [ruff](https://docs.astral.sh/ruff/) is both, in one program. It goes in a second group
 of dependencies, `lint`, next to the group `test`.
 
-[ruff](https://docs.astral.sh/ruff/) comes from Astral, as uv does, and is written in Rust. It does the work of
+ruff comes from Astral, as uv does, and is written in Rust. It does the work of
 older tools, such as Black for the format, and flake8 and isort for the lint, much faster.
 
 This change came from running `uv add --group lint ruff`.

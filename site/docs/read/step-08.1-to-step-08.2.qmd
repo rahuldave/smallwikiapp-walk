@@ -22,20 +22,20 @@ just setup
 ```
 
 A dependency group is a named list of packages in `pyproject.toml`. The project uses them to test, check or
-document the code, but the code does not need them to run. The code now also has pytest, in a group `test`, and
+document the code, but the code does not need them to run. The code now also has [pytest](https://docs.pytest.org/), in a group `test`, and
 uv installs every group.
 
 The code has tests. In the tests, a stand-in called a mock answers in place of Wikipedia, so the tests need no
 network. Each run also measures coverage, which is the share of the lines of the code that the tests run. The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
 
-The code now also has ruff and ty, in a group `lint`. ruff formats the code, and lints it, which means that it
+The code now also has [ruff](https://docs.astral.sh/ruff/) and [ty](https://docs.astral.sh/ty/), in a group `lint`. ruff formats the code, and lints it, which means that it
 checks the code against a list of rules. ty checks the types, the kind of value, such as a string or a number,
 that each name has. `just check` runs every check. `just hook` installs a git hook, a script that git runs by
 itself before each `git commit`, and the hook runs `just check`.
 
 The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
-`random_page` returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of its fields.
+`random_page` returns a `Page`. A `Page` is a [pydantic](https://docs.pydantic.dev/) model, a class that checks the type of each of its fields.
 Its fields are a title and an extract. An answer that is not a page, or a
 language that is not a language code, raises `WikipediaError`.
 

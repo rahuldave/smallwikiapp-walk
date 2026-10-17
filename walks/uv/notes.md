@@ -1,10 +1,28 @@
-We manage the packages of `wikiapp` with uv. `wikiapp` is a small command that prints the title and the summary of
+We manage the packages of `wikiapp` with [uv](https://docs.astral.sh/uv/). `wikiapp` is a small command that prints the title and the summary of
 a random Wikipedia page. A project must install the same packages on every machine, and keep the tools of its
 authors apart from what its users get. uv makes the project, installs its packages, runs its tools, and builds it.
 This tutorial takes the parts about uv out of the whole tutorial of smallwikiapp.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the text says "the original wikiapp", it means that project.
+
+[`just`](https://just.systems/) runs the tasks that the file `justfile` lists. For example, `just setup` has uv install the
+packages that the project needs. A package is code that other people wrote.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end of the whole tutorial, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
 
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
 file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
@@ -77,7 +95,7 @@ $ just setup
 The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, a line
 that tells Wikipedia the name of the program that asks. `wikiapp --version` prints the version.
 
-The tests need pytest, and a user of the command does not. A dependency group is a list of packages for the
+The tests need [pytest](https://docs.pytest.org/), and a user of the command does not. A dependency group is a list of packages for the
 people who work on the project. By default uv installs only a group named `dev`. The project first sets
 `default-groups = "all"`, so that uv installs every group. Then the test tools, the linters and the docs tools can
 each have a group of their own.
@@ -112,10 +130,14 @@ name.
 
 $ just setup
 
-The code now also has pytest-mock and pytest-cov, in the group `test`. The project now has tests that use a
+The code now also has [pytest-mock](https://pytest-mock.readthedocs.io/) and [pytest-cov](https://pytest-cov.readthedocs.io/), in the
+group `test`. Each adds to pytest. pytest-mock gives a test its mocks, and pytest-cov measures which lines the tests
+run. The project now has tests that use a
 mock, a stand-in that answers in place of Wikipedia with no network. It also has recipes in the justfile that run each tool with `uv run`. The code that asks Wikipedia is now a library
-of its own, `src/wikiapp/wikipedia.py`. ruff and
-validate-pyproject are in a new group `lint`. `just lint-config` runs `uv lock --check`,
+of its own, `src/wikiapp/wikipedia.py`.
+
+[ruff](https://docs.astral.sh/ruff/) formats the code and checks
+it for common mistakes. [validate-pyproject](https://validate-pyproject.readthedocs.io/) checks `pyproject.toml`. Both are in a new group `lint`. `just lint-config` runs `uv lock --check`,
 which fails if the lockfile is out of date with `pyproject.toml`.
 
 A recipe should fail when `pyproject.toml` changes and nobody runs `uv lock`. But with no option, `uv run` resolves
@@ -137,7 +159,8 @@ section 10, still works.
 $ just setup
 
 The code now also has `just check`, which runs every check, and a git hook runs it before each `git commit`.
-`pre-commit` and ty, a type checker, are in the group `lint`, and `just check` runs ty. The tests that ask the real
+[`pre-commit`](https://pre-commit.com/) installs that hook, and [ty](https://docs.astral.sh/ty/) is a type checker. Both are in
+the group `lint`, and `just check` runs ty. The tests that ask the real
 Wikipedia run only on request.
 
 The project runs on one Python, and its users may have an older one. `.python-version` says which Python `.venv`
@@ -179,9 +202,9 @@ change in the next section.
 
 ## Each job on GitHub with its own group
 
-The code now also has pydantic in the dependencies, from `uv add pydantic`. The function `random_page`, which asks
+The code now also has [pydantic](https://docs.pydantic.dev/) in the dependencies, from `uv add pydantic`. The function `random_page`, which asks
 Wikipedia for a page, now returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of
-its fields. smalldocs is in a new group `docs`. `just docs` builds a site from the code,
+its fields. [smalldocs](https://docs.smallish.dev/), which makes documentation from the code, is in a new group `docs`. `just docs` builds a site from the code,
 and `just docs check` counts what has documentation.
 
 {{include step-08b}}

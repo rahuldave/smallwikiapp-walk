@@ -24,7 +24,7 @@ just setup
 The command now asks Wikipedia for a random page, and prints its title and summary. It sends a User-Agent, a line
 that tells Wikipedia the name of the program that asks. `wikiapp --version` prints the version.
 
-The tests need pytest, and a user of the command does not. A dependency group is a list of packages for the
+The tests need [pytest](https://docs.pytest.org/), and a user of the command does not. A dependency group is a list of packages for the
 people who work on the project. By default uv installs only a group named `dev`. The project first sets
 `default-groups = "all"`, so that uv installs every group. Then the test tools, the linters and the docs tools can
 each have a group of their own.
@@ -129,10 +129,10 @@ The command fails on purpose. Python prints `No module named pytest`, and the ex
 
 ## 2.3 pytest, in the group test {#step-02.3}
 
-The test needs pytest. `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
+The test needs [pytest](https://docs.pytest.org/). `uv add --group test` writes pytest into a new group `test` of `pyproject.toml`, adds its
 exact version to `uv.lock`, and installs it.
 
-[pytest](https://docs.pytest.org/) is the test runner of most Python projects. It finds each function whose name
+pytest is the test runner of most Python projects. It finds each function whose name
 starts with `test_`, in the files whose names start with `test_`, and runs it. When an `assert` fails, it prints the
 values on both sides.
 

@@ -24,10 +24,11 @@ git fetch --quiet --tags --force origin; git rm -rq --cached --ignore-unmatch --
 just setup
 ```
 
-In the code now, `random_page` returns a `Page`, a pydantic model with a title and an extract. An answer that
+In the code now, `random_page` returns a `Page`, a [pydantic](https://docs.pydantic.dev/) model with a title and an extract. An answer that
 is not a page, or a language that is not a language code, raises `WikipediaError`.
 
-Nothing says which parts of the code have documentation. smalldocs comes in, and `just docs check` counts what has
+Nothing says which parts of the code have documentation. [smalldocs](https://docs.smallish.dev/) makes documentation from the code. It comes in, and
+`just docs check` counts what has
 documentation. The words after `docs` go to `smalldocs api`.
 
 ## 8.1 smalldocs {#step-08.1}

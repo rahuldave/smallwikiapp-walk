@@ -17,6 +17,25 @@ then gets its code, and the format and the lint check that code and its tests.
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote
 in 2024 with pixi. Where the text says "the original wikiapp", it means that project.
 
+The project uses [uv](https://docs.astral.sh/uv/) and [`just`](https://just.systems/). uv installs Python and the project's packages, which are
+code that other people wrote. It also runs commands with them. `uv init` is the command of uv that made the project. `just` runs the tasks that the file
+`justfile` lists. For example, `just setup` has uv install the packages that the project needs.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end of the whole tutorial, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
+
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
 file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
 against it.
@@ -45,7 +64,7 @@ Each kind of check comes in at the section in the table.
 |---|---|---|
 | Formatter | Changes how the code looks, never what it does | Section 3 |
 | Linter | Finds problems in the code, against rules | Section 4 |
-| A fix by the tool | A fix that ruff counts as safe, such as the order of imports | Section 5 |
+| A fix by the tool | A fix that [ruff](https://docs.astral.sh/ruff/) counts as safe, such as the order of imports | Section 5 |
 | A fix by a person | The rest. ruff has no fix for some problems, and marks others unsafe | Section 5 |
 | A check of the configuration | Finds errors in `pyproject.toml`, the lockfile and the justfile | Sections 6 and 10 |
 | One recipe for every check | `just check` runs every check, one after the other | Section 7 |

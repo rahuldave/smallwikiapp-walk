@@ -24,7 +24,7 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source b7469ee81a82 
 just setup
 ```
 
-The code now also has ruff, a tool that checks Python code. A recipe is a named task of the justfile, such as `fmt`
+The code now also has [ruff](https://docs.astral.sh/ruff/), a tool that checks Python code. A recipe is a named task of the justfile, such as `fmt`
 or `lint`. `just fmt` makes ruff lay out the code and the tests
 in one fixed way. `just lint` makes ruff check them against a list of rules. `just lint-config` checks the
 settings in `pyproject.toml`, the lockfile and the justfile.

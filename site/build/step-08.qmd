@@ -19,7 +19,7 @@ just setup
 ```
 
 A person who calls `random_page` must read its code to learn what it takes, what it returns and when it fails. We
-document the code, and let a tool, smalldocs, write the reference from it. smalldocs also lists what has no
+document the code, and let a tool, [smalldocs](https://docs.smallish.dev/), write the reference from it. smalldocs also lists what has no
 documentation, so `just check` can fail when a function has none. We document the library, the command and the tests. Then we
 build a site with a front page, and name the tests and the docs in the README.
 

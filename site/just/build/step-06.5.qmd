@@ -63,7 +63,7 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
 thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
-part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
+part of the tutorial publishes the docs with [GitHub Pages](https://docs.github.com/en/pages), and lists each setting that a fork needs.
 
 The job `check` is the third caller of `just check`, after a person and the git hook. It runs from a fresh clone.
 No person has to install it or remember it, and `--no-verify` does not skip it. The job `tests` runs

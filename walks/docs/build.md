@@ -10,7 +10,7 @@ In Build it yourself, a file that a command makes says which command. A diff tha
 
 We document `wikiapp`, a small command that prints the title and the summary of a random Wikipedia page. A person
 who calls the code needs to know what each part does. A person who reads the project on GitHub needs to know where
-each part is. smalldocs makes a reference from the docstrings of the code, and counts what has none.
+each part is. [smalldocs](https://docs.smallish.dev/) makes a reference from the docstrings of the code, and counts what has none.
 
 This tutorial takes the parts about documentation out of the whole tutorial of smallwikiapp. It starts from the
 project that `uv init` made, for Python 3.13. The command then gets its code. The documentation comes after,
@@ -18,6 +18,25 @@ when the code has tests, lint and types.
 
 The project is a rebuild of [the original wikiapp](https://github.com/rahuldave/wikiapp), which its author wrote in
 2024 with pixi. Where the text says "the original wikiapp", it means that project.
+
+The project uses [uv](https://docs.astral.sh/uv/) and [`just`](https://just.systems/). uv installs Python and the project's packages, which are
+code that other people wrote. It also runs commands with them. `uv init` is the command of uv that made the project. `just` runs the tasks that the file
+`justfile` lists. For example, `just setup` has uv install the packages that the project needs.
+
+The code is on GitHub, at [rahuldave/smallwikiapp](https://github.com/rahuldave/smallwikiapp). Its author kept
+the history of the project with git, a tool that records each change. That history, each change of the whole
+tutorial one after another, is on GitHub too. A tag is a name for
+one point in that history. The tags `step-00` to `step-10`, with `step-08b`, name the code at the end of each part
+of the whole tutorial.
+
+At the end of the whole tutorial, the command is in `src/wikiapp/`. `wikirandom`, the library that asks Wikipedia for a
+random page, has a folder of its own, `packages/wikirandom/`. The tests of both are in `tests/`. The project also has a website of
+documentation, the docs site, and `docs/` has its front page and its settings.
+
+GitHub can also run the tasks of the project on its own machines. Each file in `.github/workflows/` says which
+tasks, and when. `main` is the main line of the history on GitHub. Each time the author adds
+a change to it, GitHub runs the tests, and every check that `just check` runs. It does the same when someone proposes a change. It also builds the docs site and publishes it each time
+a change reaches `main`.
 
 We make the project in moves. A move is one small change, made by one patch or by one command. A patch changes a
 file, and a command such as `uv add` writes the files it needs. You make each move, and then check your files
@@ -47,7 +66,7 @@ The table gives each kind of documentation, and the sections where it appears.
 | Kind | Who reads it, and what it says | Where |
 |---|---|---|
 | README | A reader on GitHub. What the project is, and where each part is | Sections 1 and 8 |
-| Help text | A person who runs the command. click, the library that the command is built on, writes it from the docstring and the options | Sections 2 and 5 |
+| Help text | A person who runs the command. [click](https://click.palletsprojects.com/), the library that the command is built on, writes it from the docstring and the options | Sections 2 and 5 |
 | Reference | A person who calls the code. smalldocs makes it from the code | Sections 3, 7 and 11 |
 | Docstring | What a module, a class or a function does | Sections 1 to 6 |
 | Docment | What each parameter, field and return is | Sections 3 to 6 |
@@ -669,14 +688,14 @@ that, then the request, then a header that Wikipedia asks for, and last an optio
 
 ### 1.1 click and requests
 
-The command needs two packages that Python does not have. click makes command lines, with options and help.
-requests gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
+The command needs two packages that Python does not have. [click](https://click.palletsprojects.com/) makes command lines, with options and help.
+[requests](https://requests.readthedocs.io/) gets pages over HTTP. `uv add` puts both in the dependencies of wikiapp, and installs them in `.venv`. It
 also chooses one version of each package that fits every range of versions, and writes the versions in the
 lockfile, `uv.lock`. uv calls this choice resolving.
 
-[click](https://click.palletsprojects.com/) comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
+click comes from Pallets, who also make Flask. In click, the line `@click.command()` above a
 function makes the function a command. Such a line is a decorator. Each option of the command becomes a parameter of
-the function. [requests](https://requests.readthedocs.io/)
+the function. requests
 is a widely used library for HTTP. One call, `requests.get`, fetches a page.
 
 ```bash
@@ -995,20 +1014,20 @@ just setup
 ```
 
 A dependency group is a named list of packages in `pyproject.toml`. The project uses them to test, check or
-document the code, but the code does not need them to run. The code now also has pytest, in a group `test`, and
+document the code, but the code does not need them to run. The code now also has [pytest](https://docs.pytest.org/), in a group `test`, and
 uv installs every group.
 
 The code has tests. In the tests, a stand-in called a mock answers in place of Wikipedia, so the tests need no
 network. Each run also measures coverage, which is the share of the lines of the code that the tests run. The code is split into a library,
 `src/wikiapp/wikipedia.py`, and the command. The command has an option `--language`.
 
-The code now also has ruff and ty, in a group `lint`. ruff formats the code, and lints it, which means that it
+The code now also has [ruff](https://docs.astral.sh/ruff/) and [ty](https://docs.astral.sh/ty/), in a group `lint`. ruff formats the code, and lints it, which means that it
 checks the code against a list of rules. ty checks the types, the kind of value, such as a string or a number,
 that each name has. `just check` runs every check. `just hook` installs a git hook, a script that git runs by
 itself before each `git commit`, and the hook runs `just check`.
 
 The tests that ask the real Wikipedia run only on request, and GitHub runs the tests and `just check`.
-`random_page` returns a `Page`. A `Page` is a pydantic model, a class that checks the type of each of its fields.
+`random_page` returns a `Page`. A `Page` is a [pydantic](https://docs.pydantic.dev/) model, a class that checks the type of each of its fields.
 Its fields are a title and an extract. An answer that is not a page, or a
 language that is not a language code, raises `WikipediaError`.
 
@@ -2069,10 +2088,10 @@ But `pyproject.toml` still sets `default-groups = "all"`, so `uv run` on your ma
 ### 8b.2 A workflow that publishes the docs
 
 `just docs` builds the docs site on one machine, and nobody else can read it. A second workflow,
-`.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and GitHub Pages publishes it.
+`.github/workflows/docs.yaml`, builds the site on GitHub on every push to main, and [GitHub Pages](https://docs.github.com/en/pages) publishes it.
 
-[GitHub Pages](https://docs.github.com/en/pages) publishes a website from a repository, free for a public one. A
-workflow can build the site and give it to Pages.
+GitHub Pages publishes a website from a repository, free for a public one. A
+workflow of [GitHub Actions](https://docs.github.com/en/actions) can build the site and give it to Pages.
 
 The workflow has two jobs. The job `build`, from line 21, installs the package and the group `docs`, and runs
 `smalldocs render docs`, the command behind `just docs`. It does not run `just docs`, because that recipe, at

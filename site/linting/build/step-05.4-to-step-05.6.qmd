@@ -24,7 +24,7 @@ git rm -rq --cached --ignore-unmatch -- :/ && git restore --source b7a3e6d212b4 
 just setup
 ```
 
-The code now also has ty, a type checker, which `just types` runs. A type says what kind of value a name has, for
+The code now also has [ty](https://docs.astral.sh/ty/), a type checker, which `just types` runs. A type says what kind of value a name has, for
 example a string or a number. The code found the name of its package with
 `__name__ or __package__`. It gave that name to `importlib.metadata.version`, which looks up the version of a
 package. ty found that the name could be None, the value Python uses for no value at all, but
@@ -232,7 +232,7 @@ The code has its types, and `just lint` still finds 22 missing in the tests. A t
 of a fixture is the type of what a test receives.
 
 The mock of `requests.get` is a `Mock`. `mocker` is
-pytest-mock's `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
+[pytest-mock](https://pytest-mock.readthedocs.io/)'s `MockerFixture`. The original wikiapp used its older name, `MockFixture`. So
 `tests/conftest.py` imports `Mock` and `MockerFixture`, and its fixture states both types.
 
 Apply the patch to [`tests/conftest.py`](#step-05.6-tests-conftest.py-626af3), from the top of the project:

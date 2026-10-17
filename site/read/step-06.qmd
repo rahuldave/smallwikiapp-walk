@@ -271,7 +271,7 @@ uv run pre-commit run check-yaml --files .github/workflows/test.yaml
 
 The file is valid YAML. GitHub runs the workflow after a push. The **Actions** tab of the repository shows the
 thirteen jobs. In a fork, GitHub runs no workflow until the owner turns the workflows on, on that tab. A later
-part of the tutorial publishes the docs with GitHub Pages, and lists each setting that a fork needs.
+part of the tutorial publishes the docs with [GitHub Pages](https://docs.github.com/en/pages), and lists each setting that a fork needs.
 
 ### What changed {#step-06.5-what-changed-182c57}
 
